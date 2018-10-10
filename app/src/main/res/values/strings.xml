@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Kalbe Call Plan AEDP</string>
+    <string name="app_name_call_plan">Kalbe Call Plan AEDP</string>
+    <string name="closeDrawer">Navigation View</string>
+    <string name="openDrawer">Navigation View Closed</string>
+    <string name="label">Kalbe Nutritionals</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_advice">Your system has been detected some errors, my developers need this information. please push button below to send the errors</string>
+
+    <string name="crash_toast_text">ups ! Your Application has Stopped, but a report has been sent to my developer to help fix the issue !</string>
+
+    <string name="crash_dialog_title">SPG Mobile has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+    <string name="crash_dialog_ok_toast">Thank you !</string>
+    <string name="CrashReport_MailBody">Hello</string>
+    <string name="CrashReport_MailSubject">Error Reporting\'\'</string>
+</resources>
