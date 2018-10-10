@@ -112,7 +112,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     EditText etUsername, etPassword;
     private AppCompatSpinner spnRoleLogin;
     String txtUsername, txtPassword, imeiNumber, deviceName, access_token, selectedRole;
-    String clientId = "";
     Button btnSubmit, btnExit, btnRefreshApp;
 //    Spinner spnRole;
     private final List<String> roleName = new ArrayList<String>();
@@ -224,19 +223,19 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         if (accountName != null){
             etUsername.setText(accountName);
         }
-//
-        try {
-            loginRepo = new mUserLoginRepo(getApplicationContext());
-            tokenRepo = new clsTokenRepo(getApplicationContext());
-            dataToken = (List<clsToken>) tokenRepo.findAll();
-            if (dataToken.size() == 0) {
-                requestToken(this, true);
-            }else if (isFromPickAccount==false){
-                checkVersion(this);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+//        try {
+//            loginRepo = new mUserLoginRepo(getApplicationContext());
+//            tokenRepo = new clsTokenRepo(getApplicationContext());
+//            dataToken = (List<clsToken>) tokenRepo.findAll();
+//            if (dataToken.size() == 0) {
+//                requestToken(this, true);
+//            }else if (isFromPickAccount==false){
+//                checkVersion(this);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
 
         // Spinner Drop down elements
@@ -340,10 +339,16 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 //                progressView.startAnimation();
 
                 if (etUsername.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(), "Username tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(LoginActivity.this,"Please fill Username",4);
+//                    Toast.makeText(getApplicationContext(), "Please fill Username", Toast.LENGTH_SHORT).show();
                 }else if (etPassword.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(), "Password tidak boleh kosong", Toast.LENGTH_SHORT).show();
-                } else {
+                    ToastCustom.showToasty(LoginActivity.this,"Please fill Password",4);
+//                    Toast.makeText(getApplicationContext(), "Please fill Password", Toast.LENGTH_SHORT).show();
+                } else if (HMRole.get("Select One")==0){
+                    ToastCustom.showToasty(LoginActivity.this,"Please select role",4);
+//                    Toast.makeText(getApplicationContext(), "Please select role", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     popupSubmit();
                 }
             }
@@ -536,67 +541,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         finish();
     }
 
-    public void checkVersion(final Context context){
-        String txtVersionName = null;
-        try {
-            txtVersionName = context.getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        mConfigData dtMConfigData = null;
-        try {
-             dtMConfigData = (mConfigData) new mConfigRepo(context).findById(7);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        String strLinkAPI = new clsHardCode().LinkMobileVersion;
-        JSONObject resJson = new JSONObject();
-        JSONObject jData = new JSONObject();
-        try {
-            jData.put("version_name",txtVersionName );
-            jData.put("application_name", dtMConfigData.getTxtValue());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            tokenRepo = new clsTokenRepo(context);
-            dataToken = (List<clsToken>) tokenRepo.findAll();
-            resJson.put("data", jData);
-            resJson.put("device_info", new clsHardCode().pDeviceInfo());
-            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyCheckVersion(context, strLinkAPI, mRequestBody, "Checking your version......", new VolleyResponseListener() {
-            @Override
-            public void onError(String message) {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(String response, Boolean status, String strErrorMsg) {
-                if (response!=null){
-                    JSONObject jsonObject = null;
-                    try {
-                        jsonObject = new JSONObject(response);
-                        JSONObject jsn = jsonObject.getJSONObject("result");
-                        String txtStatus = jsn.getString("status");
-                        String txtMessage = jsn.getString("message");
-                        String txtMethode_name = jsn.getString("method_name");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-        });
-    }
-
     private void getRole(){
         String strLinkAPI = new clsHardCode().LinkUserRole;
         JSONObject resJson = new JSONObject();
@@ -642,6 +586,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                         HMRole.clear();
                         if (txtStatus==true){
                             roleName.add("Select One");
+                            HMRole.put("Select One", 0);
                             if (arrayData != null) {
                                 if (arrayData.length()>0){
                                     int index = 0;
@@ -678,60 +623,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
                 }
 
-            }
-        });
-    }
-
-    public void requestToken(final Activity activity,final boolean isFirst){
-        String username = "";
-        String strLinkAPI = new clsHardCode().linkToken;
-
-        mConfigRepo configRepo = new mConfigRepo(activity.getApplicationContext());
-        tokenRepo = new clsTokenRepo(activity.getApplicationContext());
-        try {
-            mConfigData configDataClient = (mConfigData) configRepo.findById(4);
-            mConfigData configDataUser = (mConfigData) configRepo.findById(5);
-            username = configDataUser.getTxtDefaultValue().toString();
-            clientId = configDataClient.getTxtDefaultValue().toString();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        new VolleyUtils().makeJsonObjectRequestToken(activity, strLinkAPI, username, "", clientId, "Request Token, Please Wait", new VolleyResponseListener() {
-            @Override
-            public void onError(String message) {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(String response, Boolean status, String strErrorMsg) {
-                if (response != null) {
-                    try {
-                        String accessToken = "";
-                        String refreshToken = "";
-                        JSONObject jsonObject = new JSONObject(response);
-                        accessToken = jsonObject.getString("access_token");
-                        refreshToken = jsonObject.getString("refresh_token");
-                        String dtIssued = jsonObject.getString(".issued");
-
-                        clsToken data = new clsToken();
-                        data.setIntId("1");
-                        data.setDtIssuedToken(dtIssued);
-                        data.setTxtUserToken(accessToken);
-                        data.setTxtRefreshToken(refreshToken);
-
-                        tokenRepo.createOrUpdate(data);
-
-                        Log.d("Data info", "get access_token & refresh_token, Success");
-                        if (isFirst){
-                            checkVersion(activity);
-                        }
-
-//                        Toast.makeText(activity.getApplicationContext(), "Ready For Login", Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
     }

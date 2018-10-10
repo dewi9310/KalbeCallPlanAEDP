@@ -101,8 +101,6 @@ public class PickAccountActivity extends Activity {
     private String[] role;
     private int intSet = 1;
     int intProcesscancel = 0;
-
-    List<clsLogin> dataLogin;
     List<clsToken> dataToken;
     mUserLoginRepo loginRepo;
     clsTokenRepo tokenRepo;
@@ -163,17 +161,17 @@ public class PickAccountActivity extends Activity {
         }
 
         mAccountManager = AccountManager.get(getBaseContext());
-        try {
-            tokenRepo = new clsTokenRepo(getApplicationContext());
-            dataToken = (List<clsToken>) tokenRepo.findAll();
-            if (dataToken.size() == 0) {
-                new LoginActivity().requestToken(this, true);
-            }else {
-                new LoginActivity().checkVersion(this);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            tokenRepo = new clsTokenRepo(getApplicationContext());
+//            dataToken = (List<clsToken>) tokenRepo.findAll();
+//            if (dataToken.size() == 0) {
+//                new LoginActivity().requestToken(this, true);
+//            }else {
+//                new LoginActivity().checkVersion(this);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
 
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);

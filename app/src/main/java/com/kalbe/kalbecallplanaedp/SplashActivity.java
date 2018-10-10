@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
@@ -39,6 +40,7 @@ import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.enumStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
 
 import org.json.JSONException;
@@ -61,8 +63,10 @@ public class SplashActivity extends AppCompatActivity {
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
     PackageInfo pInfo = null;
     private AccountManager mAccountManager;
+    List<clsToken> dataToken;
+    mUserLoginRepo loginRepo;
     clsTokenRepo tokenRepo;
-    String imeiNumber, deviceName;
+    String clientId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +125,12 @@ public class SplashActivity extends AppCompatActivity {
                 && hasCameraPermission == PackageManager.PERMISSION_GRANTED
                 && hasReadPhoneState == PackageManager.PERMISSION_GRANTED
                 ){
+
+            try {
+                new mConfigRepo(getApplicationContext()).InsertDefaultmConfig();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             StartAnimations();
             checkStatusMenu();
 
@@ -203,51 +213,172 @@ public class SplashActivity extends AppCompatActivity {
     Intent myIntent = null;
     clsStatusMenuStart _clsStatusMenuStart = null;
     private void checkStatusMenu() {
-        Timer runProgress = new Timer();
-        TimerTask viewTask = new TimerTask() {
+//        Timer runProgress = new Timer();
+//        TimerTask viewTask = new TimerTask() {
+//
+//            public void run() {
+////                Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
+//
+//
+//            }
+//        };
+//        runProgress.schedule(viewTask, delay);
 
-            public void run() {
-//                Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
-
-                try {
-                    new mConfigRepo(getApplicationContext()).InsertDefaultmConfig();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
-                    if (_clsStatusMenuStart.get_intStatus() != null){
-                        if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.FormLogin) {
-                            myIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                            finish();
-                            startActivity(myIntent);
-                        } else if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.UserActiveLogin) {
-                            if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
-                                myIntent = new Intent(getApplicationContext(), MainMenu.class);
-                                finish();
-                                startActivity(myIntent);
+        try {
+            _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
+            if (_clsStatusMenuStart.get_intStatus() != null){
+                if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.FormLogin) {
+                    myIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    finish();
+                    startActivity(myIntent);
+                } else if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.UserActiveLogin) {
+                    if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
+                        myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                        finish();
+                        startActivity(myIntent);
 //                            logout();
-                            } else {
-                                myIntent = new Intent(getApplicationContext(), MainMenu.class);
-                                finish();
-                                startActivity(myIntent);
-                            }
-                        }
                     } else {
+                        myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                        finish();
+                        startActivity(myIntent);
+                    }
+                }
+            } else {
 //                        myIntent = new Intent(getApplicationContext(), LoginActivity.class);
 //                        finish();
 //                        startActivity(myIntent);
-                        new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                try {
+                    tokenRepo = new clsTokenRepo(getApplicationContext());
+                    dataToken = (List<clsToken>) tokenRepo.findAll();
+                    if (dataToken.size() == 0) {
+                        requestToken(this);
+                    }else {
+                        checkVersion(this);
                     }
-                } catch (ParseException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        };
-        runProgress.schedule(viewTask, delay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
+    public void requestToken(final Activity activity){
+        String username = "";
+        String strLinkAPI = new clsHardCode().linkToken;
+
+        mConfigRepo configRepo = new mConfigRepo(activity.getApplicationContext());
+        tokenRepo = new clsTokenRepo(activity.getApplicationContext());
+        try {
+            mConfigData configDataClient = (mConfigData) configRepo.findById(4);
+            mConfigData configDataUser = (mConfigData) configRepo.findById(5);
+            username = configDataUser.getTxtDefaultValue().toString();
+            clientId = configDataClient.getTxtDefaultValue().toString();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        new VolleyUtils().makeJsonObjectRequestToken(activity, strLinkAPI, username, "", clientId, "Request Token, Please Wait", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                if (response != null) {
+                    try {
+                        String accessToken = "";
+                        String refreshToken = "";
+                        JSONObject jsonObject = new JSONObject(response);
+                        accessToken = jsonObject.getString("access_token");
+                        refreshToken = jsonObject.getString("refresh_token");
+                        String dtIssued = jsonObject.getString(".issued");
+
+                        clsToken data = new clsToken();
+                        data.setIntId("1");
+                        data.setDtIssuedToken(dtIssued);
+                        data.setTxtUserToken(accessToken);
+                        data.setTxtRefreshToken(refreshToken);
+
+                        tokenRepo.createOrUpdate(data);
+
+                        Log.d("Data info", "get access_token & refresh_token, Success");
+
+                        checkVersion(activity);
+
+//                        Toast.makeText(activity.getApplicationContext(), "Ready For Login", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void checkVersion(final Context context){
+        String txtVersionName = null;
+        try {
+            txtVersionName = context.getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        mConfigData dtMConfigData = null;
+        try {
+            dtMConfigData = (mConfigData) new mConfigRepo(context).findById(7);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String strLinkAPI = new clsHardCode().LinkMobileVersion;
+        JSONObject resJson = new JSONObject();
+        JSONObject jData = new JSONObject();
+        try {
+            jData.put("version_name",txtVersionName );
+            jData.put("application_name", dtMConfigData.getTxtValue());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            tokenRepo = new clsTokenRepo(context);
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", jData);
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+        new clsHelperBL().volleyCheckVersion(context, strLinkAPI, mRequestBody, "Checking your version......", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                if (response!=null){
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(response);
+                        JSONObject jsn = jsonObject.getJSONObject("result");
+                        String txtStatus = jsn.getString("status");
+                        String txtMessage = jsn.getString("message");
+                        String txtMethode_name = jsn.getString("method_name");
+
+                        new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+        });
+    }
     private void logout() {
         DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
         helper.clearDataAfterLogout();

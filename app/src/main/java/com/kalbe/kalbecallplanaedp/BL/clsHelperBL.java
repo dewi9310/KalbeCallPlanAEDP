@@ -23,6 +23,7 @@ import com.kalbe.kalbecallplanaedp.LoginActivity;
 import com.kalbe.kalbecallplanaedp.Repo.clsLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
+import com.kalbe.kalbecallplanaedp.SplashActivity;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -262,7 +263,7 @@ public class clsHelperBL {
                                     Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
-                                       new LoginActivity().checkVersion(context);
+                                       new SplashActivity().checkVersion(context);
                                     }
 
                                 } catch (JSONException e) {
