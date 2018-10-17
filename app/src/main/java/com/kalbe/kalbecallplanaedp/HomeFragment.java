@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.IOException;
@@ -46,7 +47,8 @@ public class HomeFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), "bisa di klik", Toast.LENGTH_SHORT).show();
+                new clsMainActivity().showToast(getContext(), "File downloaded");
+//                Toast.makeText(getContext(), "bisa di klik", Toast.LENGTH_SHORT).show();
             }
         });
 

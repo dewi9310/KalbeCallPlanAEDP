@@ -4,63 +4,43 @@ import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.CardView;
 import android.telephony.TelephonyManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
-import com.kalbe.kalbecallplanaedp.Common.clsLogin;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
-import com.kalbe.kalbecallplanaedp.Common.mConfigData;
-import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.mUserRole;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
-import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
-import com.kalbe.kalbecallplanaedp.Repo.clsLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
-import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
@@ -68,26 +48,20 @@ import com.kalbe.mobiledevknlibs.InputFilter.InputFilters;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_ACCOUNT_NAME;
-import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_ACCOUNT_TYPE;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
@@ -123,6 +97,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     clsTokenRepo tokenRepo;
     mMenuRepo menuRepo;
     boolean isFromPickAccount = false;
+    private Gson gson;
 
     @Override
     public void onBackPressed() {
@@ -167,7 +142,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         setContentView(R.layout.activity_login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-
+        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
+        gson = gsonBuilder.create();
         //change view
 //        Display display = getWindowManager().getDefaultDisplay();
 //        Point size = new Point();
@@ -223,24 +200,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         if (accountName != null){
             etUsername.setText(accountName);
         }
-
-//        try {
-//            loginRepo = new mUserLoginRepo(getApplicationContext());
-//            tokenRepo = new clsTokenRepo(getApplicationContext());
-//            dataToken = (List<clsToken>) tokenRepo.findAll();
-//            if (dataToken.size() == 0) {
-//                requestToken(this, true);
-//            }else if (isFromPickAccount==false){
-//                checkVersion(this);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-
         // Spinner Drop down elements
 
         roleName.add("Select One");
+        HMRole.put("Select One", 0);
 
         etUsername.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -253,9 +216,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     if (!txtUsername.equals("")) {
                         getRole();
                     } else {
-                        etUsername.requestFocus();
+                        etUsername.requestFocusFromTouch();
                         ToastCustom.showToasty(LoginActivity.this,"Please input username",4);
-//                        ToastCustom.showToastSPGMobile(LoginActivity.this, "Please input username", false);
                     }
                     return true;
                 }
@@ -295,7 +257,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     tv.setTextColor(Color.GRAY);
                 }
                 else {
-                    tv.setTextColor(Color.BLACK);
+                    tv.setTextColor(getResources().getColor(R.color.green_300));
                 }
                 return view;
             }
@@ -312,6 +274,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                ToastCustom.showToasty(LoginActivity.this,"Please select role",4);
                 // put code here
             }
         });
@@ -332,21 +295,44 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
 
+        etPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+                            keyCode == KeyEvent.KEYCODE_ENTER) {
+                        btnSubmit.performClick();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        etPassword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    btnSubmit.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                progressView.setVisibility(View.VISIBLE);
-//                progressView.startAnimation();
 
                 if (etUsername.getText().toString().equals("")){
                     ToastCustom.showToasty(LoginActivity.this,"Please fill Username",4);
-//                    Toast.makeText(getApplicationContext(), "Please fill Username", Toast.LENGTH_SHORT).show();
                 }else if (etPassword.getText().toString().equals("")){
                     ToastCustom.showToasty(LoginActivity.this,"Please fill Password",4);
-//                    Toast.makeText(getApplicationContext(), "Please fill Password", Toast.LENGTH_SHORT).show();
-                } else if (HMRole.get("Select One")==0){
+                } else if (roleName.size()==1){
+                    getRole();
+                } else if (HMRole.get(spnRoleLogin.getSelectedItem())==0){
                     ToastCustom.showToasty(LoginActivity.this,"Please select role",4);
-//                    Toast.makeText(getApplicationContext(), "Please select role", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     popupSubmit();
@@ -354,38 +340,15 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
 //
-//        btnExit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-//
-//                builder.setTitle("Exit");
-//                builder.setMessage("Are you sure to exit?");
-//
-//                builder.setPositiveButton("EXIT", new DialogInterface.OnClickListener() {
-//
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        finish();
-//                    }
-//                });
-//
-//                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                AlertDialog alert = builder.create();
-//                alert.show();
-//            }
-//        });
-//
 //        checkVersion();
         btnRefreshApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    new clsHardCode().copydb(getApplicationContext());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Toast.makeText(getApplicationContext(), "Ping", Toast.LENGTH_SHORT).show();
 //                requestToken(LoginActivity.this);
             }
@@ -474,6 +437,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                         String accessToken = "dummy_access_token";
 
                         if (txtStatus == true){
+                            loginRepo = new mUserLoginRepo(getApplicationContext());
                             JSONObject objData = jsonObject.getJSONObject("data");
                             mUserLogin data = new mUserLogin();
                             data.setIntUserID(objData.getInt("IntUserID"));
@@ -545,6 +509,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         String strLinkAPI = new clsHardCode().LinkUserRole;
         JSONObject resJson = new JSONObject();
         JSONObject jData = new JSONObject();
+        txtUsername = etUsername.getText().toString();
+        txtPassword = etPassword.getText().toString();
         try {
             jData.put("username",txtUsername );
             jData.put("intRoleId", 0);
@@ -577,7 +543,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(response);
+//                        com.kalbe.kalbecallplanaedp.Common.Response model= gson.fromJson(jsonObject.toString(), com.kalbe.kalbecallplanaedp.Common.Response.class);
                         JSONObject jsn = jsonObject.getJSONObject("result");
+//                        boolean txtStatus = model.getResult().isStatus();
+//                        String txtMessage = model.getResult().getMessage();
+//                        String txtMethode_name = model.getResult().getMethodName();
                         boolean txtStatus = jsn.getBoolean("status");
                         String txtMessage = jsn.getString("message");
                         String txtMethode_name = jsn.getString("method_name");
@@ -607,12 +577,35 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                         index++;
                                     }
                                     spnRoleLogin.setEnabled(true);
-                                }else {
+                                }
+//                            if (model.getData2()!= null) {
+//                                if (model.getData2().size()>0){
+//                                    int index = 0;
+//                                    for (int i = 0; i < model.getData2().size(); i++){
+//
+//                                        String txtRoleName = model.getData2().get(i).getTxtRoleName();
+//                                        int intRoleId = model.getData2().get(i).getIntRoleId();
+//                                        roleName.add(txtRoleName);
+//
+//                                        mUserRole data = new mUserRole();
+//                                        data.setTxtId(String.valueOf(index));
+//                                        data.setIntRoleId(intRoleId);
+//                                        data.setTxtRoleName(txtRoleName);;
+//                                        mUserRoleRepo userRoleRepo = new mUserRoleRepo(getApplicationContext());
+//                                        userRoleRepo.createOrUpdate(data);
+//
+//                                        HMRole.put(txtRoleName, intRoleId);
+//                                        index++;
+//                                    }
+//                                    spnRoleLogin.setEnabled(true);
+//                                }
+                                else {
                                     spnRoleLogin.setEnabled(false);
                                 }
                             }
                         }else {
                             spnRoleLogin.setEnabled(false);
+                            etUsername.requestFocus();
                             ToastCustom.showToasty(LoginActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
@@ -625,33 +618,5 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
             }
         });
-    }
-
-    public void listMenu(Activity activity) {
-        mMenuData menu = new mMenuData();
-        menu.setIntId(Integer.parseInt("1"));
-        menu.setIntOrder(1);
-        menu.setIntParentID(109);
-        menu.setTxtDescription("mn1");
-        menu.setTxtLink("com.kalbe.project.templatemobile.FragmentFirstMenu");
-        menu.setIntMenuID("220");
-        menu.setTxtVisible("null");
-        menu.setTxtIcon("null");
-        menu.setTxtMenuName("Menu ke-1");
-
-        mMenuData menu2 = new mMenuData();
-        menu2.setIntId(Integer.parseInt("2"));
-        menu2.setIntOrder(4);
-        menu2.setIntParentID(47);
-        menu2.setTxtDescription("mn2");
-//        menu2.setTxtLink("com.kalbe.project.templatemobile.FragmentSecondMenu");
-        menu2.setIntMenuID("98");
-        menu2.setTxtVisible("null");
-        menu2.setTxtIcon("null");
-        menu2.setTxtMenuName("Menu ke-2");
-
-        menuRepo = new mMenuRepo(activity.getApplicationContext());
-        menuRepo.createOrUpdate(menu);
-        menuRepo.createOrUpdate(menu2);
     }
 }

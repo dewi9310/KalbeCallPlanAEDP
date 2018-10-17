@@ -144,17 +144,20 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             }
         });
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        fileName = "temp_absen" + timeStamp;
+
         imgCamera1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                fileName = "temp_absen" + timeStamp;
                 PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE1_REQUEST_CODE);
             }
         });
         imgCamera2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                fileName = "temp_absen" + timeStamp;
                 PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE2_REQUEST_CODE);
             }
         });

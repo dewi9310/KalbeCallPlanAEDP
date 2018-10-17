@@ -28,14 +28,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.Image;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImageCustom;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,23 +53,23 @@ public class FragmentSubAkuisisi extends Fragment {
     View v;
     private ListView mListView;
     private String txtSubAkuisisi;
-    String testing;
+    int intSubSubId;
     private ViewPager viewPager;
     private LinearLayout layout_dots;
     private AdapterImageSlider adapterImageSlider;
+    private String ZOOM_IMAGE = "zoom image";
+    private String ZOOM_DIRECTORY = "zoom directory";
+    private List<tAkuisisiDetail> dtDetail = new ArrayList<>();
+//    private List<tAkuisisiHeader> dtHeader = new ArrayList<>();
+    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
+    tAkuisisiDetailRepo detailRepo;
+    tAkuisisiHeaderRepo headerRepo;
+    private TextView tvNoDoc, tvExpDate;
 
-    public FragmentSubAkuisisi(String txtSubAkuisisi, String testing){
+    public FragmentSubAkuisisi(String txtSubAkuisisi, int intSubSubId){
         this.txtSubAkuisisi = txtSubAkuisisi;
-        this.testing = testing;
+        this.intSubSubId = intSubSubId;
     }
-
-    private static int[] array_image_product = {
-            R.drawable.image_shop_9,
-            R.drawable.image_shop_10,
-            R.drawable.image_shop_11,
-            R.drawable.image_shop_12,
-            R.drawable.image_shop_13,
-    };
 
         @Nullable
     @Override
@@ -72,20 +77,24 @@ public class FragmentSubAkuisisi extends Fragment {
         v = inflater.inflate(R.layout.fragment_sub_akuisisi, container, false);
             layout_dots = (LinearLayout) v.findViewById(R.id.layout_dots);
             viewPager = (ViewPager) v.findViewById(R.id.view_pager_subakuisisi);
-            adapterImageSlider = new AdapterImageSlider(getActivity(), new ArrayList<Image>());
-            TextView tvTesting = (TextView) v.findViewById(R.id.title_subakuisisi);
-            tvTesting.setText(testing);
+            tvNoDoc = (TextView) v.findViewById(R.id.title_subakuisisi);
+            tvExpDate = (TextView) v.findViewById(R.id.tv_exp_date_sub);
 
-//        mListView = (ListView) v.findViewById(R.id.lv_sub_akuisisi);
-            List<Image> items = new ArrayList<>();
-            for (int i : array_image_product) {
-                Image obj = new Image();
-                obj.image = i;
-                obj.imageDrw = getResources().getDrawable(obj.image);
-                items.add(obj);
+            headerRepo = new tAkuisisiHeaderRepo(getContext());
+            detailRepo = new tAkuisisiDetailRepo(getContext());
+
+            try {
+                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
+                if (dtHeader!=null){
+                    tvNoDoc.setText(dtHeader.getTxtNoDoc());
+                    tvExpDate.setText(String.valueOf(dtHeader.getDtExpiredDate()));
+                    dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            adapterImageSlider.setItems(items);
+            adapterImageSlider = new AdapterImageSlider(getActivity(), dtDetail);
+            adapterImageSlider.setItems(dtDetail);
             viewPager.setAdapter(adapterImageSlider);
 
             // displaying selected image first
@@ -106,29 +115,15 @@ public class FragmentSubAkuisisi extends Fragment {
                 public void onPageScrollStateChanged(int state) {
                 }
             });
+
+
+
             adapterImageSlider.setOnItemClickListener(new AdapterImageSlider.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, Image obj) {
-                    Intent intent = new Intent();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setAction(Intent.ACTION_VIEW);
-                    Uri uri = null;
-                    Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), obj.image);
-//                    ByteArrayOutputStream byteArrayOutStream = new ByteArrayOutputStream();
-//                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutStream);
-//                    byte[] b = byteArrayOutStream.toByteArray();
-//                    File mediaStorageDir = PickImage.decodeByteArraytoImageFile(b, new clsHardCode().txtPathTempData);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
-//                        uri =  FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getApplicationContext().getPackageName()+".provider", mediaStorageDir);
-//                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                    } else {
-//                        uri = Uri.fromFile(mediaStorageDir);
-//                    }
-//                    intent.setData(uri);
-//                    intent.setDataAndType(uri, "image/*");
-//                    startActivity(intent);
+                public void onItemClick(View view, tAkuisisiDetail obj) {
                     Intent intent1 = new Intent(getContext(), ImageViewerActivity.class);
-                    intent1.putExtra("image", obj.image);
+                    intent1.putExtra(ZOOM_DIRECTORY, new clsHardCode().txtFolderAkuisisi);
+                    intent1.putExtra(ZOOM_IMAGE, obj.getTxtDetailId());
                     startActivity(intent1);
                 }
             });
@@ -158,12 +153,12 @@ public class FragmentSubAkuisisi extends Fragment {
     private static class AdapterImageSlider extends PagerAdapter {
 
         private Activity act;
-        private List<Image> items;
+        private List<tAkuisisiDetail> items;
 
         private OnItemClickListener onItemClickListener;
 
         private interface OnItemClickListener {
-            void onItemClick(View view, Image obj);
+            void onItemClick(View view, tAkuisisiDetail obj);
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -171,7 +166,7 @@ public class FragmentSubAkuisisi extends Fragment {
         }
 
         // constructor
-        private AdapterImageSlider(Activity activity, List<Image> items) {
+        private AdapterImageSlider(Activity activity, List<tAkuisisiDetail> items) {
             this.act = activity;
             this.items = items;
         }
@@ -181,11 +176,11 @@ public class FragmentSubAkuisisi extends Fragment {
             return this.items.size();
         }
 
-        public Image getItem(int pos) {
+        public tAkuisisiDetail getItem(int pos) {
             return items.get(pos);
         }
 
-        public void setItems(List<Image> items) {
+        public void setItems(List<tAkuisisiDetail> items) {
             this.items = items;
             notifyDataSetChanged();
         }
@@ -197,18 +192,18 @@ public class FragmentSubAkuisisi extends Fragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final Image o = items.get(position);
+            final tAkuisisiDetail dt = items.get(position);
             LayoutInflater inflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = inflater.inflate(R.layout.item_slider_image, container, false);
 
             ImageView image = (ImageView) v.findViewById(R.id.image);
             MaterialRippleLayout lyt_parent = (MaterialRippleLayout) v.findViewById(R.id.lyt_parent);
-            Tools.displayImageOriginal(act, image, o.image);
+            Tools.displayImageOriginal(act, image, dt.getTxtImg());
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(v, o);
+                        onItemClickListener.onItemClick(v, dt);
                     }
                 }
             });

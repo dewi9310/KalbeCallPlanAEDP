@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -134,6 +135,16 @@ public class Tools {
     public static void displayImageOriginal(Context ctx, ImageView img, String url) {
         try {
             Glide.with(ctx).load(url)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(img);
+        } catch (Exception e) {
+        }
+    }
+
+    public static void displayImageOriginal(Context ctx, ImageView img, byte[] blobImage) {
+        try {
+            Glide.with(ctx).load(blobImage)
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(img);
@@ -329,4 +340,20 @@ public class Tools {
         }
     }
 
+    public static void intentFragmentSetArgument(Class<?> fragmentClass, String title, Context context, Bundle bundle){
+        try {
+
+            Toolbar toolbar = (Toolbar)((Activity)context).findViewById(R.id.toolbar);
+            toolbar.setTitle(title);
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            fragment.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame, fragment);
+            fragmentTransaction.commit();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 }

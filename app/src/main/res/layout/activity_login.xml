@@ -278,6 +278,8 @@
                         android:maxLength="50"
                         android:maxLines="1"
                         android:singleLine="true"
+                        android:imeActionLabel="Sign In"
+                        android:imeOptions="actionUnspecified"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@color/green_300"
                         android:ems="10"

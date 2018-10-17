@@ -409,10 +409,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("FragmentClass", "FragmentAkuisisi");
                         FragmentAkuisisi fragmentAkuisisi = new FragmentAkuisisi();
-                        fragmentAkuisisi.setArguments(bundle);
                         FragmentTransaction fragmentTransactionAkuisisi = getSupportFragmentManager().beginTransaction();
                         fragmentTransactionAkuisisi.replace(R.id.frame, fragmentAkuisisi);
                         fragmentTransactionAkuisisi.commit();

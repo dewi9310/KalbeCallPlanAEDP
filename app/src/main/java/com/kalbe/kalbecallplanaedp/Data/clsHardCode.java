@@ -22,19 +22,26 @@ import java.io.OutputStream;
 
 public class clsHardCode {
     Context context;
-    public String txtPathApp= Environment.getExternalStorageDirectory()+ File.separator+"data"+File.separator+"data"+File.separator+"KalbeCallPlanAEDP"+File.separator+"app_database"+File.separator;
-    public String dbName = "KalbeCallPlanAEDP.db";
-    public String txtFolderData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"KalbeCallPlanAEDP"+File.separator+"image_Person"+File.separator;
-    public String txtPathUserData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"com.kalbe.kalbecallplanaedp"+File.separator+"user_data"+File.separator;
-    public String txtPathTempData = Environment.getExternalStorageDirectory() + File.separator + "Android" + File.separator + "data" + File.separator + "com.kalbenutritionals.app.kalbespgmobile" + File.separator + "tempdata" + File.separator;
+//    public String txtPathApp= Environment.getExternalStorageDirectory()+ File.separator+"data"+File.separator+"data"+File.separator+"KalbeCallPlanAEDP"+File.separator+"app_database"+File.separator;
+    /* path root */
+    public String txtPathApp = "data" + File.separator + "data" + File.separator + "com.kalbenutritionals.kalbecallplanaedp" + File.separator + "databases" + File.separator;
 
+//    public String txtFolderData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"KalbeCallPlanAEDP"+File.separator+"image_Person"+File.separator;
+    public String txtPathUserData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"com.kalbenutritionals.kalbecallplanaedp"+File.separator+"user_data"+File.separator;
+    public String txtPathTempData = Environment.getExternalStorageDirectory() + File.separator + "Android" + File.separator + "data" + File.separator + "com.kalbenutritionals.kalbecallplanaedp" + File.separator + "tempdata" + File.separator;
+
+    public String dbName = "KalbeCallPlanAEDP.db";
     public String txtFolderCheckIn = txtPathUserData + "Absen" + File.separator;
+    public String txtFolderAkuisisi = txtPathUserData + "Akuisisi" + File.separator;
+    public String txtFolderData = txtPathUserData + "Image_Person" + File.separator;
     public String linkMaster = new mConfigRepo(context).API + "mProduct";
     public String linkLogin = new mConfigRepo(context).API + "loginMobileApps";
     public String linkToken = new mConfigRepo(context).APIToken + "token";
 //    public String LinkUser = new mConfigRepo(context).API + "loginMobileApps";
     public  String LinkMobileVersion = new mConfigRepo(context).API + "getLatestAndroidVersion";
     public  String LinkUserRole = new mConfigRepo(context).API + "getListRoleByUsername";
+    public int Draft = 0;
+    public int Save = 1;
 
     public String copydb(Context context) throws IOException {
         String CURRENT_DATABASE_PATH = "data/data/" + context.getPackageName() + "/databases/"+ new clsHardCode().dbName;

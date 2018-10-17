@@ -288,11 +288,30 @@ public class PickAccountActivity extends Activity {
                                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            login(data_token, HMRole.get(single_choice_selected), activity, mAccountManager);
+
                                         }
                                     });
-                                    builder.setNegativeButton("CANCEL", null);
-                                    builder.show();
+                                    builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final android.support.v7.app.AlertDialog alertD = builder.create();
+                                    alertD.show();
+//                                    builder.show();
+                                    final Button btnPos = alertD.getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE);
+                                    btnPos.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (!single_choice_selected.equals("")){
+                                                popupSubmit(data_token, HMRole.get(single_choice_selected), activity, mAccountManager);
+//                                                alertD.dismiss();
+                                            }else {
+                                                ToastCustom.showToasty(activity,"Please select role",4);
+                                            }
+                                        }
+                                    });
                                 }else {
 //                                    spnRoleLogin.setEnabled(false);
                                 }
@@ -312,25 +331,32 @@ public class PickAccountActivity extends Activity {
         });
     }
 
-//    private void showSingleChoiceDialog(final  Activity activity, final View parent_view) {
-//        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
-//        builder.setTitle("Phone Ringtone");
-//        builder.setSingleChoiceItems(RINGTONE, 0, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                single_choice_selected = RINGTONE[i];
-//            }
-//        });
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-////                Snackbar.make(parent_view, "selected : " + single_choice_selected, Snackbar.LENGTH_SHORT).show();
-//                login();
-//            }
-//        });
-//        builder.setNegativeButton("CANCEL", null);
-//        builder.show();
-//    }
+    private void popupSubmit(final String[] data_token, final int txtRoleName, final Activity activity, final AccountManager mAccountManager) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        builder.setTitle("Confirm");
+        builder.setMessage("Are You sure?");
+
+        builder.setPositiveButton("LOGIN", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                login(data_token, txtRoleName, activity, mAccountManager);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public void login(final String[] data_token, int txtRoleName, final Activity activity, final AccountManager mAccountManager) {
         txtUsername = data_token[0];
         txtPassword = data_token[1];
@@ -397,7 +423,7 @@ public class PickAccountActivity extends Activity {
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");
-                            new LoginActivity().listMenu(activity);
+//                            new LoginActivity().listMenu(activity);
 
                             datum.putString(AccountManager.KEY_ACCOUNT_NAME, txtUsername);
                             datum.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);

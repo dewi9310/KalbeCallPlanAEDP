@@ -13,20 +13,19 @@ import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.clsLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.enumStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenu;
+import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenuItem;
+import com.kalbe.mobiledevknlibs.library.swipemenu.interfaces.SwipeMenuCreator;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.swu.pulltorefreshswipemenulistview.library.swipemenu.bean.SwipeMenu;
-import edu.swu.pulltorefreshswipemenulistview.library.swipemenu.bean.SwipeMenuItem;
-import edu.swu.pulltorefreshswipemenulistview.library.swipemenu.interfaces.SwipeMenuCreator;
-
 /**
  * Created by Rian Andrivani on 11/22/2017.
  */
@@ -45,6 +44,7 @@ public class clsMainBL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+//        if (listDataLogin!=null)
         for (mUserLogin data : listDataLogin){
             if (!data.getTxtUserName().equals(null)){
                 _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.UserActiveLogin);
@@ -54,6 +54,16 @@ public class clsMainBL {
         return _clsStatusMenuStart;
     }
 
+    public mUserLogin getUserLogin(Context context){
+        List <mUserLogin> dtList = new ArrayList<>();
+        mUserLoginRepo dtRepo= new mUserLoginRepo(context);
+        try {
+            dtList = (List<mUserLogin>) dtRepo.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dtList.get(0);
+    }
     public static SwipeMenuCreator setCreator(final Context _ctx, final Map<String, HashMap> map) {
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 

@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kalbe.kalbecallplanaedp.SplashActivity;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -95,6 +96,7 @@ public class VolleyUtils {
                 builder.setPositiveButton("REFRESH", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
+                        new SplashActivity().requestToken(activity);
                         dialog.dismiss();
                     }
                 });
