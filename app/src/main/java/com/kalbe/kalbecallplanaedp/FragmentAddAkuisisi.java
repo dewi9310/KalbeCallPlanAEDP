@@ -211,7 +211,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                 dt.setTxtHeaderId(new clsActivity().GenerateGuid());
                                 dt.setDtExpiredDate(etDtExpired.getText().toString());
                                 dt.setTxtNoDoc(etNoDoc.getText().toString());
-                                dt.setIntFlag(new clsHardCode().Draft);
+                                dt.setIntFlagPush(new clsHardCode().Draft);
                                 dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                                 dt.setIntUserId(dtUserLogin.getIntUserID());
                                 try {
@@ -241,7 +241,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                             dt.setTxtHeaderId(dtHeader.getTxtHeaderId());
                             dt.setDtExpiredDate(etDtExpired.getText().toString());
                             dt.setTxtNoDoc(etNoDoc.getText().toString());
-                            dt.setIntFlag(new clsHardCode().Save);
+                            dt.setIntFlagPush(new clsHardCode().Save);
                             dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                             dt.setIntUserId(dtUserLogin.getIntUserID());
                             try {

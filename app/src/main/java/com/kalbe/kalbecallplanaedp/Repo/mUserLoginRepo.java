@@ -78,4 +78,17 @@ public class mUserLoginRepo implements crud {
         }
         return items;
     }
+
+    public int getContactCount(Context context){
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        int count = 0;
+        List<mUserLogin> data = null;
+        try {
+            data = (List<mUserLogin>) loginRepo.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        count = data.size();
+        return count;
+    }
 }

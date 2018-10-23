@@ -9,22 +9,26 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.kalbe.kalbecallplanaedp.Common.clsLogin;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
+import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mConfigData;
+import com.kalbe.kalbecallplanaedp.Common.mCounterData;
+import com.kalbe.kalbecallplanaedp.Common.mDokter;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
-import com.kalbe.kalbecallplanaedp.Common.mProduct;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mTypeSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.mUserMappingArea;
 import com.kalbe.kalbecallplanaedp.Common.mUserRole;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
-import com.kalbe.kalbecallplanaedp.Common.tOrderDetail;
-import com.kalbe.kalbecallplanaedp.Common.tOrderHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivityAttachment;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 
 
 import java.sql.SQLException;
@@ -43,23 +47,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // the DAO object we use to access the SimpleData table
     protected Dao<mConfigData, Integer> mConfigDao;
 
-    protected Dao<clsLogin, Integer> loginDao;
-    protected RuntimeExceptionDao<clsLogin, Integer> loginRuntimeDao = null;
-
     protected Dao<mMenuData, Integer> menuDao;
-    protected RuntimeExceptionDao<mMenuData, Integer> menuRuntimeDao = null;
+    protected RuntimeExceptionDao<mMenuData, Integer> menuRuntimeDao;
 
     protected Dao<clsPhotoProfile, Integer> profileDao;
     protected RuntimeExceptionDao<clsPhotoProfile, Integer> profileRuntimeDao;
-
-    protected Dao<mProduct, Integer> productDao;
-    protected RuntimeExceptionDao<mProduct, Integer> productRuntimeDao;
-
-    protected Dao<tOrderHeader, Integer> orderHeaderDao;
-    protected RuntimeExceptionDao<tOrderHeader, Integer> orderHeaderRuntimeDao;
-
-    protected Dao<tOrderDetail, Integer> orderDetailDao;
-    protected RuntimeExceptionDao<tOrderDetail, Integer> orderDetailRuntimeDao;
 
     protected Dao<clsToken, Integer> tokenDao;
     protected RuntimeExceptionDao<clsToken, Integer> tokenRuntimeDao;
@@ -68,7 +60,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected RuntimeExceptionDao<clsToken, Integer> mUserRolesRuntimeDao;
 
     protected Dao<mUserLogin, Integer> mUserLoginsDao;
-    protected RuntimeExceptionDao<clsToken, Integer> mUserLoginsRuntimeDao = null;
+    protected RuntimeExceptionDao<clsToken, Integer> mUserLoginsRuntimeDao;
 
     protected Dao<tAkuisisiHeader, Integer> tAkuisisiHeaderDao;
     protected RuntimeExceptionDao<clsToken, Integer> tAkuisisiHeaderRuntimeDao;
@@ -88,6 +80,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected Dao<mTypeSubSubActivity, Integer> mTypeSubSubActivityDao;
     protected RuntimeExceptionDao<clsToken, Integer> mTypeSubSubActivityRuntimeDao;
 
+    protected Dao<mApotek, Integer> mApotekDao;
+    protected Dao<mDokter, Integer> mDokterDao;
+    protected Dao<tProgramVisit, Integer> tProgramVisitDao;
+    protected Dao<tProgramVisitSubActivity, Integer> tProgramVisitSubActivityDao;
+    protected Dao<tRealisasiVisitPlan, Integer> tRealisasiVisitPlanDao;
+    protected Dao<mUserMappingArea, Integer> mUserMappingAreaDao;
+    protected Dao<tProgramVisitSubActivityAttachment, Integer> tProgramVisitSubActivityAttachmentDao;
+    protected Dao<mCounterData, Integer> mCounterDataDao;
+
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -96,7 +98,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, mConfigData.class);
-//            TableUtils.createTableIfNotExists(connectionSource, clsLogin.class);
             TableUtils.createTableIfNotExists(connectionSource, clsToken.class);
             TableUtils.createTableIfNotExists(connectionSource, mMenuData.class);
             TableUtils.createTableIfNotExists(connectionSource, clsPhotoProfile.class);
@@ -108,11 +109,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, mSubActivity.class);
             TableUtils.createTableIfNotExists(connectionSource, mSubSubActivity.class);
             TableUtils.createTableIfNotExists(connectionSource, mTypeSubSubActivity.class);
+            TableUtils.createTableIfNotExists(connectionSource, mApotek.class);
+            TableUtils.createTableIfNotExists(connectionSource, mDokter.class);
+            TableUtils.createTableIfNotExists(connectionSource, tProgramVisit.class);
+            TableUtils.createTableIfNotExists(connectionSource, tProgramVisitSubActivity.class);
+            TableUtils.createTableIfNotExists(connectionSource, tRealisasiVisitPlan.class);
+            TableUtils.createTableIfNotExists(connectionSource, mUserMappingArea.class);
+            TableUtils.createTableIfNotExists(connectionSource, tProgramVisitSubActivityAttachment.class);
+            TableUtils.createTableIfNotExists(connectionSource, mCounterData.class);
 
-            //calon di delete
-//            TableUtils.createTableIfNotExists(connectionSource, mProduct.class);
-//            TableUtils.createTableIfNotExists(connectionSource, tOrderHeader.class);
-//            TableUtils.createTableIfNotExists(connectionSource, tOrderDetail.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,23 +125,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        Dao<clsLogin, Integer> dao = null;
+//        Dao<clsLogin, Integer> dao = null;
         try {
-            dao = getLoginDao();
+//            dao = getLoginDao();
 
 //            if (oldVersion < 2) {
 //                dao.executeRaw("ALTER TABLE `clsLogin` ADD COLUMN txtRefreshToken TEXT;");
 //            }
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, mConfigData.class, true);
-//            TableUtils.dropTable(connectionSource, clsLogin.class, true);
             TableUtils.dropTable(connectionSource, mMenuData.class, true);
             TableUtils.dropTable(connectionSource, clsPhotoProfile.class, true);
-
-
-//            TableUtils.dropTable(connectionSource, mProduct.class, true);
-//            TableUtils.dropTable(connectionSource, tOrderHeader.class, true);
-//            TableUtils.dropTable(connectionSource, tOrderDetail.class, true);
+            TableUtils.dropTable(connectionSource, mUserRole.class, true);
+            TableUtils.dropTable(connectionSource, mUserLogin.class, true);
+            TableUtils.dropTable(connectionSource, tAkuisisiHeader.class, true);
+            TableUtils.dropTable(connectionSource, tAkuisisiDetail.class, true);
+            TableUtils.dropTable(connectionSource, mActivity.class, true);
+            TableUtils.dropTable(connectionSource, mSubActivity.class, true);
+            TableUtils.dropTable(connectionSource, mSubSubActivity.class, true);
+            TableUtils.dropTable(connectionSource, mTypeSubSubActivity.class, true);
+            TableUtils.dropTable(connectionSource, mApotek.class, true);
+            TableUtils.dropTable(connectionSource, mDokter.class, true);
+            TableUtils.dropTable(connectionSource, tProgramVisit.class, true);
+            TableUtils.dropTable(connectionSource, tProgramVisitSubActivity.class, true);
+            TableUtils.dropTable(connectionSource, tRealisasiVisitPlan.class, true);
+            TableUtils.dropTable(connectionSource, mUserMappingArea.class, true);
+            TableUtils.dropTable(connectionSource, tProgramVisitSubActivityAttachment.class, true);
+            TableUtils.dropTable(connectionSource, mCounterData.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {
@@ -146,7 +161,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void clearDataAfterLogout(){
         try {
-//            TableUtils.clearTable(connectionSource, clsLogin.class);
             TableUtils.clearTable(connectionSource, mMenuData.class);
             TableUtils.clearTable(connectionSource, clsPhotoProfile.class);
             TableUtils.clearTable(connectionSource, mUserRole.class);
@@ -157,12 +171,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.clearTable(connectionSource, mSubActivity.class);
             TableUtils.clearTable(connectionSource, mSubSubActivity.class);
             TableUtils.clearTable(connectionSource, mTypeSubSubActivity.class);
+            TableUtils.clearTable(connectionSource, mApotek.class);
+            TableUtils.clearTable(connectionSource, mDokter.class);
+            TableUtils.clearTable(connectionSource, tProgramVisit.class);
+            TableUtils.clearTable(connectionSource, tProgramVisitSubActivity.class);
+            TableUtils.clearTable(connectionSource, mUserMappingArea.class);
+            TableUtils.clearTable(connectionSource, tRealisasiVisitPlan.class);
+            TableUtils.clearTable(connectionSource, tProgramVisitSubActivityAttachment.class);
+            TableUtils.clearTable(connectionSource, mCounterData.class);
 
-            //calon di delete
-//            TableUtils.clearTable(connectionSource, mProduct.class);
-//            TableUtils.clearTable(connectionSource, tOrderHeader.class);
-//            TableUtils.clearTable(connectionSource, tOrderDetail.class);
-            // after we drop the old databases, we create the new ones
 //            onCreate(db, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,13 +199,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tokenDao = getDao(clsToken.class);
         }
         return tokenDao;
-    }
-
-    public Dao<clsLogin, Integer> getLoginDao() throws SQLException {
-        if (loginDao == null) {
-            loginDao = getDao(clsLogin.class);
-        }
-        return loginDao;
     }
 
     public Dao<mMenuData, Integer> getMenuDao() throws SQLException {
@@ -261,35 +271,65 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mTypeSubSubActivityDao;
     }
 
-
-//calon di delete
-    public Dao<mProduct, Integer> getProductDao() throws SQLException {
-        if (productDao == null) {
-            productDao = getDao(mProduct.class);
+    public Dao<mApotek, Integer> getmApotekDao() throws SQLException {
+        if (mApotekDao == null) {
+            mApotekDao = getDao(mApotek.class);
         }
-        return productDao;
+        return mApotekDao;
     }
 
-    public Dao<tOrderHeader, Integer> getOrderHeaderDao() throws SQLException {
-        if (orderHeaderDao == null) {
-            orderHeaderDao = getDao(tOrderHeader.class);
+    public Dao<mDokter, Integer> getmDokterDao() throws SQLException {
+        if (mDokterDao == null) {
+            mDokterDao = getDao(mDokter.class);
         }
-        return orderHeaderDao;
+        return mDokterDao;
     }
 
-    public Dao<tOrderDetail, Integer> getOrderDetailDao() throws SQLException {
-        if (orderDetailDao == null) {
-            orderDetailDao = getDao(tOrderDetail.class);
+    public Dao<tProgramVisit, Integer> gettProgramVisitDao() throws SQLException {
+        if (tProgramVisitDao == null) {
+            tProgramVisitDao = getDao(tProgramVisit.class);
         }
-        return orderDetailDao;
+        return tProgramVisitDao;
     }
 
+    public Dao<tProgramVisitSubActivity, Integer> gettProgramVisitSubActivityDao() throws SQLException {
+        if (tProgramVisitSubActivityDao == null) {
+            tProgramVisitSubActivityDao = getDao(tProgramVisitSubActivity.class);
+        }
+        return tProgramVisitSubActivityDao;
+    }
 
+    public Dao<tRealisasiVisitPlan, Integer> gettRealisasiVisitPlanDao() throws SQLException {
+        if (tRealisasiVisitPlanDao == null) {
+            tRealisasiVisitPlanDao = getDao(tRealisasiVisitPlan.class);
+        }
+        return tRealisasiVisitPlanDao;
+    }
+
+    public Dao<mUserMappingArea, Integer> getmUserMappingAreaDao() throws SQLException {
+        if (mUserMappingAreaDao == null) {
+            mUserMappingAreaDao = getDao(mUserMappingArea.class);
+        }
+        return mUserMappingAreaDao;
+    }
+
+    public Dao<tProgramVisitSubActivityAttachment, Integer> gettProgramVisitSubActivityAttachmentDao() throws SQLException {
+        if (tProgramVisitSubActivityAttachmentDao == null) {
+            tProgramVisitSubActivityAttachmentDao = getDao(tProgramVisitSubActivityAttachment.class);
+        }
+        return tProgramVisitSubActivityAttachmentDao;
+    }
+
+    public Dao<mCounterData, Integer> getmCounterDataDao() throws SQLException {
+        if (mCounterDataDao == null) {
+            mCounterDataDao = getDao(mCounterData.class);
+        }
+        return mCounterDataDao;
+    }
 
     @Override
     public void close() {
         mConfigDao = null;
-        loginDao = null;
         tokenDao = null;
         menuDao = null;
         profileDao = null;
@@ -301,11 +341,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mSubActivityDao = null;
         mSubSubActivityDao = null;
         mTypeSubSubActivityDao = null;
-
-        //delete
-        productDao = null;
-        orderHeaderDao = null;
-        orderDetailDao = null;
-
+        mDokterDao = null;
+        mApotekDao = null;
+        tProgramVisitDao = null;
+        tProgramVisitSubActivityDao = null;
+        tRealisasiVisitPlanDao = null;
+        mUserMappingAreaDao = null;
+        tProgramVisitSubActivityAttachmentDao = null;
+        mCounterDataDao = null;
     }
 }

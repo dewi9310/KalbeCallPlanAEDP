@@ -38,8 +38,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
-import com.kalbe.kalbecallplanaedp.Common.clsLogin;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mConfigData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
@@ -47,12 +48,12 @@ import com.kalbe.kalbecallplanaedp.Common.mUserRole;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
-import com.kalbe.kalbecallplanaedp.Repo.clsLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.adapter.CardAppAdapter;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
@@ -107,6 +108,7 @@ public class PickAccountActivity extends Activity {
     mMenuRepo menuRepo;
     ListView listView;
     View parent_view;
+    private Gson gson;
 
     @Override
     public void onBackPressed() {
@@ -161,19 +163,6 @@ public class PickAccountActivity extends Activity {
         }
 
         mAccountManager = AccountManager.get(getBaseContext());
-//        try {
-//            tokenRepo = new clsTokenRepo(getApplicationContext());
-//            dataToken = (List<clsToken>) tokenRepo.findAll();
-//            if (dataToken.size() == 0) {
-//                new LoginActivity().requestToken(this, true);
-//            }else {
-//                new LoginActivity().checkVersion(this);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
         if (mAuthTokenType == null)
             mAuthTokenType = AUTHTOKEN_TYPE_FULL_ACCESS;
@@ -237,7 +226,7 @@ public class PickAccountActivity extends Activity {
             e.printStackTrace();
         }
         final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyCheckVersion(activity, strLinkAPI, mRequestBody, "Getting your role......", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(activity, strLinkAPI, mRequestBody, "Getting your role......", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
@@ -401,29 +390,33 @@ public class PickAccountActivity extends Activity {
                 Intent res = null;
                 if (response != null) {
                     try {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        gson = gsonBuilder.create();
                         JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
                         JSONObject jsn = jsonObject.getJSONObject("result");
-                        boolean txtStatus = jsn.getBoolean("status");
-                        String txtMessage = jsn.getString("message");
-                        String txtMethode_name = jsn.getString("method_name");
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
 
                         String accessToken = "dummy_access_token";
 
                         if (txtStatus == true){
-                            JSONObject objData = jsonObject.getJSONObject("data");
+                            loginRepo = new mUserLoginRepo(activity);
                             mUserLogin data = new mUserLogin();
-                            data.setIntUserID(objData.getInt("IntUserID"));
-                            data.setTxtUserName(objData.getString("TxtUserName"));
-                            data.setTxtNick(objData.getString("TxtNick"));
-                            data.setTxtEmpID(objData.getString("TxtEmpID"));
-                            data.setTxtEmail(objData.getString("TxtEmail"));
-                            data.setIntDepartmentID(objData.getString("IntDepartmentID"));
-                            data.setIntLOBID(objData.getString("IntLOBID"));
-                            data.setTxtCompanyCode(objData.getString("TxtCompanyCode"));
+                            data.setIntUserID(model.getData().getIntUserID());
+                            data.setTxtUserName(model.getData().getTxtUserName());
+                            data.setTxtNick(model.getData().getTxtNick());
+                            data.setTxtEmpID(model.getData().getTxtEmpID());
+                            data.setTxtEmail(model.getData().getTxtEmail());
+                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
+                            data.setIntLOBID(model.getData().getIntLOBID());
+                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
+//                            data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
+//                            data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");
-//                            new LoginActivity().listMenu(activity);
 
                             datum.putString(AccountManager.KEY_ACCOUNT_NAME, txtUsername);
                             datum.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);

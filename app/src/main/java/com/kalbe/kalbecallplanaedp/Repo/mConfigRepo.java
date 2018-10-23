@@ -21,6 +21,7 @@ public class mConfigRepo {
 //    public String APIToken = "http://10.171.14.10/WebAPITemplate/";
     public String APIToken = "http://10.171.13.50:8013/";
     public String API = "http://10.171.13.50:8013/api/";
+    public String APIKLB = "http://api.karsalintasbuwana.com/";
 
     public mConfigRepo(Context context) {
         DatabaseManager.init(context);
@@ -98,10 +99,34 @@ public class mConfigRepo {
 
         mConfigData data7 = new mConfigData();
         data7.setIntId(7);
-        data7.setTxtName("application_name ");
+        data7.setTxtName("application_name");
         data7.setTxtValue("AEDP Mobile Apps");
         data7.setTxtDefaultValue("AEDP Mobile Apps");
         data7.setIntEditAdmin("1");
         helper.getmConfigDao().createOrUpdate(data7);
+
+        mConfigData data8 = new mConfigData();
+        data8.setIntId(8);
+        data8.setTxtName("Username");
+        data8.setTxtValue("mochalatte-mae-stage");
+        data8.setTxtDefaultValue("1234567890");
+        data8.setIntEditAdmin("1");
+        helper.getmConfigDao().createOrUpdate(data8);
+
+        mConfigData data9 = new mConfigData();
+        data9.setIntId(9);
+        data9.setTxtName("Username");
+        data9.setTxtValue("mochalatte-mae-stage");
+        data9.setTxtDefaultValue("mochalatte-mae-stage");
+        data9.setIntEditAdmin("1");
+        helper.getmConfigDao().createOrUpdate(data9);
+
+        mConfigData data10 = new mConfigData();
+        data10.setIntId(10);
+        data10.setTxtName("Password");
+        data10.setTxtValue("1234567890");
+        data10.setTxtDefaultValue("1234567890");
+        data10.setIntEditAdmin("1");
+        helper.getmConfigDao().createOrUpdate(data10);
     }
 }

@@ -115,4 +115,27 @@ public class tAkuisisiDetailRepo implements crud{
         }
         return item;
     }
+
+    public List<tAkuisisiDetail> getPushAllData(List<tAkuisisiHeader> headerList){
+        List<String> headerIdList = new ArrayList<>();
+        List<tAkuisisiDetail> detailList = new ArrayList<>();
+        tAkuisisiDetail item = new tAkuisisiDetail();
+        QueryBuilder<tAkuisisiDetail, Integer> queryBuilder = null;
+        try {
+            if (headerIdList!=null){
+                if (headerList.size()>0){
+                    for (tAkuisisiHeader header : headerList){
+                        headerIdList.add(header.getTxtHeaderId());
+                    }
+                    queryBuilder = helper.getAkuisisiDetailDao().queryBuilder();
+                    queryBuilder.where().in(item.Property_intHeaderId, headerIdList);
+                    detailList = queryBuilder.query();
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return detailList;
+    }
 }

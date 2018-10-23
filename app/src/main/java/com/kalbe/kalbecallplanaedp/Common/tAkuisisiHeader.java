@@ -37,12 +37,23 @@ public class tAkuisisiHeader implements Serializable {
     public int intOutletId;
     @DatabaseField(columnName = "intAreaId")
     public int intAreaId;
-    @DatabaseField(columnName = "intFlag")
-    public int intFlag;
+    @DatabaseField(columnName = "intFlagPush")
+    public int intFlagPush;
 
     public String Property_intSubSubActivityId = "intSubSubActivityId";
     public String Property_intHeaderId = "intHeaderId";
-    public String Property_intFlag = "intFlag";
+    public String Property_intFlagPush = "intFlagPush";
+
+    public String Property_intSubSubActivityTypeId = "intSubSubActivityTypeId";
+    public String Property_txtNoDoc = "txtNoDoc";
+    public String Property_dtExpiredDate = "dtExpiredDate";
+    public String Property_intUserId = "intUserId";
+    public String Property_intRoleId = "intRoleId";
+    public String Property_intDokterId = "intDokterId";
+    public String Property_intApotekID = "intApotekID";
+    public String Property_intOutletId = "intOutletId";
+    public String Property_intAreaId = "intAreaId";
+    public String Property_ListDataOftAkuisisiHeader = "ListDataOftAkuisisiHeader";
 
     public String getTxtHeaderId() {
         return txtHeaderId;
@@ -148,11 +159,11 @@ public class tAkuisisiHeader implements Serializable {
         this.intApotekID = intApotekID;
     }
 
-    public int getIntFlag() {
-        return intFlag;
+    public int getIntFlagPush() {
+        return intFlagPush;
     }
 
-    public void setIntFlag(int intFlag) {
-        this.intFlag = intFlag;
+    public void setIntFlagPush(int intFlagPush) {
+        this.intFlagPush = intFlagPush;
     }
 }

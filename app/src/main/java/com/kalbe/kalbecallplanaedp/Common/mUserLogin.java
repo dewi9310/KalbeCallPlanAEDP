@@ -21,12 +21,30 @@ public class mUserLogin implements Serializable {
     public String TxtEmpID;
     @DatabaseField(columnName = "TxtEmail")
     public String TxtEmail;
+    @DatabaseField(columnName = "intRoleID")
+    public int intRoleID;
+    @DatabaseField(columnName = "txtRoleName")
+    public String txtRoleName;
     @DatabaseField(columnName = "IntDepartmentID")
-    public String IntDepartmentID;
+    public int IntDepartmentID;
     @DatabaseField(columnName = "IntLOBID")
-    public String IntLOBID;
+    public int IntLOBID;
     @DatabaseField(columnName = "TxtCompanyCode")
     public String TxtCompanyCode;
+
+
+    public String Property_IntUserID = "IntUserID";
+    public String Property_TxtUserName = "TxtUserName";
+    public String Property_TxtNick = "TxtNick";
+    public String Property_TxtEmpID = "TxtEmpID";
+    public String Property_TxtEmail = "TxtEmail";
+    public String Property_intRoleID = "intRoleID";
+    public String Property_txtRoleName = "txtRoleName";
+    public String Property_IntDepartmentID = "IntDepartmentID";
+    public String Property_IntLOBID = "IntLOBID";
+    public String Property_TxtCompanyCode = "TxtCompanyCode";
+    public String Property_ListDatamUserLogin = "ListDatamUserLogin";
+
 
     public int getIntUserID() {
         return IntUserID;
@@ -68,19 +86,19 @@ public class mUserLogin implements Serializable {
         TxtEmail = txtEmail;
     }
 
-    public String getIntDepartmentID() {
+    public int getIntDepartmentID() {
         return IntDepartmentID;
     }
 
-    public void setIntDepartmentID(String intDepartmentID) {
+    public void setIntDepartmentID(int intDepartmentID) {
         IntDepartmentID = intDepartmentID;
     }
 
-    public String getIntLOBID() {
+    public int getIntLOBID() {
         return IntLOBID;
     }
 
-    public void setIntLOBID(String intLOBID) {
+    public void setIntLOBID(int intLOBID) {
         IntLOBID = intLOBID;
     }
 
@@ -91,6 +109,20 @@ public class mUserLogin implements Serializable {
     public void setTxtCompanyCode(String txtCompanyCode) {
         TxtCompanyCode = txtCompanyCode;
     }
-    //    @DatabaseField(columnName = "TxtPassword")
-//    public String TxtPassword;
+
+    public int getIntRoleID() {
+        return intRoleID;
+    }
+
+    public void setIntRoleID(int intRoleID) {
+        this.intRoleID = intRoleID;
+    }
+
+    public String getTxtRoleName() {
+        return txtRoleName;
+    }
+
+    public void setTxtRoleName(String txtRoleName) {
+        this.txtRoleName = txtRoleName;
+    }
 }

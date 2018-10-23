@@ -54,27 +54,25 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
-import com.kalbe.kalbecallplanaedp.Common.clsLogin;
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
+import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
-import com.kalbe.kalbecallplanaedp.Common.mProduct;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
-import com.kalbe.kalbecallplanaedp.Common.tOrderDetail;
-import com.kalbe.kalbecallplanaedp.Common.tOrderHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
-import com.kalbe.kalbecallplanaedp.Repo.clsLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
-import com.kalbe.kalbecallplanaedp.Repo.mProductRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
-import com.kalbe.kalbecallplanaedp.Repo.tOrderDetailRepo;
-import com.kalbe.kalbecallplanaedp.Repo.tOrderHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.mobiledevknlibs.Maps.PopUpMaps;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -321,21 +319,27 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
-                                dialog2.setIndeterminate(true);
-                                dialog2.setMessage("Logging out...");
-                                dialog2.setCancelable(false);
-                                dialog2.show();
-
-                                new Handler().postDelayed(
-                                        new Runnable() {
-                                            public void run() {
-                                                // On complete call either onLoginSuccess or onLoginFailed
-                                                logout();
-                                                // onLoginFailed();
-                                                dialog2.dismiss();
-                                            }
-                                        }, 3000);
+                                try {
+                                    pushData();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+//                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
+//                                dialog2.setIndeterminate(true);
+//                                dialog2.setMessage("Logging out...");
+//                                dialog2.setCancelable(false);
+//                                dialog2.show();
+//
+//                                new Handler().postDelayed(
+//                                        new Runnable() {
+//                                            public void run() {
+//
+//                                                // On complete call either onLoginSuccess or onLoginFailed
+////                                                clearData();
+//                                                // onLoginFailed();
+//                                                dialog2.dismiss();
+//                                            }
+//                                        }, 3000);
                             }
                         });
 
@@ -527,12 +531,38 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         }
     }
 
-    private void logout() {
+    private void clearData() {
         Intent intent = new Intent(MainMenu.this, SplashActivity.class);
         DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
         helper.clearDataAfterLogout();
         finish();
         startActivity(intent);
+    }
+
+    private void pushData() throws JSONException {
+        String versionName = "";
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        clsPushData dtJson = new clsHelperBL().pushData(versionName, getApplicationContext());
+        if (dtJson == null){
+        }else {
+            String linkPushData = new clsHardCode().linkPushData;
+            new clsHelperBL().makeJsonObjectRequestPushData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(String response, Boolean status, String strErrorMsg) {
+
+                }
+            });
+        }
     }
 
     private void selectImageProfile() {
@@ -802,115 +832,5 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 return true;
             }
         }
-    }
-
-
-    protected void addProductAndOrder() {
-        mProduct data = new mProduct();
-        data.setTxtGuiId("1");
-        data.setTxtProductCode("ENT");
-        data.setTxtProductName("Entrasol");
-        data.setTxtPrice((double) 18000);
-
-        mProduct data2 = new mProduct();
-        data2.setTxtGuiId("2");
-        data2.setTxtProductCode("PREN");
-        data2.setTxtProductName("Prenagen");
-        data2.setTxtPrice((double) 25000);
-
-        mProduct data3 = new mProduct();
-        data3.setTxtGuiId("3");
-        data3.setTxtProductCode("MIL");
-        data3.setTxtProductName("Milna Biskuit");
-        data3.setTxtPrice((double) 5000);
-
-        mProduct data4 = new mProduct();
-        data4.setTxtGuiId("4");
-        data4.setTxtProductCode("FTBR");
-        data4.setTxtProductName("Fitbar");
-        data4.setTxtPrice((double) 3000);
-
-        mProduct data5 = new mProduct();
-        data5.setTxtGuiId("5");
-        data5.setTxtProductCode("DTBSL");
-        data5.setTxtProductName("Diabetasol");
-        data5.setTxtPrice((double) 12000);
-
-        mProduct data6 = new mProduct();
-        data6.setTxtGuiId("6");
-        data6.setTxtProductCode("CHLG");
-        data6.setTxtProductName("Chilgo");
-        data6.setTxtPrice((double) 4500);
-
-        mProduct data7 = new mProduct();
-        data7.setTxtGuiId("10");
-        data7.setTxtProductCode("BNCL");
-        data7.setTxtProductName("Benecol");
-        data7.setTxtPrice((double) 3000);
-
-        mProduct data8 = new mProduct();
-        data8.setTxtGuiId("11");
-        data8.setTxtProductCode("ZE");
-        data8.setTxtProductName("Zee");
-        data8.setTxtPrice((double) 15000);
-
-        mProductRepo productRepo = new mProductRepo(getApplicationContext());
-        productRepo.createOrUpdate(data);
-        productRepo.createOrUpdate(data2);
-        productRepo.createOrUpdate(data3);
-        productRepo.createOrUpdate(data4);
-        productRepo.createOrUpdate(data5);
-        productRepo.createOrUpdate(data6);
-        productRepo.createOrUpdate(data7);
-        productRepo.createOrUpdate(data8);
-
-        tOrderHeader dt = new tOrderHeader();
-        dt.setTxtGuiId("1");
-        dt.setTxtNoTransaksi("A-3311");
-
-        tOrderDetail dta = new tOrderDetail();
-        dta.setTxtGuiId(new clsActivity().GenerateGuid());
-        dta.setTxtHeaderID("1");
-        dta.setTxtQuantity("3");
-        dta.setTxtTotalPrice(Double.valueOf("75000"));
-        dta.setProduct(data);
-
-        tOrderDetail dta2 = new tOrderDetail();
-        dta2.setTxtGuiId(new clsActivity().GenerateGuid());
-        dta2.setTxtHeaderID("1");
-        dta2.setTxtQuantity("1");
-        dta2.setTxtTotalPrice(Double.valueOf("18000"));
-        dta2.setProduct(data2);
-
-        tOrderDetail dta3 = new tOrderDetail();
-        dta3.setTxtGuiId(new clsActivity().GenerateGuid());
-        dta3.setTxtHeaderID("1");
-        dta3.setTxtQuantity("4");
-        dta3.setTxtTotalPrice(Double.valueOf("18000"));
-        dta3.setProduct(data3);
-
-        tOrderDetail dta4 = new tOrderDetail();
-        dta4.setTxtGuiId(new clsActivity().GenerateGuid());
-        dta4.setTxtHeaderID("1");
-        dta4.setTxtQuantity("2");
-        dta4.setTxtTotalPrice(Double.valueOf("18000"));
-        dta4.setProduct(data8);
-
-        tOrderDetail dta5 = new tOrderDetail();
-        dta5.setTxtGuiId(new clsActivity().GenerateGuid());
-        dta5.setTxtHeaderID("1");
-        dta5.setTxtQuantity("2");
-        dta5.setTxtTotalPrice(Double.valueOf("18000"));
-        dta5.setProduct(data7);
-
-        tOrderHeaderRepo orderHeaderRepo = new tOrderHeaderRepo(getApplicationContext());
-        tOrderDetailRepo orderDetailRepo = new tOrderDetailRepo(getApplicationContext());
-
-        orderHeaderRepo.createOrUpdate(dt);
-        orderDetailRepo.createOrUpdate(dta);
-        orderDetailRepo.createOrUpdate(dta2);
-        orderDetailRepo.createOrUpdate(dta3);
-        orderDetailRepo.createOrUpdate(dta4);
-        orderDetailRepo.createOrUpdate(dta5);
     }
 }

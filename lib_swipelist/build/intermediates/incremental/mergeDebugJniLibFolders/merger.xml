@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="E:\Real Project\KalbeCallPlanAEDP\lib_swipelist\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="E:\Real Project\KalbeCallPlanAEDP\lib_swipelist\src\debug\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\Real Project\callplan\KalbeCallPlanAEDP\lib_swipelist\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="E:\Real Project\callplan\KalbeCallPlanAEDP\lib_swipelist\src\debug\jniLibs"/></dataSet></merger>

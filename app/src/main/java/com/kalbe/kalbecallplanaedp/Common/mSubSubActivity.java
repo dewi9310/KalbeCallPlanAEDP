@@ -19,8 +19,8 @@ public class mSubSubActivity implements Serializable {
     public String txtName;
     @DatabaseField(columnName = "txtDesc")
     public String txtDesc;
-    @DatabaseField(columnName = "txtType")
-    public String txtType;
+    @DatabaseField(columnName = "intType")
+    public int intType;
 
     public int getIntSubSubActivityid() {
         return intSubSubActivityid;
@@ -54,11 +54,11 @@ public class mSubSubActivity implements Serializable {
         this.txtDesc = txtDesc;
     }
 
-    public String getTxtType() {
-        return txtType;
+    public int getIntType() {
+        return intType;
     }
 
-    public void setTxtType(String txtType) {
-        this.txtType = txtType;
+    public void setIntType(int intType) {
+        this.intType = intType;
     }
 }

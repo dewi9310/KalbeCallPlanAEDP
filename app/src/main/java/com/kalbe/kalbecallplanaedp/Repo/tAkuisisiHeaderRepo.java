@@ -7,6 +7,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class tAkuisisiHeaderRepo implements crud {
         QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId).and().eq(item.Property_intFlag, intFlag);
+            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId).and().eq(item.Property_intFlagPush, intFlag);
             listData = queryBuilder.queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,5 +142,19 @@ public class tAkuisisiHeaderRepo implements crud {
             e.printStackTrace();
         }
         return item;
+    }
+
+    public List<tAkuisisiHeader> getAllPushData () {
+        tAkuisisiHeader item = new tAkuisisiHeader();
+       List<tAkuisisiHeader> listData = new ArrayList<>();
+        QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 }

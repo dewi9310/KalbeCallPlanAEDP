@@ -23,6 +23,12 @@ public class tAkuisisiDetail implements Serializable {
 
     public String Property_txtDetailId = "txtDetailId";
     public String Property_intHeaderId = "txtHeaderId";
+    public String Property_txtImg = "txtImg";
+    public String Property_txtImgName = "txtImgName";
+    public String Property_ListDataOftAkuisisiDetail = "ListDataOftAkuisisiDetail";
+
+
+
     public String getTxtDetailId() {
         return txtDetailId;
     }

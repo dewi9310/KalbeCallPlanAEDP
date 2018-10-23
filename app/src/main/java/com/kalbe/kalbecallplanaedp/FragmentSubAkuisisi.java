@@ -53,6 +53,7 @@ public class FragmentSubAkuisisi extends Fragment {
     View v;
     private ListView mListView;
     private String txtSubAkuisisi;
+    private int intTypeSubSubId;
     int intSubSubId;
     private ViewPager viewPager;
     private LinearLayout layout_dots;
@@ -65,10 +66,12 @@ public class FragmentSubAkuisisi extends Fragment {
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
     private TextView tvNoDoc, tvExpDate;
+    LinearLayout ln_resgistrasi, ln_image;
 
-    public FragmentSubAkuisisi(String txtSubAkuisisi, int intSubSubId){
+    public FragmentSubAkuisisi(String txtSubAkuisisi, int intSubSubId, int intTypeSubSubId){
         this.txtSubAkuisisi = txtSubAkuisisi;
         this.intSubSubId = intSubSubId;
+        this.intTypeSubSubId = intTypeSubSubId;
     }
 
         @Nullable
@@ -79,7 +82,14 @@ public class FragmentSubAkuisisi extends Fragment {
             viewPager = (ViewPager) v.findViewById(R.id.view_pager_subakuisisi);
             tvNoDoc = (TextView) v.findViewById(R.id.title_subakuisisi);
             tvExpDate = (TextView) v.findViewById(R.id.tv_exp_date_sub);
+            ln_image = (LinearLayout) v.findViewById(R.id.ln_image_sub_akuisisi);
+            ln_resgistrasi = (LinearLayout) v.findViewById(R.id.ln_resgistrasi_sub_akuisisi);
 
+            if (intTypeSubSubId ==1){
+                ln_resgistrasi.setVisibility(View.GONE);
+            }else if (intTypeSubSubId==2){
+                ln_image.setVisibility(View.GONE);
+            }
             headerRepo = new tAkuisisiHeaderRepo(getContext());
             detailRepo = new tAkuisisiDetailRepo(getContext());
 
@@ -207,15 +217,6 @@ public class FragmentSubAkuisisi extends Fragment {
                     }
                 }
             });
-//            lyt_parent.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(final View v) {
-//                    if (onItemClickListener != null) {
-//                        onItemClickListener.onItemClick(v, o);
-//                    }
-//                }
-//            });
-
             ((ViewPager) container).addView(v);
 
             return v;

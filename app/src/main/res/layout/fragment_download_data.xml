@@ -101,7 +101,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="92776"
+                                    android:id="@+id/tv_count_branch"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -110,7 +111,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/tv_download_branch"
-                                    android:text="Branch"
+                                    android:text="Area"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                     android:textColor="@color/grey_40" />
 
@@ -137,7 +138,7 @@
                         app:cardElevation="2dp">
 
                         <LinearLayout
-                            android:id="@+id/ln_outlet_download"
+                            android:id="@+id/ln_download_apotek"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
@@ -176,8 +177,9 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
+                                    android:id="@+id/tv_count_apotek"
                                     android:layout_weight="1"
-                                    android:text="52791"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -185,8 +187,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Outlet"
-                                    android:id="@+id/tv_download_outlet"
+                                    android:text="Apotek"
+                                    android:id="@+id/tv_download_apotek"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                     android:textColor="@color/grey_40" />
 
@@ -222,7 +224,7 @@
                         app:cardElevation="2dp">
 
                         <LinearLayout
-                            android:id="@+id/ln_call_plan_download"
+                            android:id="@+id/ln_download_dokter"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
@@ -245,7 +247,7 @@
                                     android:layout_height="20dp"
                                     android:layout_centerInParent="true"
                                     android:tint="@android:color/white"
-                                    app:srcCompat="@mipmap/ic_assigment" />
+                                    app:srcCompat="@mipmap/ic_dokter" />
 
                             </RelativeLayout>
 
@@ -262,7 +264,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="4000+"
+                                    android:id="@+id/tv_count_dokter"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -270,7 +273,8 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Call Plan"
+                                    android:id="@+id/tv_download_dokter"
+                                    android:text="Dokter"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                     android:textColor="@color/grey_40" />
 
@@ -337,7 +341,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="4429"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -361,6 +365,331 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spacing_middle" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_xsmall"
+                        android:layout_marginLeft="@dimen/spacing_xsmall"
+                        android:layout_marginRight="@dimen/spacing_xsmall"
+                        android:layout_marginTop="@dimen/spacing_xsmall"
+                        android:layout_weight="1"
+                        android:visibility="visible"
+                        app:cardCornerRadius="2dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:id="@+id/ln_download_activity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_large">
+
+                            <RelativeLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@color/blue_300"
+                                    app:srcCompat="@drawable/shape_circle" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@android:color/white"
+                                    app:srcCompat="@mipmap/ic_activity" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="@dimen/spacing_middle"
+                                android:layout_height="0dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_count_download_activity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:text="0"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@color/grey_60"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tv_download_activity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Activity"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                    android:textColor="@color/grey_40" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <View
+                        android:layout_width="@dimen/spacing_middle"
+                        android:layout_height="0dp" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_xsmall"
+                        android:layout_marginLeft="@dimen/spacing_xsmall"
+                        android:layout_marginRight="@dimen/spacing_xsmall"
+                        android:layout_marginTop="@dimen/spacing_xsmall"
+                        android:layout_weight="1"
+                        android:visibility="visible"
+                        app:cardCornerRadius="2dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:id="@+id/ln_download_subactivity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_large">
+
+                            <RelativeLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@color/red_100"
+                                    app:srcCompat="@drawable/shape_circle" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@android:color/white"
+                                    app:srcCompat="@mipmap/ic_subactivity" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="@dimen/spacing_middle"
+                                android:layout_height="0dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="0dp"
+                                    android:id="@+id/tv_count_download_subactivity"
+                                    android:layout_weight="1"
+                                    android:text="0"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@color/grey_60"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/tv_download_subactivity"
+                                    android:text="Sub Activity"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                    android:textColor="@color/grey_40" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/spacing_middle"
+                    android:paddingRight="@dimen/spacing_middle">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_xsmall"
+                        android:layout_marginLeft="@dimen/spacing_xsmall"
+                        android:layout_marginRight="@dimen/spacing_xsmall"
+                        android:layout_marginTop="@dimen/spacing_xsmall"
+                        android:layout_weight="1"
+                        android:visibility="visible"
+                        app:cardCornerRadius="2dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:id="@+id/ln_download_subsub_activity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_large">
+
+                            <RelativeLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@color/green_A700"
+                                    app:srcCompat="@drawable/shape_circle" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_centerInParent="true"
+                                    android:tint="@android:color/white"
+                                    app:srcCompat="@mipmap/ic_subsubactivity" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="@dimen/spacing_middle"
+                                android:layout_height="0dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="0dp"
+                                    android:id="@+id/tv_count_download_subsubactivity"
+                                    android:layout_weight="1"
+                                    android:text="0"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@color/grey_60"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/tv_download_subsubactivity"
+                                    android:text="Sub Sub Activity"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                    android:textColor="@color/grey_40" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <View
+                        android:layout_width="@dimen/spacing_middle"
+                        android:layout_height="0dp" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_xsmall"
+                        android:layout_marginLeft="@dimen/spacing_xsmall"
+                        android:layout_marginRight="@dimen/spacing_xsmall"
+                        android:layout_marginTop="@dimen/spacing_xsmall"
+                        android:layout_weight="1"
+                        android:visibility="visible"
+                        app:cardCornerRadius="2dp"
+                        app:cardElevation="2dp">
+
+                        <!--<LinearLayout-->
+                            <!--android:id="@+id/ln_download_typesub_activity"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:clickable="true"-->
+                            <!--android:orientation="horizontal"-->
+                            <!--android:padding="@dimen/spacing_large">-->
+
+                            <!--<RelativeLayout-->
+                                <!--android:layout_width="40dp"-->
+                                <!--android:layout_height="40dp">-->
+
+                                <!--<ImageView-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="match_parent"-->
+                                    <!--android:layout_centerInParent="true"-->
+                                    <!--android:tint="@color/pink_300"-->
+                                    <!--app:srcCompat="@drawable/shape_circle" />-->
+
+                                <!--<ImageView-->
+                                    <!--android:layout_width="20dp"-->
+                                    <!--android:layout_height="20dp"-->
+                                    <!--android:layout_centerInParent="true"-->
+                                    <!--android:tint="@android:color/white"-->
+                                    <!--app:srcCompat="@mipmap/ic_type_activity_white" />-->
+
+                            <!--</RelativeLayout>-->
+
+                            <!--<View-->
+                                <!--android:layout_width="@dimen/spacing_middle"-->
+                                <!--android:layout_height="0dp" />-->
+
+                            <!--<LinearLayout-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:orientation="vertical">-->
+
+                                <!--<TextView-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="0dp"-->
+                                    <!--android:id="@+id/tv_count_download_typesubsubactivity"-->
+                                    <!--android:layout_weight="1"-->
+                                    <!--android:text="4429"-->
+                                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"-->
+                                    <!--android:textColor="@color/grey_60"-->
+                                    <!--android:textStyle="bold" />-->
+
+                                <!--<TextView-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:id="@+id/tv_download_typesubsubactivity"-->
+                                    <!--android:text="Master Type Sub Sub Activity"-->
+                                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"-->
+                                    <!--android:textColor="@color/grey_40" />-->
+
+                            <!--</LinearLayout>-->
+
+                        <!--</LinearLayout>-->
+
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spacing_middle" />
             </LinearLayout>
 
             <LinearLayout
@@ -405,7 +734,7 @@
                         app:cardElevation="2dp">
 
                         <LinearLayout
-                            android:id="@+id/ln_branchtr_download"
+                            android:id="@+id/ln_download"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
@@ -444,7 +773,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="92776"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -519,7 +848,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="52791"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -603,7 +932,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="4000+"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -678,7 +1007,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="4429"
+                                    android:text="0"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                     android:textColor="@color/grey_60"
                                     android:textStyle="bold" />
@@ -713,8 +1042,6 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
-                    android:clickable="true"
-                    android:id="@+id/ln_download_all"
                     android:paddingLeft="@dimen/spacing_middle"
                     android:paddingRight="@dimen/spacing_middle">
 
@@ -730,10 +1057,12 @@
                         app:cardElevation="2dp">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:id="@+id/ln_download_all"
                             android:layout_gravity="center"
-                            android:gravity="center_vertical"
+                            android:gravity="center"
                             android:orientation="horizontal"
                             android:padding="@dimen/spacing_large">
 
@@ -766,14 +1095,14 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="4000+"
-                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                                    android:textColor="@color/grey_60"
-                                    android:textStyle="bold" />
+                                <!--<TextView-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="0dp"-->
+                                    <!--android:layout_weight="1"-->
+                                    <!--android:text="0"-->
+                                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"-->
+                                    <!--android:textColor="@color/grey_60"-->
+                                    <!--android:textStyle="bold" />-->
 
                                 <TextView
                                     android:layout_width="wrap_content"

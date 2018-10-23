@@ -44,6 +44,7 @@ import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.mobiledevknlibs.InputFilter.InputFilters;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
@@ -143,24 +144,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
-        //change view
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        int height = size.y;
-//        int heightForm =(int) Math.round(0.3 * height);
-//        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.ln_form_login2);
-//
-//        // get layout parameters for that view
-//        ViewGroup.LayoutParams params = mainLayout.getLayoutParams();
-//
-//        // change height of the params e.g. 480dp
-//        params.height = heightForm;
-//
-//        // initialize new parameters for my element
-//        mainLayout.setLayoutParams(new LinearLayout.LayoutParams(params));
 
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -429,25 +413,30 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 if (response != null) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
                         JSONObject jsn = jsonObject.getJSONObject("result");
-                        boolean txtStatus = jsn.getBoolean("status");
-                        String txtMessage = jsn.getString("message");
-                        String txtMethode_name = jsn.getString("method_name");
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
 
                         String accessToken = "dummy_access_token";
 
                         if (txtStatus == true){
                             loginRepo = new mUserLoginRepo(getApplicationContext());
-                            JSONObject objData = jsonObject.getJSONObject("data");
+//                            JSONObject objData = jsonObject.getJSONObject("data");
                             mUserLogin data = new mUserLogin();
-                            data.setIntUserID(objData.getInt("IntUserID"));
-                            data.setTxtUserName(objData.getString("TxtUserName"));
-                            data.setTxtNick(objData.getString("TxtNick"));
-                            data.setTxtEmpID(objData.getString("TxtEmpID"));
-                            data.setTxtEmail(objData.getString("TxtEmail"));
-                            data.setIntDepartmentID(objData.getString("IntDepartmentID"));
-                            data.setIntLOBID(objData.getString("IntLOBID"));
-                            data.setTxtCompanyCode(objData.getString("TxtCompanyCode"));
+                            data.setIntUserID(model.getData().getIntUserID());
+                            data.setTxtUserName(model.getData().getTxtUserName());
+                            data.setTxtNick(model.getData().getTxtNick());
+                            data.setTxtEmpID(model.getData().getTxtEmpID());
+                            data.setTxtEmail(model.getData().getTxtEmail());
+                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
+                            data.setIntLOBID(model.getData().getIntLOBID());
+                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
+                            if (model.getData().getMUserRole()!=null){
+                                data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
+                                data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
+                            }
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");
@@ -531,7 +520,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             e.printStackTrace();
         }
         final String mRequestBody = resJson.toString();
-       new clsHelperBL().volleyCheckVersion(LoginActivity.this, strLinkAPI, mRequestBody, "Getting your role......", new VolleyResponseListener() {
+       new clsHelperBL().volleyLogin(LoginActivity.this, strLinkAPI, mRequestBody, "Getting your role......", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();

@@ -51,11 +51,13 @@ public class FragmentAkuisisi extends Fragment{
         NamaTab.add("SIP");
         NamaTab.add("STR");
         NamaTab.add("KKI Online");
+        NamaTab.add("Registrasi");
 
         MapTab.put("KTP/SIM", 1);
         MapTab.put("SIP", 2);
         MapTab.put("STR", 3);
         MapTab.put("KKI Online", 4);
+        MapTab.put("Registrasi", 5);
 
         setupViewPager(customViewPager);
         tabLayout.setupWithViewPager(customViewPager);
@@ -88,8 +90,15 @@ public class FragmentAkuisisi extends Fragment{
     }
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        List<Integer> type = new ArrayList<>();
+        type.add(1);
+        type.add(1);
+        type.add(1);
+        type.add(1);
+        type.add(2);
+
         for (int i =0; i < NamaTab.size(); i++){
-            adapter.addFragment(new FragmentSubAkuisisi(NamaTab.get(i), MapTab.get(NamaTab.get(i))), NamaTab.get(i));
+            adapter.addFragment(new FragmentSubAkuisisi(NamaTab.get(i), MapTab.get(NamaTab.get(i)), type.get(i)), NamaTab.get(i));
         }
 
 //        adapter.addFragment(new FragmentSubAkuisisi("testing2", "testing222"), "testing222");
