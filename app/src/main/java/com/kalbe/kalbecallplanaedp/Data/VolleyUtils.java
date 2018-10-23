@@ -273,8 +273,8 @@ public class VolleyUtils {
                 if (mRequestBody.getFileName()!=null){
                     if (mRequestBody.getFileName().size()>0){
                         for (int i = 0; i< mRequestBody.getFileName().size(); i++){
-                            String fileName = mRequestBody.getFileName().get(0).toString();
-                            params.put("image" + i, new DataPart("file_image" + i +".jpg", mRequestBody.getFileUpload().get(fileName),"image/jpeg"));
+                            String fileName = mRequestBody.getFileName().get(i).toString();
+                            params.put(fileName, new DataPart(fileName + ".jpg", mRequestBody.getFileUpload().get(fileName),"image/jpeg"));
 //                            params.put("image1", new DataPart("file_image1.jpg", mRequestBody.getFileUpload().get("FUAbsen-1"), "image/jpeg"));
                         }
 

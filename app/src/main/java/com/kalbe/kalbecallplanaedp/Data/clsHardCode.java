@@ -48,7 +48,7 @@ public class clsHardCode {
     public String linkSubSubActivity = new  mConfigRepo(context).API + "downloadSubActivityDetail";
     public String linkDownloadArea = new mConfigRepo(context).API + "downloadtMappingArea";
     public String linkProgramVisit = new mConfigRepo(context).API + "downloadtProgramVisit";
-    public String linkPushData = "http://10.171.14.7/APIAEDP/api/PushAllData";
+    public String linkPushData = "http://10.171.14.16/APIAEDP/api/PushAllData";
 
     /*Link klik apotek*/
     public String linkApotek = new mConfigRepo(context).APIKLB +"mae/apotek";

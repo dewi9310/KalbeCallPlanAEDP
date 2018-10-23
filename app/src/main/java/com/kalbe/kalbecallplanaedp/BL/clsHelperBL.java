@@ -98,8 +98,8 @@ public class clsHelperBL {
                 dtPush.setListDataOftAkuisisiDetail(ListOftAkuisisiDetailData);
                 for (tAkuisisiDetail data : ListOftAkuisisiDetailData){
                     if (data.getTxtImg()!=null){
-                        FileName.add(data.getTxtImgName());
-                        FileUpload.put(data.getTxtImgName(), data.getTxtImg());
+                        FileName.add(data.getTxtDetailId());
+                        FileUpload.put(data.getTxtDetailId(), data.getTxtImg());
                     }
                 }
             }
