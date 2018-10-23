@@ -3,7 +3,6 @@ package com.kalbe.kalbecallplanaedp;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,17 +60,16 @@ import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
+import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
-import com.kalbe.mobiledevknlibs.Maps.PopUpMaps;
 
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -551,7 +548,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         if (dtJson == null){
         }else {
             String linkPushData = new clsHardCode().linkPushData;
-            new clsHelperBL().makeJsonObjectRequestPushData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
+            new VolleyUtils().makeJsonObjectRequestPushData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -562,8 +559,20 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                 }
             });
+            /*new clsHelperBL().volleyRequestSendData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+
+                }
+
+                @Override
+                public void onResponse(String response, Boolean status, String strErrorMsg) {
+
+                }
+            });*/
         }
     }
+
 
     private void selectImageProfile() {
         final CharSequence[] items = { "Ambil Foto", "Pilih dari Galeri",

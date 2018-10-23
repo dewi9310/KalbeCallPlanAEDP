@@ -3,7 +3,6 @@ package com.kalbe.kalbecallplanaedp.BL;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.provider.SyncStateContract;
 import android.util.Base64;
 import android.widget.Toast;
 
@@ -28,7 +27,6 @@ import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Data.enumCounterData;
-import com.kalbe.kalbecallplanaedp.LoginActivity;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mCounterDataRepo;
@@ -281,6 +279,74 @@ public class clsHelperBL {
             e.printStackTrace();
         }
         return dtToken;
+    }
+    public void volleyRequestSendData(final Context ctx,String strLinkAPI, final clsPushData mRequestBody, final VolleyResponseListener listener) {
+        final mConfigRepo configRepo = new mConfigRepo(ctx);
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        try {
+            mConfigData configDataClient = (mConfigData) configRepo.findById(4);
+            clientId = configDataClient.getTxtDefaultValue().toString();
+            dataToken = getDataToken(ctx);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        com.kalbe.kalbecallplanaedp.Data.VolleyMultipartRequest multipartRequest = new com.kalbe.kalbecallplanaedp.Data.VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Boolean status = false;
+                String errorMessage = null;
+                listener.onResponse(response.toString(), status, errorMessage);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String strLinkRequestToken = new clsHardCode().linkToken;
+                NetworkResponse networkResponse = error.networkResponse;
+
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                try {
+                    final String mRequestBody2 = "[" +  mRequestBody.getDataJson().txtJSON().toString() + "]";
+                    params.put("txtParam", mRequestBody2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access from real path
+                // for now just get bitmap data from ImageView
+                if (mRequestBody.getFileUpload().get("input_struk") != null){
+                    params.put("ImageStruk.jpg", new DataPart("ImageStruk.jpg", mRequestBody.getFileUpload().get("input_struk"), "image/jpeg"));
+                }
+
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                dataToken = getDataToken(ctx);
+                access_token = dataToken.get(0).getTxtUserToken();
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + access_token);
+
+                return headers;
+            }
+        };
+        multipartRequest.setRetryPolicy(new
+                DefaultRetryPolicy(500000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        queue.add(multipartRequest);
     }
     public void volleyLogin(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final VolleyResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
