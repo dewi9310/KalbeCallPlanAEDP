@@ -12,15 +12,18 @@ import java.io.Serializable;
 @DatabaseTable
 public class mSubSubActivity implements Serializable {
     @DatabaseField(id = true,columnName = "intSubSubActivityid")
-    public int intSubSubActivityid;
+    private int intSubSubActivityid;
     @DatabaseField(columnName = "intSubActivityid")
-    public int intSubActivityid;
+    private int intSubActivityid;
     @DatabaseField(columnName = "txtName")
-    public String txtName;
+    private String txtName;
     @DatabaseField(columnName = "txtDesc")
-    public String txtDesc;
+    private String txtDesc;
     @DatabaseField(columnName = "intType")
-    public int intType;
+    private int intType;
+
+    public String Property_intSubActivityid = "intSubActivityid";
+    public String Property_intType = "intType";
 
     public int getIntSubSubActivityid() {
         return intSubSubActivityid;

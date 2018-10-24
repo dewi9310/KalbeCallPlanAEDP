@@ -12,10 +12,22 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.mActivity;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Model.clsListItemAdapter;
+import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +48,13 @@ public class FragmentListCallPlan extends Fragment{
     private Toolbar toolbar;
     clsMainBL _clsMainBL=null;
     private String DT_CALL_PLAN = "dtCallPlan";
+    List<tRealisasiVisitPlan> listRealisasi;
+    List<tProgramVisit> listVisitHeader;
+    List<tProgramVisitSubActivity> listVisitDetail;
+    tRealisasiVisitPlanRepo repoRealisasi;
+    tProgramVisitRepo repoProgramVisit;
+    tProgramVisitSubActivityRepo repoProgramVisitSubActivity;
+    mActivityRepo repoActivity;
 
 
     @Nullable
@@ -46,33 +65,104 @@ public class FragmentListCallPlan extends Fragment{
         fab = (FloatingActionButton) v.findViewById(R.id.fab_add_unplan);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        clsListItemAdapter swpItem;
-        _clsMainBL=new clsMainBL();
+        repoProgramVisit = new tProgramVisitRepo(getContext());
+        repoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+        repoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
+        repoActivity = new mActivityRepo(getContext());
+        try {
+            listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        listDataHeader.clear();
+        listDataChild.clear();
         swipeListPlan.clear();
         swipeListUnplan.clear();
-        swpItem = new clsListItemAdapter();
-        swpItem.setTxtTittle("Visit Dokter");
-        swpItem.setTxtSubTittle("Visit Dokter Fauziyah");
-        swpItem.setTxtDate("02-10-2018");
-        swpItem.setIntColor(R.color.purple_600);
-        swpItem.setBoolSection(false);
-        swpItem.setTxtImgName("PL");
-        swipeListPlan.add(swpItem);
-        swpItem = new clsListItemAdapter();
-        swpItem.setTxtTittle("Visit Dokter");
-        swpItem.setTxtSubTittle("Visit Dokter Azizah");
-        swpItem.setTxtDate("02-10-2018");
-        swpItem.setIntColor(getResources().getColor(R.color.blue_500));
-        swpItem.setBoolSection(false);
-        swpItem.setTxtImgName("NP");
-        swipeListUnplan.add(swpItem);
+        if (listRealisasi!=null){
+            if (listRealisasi.size()>0){
+                for (tRealisasiVisitPlan data : listRealisasi){
+                    clsListItemAdapter swpItem =  new clsListItemAdapter();
+                    if (data.getIntPlanType()==1){
+                        mActivity dtActivity = null;
+                        try {
+                            dtActivity = (mActivity) repoActivity.findById(data.getIntVisitType());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        if (dtActivity!=null){
+                            swpItem.setTxtTittle(dtActivity.getTxtName());
+                            if (dtActivity.getIntActivityId()==1){
+                                swpItem.setTxtSubTittle(data.getTxtDokterName());
+                            }else if (dtActivity.getIntActivityId()==2){
+                                swpItem.setTxtSubTittle(data.getTxtApotekName());
+                            }
+                        }else {
+                            swpItem.setTxtTittle("");
+                            swpItem.setTxtSubTittle("");
+                        }
+//                        swpItem.setTxtTittle("Visit Dokter");
+//                        swpItem.setTxtSubTittle("Visit Dokter Fauziyah");
+                        swpItem.setTxtDate(parseDate(data.getDtDateRealisasi()));
+                        swpItem.setIntColor(R.color.purple_600);
+                        swpItem.setBoolSection(false);
+                        swpItem.setTxtImgName("PL");
+                        swipeListPlan.add(swpItem);
+                    }else if (data.getIntPlanType()==2){
+                        mActivity dtActivity = null;
+                        try {
+                            dtActivity = (mActivity) repoActivity.findById(data.getIntVisitType());
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        if (dtActivity!=null){
+                            swpItem.setTxtTittle(dtActivity.getTxtName());
+                            if (dtActivity.getIntActivityId()==1){
+                                swpItem.setTxtSubTittle(data.getTxtDokterName());
+                            }else if (dtActivity.getIntActivityId()==2){
+                                swpItem.setTxtSubTittle(data.getTxtApotekName());
+                            }
+                        }else {
+                            swpItem.setTxtTittle("");
+                            swpItem.setTxtSubTittle("");
+                        }
+//                        swpItem.setTxtTittle("Visit Dokter");
+//                        swpItem.setTxtSubTittle("Visit Dokter Azizah");
+                        swpItem.setTxtDate(parseDate(data.getDtDateRealisasi()));
+                        swpItem.setIntColor(getResources().getColor(R.color.blue_500));
+                        swpItem.setBoolSection(false);
+                        swpItem.setTxtImgName("NP");
+                        swipeListUnplan.add(swpItem);
+                    }
+                }
 
-        listDataHeader.clear();
-        listDataHeader.add("Plan");
-        listDataHeader.add("Unplan");
-        listDataChild.clear();
-        listDataChild.put(listDataHeader.get(0), swipeListPlan);
-        listDataChild.put(listDataHeader.get(1), swipeListUnplan);
+                listDataHeader.add("Plan");
+                listDataHeader.add("Unplan");
+                listDataChild.put(listDataHeader.get(0), swipeListPlan);
+                listDataChild.put(listDataHeader.get(1), swipeListUnplan);
+            }
+        }
+
+//        clsListItemAdapter swpItem;
+//        _clsMainBL=new clsMainBL();
+
+//        swpItem = new clsListItemAdapter();
+//        swpItem.setTxtTittle("Visit Dokter");
+//        swpItem.setTxtSubTittle("Visit Dokter Fauziyah");
+//        swpItem.setTxtDate("02-10-2018");
+//        swpItem.setIntColor(R.color.purple_600);
+//        swpItem.setBoolSection(false);
+//        swpItem.setTxtImgName("PL");
+//        swipeListPlan.add(swpItem);
+//        swpItem = new clsListItemAdapter();
+//        swpItem.setTxtTittle("Visit Dokter");
+//        swpItem.setTxtSubTittle("Visit Dokter Azizah");
+//        swpItem.setTxtDate("02-10-2018");
+//        swpItem.setIntColor(getResources().getColor(R.color.blue_500));
+//        swpItem.setBoolSection(false);
+//        swpItem.setTxtImgName("NP");
+//        swipeListUnplan.add(swpItem);
+
+
 
         mExpandableListAdapter = new com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
         mExpandableListView.setAdapter(mExpandableListAdapter);
@@ -96,7 +186,6 @@ public class FragmentListCallPlan extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
                 toolbar.setTitle("Add Call Plan Unplan");
 
                 FragmentAddUnplan fragmentAddUnplan = new FragmentAddUnplan();
@@ -106,6 +195,18 @@ public class FragmentListCallPlan extends Fragment{
             }
         });
         return v;
+    }
+
+    private String parseDate(String dateExp){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateExp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateFormat.format(date);
     }
 
 }

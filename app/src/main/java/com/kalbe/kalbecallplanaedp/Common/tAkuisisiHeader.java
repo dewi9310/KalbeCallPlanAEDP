@@ -33,8 +33,8 @@ public class tAkuisisiHeader implements Serializable {
     public  int intDokterId;
     @DatabaseField(columnName = "intApotekID")
     public String intApotekID;
-    @DatabaseField(columnName = "intOutletId")
-    public int intOutletId;
+//    @DatabaseField(columnName = "intOutletId")
+//    public int intOutletId;
     @DatabaseField(columnName = "intAreaId")
     public int intAreaId;
     @DatabaseField(columnName = "intFlagPush")
@@ -51,7 +51,7 @@ public class tAkuisisiHeader implements Serializable {
     public String Property_intRoleId = "intRoleId";
     public String Property_intDokterId = "intDokterId";
     public String Property_intApotekID = "intApotekID";
-    public String Property_intOutletId = "intOutletId";
+//    public String Property_intOutletId = "intOutletId";
     public String Property_intAreaId = "intAreaId";
     public String Property_ListDataOftAkuisisiHeader = "ListDataOftAkuisisiHeader";
 
@@ -118,14 +118,14 @@ public class tAkuisisiHeader implements Serializable {
     public void setIntDokterId(int intDokterId) {
         this.intDokterId = intDokterId;
     }
-
-    public int getIntOutletId() {
-        return intOutletId;
-    }
-
-    public void setIntOutletId(int intOutletId) {
-        this.intOutletId = intOutletId;
-    }
+//
+//    public int getIntOutletId() {
+//        return intOutletId;
+//    }
+//
+//    public void setIntOutletId(int intOutletId) {
+//        this.intOutletId = intOutletId;
+//    }
 
     public int getIntAreaId() {
         return intAreaId;

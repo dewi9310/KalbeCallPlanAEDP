@@ -3,11 +3,13 @@ package com.kalbe.kalbecallplanaedp.Repo;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,4 +87,32 @@ public class mSubSubActivityRepo implements crud{
         }
         return items;
     }
+
+    public List<mSubSubActivity> findBySubActivityId(int intSubActivityid) throws SQLException {
+        mSubSubActivity item = new mSubSubActivity();
+        List<mSubSubActivity> listData = new ArrayList<>();
+        QueryBuilder<mSubSubActivity, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getmSubSubActivityDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+    public List<mSubSubActivity> findBySubActivityIdAndTypeId(int intSubActivityid, int intTypeId) throws SQLException {
+        mSubSubActivity item = new mSubSubActivity();
+        List<mSubSubActivity> listData = new ArrayList<>();
+        QueryBuilder<mSubSubActivity, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getmSubSubActivityDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid).and().eq(item.Property_intType, intTypeId);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
 }

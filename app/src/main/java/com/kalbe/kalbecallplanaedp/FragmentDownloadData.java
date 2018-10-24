@@ -66,6 +66,7 @@ import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadApotek.DownlaodApote
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadDokter.DownloadDokter;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadSubActivity.DownloadSubActivity;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadSubActivityDetail.DownloadSubActivityDetail;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadTRealisasi.DownloadTRealisasi;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadmActivity.DownloadmActivity;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtMappingArea.DownloadtMappingArea;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit.DownloadtProgramVisit;
@@ -78,9 +79,11 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
@@ -96,9 +99,9 @@ public class FragmentDownloadData extends Fragment{
 
     ArrayAdapter<String> dataAdapter;
     List<String> itemList = new ArrayList<>();
-    private LinearLayout ln_download_all, ln_branch_downlaod, ln_download_apotek,ln_download_dokter, ln_download_activity,ln_download_subactivity,ln_download_subsub_activity, ln_download_typesub_activity;
-    private  TextView tv_download_branch, tv_download_apotek,tv_download_dokter, tv_download_activity, tv_download_subactivity, tv_download_subsubactivity, tv_download_typesubsubactivity;
-    private TextView tv_count_apotek,tv_count_branch,tv_count_dokter, tv_count_download_activity,tv_count_download_subactivity, tv_count_download_subsubactivity, tv_count_download_typesubsubactivity;
+    private LinearLayout ln_download_all, ln_branch_downlaod, ln_download_apotek,ln_download_dokter, ln_download_activity,ln_download_subactivity,ln_download_subsub_activity, ln_download_realisasi;
+    private  TextView tv_download_branch, tv_download_apotek,tv_download_dokter, tv_download_activity, tv_download_subactivity, tv_download_subsubactivity, tv_download_typesubsubactivity, tv_download_realisasi;
+    private TextView tv_count_apotek,tv_count_branch,tv_count_dokter, tv_count_download_activity,tv_count_download_subactivity, tv_count_download_subsubactivity, tv_count_realisasi;
     private Gson gson;
     List<clsToken> dataToken;
     clsTokenRepo tokenRepo;
@@ -141,6 +144,7 @@ public class FragmentDownloadData extends Fragment{
         ln_download_activity = (LinearLayout)v.findViewById(R.id.ln_download_activity);
         ln_download_subactivity = (LinearLayout)v.findViewById(R.id.ln_download_subactivity);
         ln_download_subsub_activity = (LinearLayout)v.findViewById(R.id.ln_download_subsub_activity);
+        ln_download_realisasi = (LinearLayout)v.findViewById(R.id.ln_download_realisasi);
 //        ln_download_typesub_activity = (LinearLayout)v.findViewById(R.id.ln_download_typesub_activity);
 
         /*nama download*/
@@ -150,6 +154,7 @@ public class FragmentDownloadData extends Fragment{
         tv_download_activity = (TextView)v.findViewById(R.id.tv_download_activity);
         tv_download_subactivity = (TextView)v.findViewById(R.id.tv_download_subactivity);
         tv_download_subsubactivity = (TextView)v.findViewById(R.id.tv_download_subsubactivity);
+        tv_download_realisasi = (TextView)v.findViewById(R.id.tv_download_realisasi);
 //        tv_download_typesubsubactivity = (TextView)v.findViewById(R.id.tv_download_typesubsubactivity);
 
         /*count*/
@@ -159,6 +164,7 @@ public class FragmentDownloadData extends Fragment{
         tv_count_download_activity = (TextView) v.findViewById(R.id.tv_count_download_activity);
         tv_count_download_subactivity = (TextView) v.findViewById(R.id.tv_count_download_subactivity);
         tv_count_download_subsubactivity = (TextView) v.findViewById(R.id.tv_count_download_subsubactivity);
+        tv_count_realisasi = (TextView)v.findViewById(R.id.tv_count_realisasi);
 //        tv_count_download_typesubsubactivity = (TextView)v.findViewById(R.id.tv_count_download_typesubsubactivity);
 
 
@@ -207,6 +213,11 @@ public class FragmentDownloadData extends Fragment{
             dataListProgramVist = (List<tProgramVisit>) dtRepoProgramVisit.findAll();
             if (dataListProgramVist!=null){
 
+            }
+
+            dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
+            if (dataListRealisasi!=null){
+                tv_count_realisasi.setText(String.valueOf(dataListRealisasi.size()));
             }
 //            dataListTypeSubSubActivity = (List<mTypeSubSubActivity>) dtRepoTypeSubSubActivity.findAll();
 //            if (dataListTypeSubSubActivity!=null){
@@ -354,6 +365,30 @@ public class FragmentDownloadData extends Fragment{
             }
         });
 
+        ln_download_realisasi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemList.clear();
+                try {
+                    dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (dataListRealisasi!=null){
+                    if (dataListRealisasi.size()>0){
+                        int index = 0;
+                        for (tRealisasiVisitPlan data : dataListRealisasi){
+                            index++;
+                            itemList.add(String.valueOf(index)+ " - " + data.getTxtRealisasiVisitId());
+                        }
+                    }else {
+                        itemList.add(" - ");
+                    }
+                }
+                onButtonOnClick(ln_download_realisasi, tv_download_realisasi, "tRealisasiVisitPlan");
+            }
+        });
+
 //        ln_download_typesub_activity.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -441,6 +476,8 @@ public class FragmentDownloadData extends Fragment{
         } else if (txtDownlaod.equals("mUserMappingArea")){
             downloadArea();
         } else if (txtDownlaod.equals("tProgramVisit")){
+
+        } else if (txtDownlaod.equals("tRealisasiVisitPlan")){
             downloadtCallPlan();
         }
 
@@ -1023,6 +1060,39 @@ public class FragmentDownloadData extends Fragment{
                                     }
                                 }
                             }
+                            if (model.getData().getRealisasiData()!=null){
+                                if (model.getData().getRealisasiData().size()>0){
+                                    dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+                                    for (int i = 0; i <model.getData().getRealisasiData().size(); i++){
+                                        tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+                                        data.setTxtProgramVisitId(model.getData().getRealisasiData().get(i).getTxtProgramVisitId());
+                                        data.setTxtRealisasiVisitId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                        data.setIntVisitType(model.getData().getRealisasiData().get(i).getIntVisitType());
+                                        data.setIntPlanType(model.getData().getRealisasiData().get(i).getIntPlanType());
+                                        data.setIntRoleID(model.getData().getRealisasiData().get(i).getIntRoleId());
+                                        data.setTxtDokterId(model.getData().getRealisasiData().get(i).getTxtDokterId());
+                                        data.setIntUserId(model.getData().getRealisasiData().get(i).getIntUserId());
+                                        data.setTxtDokterName(model.getData().getRealisasiData().get(i).getTxtNamaDokter());
+                                        data.setTxtApotekId(model.getData().getRealisasiData().get(i).getTxtApotekId());
+                                        data.setTxtApotekName(model.getData().getRealisasiData().get(i).getTxtNamaApotek());
+                                        data.setDtCheckIn(parseDate(model.getData().getRealisasiData().get(i).getDtCheckin()));
+                                        data.setDtCheckOut(parseDate(model.getData().getRealisasiData().get(i).getDtChekout()));
+                                        data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
+                                        data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
+                                        data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
+                                        data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
+                                        data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
+                                        data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
+                                        data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
+//                                        data.setBlobImg1(model.getData().getRealisasiData().get(i).);
+//                                        data.setBlobImg2();
+                                        dtRepoRealisasi.createOrUpdate(data);
+                                        itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                    }
+                                }
+                                dataAdapter.notifyDataSetChanged();
+                                tv_count_realisasi.setText(String.valueOf(model.getData().getRealisasiData().size()));
+                            }
                             Log.d("Data info", "Success Download");
 
                         } else {
@@ -1036,5 +1106,102 @@ public class FragmentDownloadData extends Fragment{
                 }
             }
         });
+    }
+    private void downloadtRealisasiCallPlan() {
+        String strLinkAPI = new clsHardCode().linkRealisasiVisit;
+        JSONObject resJson = new JSONObject();
+        try {
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", ParamDownloadMaster());
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+        new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        DownloadTRealisasi model = gson.fromJson(jsonObject.toString(), DownloadTRealisasi.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
+                        if (txtStatus == true){
+                            itemList.clear();
+                            if (model.getData().getRealisasiData()!=null){
+                                if (model.getData().getRealisasiData().size()>0){
+                                    dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+                                    for (int i = 0; i <model.getData().getRealisasiData().size(); i++){
+                                        tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+                                        data.setTxtProgramVisitId(model.getData().getRealisasiData().get(i).getTxtProgramVisitId());
+                                        data.setTxtRealisasiVisitId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                        data.setIntVisitType(model.getData().getRealisasiData().get(i).getIntVisitType());
+                                        data.setIntPlanType(model.getData().getRealisasiData().get(i).getIntPlanType());
+                                        data.setIntRoleID(model.getData().getRealisasiData().get(i).getIntRoleId());
+                                        data.setTxtDokterId(model.getData().getRealisasiData().get(i).getTxtDokterId());
+                                        data.setIntUserId(model.getData().getRealisasiData().get(i).getIntUserId());
+                                        data.setTxtDokterName(model.getData().getRealisasiData().get(i).getTxtNamaDokter());
+                                        data.setTxtApotekId(model.getData().getRealisasiData().get(i).getTxtApotekId());
+                                        data.setTxtApotekName(model.getData().getRealisasiData().get(i).getTxtNamaApotek());
+                                        data.setDtCheckIn(model.getData().getRealisasiData().get(i).getDtCheckin());
+                                        data.setDtCheckOut(model.getData().getRealisasiData().get(i).getDtChekout());
+                                        data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
+                                        data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
+                                        data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
+                                        data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
+                                        data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
+                                        data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
+                                        data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
+//                                        data.setBlobImg1(model.getData().getRealisasiData().get(i).);
+//                                        data.setBlobImg2();
+                                        dtRepoRealisasi.createOrUpdate(data);
+                                        itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                    }
+                                }
+                                dataAdapter.notifyDataSetChanged();
+                                tv_count_realisasi.setText(String.valueOf(model.getData().getRealisasiData().size()));
+                            }
+                            Log.d("Data info", "Success Download");
+
+                        } else {
+                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private String parseDate(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
+
     }
 }

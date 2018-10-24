@@ -15,6 +15,7 @@ import com.kalbe.mobiledevknlibs.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Dewi Oktaviani on 1/8/2018.
@@ -98,13 +99,17 @@ public class CustomDatePicker {
 
     public static String formatDate(DatePicker dp, int format){
         String date = "";
+        SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
+        String month_name = month_date.format(calendar.getTime());
         String month2 = clsMainExlActivity.months[dp.getMonth() + 1];
         switch (format){
             case 0:
-                date = String.valueOf(dp.getDayOfMonth()) + " - " + month2 + " - " + String.valueOf(dp.getYear());
+                date = String.valueOf(dp.getDayOfMonth()) + " - " + month_name + " - " + String.valueOf(dp.getYear());
                 break;
             case 1:
-                date = String.valueOf(dp.getDayOfMonth()) + " " + month2 + " " + String.valueOf(dp.getYear());
+                date = String.valueOf(dp.getDayOfMonth()) + " " + month_name + " " + String.valueOf(dp.getYear());
                 break;
             case 2:
                 date = String.valueOf(dp.getYear()) + "/" + String.valueOf(dp.getMonth() + 1) + "/"+ String.valueOf(dp.getDayOfMonth())  ;

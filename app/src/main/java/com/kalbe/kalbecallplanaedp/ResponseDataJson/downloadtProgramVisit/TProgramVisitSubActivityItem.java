@@ -1,51 +1,19 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
-import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
-
-@Generated("com.robohorse.robopojogenerator")
 public class TProgramVisitSubActivityItem{
-
-	@SerializedName("txtApotekName")
 	private String txtApotekName;
-
-	@SerializedName("intType")
 	private int intType;
-
-	@SerializedName("txtProgramVisitSubActivityId")
 	private String txtProgramVisitSubActivityId;
-
-	@SerializedName("txtAreaName")
 	private String txtAreaName;
-
-	@SerializedName("txtDokterId")
 	private String txtDokterId;
-
-	@SerializedName("txtNotes")
 	private String txtNotes;
-
-	@SerializedName("txtDokterName")
 	private String txtDokterName;
-
-	@SerializedName("txtProgramVisitId")
 	private String txtProgramVisitId;
-
-	@SerializedName("txtApotekId")
 	private String txtApotekId;
-
-	@SerializedName("intActivityId")
 	private int intActivityId;
-
-	@SerializedName("intSubActivityId")
 	private int intSubActivityId;
-
-	@SerializedName("txtAreaId")
 	private String txtAreaId;
-
-	@SerializedName("dtStart")
 	private String dtStart;
-
-	@SerializedName("dtEnd")
 	private String dtEnd;
 
 	public void setTxtApotekName(String txtApotekName){
