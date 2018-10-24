@@ -53,7 +53,7 @@ public class FragmentPushData extends Fragment{
     }
 
     private void pushData() throws JSONException {
-        String versionName = "";
+        String versionName = "";  
         try {
             versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e2) {
