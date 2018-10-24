@@ -81,7 +81,7 @@ public class tRealisasiVisitPlan implements Serializable{
     public String Property_txtImgName2 = "txtImgName2";
     public String Property_blobImg2 = "blobImg2";
     public String Property_intFlagPush = "intFlagPush";
-    private String Property_intStatusRealisasi = "intStatusRealisasi";
+    public String Property_intStatusRealisasi = "intStatusRealisasi";
     public String Property_ListOfDatatRealisasiVisitPlan = "ListOfDatatRealisasiVisitPlan";
 
     public String getTxtRealisasiVisitId() {
@@ -258,5 +258,13 @@ public class tRealisasiVisitPlan implements Serializable{
 
     public void setIntFlagPush(int intFlagPush) {
         this.intFlagPush = intFlagPush;
+    }
+
+    public String getIntStatusRealisasi() {
+        return intStatusRealisasi;
+    }
+
+    public void setIntStatusRealisasi(String intStatusRealisasi) {
+        this.intStatusRealisasi = intStatusRealisasi;
     }
 }

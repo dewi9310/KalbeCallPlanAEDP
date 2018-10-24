@@ -7,8 +7,10 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,5 +99,19 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
             e.printStackTrace();
         }
         return item;
+    }
+
+    public List<tRealisasiVisitPlan> getAllPushData () {
+        tRealisasiVisitPlan item = new tRealisasiVisitPlan();
+        List<tRealisasiVisitPlan> listData = new ArrayList<>();
+        QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 }

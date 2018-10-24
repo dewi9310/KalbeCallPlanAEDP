@@ -23,6 +23,7 @@ import com.kalbe.kalbecallplanaedp.Common.mCounterData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
@@ -33,6 +34,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mCounterDataRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.mobiledevknlibs.Volley.volley.VolleyMultipartRequest;
 
@@ -83,10 +85,12 @@ public class clsHelperBL {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            tRealisasiVisitPlanRepo _tRealisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
             tAkuisisiHeaderRepo _tAkuisisiHeaderRepo = new tAkuisisiHeaderRepo(context);
             tAkuisisiDetailRepo _tAkuisisiDetailRepo = new tAkuisisiDetailRepo(context);
 
 
+            List<tRealisasiVisitPlan> ListoftRealisasiVisitData = _tRealisasiVisitPlanRepo.getAllPushData();
             List<tAkuisisiHeader> ListOftAkuisisiHeaderData = _tAkuisisiHeaderRepo.getAllPushData();
             List<tAkuisisiDetail> ListOftAkuisisiDetailData = _tAkuisisiDetailRepo.getPushAllData(ListOftAkuisisiHeaderData);
 
@@ -100,6 +104,20 @@ public class clsHelperBL {
                     if (data.getTxtImg()!=null){
                         FileName.add(data.getTxtDetailId());
                         FileUpload.put(data.getTxtDetailId(), data.getTxtImg());
+                    }
+                }
+            }
+
+            if (ListoftRealisasiVisitData!=null){
+                dtPush.setListOfDatatRealisasiVisitPlan(ListoftRealisasiVisitData);
+                for (tRealisasiVisitPlan data : ListoftRealisasiVisitData){
+                    if (data.getBlobImg1()!=null){
+                        FileName.add("Visit" + data.getTxtRealisasiVisitId() + "-1");
+                        FileUpload.put("Visit" + data.getTxtRealisasiVisitId() + "-1", data.getBlobImg1());
+                    }
+                    if (data.getBlobImg2()!=null){
+                        FileName.add("Visit" + data.getTxtRealisasiVisitId() + "-2");
+                        FileUpload.put("Visit" + data.getTxtRealisasiVisitId() + "-2", data.getBlobImg2());
                     }
                 }
             }

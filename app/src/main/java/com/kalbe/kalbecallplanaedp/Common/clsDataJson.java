@@ -170,6 +170,37 @@ public class clsDataJson {
             }
         }
 
+        if (this.getListOfDatatRealisasiVisitPlan()!=null){
+            tRealisasiVisitPlan dataRealisasi = new tRealisasiVisitPlan();
+            itemLIstQuery = new ArrayList<>();
+            for (tRealisasiVisitPlan data : this.getListOfDatatRealisasiVisitPlan()){
+                JSONObject item = new JSONObject();
+                item.put(dataRealisasi.Property_txtRealisasiVisitId, String.valueOf(data.getTxtRealisasiVisitId()));
+                item.put(dataRealisasi.Property_txtProgramVisitId, String.valueOf(data.getTxtProgramVisitId()));
+                item.put(dataRealisasi.Property_intVisitType, String.valueOf(data.getIntVisitType()));
+                item.put(dataRealisasi.Property_intPlanType, String.valueOf(data.getIntPlanType()));
+                item.put(dataRealisasi.Property_intUserId, String.valueOf(data.getIntUserId()));
+                item.put(dataRealisasi.Property_intRoleID, String.valueOf(data.getIntRoleID()));
+                item.put(dataRealisasi.Property_txtDokterId, String.valueOf(data.getTxtDokterId()));
+                item.put(dataRealisasi.Property_txtDokterName, String.valueOf(data.getTxtDokterName()));
+                item.put(dataRealisasi.Property_txtApotekId, String.valueOf(data.getTxtApotekId()));
+                item.put(dataRealisasi.Property_txtApotekName, String.valueOf(data.getTxtApotekName()));
+                item.put(dataRealisasi.Property_dtCheckIn, String.valueOf(data.getDtCheckIn()));
+                item.put(dataRealisasi.Property_dtCheckOut, String.valueOf(data.getDtCheckOut()));
+                item.put(dataRealisasi.Property_dtDateRealisasi, String.valueOf(data.getDtDateRealisasi()));
+                item.put(dataRealisasi.Property_intNumberRealisasi, String.valueOf(dataRealisasi.getIntNumberRealisasi()));
+                item.put(dataRealisasi.Property_txtAcc, String.valueOf(data.getTxtAcc()));
+                item.put(dataRealisasi.Property_txtLong, String.valueOf(data.getTxtLong()));
+                item.put(dataRealisasi.Property_txtLat, String.valueOf(data.getTxtLat()));
+                item.put(dataRealisasi.Property_txtImgName1, String.valueOf(data.getTxtImgName1()));
+                item.put(dataRealisasi.Property_txtImgName2, String.valueOf(data.getTxtImgName2()));
+                item.put(dataRealisasi.Property_intStatusRealisasi, String.valueOf(data.getIntStatusRealisasi()));
+                item.put(dataRealisasi.Property_blobImg1, String.valueOf(data.getBlobImg1()));
+                item.put(dataRealisasi.Property_blobImg2, String.valueOf(data.getBlobImg2()));
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataRealisasi.Property_ListOfDatatRealisasiVisitPlan, new JSONArray(itemLIstQuery));
+        }
         if (this.getListDataOftAkuisisiHeader()!=null){
             tAkuisisiHeader dataAkuisisiHeader = new tAkuisisiHeader();
             itemLIstQuery  = new ArrayList<>();
@@ -184,7 +215,7 @@ public class clsDataJson {
                 item.put(dataAkuisisiHeader.Property_intRoleId, String.valueOf(data.getIntRoleId()));
                 item.put(dataAkuisisiHeader.Property_intDokterId, String.valueOf(data.getIntDokterId()));
                 item.put(dataAkuisisiHeader.Property_intApotekID, String.valueOf(data.getIntApotekID()));
-                item.put(dataAkuisisiHeader.Property_intOutletId, String.valueOf(data.getIntOutletId()));
+//                item.put(dataAkuisisiHeader.Property_intOutletId, String.valueOf(data.getIntOutletId()));
                 item.put(dataAkuisisiHeader.Property_intAreaId, String.valueOf(data.getIntAreaId()));
                 itemLIstQuery.add(item);
             }
