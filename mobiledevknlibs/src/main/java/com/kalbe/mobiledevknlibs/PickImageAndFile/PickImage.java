@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
@@ -154,4 +157,122 @@ public class PickImage {
         return file;
     }
 
+    public static byte[] getByteImageToSaveRotate(Context context, Uri uri) {
+        byte[] imgPhoto = null;
+        try {
+            Bitmap bitmap = PickImage.decodeStreamReturnBitmap(context, uri);
+            ExifInterface exif = null;
+            String path = uri.toString();
+            if (path.startsWith("file://")) {
+                exif = new ExifInterface(path);
+            }
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (path.startsWith("content://")) {
+                    InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                    exif = new ExifInterface(inputStream);
+                }
+            }
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            Bitmap rotatedBitmap = rotateBitmap(bitmap, orientation);
+
+            ByteArrayOutputStream output = null;
+
+            try {
+                output = new ByteArrayOutputStream();
+                rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            } catch (Exception var15) {
+                var15.printStackTrace();
+            } finally {
+                try {
+                    if(output != null) {
+                        output.close();
+                    }
+                } catch (IOException var14) {
+                    var14.printStackTrace();
+                }
+
+            }
+
+            imgPhoto = output.toByteArray();
+        } catch (NullPointerException var17) {
+            var17.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imgPhoto;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+
+            return bmRotated;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static int Orientation (Context context, Uri uri){
+        ExifInterface exif = null;
+        String path = uri.toString();
+        if (path.startsWith("file://")) {
+            try {
+                exif = new ExifInterface(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (path.startsWith("content://")) {
+                InputStream inputStream = null;
+                try {
+                    inputStream = context.getContentResolver().openInputStream(uri);
+                    exif = new ExifInterface(inputStream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        return orientation;
+    }
 }
