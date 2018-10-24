@@ -1193,6 +1193,7 @@ public class FragmentDownloadData extends Fragment{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
         Date date = null;
         try {
+            if (dateParse!=""||dateParse!=null)
             date = sdf.parse(dateParse);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1202,6 +1203,5 @@ public class FragmentDownloadData extends Fragment{
         }else {
             return "";
         }
-
     }
 }

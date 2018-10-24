@@ -312,11 +312,16 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = null;
         try {
+            if (dateExp!=""||dateExp!=null)
             date = dateFormat.parse(dateExp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return sdf.format(date);
+        if (date!=null){
+            return sdf.format(date);
+        }else {
+            return "";
+        }
     }
 
     private String parseDate(String dateExp){
@@ -324,11 +329,16 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = null;
         try {
+            if (dateExp!=""||dateExp!=null)
             date = sdf.parse(dateExp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return dateFormat.format(date);
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
     }
 
     private void dialogDatePickerLight() {
