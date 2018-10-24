@@ -46,11 +46,17 @@ import android.widget.TextView;
 
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.mActivity;
+import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsListImageAdapter;
+import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
@@ -71,6 +77,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,6 +116,12 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetail dtDetail = new tAkuisisiDetail();
     List<tAkuisisiDetail> listDetail = new ArrayList<>();
+    mSubActivity _mSubActivity;
+    List<mSubSubActivity> _mSubSubActivity;
+    mActivity _mActivity;
+    mSubSubActivityRepo subSubActivityRepo;
+    mSubActivityRepo subActivityRepo;
+    mActivityRepo activityRepo;
 
     @Nullable
     @Override
@@ -126,18 +140,22 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         lv_akuisisi.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 3), true));
         lv_akuisisi.setHasFixedSize(true);
 
-        NamaTab.add("Select One");
-        NamaTab.add("KTP/SIM");
-        NamaTab.add("SIP");
-        NamaTab.add("STR");
-        NamaTab.add("KKI Online");
 
-        MapTab.put("Select One", 0);
-        MapTab.put("KTP/SIM", 1);
-        MapTab.put("SIP", 2);
-        MapTab.put("STR", 3);
-        MapTab.put("KKI Online", 4);
+        subSubActivityRepo = new mSubSubActivityRepo(getContext());
+        try {
+            _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(1, 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        if (_mSubSubActivity!=null&&_mSubSubActivity.size()>0){
+            NamaTab.add("Select One");
+            MapTab.put("Select One", 0);
+            for (int i = 0; i < _mSubSubActivity.size(); i++){
+                NamaTab.add(_mSubSubActivity.get(i).getTxtName());
+                MapTab.put(_mSubSubActivity.get(i).getTxtName(), _mSubSubActivity.get(i).getIntSubSubActivityid());
+            }
+        }
 
         // Initializing an ArrayAdapter with initial text like select one
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
@@ -209,7 +227,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 
                                 tAkuisisiHeader dt = new tAkuisisiHeader();
                                 dt.setTxtHeaderId(new clsActivity().GenerateGuid());
-                                dt.setDtExpiredDate(etDtExpired.getText().toString());
+                                dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
                                 dt.setTxtNoDoc(etNoDoc.getText().toString());
                                 dt.setIntFlagPush(new clsHardCode().Draft);
                                 dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
@@ -239,7 +257,8 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                         }else {
                             tAkuisisiHeader dt = new tAkuisisiHeader();
                             dt.setTxtHeaderId(dtHeader.getTxtHeaderId());
-                            dt.setDtExpiredDate(etDtExpired.getText().toString());
+//                            dt.setDtExpiredDate(etDtExpired.getText().toString());
+                            dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
                             dt.setTxtNoDoc(etNoDoc.getText().toString());
                             dt.setIntFlagPush(new clsHardCode().Save);
                             dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
@@ -287,6 +306,31 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         return v;
     }
 
+    private String parseDateTime(String dateExp){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateExp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return sdf.format(date);
+    }
+
+    private String parseDate(String dateExp){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date = null;
+        try {
+            date = sdf.parse(dateExp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateFormat.format(date);
+    }
+
     private void dialogDatePickerLight() {
         Calendar cur_calender = Calendar.getInstance();
         DatePickerDialog datePicker = DatePickerDialog.newInstance(
@@ -317,9 +361,12 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         try {
             dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
             if (dtHeader!=null){
-                etDtExpired.setText(dtHeader.getDtExpiredDate());
+                etDtExpired.setText(parseDate(dtHeader.getDtExpiredDate()));
                 etNoDoc.setText(dtHeader.getTxtNoDoc());
                 listDetail =  (List<tAkuisisiDetail>) dtDetailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+            }else {
+                etDtExpired.setText("");
+                etNoDoc.setText("");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -392,9 +439,13 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         try {
             dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
             if (dtHeader!=null){
-                etDtExpired.setText(dtHeader.getDtExpiredDate());
+//                etDtExpired.setText(dtHeader.getDtExpiredDate());
+                etDtExpired.setText(parseDate(dtHeader.getDtExpiredDate()));
                 etNoDoc.setText(dtHeader.getTxtNoDoc());
                 listDetail =  (List<tAkuisisiDetail>) dtDetailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+            }else {
+                etDtExpired.setText("");
+                etNoDoc.setText("");
             }
         } catch (SQLException e) {
             e.printStackTrace();

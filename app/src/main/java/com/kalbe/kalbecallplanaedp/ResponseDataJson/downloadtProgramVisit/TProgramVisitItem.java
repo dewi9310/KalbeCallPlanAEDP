@@ -1,33 +1,13 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
-import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
-
-@Generated("com.robohorse.robopojogenerator")
 public class TProgramVisitItem{
-
-	@SerializedName("intUserId")
 	private int intUserId;
-
-	@SerializedName("intRoleId")
 	private int intRoleId;
-
-	@SerializedName("txtNotes")
 	private String txtNotes;
-
-	@SerializedName("txtProgramVisitId")
 	private String txtProgramVisitId;
-
-	@SerializedName("intType")
 	private int intType;
-
-	@SerializedName("intStatus")
 	private int intStatus;
-
-	@SerializedName("dtStart")
 	private String dtStart;
-
-	@SerializedName("dtEnd")
 	private String dtEnd;
 
 	public void setIntUserId(int intUserId){

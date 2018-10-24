@@ -1,5 +1,6 @@
 package com.kalbe.kalbecallplanaedp;
 
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,11 +9,20 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
+import com.kalbe.kalbecallplanaedp.Common.clsPushData;
+import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
+import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -24,16 +34,60 @@ public class FragmentPushData extends Fragment{
     View v;
 
     private TableLayout tablePushData;
+    Button button_push_data;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_push_data, container, false);
         tablePushData = (TableLayout) v.findViewById(R.id.tablePushData);
+        button_push_data = (Button)v.findViewById(R.id.button_push_data);
         ListData();
+        button_push_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         return v;
     }
 
+    private void pushData() throws JSONException {
+        String versionName = "";
+        try {
+            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        clsPushData dtJson = new clsHelperBL().pushData(versionName, getContext());
+        if (dtJson == null){
+        }else {
+            String linkPushData = new clsHardCode().linkPushData;
+            new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(String response, Boolean status, String strErrorMsg) {
+
+                }
+            });
+            /*new clsHelperBL().volleyRequestSendData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+
+                }
+
+                @Override
+                public void onResponse(String response, Boolean status, String strErrorMsg) {
+
+                }
+            });*/
+        }
+    }
     private void ListData(){
         tablePushData.removeAllViews();
 //        clsMobile_trVisitPlan_Detail _clsMobile_trVisitPlan_Detail=new clsMobile_trVisitPlan_Detail();

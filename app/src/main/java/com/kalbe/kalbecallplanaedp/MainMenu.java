@@ -3,6 +3,7 @@ package com.kalbe.kalbecallplanaedp;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -316,27 +318,27 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    pushData();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-//                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
-//                                dialog2.setIndeterminate(true);
-//                                dialog2.setMessage("Logging out...");
-//                                dialog2.setCancelable(false);
-//                                dialog2.show();
-//
-//                                new Handler().postDelayed(
-//                                        new Runnable() {
-//                                            public void run() {
-//
-//                                                // On complete call either onLoginSuccess or onLoginFailed
-////                                                clearData();
-//                                                // onLoginFailed();
-//                                                dialog2.dismiss();
-//                                            }
-//                                        }, 3000);
+//                                try {
+//                                    pushData();
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
+                                dialog2.setIndeterminate(true);
+                                dialog2.setMessage("Logging out...");
+                                dialog2.setCancelable(false);
+                                dialog2.show();
+
+                                new Handler().postDelayed(
+                                        new Runnable() {
+                                            public void run() {
+
+                                                // On complete call either onLoginSuccess or onLoginFailed
+                                                clearData();
+                                                // onLoginFailed();
+                                                dialog2.dismiss();
+                                            }
+                                        }, 3000);
                             }
                         });
 

@@ -13,49 +13,51 @@ import java.io.Serializable;
 @DatabaseTable
 public class tRealisasiVisitPlan implements Serializable{
     @DatabaseField(id = true, columnName = "txtRealisasiVisitId")
-    public String txtRealisasiVisitId;
+    private String txtRealisasiVisitId;
     @DatabaseField(columnName = "txtProgramVisitId")
-    public String txtProgramVisitId;
+    private String txtProgramVisitId;
     @DatabaseField(columnName = "intVisitType")
-    public int intVisitType;
+    private int intVisitType;
     @DatabaseField(columnName = "intPlanType")
-    public int intPlanType;
+    private int intPlanType;
     @DatabaseField(columnName = "intUserId")
-    public int intUserId;
+    private int intUserId;
     @DatabaseField(columnName = "intRoleId")
-    public int intRoleID;
+    private int intRoleID;
     @DatabaseField(columnName = "txtDokterId")
-    public String txtDokterId;
+    private String txtDokterId;
     @DatabaseField(columnName = "txtDokterName")
-    public String txtDokterName;
+    private String txtDokterName;
     @DatabaseField(columnName = "txtApotekId")
-    public String txtApotekId;
+    private String txtApotekId;
     @DatabaseField(columnName = "txtApotekName")
-    public String txtApotekName;
+    private String txtApotekName;
     @DatabaseField(columnName = "dtCheckIn")
-    public String dtCheckIn;
+    private String dtCheckIn;
     @DatabaseField(columnName = "dtCheckOut")
-    public String dtCheckOut;
+    private String dtCheckOut;
     @DatabaseField(columnName = "dtDateRealisasi")
-    public String dtDateRealisasi;
+    private String dtDateRealisasi;
     @DatabaseField(columnName = "intNumberRealisasi")
-    public int intNumberRealisasi;
+    private int intNumberRealisasi;
     @DatabaseField(columnName = "txtAcc")
-    public String txtAcc;
+    private String txtAcc;
     @DatabaseField(columnName = "txtLong")
-    public String txtLong;
+    private String txtLong;
     @DatabaseField(columnName = "txtLat")
-    public String txtLat;
+    private String txtLat;
     @DatabaseField(columnName = "txtImgName1")
-    public String txtImgName1;
+    private String txtImgName1;
     @DatabaseField(columnName = "blobImg1", dataType = DataType.BYTE_ARRAY)
-    public byte[] blobImg1;
+    private byte[] blobImg1;
     @DatabaseField(columnName = "txtImgName2")
-    public String txtImgName2;
+    private String txtImgName2;
     @DatabaseField(columnName = "blobImg2", dataType = DataType.BYTE_ARRAY)
-    public byte[] blobImg2;
+    private byte[] blobImg2;
+    @DatabaseField(columnName = "intStatusRealisasi")
+    private String intStatusRealisasi;
     @DatabaseField(columnName = "intFlagPush")
-    public int intFlagPush;
+    private int intFlagPush;
 
     public String Property_txtRealisasiVisitId = "txtRealisasiVisitId";
     public String Property_txtProgramVisitId = "txtProgramVisitId";
@@ -79,6 +81,7 @@ public class tRealisasiVisitPlan implements Serializable{
     public String Property_txtImgName2 = "txtImgName2";
     public String Property_blobImg2 = "blobImg2";
     public String Property_intFlagPush = "intFlagPush";
+    private String Property_intStatusRealisasi = "intStatusRealisasi";
     public String Property_ListOfDatatRealisasiVisitPlan = "ListOfDatatRealisasiVisitPlan";
 
     public String getTxtRealisasiVisitId() {

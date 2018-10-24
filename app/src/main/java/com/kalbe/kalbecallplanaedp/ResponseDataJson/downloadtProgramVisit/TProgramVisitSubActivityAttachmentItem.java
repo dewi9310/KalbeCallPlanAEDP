@@ -1,24 +1,10 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
-import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
-
-@Generated("com.robohorse.robopojogenerator")
 public class TProgramVisitSubActivityAttachmentItem{
-
-	@SerializedName("txtFilePath")
 	private String txtFilePath;
-
-	@SerializedName("txtNoDocument")
 	private String txtNoDocument;
-
-	@SerializedName("txtProgramVisitSubActivityAttachmentId")
 	private String txtProgramVisitSubActivityAttachmentId;
-
-	@SerializedName("txtProgramVisitSubActivityId")
 	private String txtProgramVisitSubActivityId;
-
-	@SerializedName("dtExpiredDate")
 	private String dtExpiredDate;
 
 	public void setTxtFilePath(String txtFilePath){

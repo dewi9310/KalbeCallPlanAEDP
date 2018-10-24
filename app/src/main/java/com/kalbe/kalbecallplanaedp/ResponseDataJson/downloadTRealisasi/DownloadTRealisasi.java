@@ -1,7 +1,15 @@
-package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
+package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadTRealisasi;
 
-public class DownloadtProgramVisit{
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
+public class DownloadTRealisasi{
+
+	@SerializedName("result")
 	private Result result;
+
+	@SerializedName("data")
 	private Data data;
 
 	public void setResult(Result result){
@@ -23,7 +31,7 @@ public class DownloadtProgramVisit{
 	@Override
  	public String toString(){
 		return 
-			"DownloadtProgramVisit{" + 
+			"DownloadTRealisasi{" + 
 			"result = '" + result + '\'' + 
 			",data = '" + data + '\'' + 
 			"}";

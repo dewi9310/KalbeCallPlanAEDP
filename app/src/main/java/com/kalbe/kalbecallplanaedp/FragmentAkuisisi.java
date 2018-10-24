@@ -14,11 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.kalbe.kalbecallplanaedp.Common.mActivity;
+import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
+import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomTablayout;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +43,13 @@ public class FragmentAkuisisi extends Fragment{
     public static final int DIALOG_QUEST_CODE = 2018;
     public List<String> NamaTab = new ArrayList<>();
     public HashMap<String, Integer> MapTab = new HashMap<>();
+    mSubActivity _mSubActivity;
+    List<mSubSubActivity> _mSubSubActivity;
+    mActivity _mActivity;
+    mSubSubActivityRepo subSubActivityRepo;
+    mSubActivityRepo subActivityRepo;
+    mActivityRepo activityRepo;
+
 
     @Nullable
     @Override
@@ -47,17 +61,16 @@ public class FragmentAkuisisi extends Fragment{
         fab = (FloatingActionButton) v.findViewById(R.id.fab_akuisisi);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
 
-        NamaTab.add("KTP/SIM");
-        NamaTab.add("SIP");
-        NamaTab.add("STR");
-        NamaTab.add("KKI Online");
-        NamaTab.add("Registrasi");
+        subSubActivityRepo = new mSubSubActivityRepo(getContext());
+        try {
+            _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        MapTab.put("KTP/SIM", 1);
-        MapTab.put("SIP", 2);
-        MapTab.put("STR", 3);
-        MapTab.put("KKI Online", 4);
-        MapTab.put("Registrasi", 5);
+        if (_mSubSubActivity!=null&&_mSubSubActivity.size()>0){
+
+        }
 
         setupViewPager(customViewPager);
         tabLayout.setupWithViewPager(customViewPager);
@@ -68,8 +81,8 @@ public class FragmentAkuisisi extends Fragment{
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             String txtSubSubActivity = bundle.getString(SUB_SUB_ACTIVITY);
-            for (int i=0; i<NamaTab.size(); i++){
-                if (NamaTab.get(i)==txtSubSubActivity)
+            for (int i=0; i<_mSubSubActivity.size(); i++){
+                if (_mSubSubActivity.get(i).getTxtName()==txtSubSubActivity)
                     customViewPager.setCurrentItem(i);
             }
 
@@ -80,9 +93,8 @@ public class FragmentAkuisisi extends Fragment{
             public void onClick(View v) {
                 final int iterator = customViewPager.getCurrentItem();
                 Bundle bundle = new Bundle();
-                bundle.putString(SUB_SUB_ACTIVITY, NamaTab.get(iterator));
+                bundle.putString(SUB_SUB_ACTIVITY, _mSubSubActivity.get(iterator).getTxtName());
                 Tools.intentFragmentSetArgument(FragmentAddAkuisisi.class, "Add Akuisisi", getContext(), bundle);
-//                showDialogFullScreen();
             }
         });
 
@@ -90,18 +102,9 @@ public class FragmentAkuisisi extends Fragment{
     }
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        List<Integer> type = new ArrayList<>();
-        type.add(1);
-        type.add(1);
-        type.add(1);
-        type.add(1);
-        type.add(2);
-
-        for (int i =0; i < NamaTab.size(); i++){
-            adapter.addFragment(new FragmentSubAkuisisi(NamaTab.get(i), MapTab.get(NamaTab.get(i)), type.get(i)), NamaTab.get(i));
+        for (int i =0; i < _mSubSubActivity.size(); i++){
+            adapter.addFragment(new FragmentSubAkuisisi(_mSubSubActivity.get(i).getTxtName(), _mSubSubActivity.get(i).getIntSubSubActivityid(), _mSubSubActivity.get(i).getIntType()), _mSubSubActivity.get(i).getTxtName());
         }
-
-//        adapter.addFragment(new FragmentSubAkuisisi("testing2", "testing222"), "testing222");
         viewPager.setAdapter(adapter);
     }
 

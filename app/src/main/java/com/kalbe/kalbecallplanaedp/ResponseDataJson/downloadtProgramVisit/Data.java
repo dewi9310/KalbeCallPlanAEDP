@@ -1,19 +1,11 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
 import java.util.List;
-import javax.annotation.Generated;
-import com.google.gson.annotations.SerializedName;
 
-@Generated("com.robohorse.robopojogenerator")
 public class Data{
-
-	@SerializedName("tProgramVisit")
 	private List<TProgramVisitItem> tProgramVisit;
-
-	@SerializedName("tProgramVisitSubActivity")
 	private List<TProgramVisitSubActivityItem> tProgramVisitSubActivity;
-
-	@SerializedName("tProgramVisitSubActivityAttachment")
+	private List<RealisasiDataItem> realisasiData;
 	private List<TProgramVisitSubActivityAttachmentItem> tProgramVisitSubActivityAttachment;
 
 	public void setTProgramVisit(List<TProgramVisitItem> tProgramVisit){
@@ -32,6 +24,14 @@ public class Data{
 		return tProgramVisitSubActivity;
 	}
 
+	public void setRealisasiData(List<RealisasiDataItem> realisasiData){
+		this.realisasiData = realisasiData;
+	}
+
+	public List<RealisasiDataItem> getRealisasiData(){
+		return realisasiData;
+	}
+
 	public void setTProgramVisitSubActivityAttachment(List<TProgramVisitSubActivityAttachmentItem> tProgramVisitSubActivityAttachment){
 		this.tProgramVisitSubActivityAttachment = tProgramVisitSubActivityAttachment;
 	}
@@ -46,6 +46,7 @@ public class Data{
 			"Data{" + 
 			"tProgramVisit = '" + tProgramVisit + '\'' + 
 			",tProgramVisitSubActivity = '" + tProgramVisitSubActivity + '\'' + 
+			",realisasiData = '" + realisasiData + '\'' + 
 			",tProgramVisitSubActivityAttachment = '" + tProgramVisitSubActivityAttachment + '\'' + 
 			"}";
 		}

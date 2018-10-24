@@ -1,8 +1,18 @@
-package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
+package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadTRealisasi;
 
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
 public class Result{
+
+	@SerializedName("method_name")
 	private String methodName;
+
+	@SerializedName("message")
 	private String message;
+
+	@SerializedName("status")
 	private boolean status;
 
 	public void setMethodName(String methodName){
