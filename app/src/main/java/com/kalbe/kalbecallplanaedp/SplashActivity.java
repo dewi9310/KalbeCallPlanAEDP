@@ -179,11 +179,13 @@ public class SplashActivity extends AppCompatActivity {
                             REQUEST_CODE_ASK_PERMISSIONS);
                     dialog.dismiss();
 
+                }else{
+                    ActivityCompat.requestPermissions(SplashActivity.this,
+                            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE},
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                    dialog.dismiss();
                 }
-                ActivityCompat.requestPermissions(SplashActivity.this,
-                        new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE},
-                        REQUEST_CODE_ASK_PERMISSIONS);
-                dialog.dismiss();
+
             }
         });
 
