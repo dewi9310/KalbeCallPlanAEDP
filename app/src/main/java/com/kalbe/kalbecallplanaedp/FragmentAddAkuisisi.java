@@ -312,7 +312,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = null;
         try {
-            if (dateExp!=""||dateExp!=null)
+            if (dateExp!=null&& dateExp!="")
             date = dateFormat.parse(dateExp);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -329,7 +329,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = null;
         try {
-            if (dateExp!=""||dateExp!=null)
+            if (dateExp!=null&& dateExp!="")
             date = sdf.parse(dateExp);
         } catch (ParseException e) {
             e.printStackTrace();

@@ -106,6 +106,7 @@ public class FragmentListCallPlan extends Fragment{
                         swpItem.setIntColor(R.color.purple_600);
                         swpItem.setBoolSection(false);
                         swpItem.setTxtImgName("PL");
+                        swpItem.setTxtId(data.getTxtRealisasiVisitId());
                         swipeListPlan.add(swpItem);
                     }else if (data.getIntPlanType()==2){
                         mActivity dtActivity = null;
@@ -131,6 +132,7 @@ public class FragmentListCallPlan extends Fragment{
                         swpItem.setIntColor(getResources().getColor(R.color.blue_500));
                         swpItem.setBoolSection(false);
                         swpItem.setTxtImgName("NP");
+                        swpItem.setTxtId(data.getTxtRealisasiVisitId());
                         swipeListUnplan.add(swpItem);
                     }
                 }
@@ -172,8 +174,8 @@ public class FragmentListCallPlan extends Fragment{
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Bundle data = new Bundle();
 
-//                data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).toString());
-                data.putSerializable(DT_CALL_PLAN, listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
+                data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
+//                data.putSerializable(DT_CALL_PLAN, listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                 FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
                 fragmentCallPlan.setArguments(data);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

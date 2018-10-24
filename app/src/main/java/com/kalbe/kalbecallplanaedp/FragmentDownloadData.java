@@ -1107,94 +1107,94 @@ public class FragmentDownloadData extends Fragment{
             }
         });
     }
-    private void downloadtRealisasiCallPlan() {
-        String strLinkAPI = new clsHardCode().linkRealisasiVisit;
-        JSONObject resJson = new JSONObject();
-        try {
-            tokenRepo = new clsTokenRepo(getContext());
-            dataToken = (List<clsToken>) tokenRepo.findAll();
-            resJson.put("data", ParamDownloadMaster());
-            resJson.put("device_info", new clsHardCode().pDeviceInfo());
-            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
-            @Override
-            public void onError(String message) {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(String response, Boolean status, String strErrorMsg) {
-                Intent res = null;
-                if (response != null) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        DownloadTRealisasi model = gson.fromJson(jsonObject.toString(), DownloadTRealisasi.class);
-                        boolean txtStatus = model.getResult().isStatus();
-                        String txtMessage = model.getResult().getMessage();
-                        String txtMethode_name = model.getResult().getMethodName();
-                        if (txtStatus == true){
-                            itemList.clear();
-                            if (model.getData().getRealisasiData()!=null){
-                                if (model.getData().getRealisasiData().size()>0){
-                                    dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
-                                    for (int i = 0; i <model.getData().getRealisasiData().size(); i++){
-                                        tRealisasiVisitPlan data = new tRealisasiVisitPlan();
-                                        data.setTxtProgramVisitId(model.getData().getRealisasiData().get(i).getTxtProgramVisitId());
-                                        data.setTxtRealisasiVisitId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
-                                        data.setIntVisitType(model.getData().getRealisasiData().get(i).getIntVisitType());
-                                        data.setIntPlanType(model.getData().getRealisasiData().get(i).getIntPlanType());
-                                        data.setIntRoleID(model.getData().getRealisasiData().get(i).getIntRoleId());
-                                        data.setTxtDokterId(model.getData().getRealisasiData().get(i).getTxtDokterId());
-                                        data.setIntUserId(model.getData().getRealisasiData().get(i).getIntUserId());
-                                        data.setTxtDokterName(model.getData().getRealisasiData().get(i).getTxtNamaDokter());
-                                        data.setTxtApotekId(model.getData().getRealisasiData().get(i).getTxtApotekId());
-                                        data.setTxtApotekName(model.getData().getRealisasiData().get(i).getTxtNamaApotek());
-                                        data.setDtCheckIn(model.getData().getRealisasiData().get(i).getDtCheckin());
-                                        data.setDtCheckOut(model.getData().getRealisasiData().get(i).getDtChekout());
-                                        data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
-                                        data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
-                                        data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
-                                        data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
-                                        data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
-                                        data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
-                                        data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
-//                                        data.setBlobImg1(model.getData().getRealisasiData().get(i).);
-//                                        data.setBlobImg2();
-                                        dtRepoRealisasi.createOrUpdate(data);
-                                        itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
-                                    }
-                                }
-                                dataAdapter.notifyDataSetChanged();
-                                tv_count_realisasi.setText(String.valueOf(model.getData().getRealisasiData().size()));
-                            }
-                            Log.d("Data info", "Success Download");
-
-                        } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
+//    private void downloadtRealisasiCallPlan() {
+//        String strLinkAPI = new clsHardCode().linkRealisasiVisit;
+//        JSONObject resJson = new JSONObject();
+//        try {
+//            tokenRepo = new clsTokenRepo(getContext());
+//            dataToken = (List<clsToken>) tokenRepo.findAll();
+//            resJson.put("data", ParamDownloadMaster());
+//            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+//            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        final String mRequestBody = resJson.toString();
+//        new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+//            @Override
+//            public void onError(String message) {
+//                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onResponse(String response, Boolean status, String strErrorMsg) {
+//                Intent res = null;
+//                if (response != null) {
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(response);
+//                        DownloadTRealisasi model = gson.fromJson(jsonObject.toString(), DownloadTRealisasi.class);
+//                        boolean txtStatus = model.getResult().isStatus();
+//                        String txtMessage = model.getResult().getMessage();
+//                        String txtMethode_name = model.getResult().getMethodName();
+//                        if (txtStatus == true){
+//                            itemList.clear();
+//                            if (model.getData().getRealisasiData()!=null){
+//                                if (model.getData().getRealisasiData().size()>0){
+//                                    dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+//                                    for (int i = 0; i <model.getData().getRealisasiData().size(); i++){
+//                                        tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+//                                        data.setTxtProgramVisitId(model.getData().getRealisasiData().get(i).getTxtProgramVisitId());
+//                                        data.setTxtRealisasiVisitId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+//                                        data.setIntVisitType(model.getData().getRealisasiData().get(i).getIntVisitType());
+//                                        data.setIntPlanType(model.getData().getRealisasiData().get(i).getIntPlanType());
+//                                        data.setIntRoleID(model.getData().getRealisasiData().get(i).getIntRoleId());
+//                                        data.setTxtDokterId(model.getData().getRealisasiData().get(i).getTxtDokterId());
+//                                        data.setIntUserId(model.getData().getRealisasiData().get(i).getIntUserId());
+//                                        data.setTxtDokterName(model.getData().getRealisasiData().get(i).getTxtNamaDokter());
+//                                        data.setTxtApotekId(model.getData().getRealisasiData().get(i).getTxtApotekId());
+//                                        data.setTxtApotekName(model.getData().getRealisasiData().get(i).getTxtNamaApotek());
+//                                        data.setDtCheckIn(model.getData().getRealisasiData().get(i).getDtCheckin());
+//                                        data.setDtCheckOut(model.getData().getRealisasiData().get(i).getDtChekout());
+//                                        data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
+//                                        data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
+//                                        data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
+//                                        data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
+//                                        data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
+//                                        data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
+//                                        data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
+////                                        data.setBlobImg1(model.getData().getRealisasiData().get(i).);
+////                                        data.setBlobImg2();
+//                                        dtRepoRealisasi.createOrUpdate(data);
+//                                        itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+//                                    }
+//                                }
+//                                dataAdapter.notifyDataSetChanged();
+//                                tv_count_realisasi.setText(String.valueOf(model.getData().getRealisasiData().size()));
+//                            }
+//                            Log.d("Data info", "Success Download");
+//
+//                        } else {
+//                            ToastCustom.showToasty(getContext(),txtMessage,4);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     private String parseDate(String dateParse){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
         Date date = null;
         try {
-            if (dateParse!=""||dateParse!=null)
-            date = sdf.parse(dateParse);
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
         } catch (ParseException e) {
             e.printStackTrace();
         }

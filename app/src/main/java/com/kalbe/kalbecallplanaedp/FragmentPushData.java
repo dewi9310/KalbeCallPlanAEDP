@@ -46,14 +46,18 @@ public class FragmentPushData extends Fragment{
         button_push_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    pushData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return v;
     }
 
     private void pushData() throws JSONException {
-        String versionName = "";  
+        String versionName = "";
         try {
             versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e2) {

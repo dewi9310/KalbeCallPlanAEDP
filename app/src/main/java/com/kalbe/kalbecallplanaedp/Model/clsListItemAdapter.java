@@ -13,11 +13,11 @@ import java.io.Serializable;
 @DatabaseTable
 public class clsListItemAdapter implements Serializable {
 
-    public int getTxtId() {
+    public String getTxtId() {
         return txtId;
     }
 
-    public void setTxtId(int txtId) {
+    public void setTxtId(String txtId) {
         this.txtId = txtId;
     }
 
@@ -93,7 +93,7 @@ public class clsListItemAdapter implements Serializable {
 
 
     @DatabaseField(id = true, columnName = "txtId")
-    public int txtId;
+    public String txtId;
     @DatabaseField(columnName = "intImgView")
     public Integer intImgView;
     @DatabaseField(columnName = "drwImg")
