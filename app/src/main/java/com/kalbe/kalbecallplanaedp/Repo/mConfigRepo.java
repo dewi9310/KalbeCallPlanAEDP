@@ -20,8 +20,9 @@ public class mConfigRepo {
 //    public String API = "http://10.171.14.10/WebAPITemplate/API/";
 //    public String APIToken = "http://10.171.14.10/WebAPITemplate/";
 //    public String APIToken = "http://10.171.13.50:8013/";
-    public String APIToken = "http://10.171.14.16/apiAEDP/";
-    public String API = "http://10.171.14.16/apiAEDP/api/";
+    private String domainAddress = "10.171.14.16/apiAEDP";
+    public String APIToken = "http://"+domainAddress+"/";
+    public String API = "http://"+domainAddress+"/api/";
     public String APIKLB = "http://api.karsalintasbuwana.com/";
 
     public mConfigRepo(Context context) {
