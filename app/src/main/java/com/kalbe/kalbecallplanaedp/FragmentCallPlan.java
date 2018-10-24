@@ -32,8 +32,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsListItemAdapter;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
@@ -42,8 +46,12 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -58,8 +66,8 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
     View v;
     private Button btnCheckin, btnViewMap, btnRefreshMap;
     private ImageView imgCamera1, imgCamera2;
-    private TextView tvLongUser, tvLongOutlet, tvLatUser, tvLatOutlet,tvAcc, tvDistance;
-    private EditText etDesc, etOutlet, etBranch, etDate;
+    private TextView tvLongUser, tvLongOutlet, tvLatUser, tvLatOutlet,tvAcc;
+    private EditText etDesc, etBranch, etDate;
     private Location mLastLocation;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     // Google client to interact with Google API
@@ -74,7 +82,13 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
     Bundle dataHeader;
     private String fileName;
     private Toolbar toolbar;
-    clsListItemAdapter dtTesting;
+//    clsListItemAdapter dtTesting;
+    tRealisasiVisitPlan dtTemp;
+    tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
+    tRealisasiVisitPlan dtRealisasiVisit;
+    tProgramVisitSubActivity dtVisitPlan;
+    tProgramVisitSubActivityRepo visitPlanRepo;
+
 
     @Nullable
     @Override
@@ -91,29 +105,42 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         tvLongOutlet = (TextView) v.findViewById(R.id.tvLongOutlet);
         tvLatOutlet = (TextView) v.findViewById(R.id.tvlatOutlet);
         tvAcc = (TextView) v.findViewById(R.id.tvAcc);
-        tvDistance = (TextView) v.findViewById(R.id.tvDistance);
+//        tvDistance = (TextView) v.findViewById(R.id.tvDistance);
         etBranch = (EditText) v.findViewById(R.id.etBranch);
-        etOutlet = (EditText) v.findViewById(R.id.etOutlet);
+//        etOutlet = (EditText) v.findViewById(R.id.etOutlet);
         etDesc = (EditText) v.findViewById(R.id.etDesc);
         etDate = (EditText) v.findViewById(R.id.etDate);
         toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        dataHeader = getArguments();
+        realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(getContext());
+        visitPlanRepo = new tProgramVisitSubActivityRepo(getContext());
+        dtTemp = new tRealisasiVisitPlan();
+        if (dataHeader!=null){
+            dataHeader = getArguments();
+            try {
+                dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtId(dataHeader.getString(DT_CALL_PLAN));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-        dtTesting = (clsListItemAdapter) dataHeader.getSerializable(DT_CALL_PLAN);
-        etDate.setText(dtTesting.getTxtDate());
-        etDesc.setText(dtTesting.getTxtSubTittle());
+        }
+
+//        dtTesting = (clsListItemAdapter) dataHeader.getSerializable(DT_CALL_PLAN);
+        if (dtRealisasiVisit!=null){
+            etDate.setText(parseDateTime(dtRealisasiVisit.getDtDateRealisasi()));
+            etDesc.setText("deskripsi");
+            etBranch.setText("Jakarta");
+        }
+
         options = new Options();
         options.inSampleSize = 2;
 
         tvLongUser.setText("");
         tvLatUser.setText("");
+        tvAcc.setText("");
+//        tvDistance.setText("");
         tvLongOutlet.setText("");
         tvLatOutlet.setText("");
-        tvAcc.setText("");
-        tvDistance.setText("");
-        tvLongOutlet.setText("106.814095");
-        tvLatOutlet.setText("-6.300641");
 
         getLocation();
 
@@ -137,8 +164,8 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         btnViewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PopUpMaps().popUpMapsTwoCoordinates(getContext(), R.layout.popup_map, tvLatOutlet.getText().toString(), tvLongOutlet.getText().toString());
-//                new PopUpMaps().popUpMapsTwoCoordinates(getActivity(), R.layout.popup_map, "-6.300641", "106.814095");
+//                new PopUpMaps().popUpMapsTwoCoordinates(getContext(), R.layout.popup_map, tvLatOutlet.getText().toString(), tvLongOutlet.getText().toString());
+                new PopUpMaps().popUpMaps(getActivity(), R.layout.popup_map);
 
 
             }
@@ -161,7 +188,101 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE2_REQUEST_CODE);
             }
         });
+
+        btnCheckin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveData();
+            }
+        });
         return v;
+    }
+
+    private void saveData(){
+        boolean valid = false;
+        if (dtTemp==null){
+            valid = false;
+            ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
+        }else if (dtTemp.getBlobImg1()==null && dtTemp.getBlobImg2()==null){
+            ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
+        }else if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")){
+            valid = false;
+            ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
+        }else if (tvLatUser.getText()==null && tvLongUser.getText()==null){
+            ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
+        } else {
+//            try {
+//                DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                Calendar cal = Calendar.getInstance();
+//                tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+//                data.setTxtRealisasiVisitId(dtRealisasiVisit.getTxtRealisasiVisitId());
+//                data.setTxtProgramVisitSubActivityId(dtRealisasiVisit.getTxtProgramVisitSubActivityId());
+//                data.setIntUserId(dtRealisasiVisit.getIntUserId());
+//                data.setIntRoleID(dtRealisasiVisit.getIntRoleID());
+//                data.setTxtDokterId(dtRealisasiVisit.getTxtDokterId());
+//                data.setTxtDokterName(dtRealisasiVisit.getTxtDokterName());
+//                data.setTxtApotekId(dtRealisasiVisit.getTxtApotekId());
+//                data.setTxtApotekName(dtRealisasiVisit.getTxtApotekName());
+//                data.setDtCheckIn(dateTimeFormat.format(cal.getTime()));
+//                data.setDtCheckOut("");
+//                data.setDtDateRealisasi(dateFormat.format(cal.getTime()));
+//                data.setDtDatePlan(dtRealisasiVisit.getDtDatePlan());
+//                data.setIntNumberRealisasi(dtRealisasiVisit.getIntNumberRealisasi());
+//                data.setTxtAcc(tvAcc.getText().toString());
+//                data.setTxtLat(tvLatUser.getText().toString());
+//                data.setTxtLong(tvLongUser.getText().toString());
+//                data.setTxtImgName1(dtTemp.getTxtImgName1());
+//                data.setBlobImg1(dtTemp.getBlobImg1());
+//                data.setTxtImgName2(dtTemp.getTxtImgName2());
+//                data.setBlobImg2(dtTemp.getBlobImg2());
+//                data.setIntStatusRealisasi(new clsHardCode().Realisasi);
+//                data.setIntFlagPush(new clsHardCode().Save);
+//                realisasiVisitPlanRepo.createOrUpdate(data);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+            ToastCustom.showToasty(getContext(),"Submit",1);
+//            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            Intent myIntent = new Intent(getContext(), MainMenu.class);
+            getActivity().finish();
+            startActivity(myIntent);
+        }
+
+
+    }
+    private String parseDateTime(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
+    }
+
+    private String parseDate(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
     }
 
     @Override
@@ -173,9 +294,11 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 //untuk mendapatkan bitmap bisa menggunakan decode stream
                 Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
                 //get byte array
-                byte[] save = PickImage.getByteImageToSave(getContext(), uri);
-//                ToastCustom.showToastDefault(this, "data yang tersimpan : " + save);
-                PickImage.previewCapturedImage(imgCamera1, bitmap, 150, 150);
+                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
+                dtTemp.setBlobImg1(save);
+                dtTemp.setTxtImgName1(fileName);
+                Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                PickImage.previewCapturedImage(imgCamera1, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);
             } else {
@@ -187,9 +310,11 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 //untuk mendapatkan bitmap bisa menggunakan decode stream
                 Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
                 //get byte array
-                byte[] save = PickImage.getByteImageToSave(getContext(), uri);
-//                ToastCustom.showToastDefault(this, "data yang tersimpan : " + save);
-                PickImage.previewCapturedImage(imgCamera2, bitmap, 150, 150);
+                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
+                Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                dtTemp.setBlobImg2(save);
+                dtTemp.setTxtImgName2(fileName);
+                PickImage.previewCapturedImage(imgCamera2, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                 new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);
             } else {
@@ -279,12 +404,12 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             tvLatUser.setText(String.format("%s", latitude));
             tvAcc.setText(String.format("%s", df.format(accurate)));
 
-            try {
-                float distance = countDistance(latitude, longitude);
-                tvDistance.setText(String.format("%s meters", String.valueOf((int) Math.ceil(distance))));
-            } catch (Exception ignored) {
-
-            }
+//            try {
+//                float distance = countDistance(latitude, longitude);
+//                tvDistance.setText(String.format("%s meters", String.valueOf((int) Math.ceil(distance))));
+//            } catch (Exception ignored) {
+//
+//            }
 
             mlongitude = longitude;
             mlatitude = latitude;
@@ -293,37 +418,37 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             tvLatUser.setText("");
             tvLongUser.setText("");
             tvAcc.setText("");
-            tvDistance.setText("");
+//            tvDistance.setText("");
         }
 
     }
 
     // count distance
-    private float countDistance(double latitude, double longitude) {
-        float distance;
-
-//        double latitudeOutlet = Double.parseDouble(HMoutletLat.get(spnOutlet.getSelectedItem().toString()));
-//        double longitudeOutlet = Double.parseDouble(HMoutletLang.get(spnOutlet.getSelectedItem().toString()));
-
-        double latitudeOutlet = Double.parseDouble(tvLatOutlet.getText().toString());
-        double longitudeOutlet = Double.parseDouble(tvLongOutlet.getText().toString());
-
-        Location locationA = new Location("point user");
-
-        locationA.setLatitude(latitude);
-        locationA.setLongitude(longitude);
-
-        Location locationB = new Location("point outlet");
-
-        locationB.setLatitude(latitudeOutlet);
-        locationB.setLongitude(longitudeOutlet);
-
-        distance = locationA.distanceTo(locationB);
-
-        tvDistance.setText(String.format("%s meters", String.valueOf((int) Math.ceil(distance))));
-
-        return distance;
-    }
+//    private float countDistance(double latitude, double longitude) {
+//        float distance;
+//
+////        double latitudeOutlet = Double.parseDouble(HMoutletLat.get(spnOutlet.getSelectedItem().toString()));
+////        double longitudeOutlet = Double.parseDouble(HMoutletLang.get(spnOutlet.getSelectedItem().toString()));
+//
+//        double latitudeOutlet = Double.parseDouble(tvLatOutlet.getText().toString());
+//        double longitudeOutlet = Double.parseDouble(tvLongOutlet.getText().toString());
+//
+//        Location locationA = new Location("point user");
+//
+//        locationA.setLatitude(latitude);
+//        locationA.setLongitude(longitude);
+//
+//        Location locationB = new Location("point outlet");
+//
+//        locationB.setLatitude(latitudeOutlet);
+//        locationB.setLongitude(longitudeOutlet);
+//
+//        distance = locationA.distanceTo(locationB);
+//
+//        tvDistance.setText(String.format("%s meters", String.valueOf((int) Math.ceil(distance))));
+//
+//        return distance;
+//    }
 
     private void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
