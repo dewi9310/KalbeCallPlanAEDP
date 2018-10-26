@@ -53,6 +53,7 @@ import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsListImageAdapter;
@@ -62,6 +63,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.SpacingItemDecoration;
@@ -127,6 +129,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     mSubActivityRepo subActivityRepo;
     tRealisasiVisitPlanRepo absenRepo;
     mActivityRepo activityRepo;
+    tProgramVisitSubActivity dataPlan;
 
     @Nullable
     @Override
@@ -147,13 +150,27 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         lv_akuisisi.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 3), true));
         lv_akuisisi.setHasFixedSize(true);
         final tRealisasiVisitPlan dataCheckinActive = absenRepo.getDataCheckinActive();
-
-        subSubActivityRepo = new mSubSubActivityRepo(getContext());
         try {
-            _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(1, 1);
+           dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dataCheckinActive.getTxtProgramVisitSubActivityId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        subSubActivityRepo = new mSubSubActivityRepo(getContext());
+        try {
+            if (dataPlan.getIntActivityId()==1){
+                List<Integer> listSubSubActivityId = dtHeaderRepo.getIntSubSubActivityId(dataPlan.getIntActivityId(), dataPlan.getTxtDokterId());
+                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(listSubSubActivityId,1, 1);
+//                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(1, 1);
+            }else if (dataPlan.getIntActivityId()==2){
+                List<Integer> listSubSubActivityId = dtHeaderRepo.getIntSubSubActivityId(dataPlan.getIntActivityId(), dataPlan.getTxtApotekId());
+//                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(4, 1);
+                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityIdAndTypeId(listSubSubActivityId,4, 1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         NamaTab.clear();
         MapTab.clear();
         NamaTab.add("Select One");
@@ -239,13 +256,22 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                 dt.setIntFlagPush(new clsHardCode().Draft);
                                 dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                                 dt.setIntUserId(dtUserLogin.getIntUserID());
+                                dt.setIntRoleId(dtUserLogin.getIntRoleID());
+                                dt.setIntAreaId(dataPlan.getTxtAreaId());
+                                if (dataPlan.getIntActivityId()==1){
+                                    dt.setIntDokterId(dataCheckinActive.getTxtDokterId());
+                                }else if (dataPlan.getIntActivityId()==2){
+                                    dt.setIntApotekID(dataCheckinActive.getTxtApotekId());
+                                }
                                 dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
+                                dt.setIntFlagShow(new clsHardCode().Draft);
                                 try {
                                     dtHeaderRepo.createOrUpdate(dt);
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-//                            dt.setIntSubSubActivityTypeId();
+                                dt.setIntSubSubActivityTypeId(new clsHardCode().TypeFoto);
+
                             }
                             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                             fileName = "temp_akuisisi" + timeStamp;
@@ -271,7 +297,16 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                             dt.setIntFlagPush(new clsHardCode().Save);
                             dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                             dt.setIntUserId(dtUserLogin.getIntUserID());
+                            dt.setIntRoleId(dtUserLogin.getIntRoleID());
+                            dt.setIntAreaId(dataPlan.getTxtAreaId());
+                            if (dataPlan.getIntActivityId()==1){
+                                dt.setIntDokterId(dataCheckinActive.getTxtDokterId());
+                            }else if (dataPlan.getIntActivityId()==2){
+                                dt.setIntApotekID(dataCheckinActive.getTxtApotekId());
+                            }
                             dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
+                            dt.setIntFlagShow(new clsHardCode().Save);
+                            dt.setIntSubSubActivityTypeId(new clsHardCode().TypeFoto);
                             try {
                                 dtHeaderRepo.createOrUpdate(dt);
                             } catch (SQLException e) {
@@ -307,16 +342,6 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
              CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
             }
         });
-
-//        etDtExpired.setOnTouchListener(new DrawableClickListener.RightDrawableClickListener(etDtExpired) {
-//            @Override
-//            public boolean onDrawableClick() {
-////                clsDatePicker.showDatePicker(getContext(), etDtExpired, "Select Date", args, clsDatePicker.format.standard1, AlertDialog.THEME_HOLO_LIGHT);
-//                CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
-////                dialogDatePickerLight();
-//                return false;
-//            }
-//        });
 
         return v;
     }
@@ -356,35 +381,15 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         }
     }
 
-    private void dialogDatePickerLight() {
-        Calendar cur_calender = Calendar.getInstance();
-        DatePickerDialog datePicker = DatePickerDialog.newInstance(
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, monthOfYear);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        long date_ship_millis = calendar.getTimeInMillis();
-                        etDtExpired.setText(Tools.getFormattedDateSimple(date_ship_millis));
-                    }
-                },
-                cur_calender.get(Calendar.YEAR),
-                cur_calender.get(Calendar.MONTH),
-                cur_calender.get(Calendar.DAY_OF_MONTH)
-        );
-        //set dark light
-        datePicker.setThemeDark(false);
-        datePicker.setAccentColor(getResources().getColor(R.color.green_300));
-        datePicker.setMinDate(cur_calender);
-        datePicker.show(getActivity().getFragmentManager(), "Datepickerdialog");
-    }
-
     private void setAdapterAkusisi(){
         List<tAkuisisiDetail> listDetail = null;
         try {
-            dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
+            if (dataPlan.getIntActivityId()==1){
+                dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndDokterId(MapTab.get(txtSubSubActivity), dataPlan.getTxtDokterId(), new clsHardCode().Draft);
+            }else if (dataPlan.getIntActivityId()==2){
+                dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndApotekId(MapTab.get(txtSubSubActivity), dataPlan.getTxtApotekId(), new clsHardCode().Draft);
+            }
+//            dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
             if (dtHeader!=null){
                 etDtExpired.setText(parseDate(dtHeader.getDtExpiredDate()));
                 etNoDoc.setText(dtHeader.getTxtNoDoc());
@@ -462,7 +467,12 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     private void onItemSpinnerSelected(){
         List<tAkuisisiDetail> listDetail = null;
         try {
-            dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
+            if (dataPlan.getIntActivityId()==1){
+                dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndDokterId(MapTab.get(txtSubSubActivity), dataPlan.getTxtDokterId(), new clsHardCode().Draft);
+            }else if (dataPlan.getIntActivityId()==2){
+                dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndApotekId(MapTab.get(txtSubSubActivity), dataPlan.getTxtApotekId(), new clsHardCode().Draft);
+            }
+//            dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
             if (dtHeader!=null){
 //                etDtExpired.setText(dtHeader.getDtExpiredDate());
                 etDtExpired.setText(parseDate(dtHeader.getDtExpiredDate()));
@@ -500,7 +510,12 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                 byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
                 PickImage.decodeByteArraytoImageFile(save, new clsHardCode().txtPathTempData);
                 try {
-                    dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
+                    if (dataPlan.getIntActivityId()==1){
+                        dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndDokterId(MapTab.get(txtSubSubActivity), dataPlan.getTxtDokterId(), new clsHardCode().Draft);
+                    }else if (dataPlan.getIntActivityId()==2){
+                        dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndApotekId(MapTab.get(txtSubSubActivity), dataPlan.getTxtApotekId(), new clsHardCode().Draft);
+                    }
+//                    dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubId(MapTab.get(txtSubSubActivity), new clsHardCode().Draft);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

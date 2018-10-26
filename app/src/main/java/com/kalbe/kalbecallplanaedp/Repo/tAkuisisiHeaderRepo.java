@@ -3,6 +3,8 @@ package com.kalbe.kalbecallplanaedp.Repo;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.dao.RawRowMapper;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
@@ -158,22 +160,26 @@ public class tAkuisisiHeaderRepo implements crud {
         return listData;
     }
 
-    public List<Integer> getIntSubSubActivityId (int intActivity) {
+    public List<Integer> getIntSubSubActivityId (int intActivity, String intOutlet) {
         tAkuisisiHeader item = new tAkuisisiHeader();
-        List<Integer> listData = new ArrayList<>();
+        List<Integer> listId = new ArrayList<>();
+        List<tAkuisisiHeader> listData = new ArrayList<>();
         QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
-            if (intActivity==1){
-                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intApotekID, new clsHardCode().VisitDokter);
-            }else if (intActivity==2){
-                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intDokterId, new clsHardCode().VisitApotek);
+            if (intActivity==new clsHardCode().VisitDokter){
+                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intDokterId, intOutlet);
+            }else if (intActivity==new clsHardCode().VisitApotek){
+                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intApotekID, intOutlet);
             }
-//            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
-            listData = queryBuilder.selectColumns(item.Property_intSubSubActivityId).;
+            listData = queryBuilder.query();
+            for (tAkuisisiHeader data : listData){
+                listId.add(data.getIntSubSubActivityId());
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return listData;
+        return listId;
     }
 }

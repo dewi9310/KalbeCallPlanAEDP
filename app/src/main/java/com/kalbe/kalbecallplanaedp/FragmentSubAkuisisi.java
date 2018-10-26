@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -52,26 +53,27 @@ import java.util.List;
 public class FragmentSubAkuisisi extends Fragment {
     View v;
     private ListView mListView;
-    private String txtSubAkuisisi;
+//    private String txtSubAkuisisi;
     private int intTypeSubSubId;
-    int intSubSubId;
+//    int intSubSubId;
     private ViewPager viewPager;
     private LinearLayout layout_dots;
     private AdapterImageSlider adapterImageSlider;
     private String ZOOM_IMAGE = "zoom image";
     private String ZOOM_DIRECTORY = "zoom directory";
     private List<tAkuisisiDetail> dtDetail = new ArrayList<>();
-//    private List<tAkuisisiHeader> dtHeader = new ArrayList<>();
-    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
+    private tAkuisisiHeader dtHeader;
+//    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
     private TextView tvNoDoc, tvExpDate;
     LinearLayout ln_resgistrasi, ln_image;
+    FloatingActionButton fab;
 
-    public FragmentSubAkuisisi(String txtSubAkuisisi, int intSubSubId, int intTypeSubSubId){
-        this.txtSubAkuisisi = txtSubAkuisisi;
-        this.intSubSubId = intSubSubId;
+    public FragmentSubAkuisisi(tAkuisisiHeader dtHeader, int intTypeSubSubId, FloatingActionButton fab){
+        this.dtHeader = dtHeader;
         this.intTypeSubSubId = intTypeSubSubId;
+        this.fab = fab;
     }
 
         @Nullable
@@ -94,8 +96,9 @@ public class FragmentSubAkuisisi extends Fragment {
             detailRepo = new tAkuisisiDetailRepo(getContext());
 
             try {
-                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
+//                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
                 if (dtHeader!=null){
+
                     tvNoDoc.setText(dtHeader.getTxtNoDoc());
                     tvExpDate.setText(String.valueOf(dtHeader.getDtExpiredDate()));
                     dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());

@@ -14,12 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomTablayout;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
@@ -49,7 +56,9 @@ public class FragmentAkuisisi extends Fragment{
     mSubSubActivityRepo subSubActivityRepo;
     mSubActivityRepo subActivityRepo;
     mActivityRepo activityRepo;
-
+    tRealisasiVisitPlan dtCheckinActive;
+    tProgramVisitSubActivity dataPlan;
+    tAkuisisiHeader dtHeader;
 
     @Nullable
     @Override
@@ -60,10 +69,19 @@ public class FragmentAkuisisi extends Fragment{
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_akuisisi);
         fab = (FloatingActionButton) v.findViewById(R.id.fab_akuisisi);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
-
+        dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
+        try {
+            dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
         try {
-            _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
+            if (dataPlan.getIntActivityId()==1){
+                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
+            }else if (dataPlan.getIntActivityId()==2){
+                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(4);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,7 +90,7 @@ public class FragmentAkuisisi extends Fragment{
 
         }
 
-        setupViewPager(customViewPager);
+        setupViewPager(customViewPager, fab);
         tabLayout.setupWithViewPager(customViewPager);
 //        customViewPager.setOffscreenPageLimit(NamaTab.size());
         customViewPager.setPagingEnabled(false);
@@ -87,23 +105,85 @@ public class FragmentAkuisisi extends Fragment{
             }
 
         }
+        final int iterator = customViewPager.getCurrentItem();
+        if (iterator==0){
+            try {
+                if (dataPlan.getIntActivityId()==1){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                }else if (dataPlan.getIntActivityId()==2){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
+            if (dtHeader!=null){
+                fab.setVisibility(View.GONE);
+            }else {
+                fab.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                final int i = tab.getPosition();
+
+                try {
+                    if (dataPlan.getIntActivityId()==1){
+                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                    }else if (dataPlan.getIntActivityId()==2){
+                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (dtHeader!=null){
+                    fab.setVisibility(View.GONE);
+                }else {
+                    fab.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int iterator = customViewPager.getCurrentItem();
+                int i = customViewPager.getCurrentItem();
                 Bundle bundle = new Bundle();
-                bundle.putString(SUB_SUB_ACTIVITY, _mSubSubActivity.get(iterator).getTxtName());
+                bundle.putString(SUB_SUB_ACTIVITY, _mSubSubActivity.get(i).getTxtName());
                 Tools.intentFragmentSetArgument(FragmentAddAkuisisi.class, "Add Akuisisi", getContext(), bundle);
             }
         });
 
         return v;
     }
-    private void setupViewPager(ViewPager viewPager){
+    private void setupViewPager(ViewPager viewPager, FloatingActionButton fab){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        tAkuisisiHeader dtHeader = null;
         for (int i =0; i < _mSubSubActivity.size(); i++){
-            adapter.addFragment(new FragmentSubAkuisisi(_mSubSubActivity.get(i).getTxtName(), _mSubSubActivity.get(i).getIntSubSubActivityid(), _mSubSubActivity.get(i).getIntType()), _mSubSubActivity.get(i).getTxtName());
+            try {
+                if (dataPlan.getIntActivityId()==1){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                }else if (dataPlan.getIntActivityId()==2){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            adapter.addFragment(new FragmentSubAkuisisi(dtHeader, _mSubSubActivity.get(i).getIntType(), fab), _mSubSubActivity.get(i).getTxtName());
         }
         viewPager.setAdapter(adapter);
     }

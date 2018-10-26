@@ -101,13 +101,31 @@ public class mSubSubActivityRepo implements crud{
         }
         return listData;
     }
-    public List<mSubSubActivity> findBySubActivityIdAndTypeId(int intSubActivityid, int intTypeId) throws SQLException {
+//    public List<mSubSubActivity> findBySubActivityIdAndTypeId(int intSubActivityid, int intTypeId) throws SQLException {
+//        mSubSubActivity item = new mSubSubActivity();
+//        List<mSubSubActivity> listData = new ArrayList<>();
+//        QueryBuilder<mSubSubActivity, Integer> queryBuilder = null;
+//        try {
+//            queryBuilder = helper.getmSubSubActivityDao().queryBuilder();
+//            queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid).and().eq(item.Property_intType, intTypeId);
+//            listData = queryBuilder.query();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return listData;
+//    }
+
+    public List<mSubSubActivity> findBySubActivityIdAndTypeId(List<Integer> listSubSubActivityid, int intSubActivityid, int intTypeId) throws SQLException {
         mSubSubActivity item = new mSubSubActivity();
         List<mSubSubActivity> listData = new ArrayList<>();
         QueryBuilder<mSubSubActivity, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getmSubSubActivityDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid).and().eq(item.Property_intType, intTypeId);
+//            if (intSubSubActivityid.size()>0){
+                queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid).and().eq(item.Property_intType, intTypeId).and().notIn(item.Property_intSubSubActivityid, listSubSubActivityid);
+//            }else {
+//                queryBuilder.where().eq(item.Property_intSubActivityid, intSubActivityid).and().eq(item.Property_intType, intTypeId);
+//            }
             listData = queryBuilder.query();
         } catch (SQLException e) {
             e.printStackTrace();
