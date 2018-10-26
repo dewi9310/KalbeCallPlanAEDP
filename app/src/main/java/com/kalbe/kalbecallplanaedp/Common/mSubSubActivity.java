@@ -23,6 +23,7 @@ public class mSubSubActivity implements Serializable {
     private int intType;
 
     public String Property_intSubActivityid = "intSubActivityid";
+    public String Property_intSubSubActivityid = "intSubSubActivityid";
     public String Property_intType = "intType";
 
     public int getIntSubSubActivityid() {

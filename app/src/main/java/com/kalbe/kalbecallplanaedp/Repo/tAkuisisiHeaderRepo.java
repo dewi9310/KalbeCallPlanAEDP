@@ -170,7 +170,7 @@ public class tAkuisisiHeaderRepo implements crud {
                 queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intDokterId, new clsHardCode().VisitApotek);
             }
 //            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
-            listData = (List<Integer>) queryBuilder.selectColumns(item.Property_intSubSubActivityId);
+            listData = queryBuilder.selectColumns(item.Property_intSubSubActivityId).;
         } catch (SQLException e) {
             e.printStackTrace();
         }

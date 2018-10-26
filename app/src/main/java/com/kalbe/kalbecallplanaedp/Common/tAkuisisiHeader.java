@@ -30,17 +30,21 @@ public class tAkuisisiHeader implements Serializable {
     @DatabaseField(columnName = "intRoleId")
     public int intRoleId;
     @DatabaseField(columnName = "intDokterId")
-    public  int intDokterId;
+    public  String intDokterId;
     @DatabaseField(columnName = "intApotekID")
     public String intApotekID;
 //    @DatabaseField(columnName = "intOutletId")
 //    public int intOutletId;
     @DatabaseField(columnName = "intAreaId")
-    public int intAreaId;
+    public String intAreaId;
     @DatabaseField(columnName = "intFlagPush")
     public int intFlagPush;
     @DatabaseField
-    public String txtRealisasiVisitId = "txtRealisasiVisitId";
+    public String txtRealisasiVisitId;
+    @DatabaseField
+    public int  intFlagShow;
+
+
 
     public String Property_intSubSubActivityId = "intSubSubActivityId";
     public String Property_intHeaderId = "intHeaderId";
@@ -57,6 +61,7 @@ public class tAkuisisiHeader implements Serializable {
     public String Property_intAreaId = "intAreaId";
     public String Property_txtRealisasiVisitId = "txtRealisasiVisitId";
     public String Property_ListDataOftAkuisisiHeader = "ListDataOftAkuisisiHeader";
+    public String Property_intFlagSow = "intFlagShow";
 
     public String getTxtHeaderId() {
         return txtHeaderId;
@@ -114,14 +119,6 @@ public class tAkuisisiHeader implements Serializable {
         this.intRoleId = intRoleId;
     }
 
-    public int getIntDokterId() {
-        return intDokterId;
-    }
-
-    public void setIntDokterId(int intDokterId) {
-        this.intDokterId = intDokterId;
-    }
-//
 //    public int getIntOutletId() {
 //        return intOutletId;
 //    }
@@ -130,13 +127,6 @@ public class tAkuisisiHeader implements Serializable {
 //        this.intOutletId = intOutletId;
 //    }
 
-    public int getIntAreaId() {
-        return intAreaId;
-    }
-
-    public void setIntAreaId(int intAreaId) {
-        this.intAreaId = intAreaId;
-    }
 
     public int getIntSubSubActivityTypeId() {
         return intSubSubActivityTypeId;
@@ -176,5 +166,29 @@ public class tAkuisisiHeader implements Serializable {
 
     public void setTxtRealisasiVisitId(String txtRealisasiVisitId) {
         this.txtRealisasiVisitId = txtRealisasiVisitId;
+    }
+
+    public String getIntDokterId() {
+        return intDokterId;
+    }
+
+    public void setIntDokterId(String intDokterId) {
+        this.intDokterId = intDokterId;
+    }
+
+    public String getIntAreaId() {
+        return intAreaId;
+    }
+
+    public void setIntAreaId(String intAreaId) {
+        this.intAreaId = intAreaId;
+    }
+
+    public int getIntFlagShow() {
+        return intFlagShow;
+    }
+
+    public void setIntFlagShow(int intFlagShow) {
+        this.intFlagShow = intFlagShow;
     }
 }

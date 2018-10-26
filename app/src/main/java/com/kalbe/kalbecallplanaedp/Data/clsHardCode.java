@@ -61,6 +61,8 @@ public class clsHardCode {
     public int Sync = 2;
 
 
+    public int VisitDokter = 1;
+    public int VisitApotek = 2;
     public int VisitPlan = 0;
     public int Realisasi = 1;
     public int CheckIn = 2;
