@@ -49,7 +49,7 @@ public class clsHardCode {
     public String linkDownloadArea = new mConfigRepo(context).API + "downloadtMappingArea";
     public String linkProgramVisit = new mConfigRepo(context).API + "downloadtProgramVisit";
 //    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
-    public String linkPushData = "http://10.171.14.7/APIAEDP/api/PushAllData";
+    public String linkPushData = new mConfigRepo(context).API +"PushAllData";
 
     /*Link klik apotek*/
     public String linkApotek = new mConfigRepo(context).APIKLB +"mae/apotek";
