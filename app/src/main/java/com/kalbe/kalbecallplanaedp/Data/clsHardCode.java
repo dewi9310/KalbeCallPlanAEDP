@@ -48,7 +48,7 @@ public class clsHardCode {
     public String linkSubSubActivity = new  mConfigRepo(context).API + "downloadSubActivityDetail";
     public String linkDownloadArea = new mConfigRepo(context).API + "downloadtMappingArea";
     public String linkProgramVisit = new mConfigRepo(context).API + "downloadtProgramVisit";
-    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
+//    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
     public String linkPushData = "http://10.171.14.7/APIAEDP/api/PushAllData";
 
     /*Link klik apotek*/
@@ -60,8 +60,10 @@ public class clsHardCode {
     public int Save = 1;
     public int Sync = 2;
 
-    public int VisitApotek = 1;
-    public int VisitDokter = 2;
+
+    public int VisitPlan = 0;
+    public int Realisasi = 1;
+    public int CheckIn = 2;
     public int Plan = 1;
     public int UnPlan = 2;
 
