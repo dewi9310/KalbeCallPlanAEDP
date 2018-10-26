@@ -31,6 +31,10 @@ public class mUserLogin implements Serializable {
     public int IntLOBID;
     @DatabaseField(columnName = "TxtCompanyCode")
     public String TxtCompanyCode;
+    @DatabaseField
+    public String dtLogOut;
+    @DatabaseField
+    public String dtLogIn;
 
 
     public String Property_IntUserID = "IntUserID";
@@ -124,5 +128,21 @@ public class mUserLogin implements Serializable {
 
     public void setTxtRoleName(String txtRoleName) {
         this.txtRoleName = txtRoleName;
+    }
+
+    public String getDtLogOut() {
+        return dtLogOut;
+    }
+
+    public void setDtLogOut(String dtLogOut) {
+        this.dtLogOut = dtLogOut;
+    }
+
+    public String getDtLogIn() {
+        return dtLogIn;
+    }
+
+    public void setDtLogIn(String dtLogIn) {
+        this.dtLogIn = dtLogIn;
     }
 }

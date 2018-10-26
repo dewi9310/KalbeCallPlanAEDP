@@ -1,26 +1,72 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
 public class RealisasiDataItem{
+
+	@SerializedName("intUserId")
 	private int intUserId;
+
+	@SerializedName("intRoleId")
 	private int intRoleId;
+
+	@SerializedName("dtDatePlan")
+	private String dtDatePlan;
+
+	@SerializedName("txtImage2Path")
 	private String txtImage2Path;
+
+	@SerializedName("txtLongitude")
 	private String txtLongitude;
+
+	@SerializedName("dtDateRealisasi")
 	private String dtDateRealisasi;
+
+	@SerializedName("dtCheckin")
 	private String dtCheckin;
+
+	@SerializedName("txtLatitude")
 	private String txtLatitude;
-	private int intPlanType;
+
+	@SerializedName("txtNamaApotek")
 	private String txtNamaApotek;
+
+	@SerializedName("dtChekout")
 	private String dtChekout;
+
+	@SerializedName("txtProgramVisitSubActivityId")
+	private String txtProgramVisitSubActivityId;
+
+	@SerializedName("txtImage1Name")
 	private String txtImage1Name;
+
+	@SerializedName("txtDokterId")
 	private String txtDokterId;
+
+	@SerializedName("txtNamaDokter")
 	private String txtNamaDokter;
+
+	@SerializedName("txtAccurasi")
 	private String txtAccurasi;
-	private int intVisitType;
+
+	@SerializedName("txtImage1Path")
 	private String txtImage1Path;
-	private String txtProgramVisitId;
+
+	@SerializedName("txtApotekId")
 	private String txtApotekId;
+
+	@SerializedName("txtRealisasiVisitId")
 	private String txtRealisasiVisitId;
+
+	@SerializedName("intRealisasiNumber")
 	private int intRealisasiNumber;
+
+	@SerializedName("intRealisasiStatus")
+	private int intRealisasiStatus;
+
+	@SerializedName("txtImage2Name")
 	private String txtImage2Name;
 
 	public void setIntUserId(int intUserId){
@@ -37,6 +83,14 @@ public class RealisasiDataItem{
 
 	public int getIntRoleId(){
 		return intRoleId;
+	}
+
+	public void setDtDatePlan(String dtDatePlan){
+		this.dtDatePlan = dtDatePlan;
+	}
+
+	public String getDtDatePlan(){
+		return dtDatePlan;
 	}
 
 	public void setTxtImage2Path(String txtImage2Path){
@@ -79,14 +133,6 @@ public class RealisasiDataItem{
 		return txtLatitude;
 	}
 
-	public void setIntPlanType(int intPlanType){
-		this.intPlanType = intPlanType;
-	}
-
-	public int getIntPlanType(){
-		return intPlanType;
-	}
-
 	public void setTxtNamaApotek(String txtNamaApotek){
 		this.txtNamaApotek = txtNamaApotek;
 	}
@@ -101,6 +147,14 @@ public class RealisasiDataItem{
 
 	public String getDtChekout(){
 		return dtChekout;
+	}
+
+	public void setTxtProgramVisitSubActivityId(String txtProgramVisitSubActivityId){
+		this.txtProgramVisitSubActivityId = txtProgramVisitSubActivityId;
+	}
+
+	public String getTxtProgramVisitSubActivityId(){
+		return txtProgramVisitSubActivityId;
 	}
 
 	public void setTxtImage1Name(String txtImage1Name){
@@ -135,28 +189,12 @@ public class RealisasiDataItem{
 		return txtAccurasi;
 	}
 
-	public void setIntVisitType(int intVisitType){
-		this.intVisitType = intVisitType;
-	}
-
-	public int getIntVisitType(){
-		return intVisitType;
-	}
-
 	public void setTxtImage1Path(String txtImage1Path){
 		this.txtImage1Path = txtImage1Path;
 	}
 
 	public String getTxtImage1Path(){
 		return txtImage1Path;
-	}
-
-	public void setTxtProgramVisitId(String txtProgramVisitId){
-		this.txtProgramVisitId = txtProgramVisitId;
-	}
-
-	public String getTxtProgramVisitId(){
-		return txtProgramVisitId;
 	}
 
 	public void setTxtApotekId(String txtApotekId){
@@ -183,6 +221,14 @@ public class RealisasiDataItem{
 		return intRealisasiNumber;
 	}
 
+	public void setIntRealisasiStatus(int intRealisasiStatus){
+		this.intRealisasiStatus = intRealisasiStatus;
+	}
+
+	public int getIntRealisasiStatus(){
+		return intRealisasiStatus;
+	}
+
 	public void setTxtImage2Name(String txtImage2Name){
 		this.txtImage2Name = txtImage2Name;
 	}
@@ -197,24 +243,24 @@ public class RealisasiDataItem{
 			"RealisasiDataItem{" + 
 			"intUserId = '" + intUserId + '\'' + 
 			",intRoleId = '" + intRoleId + '\'' + 
+			",dtDatePlan = '" + dtDatePlan + '\'' + 
 			",txtImage2Path = '" + txtImage2Path + '\'' + 
 			",txtLongitude = '" + txtLongitude + '\'' + 
 			",dtDateRealisasi = '" + dtDateRealisasi + '\'' + 
 			",dtCheckin = '" + dtCheckin + '\'' + 
 			",txtLatitude = '" + txtLatitude + '\'' + 
-			",intPlanType = '" + intPlanType + '\'' + 
 			",txtNamaApotek = '" + txtNamaApotek + '\'' + 
 			",dtChekout = '" + dtChekout + '\'' + 
+			",txtProgramVisitSubActivityId = '" + txtProgramVisitSubActivityId + '\'' + 
 			",txtImage1Name = '" + txtImage1Name + '\'' + 
 			",txtDokterId = '" + txtDokterId + '\'' + 
 			",txtNamaDokter = '" + txtNamaDokter + '\'' + 
 			",txtAccurasi = '" + txtAccurasi + '\'' + 
-			",intVisitType = '" + intVisitType + '\'' + 
 			",txtImage1Path = '" + txtImage1Path + '\'' + 
-			",txtProgramVisitId = '" + txtProgramVisitId + '\'' + 
 			",txtApotekId = '" + txtApotekId + '\'' + 
 			",txtRealisasiVisitId = '" + txtRealisasiVisitId + '\'' + 
 			",intRealisasiNumber = '" + intRealisasiNumber + '\'' + 
+			",intRealisasiStatus = '" + intRealisasiStatus + '\'' + 
 			",txtImage2Name = '" + txtImage2Name + '\'' + 
 			"}";
 		}

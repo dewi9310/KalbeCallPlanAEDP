@@ -14,12 +14,8 @@ import java.io.Serializable;
 public class tRealisasiVisitPlan implements Serializable{
     @DatabaseField(id = true, columnName = "txtRealisasiVisitId")
     private String txtRealisasiVisitId;
-    @DatabaseField(columnName = "txtProgramVisitId")
-    private String txtProgramVisitId;
-    @DatabaseField(columnName = "intVisitType")
-    private int intVisitType;
-    @DatabaseField(columnName = "intPlanType")
-    private int intPlanType;
+    @DatabaseField(columnName = "txtProgramVisitSubActivityId")
+    private String txtProgramVisitSubActivityId;
     @DatabaseField(columnName = "intUserId")
     private int intUserId;
     @DatabaseField(columnName = "intRoleId")
@@ -36,8 +32,12 @@ public class tRealisasiVisitPlan implements Serializable{
     private String dtCheckIn;
     @DatabaseField(columnName = "dtCheckOut")
     private String dtCheckOut;
+//    @DatabaseField(columnName = "txtNotes")
+//    private String txtNotes;
     @DatabaseField(columnName = "dtDateRealisasi")
     private String dtDateRealisasi;
+    @DatabaseField(columnName = "dtDatePlan")
+    private String dtDatePlan;
     @DatabaseField(columnName = "intNumberRealisasi")
     private int intNumberRealisasi;
     @DatabaseField(columnName = "txtAcc")
@@ -55,14 +55,12 @@ public class tRealisasiVisitPlan implements Serializable{
     @DatabaseField(columnName = "blobImg2", dataType = DataType.BYTE_ARRAY)
     private byte[] blobImg2;
     @DatabaseField(columnName = "intStatusRealisasi")
-    private String intStatusRealisasi;
+    private int intStatusRealisasi;
     @DatabaseField(columnName = "intFlagPush")
     private int intFlagPush;
 
     public String Property_txtRealisasiVisitId = "txtRealisasiVisitId";
-    public String Property_txtProgramVisitId = "txtProgramVisitId";
-    public String Property_intVisitType = "intVisitType";
-    public String Property_intPlanType = "intPlanType";
+    public String Property_txtProgramVisitSubActivityId = "txtProgramVisitSubActivityId";
     public String Property_intUserId = "intUserId";
     public String Property_intRoleID = "intRoleID";
     public String Property_txtDokterId = "txtDokterId";
@@ -71,7 +69,9 @@ public class tRealisasiVisitPlan implements Serializable{
     public String Property_txtApotekName = "txtApotekName";
     public String Property_dtCheckIn = "dtCheckIn";
     public String Property_dtCheckOut = "dtCheckOut";
+//    public String Property_txtNotes = "txtNotes";
     public String Property_dtDateRealisasi = "dtDateRealisasi";
+    public String Property_dtDatePlan = "dtDatePlan";
     public String Property_intNumberRealisasi = "intNumberRealisasi";
     public String Property_txtAcc = "txtAcc";
     public String Property_txtLong = "txtLong";
@@ -92,28 +92,12 @@ public class tRealisasiVisitPlan implements Serializable{
         this.txtRealisasiVisitId = txtRealisasiVisitId;
     }
 
-    public String getTxtProgramVisitId() {
-        return txtProgramVisitId;
+    public String getTxtProgramVisitSubActivityId() {
+        return txtProgramVisitSubActivityId;
     }
 
-    public void setTxtProgramVisitId(String txtProgramVisitId) {
-        this.txtProgramVisitId = txtProgramVisitId;
-    }
-
-    public int getIntVisitType() {
-        return intVisitType;
-    }
-
-    public void setIntVisitType(int intVisitType) {
-        this.intVisitType = intVisitType;
-    }
-
-    public int getIntPlanType() {
-        return intPlanType;
-    }
-
-    public void setIntPlanType(int intPlanType) {
-        this.intPlanType = intPlanType;
+    public void setTxtProgramVisitSubActivityId(String txtProgramVisitSubActivityId) {
+        this.txtProgramVisitSubActivityId = txtProgramVisitSubActivityId;
     }
 
     public int getIntUserId() {
@@ -179,6 +163,14 @@ public class tRealisasiVisitPlan implements Serializable{
     public void setDtCheckOut(String dtCheckOut) {
         this.dtCheckOut = dtCheckOut;
     }
+
+//    public String getTxtNotes() {
+//        return txtNotes;
+//    }
+//
+//    public void setTxtNotes(String txtNotes) {
+//        this.txtNotes = txtNotes;
+//    }
 
     public String getDtDateRealisasi() {
         return dtDateRealisasi;
@@ -260,11 +252,19 @@ public class tRealisasiVisitPlan implements Serializable{
         this.intFlagPush = intFlagPush;
     }
 
-    public String getIntStatusRealisasi() {
+    public int getIntStatusRealisasi() {
         return intStatusRealisasi;
     }
 
-    public void setIntStatusRealisasi(String intStatusRealisasi) {
+    public void setIntStatusRealisasi(int intStatusRealisasi) {
         this.intStatusRealisasi = intStatusRealisasi;
+    }
+
+    public String getDtDatePlan() {
+        return dtDatePlan;
+    }
+
+    public void setDtDatePlan(String dtDatePlan) {
+        this.dtDatePlan = dtDatePlan;
     }
 }

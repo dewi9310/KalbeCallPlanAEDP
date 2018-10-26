@@ -18,5 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_80"
+        android:src="@mipmap/ic_camera_orange"
         android:scaleType="centerCrop" />
 </RelativeLayout>

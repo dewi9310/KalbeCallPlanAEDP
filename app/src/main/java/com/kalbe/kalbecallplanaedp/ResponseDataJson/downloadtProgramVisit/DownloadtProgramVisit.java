@@ -1,7 +1,15 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
 public class DownloadtProgramVisit{
+
+	@SerializedName("result")
 	private Result result;
+
+	@SerializedName("data")
 	private Data data;
 
 	public void setResult(Result result){

@@ -25,6 +25,10 @@ import com.kalbe.kalbecallplanaedp.Common.mUserMappingArea;
 import com.kalbe.kalbecallplanaedp.Common.mUserRole;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivityAttachment;
@@ -88,7 +92,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected Dao<mUserMappingArea, Integer> mUserMappingAreaDao;
     protected Dao<tProgramVisitSubActivityAttachment, Integer> tProgramVisitSubActivityAttachmentDao;
     protected Dao<mCounterData, Integer> mCounterDataDao;
-
+    protected Dao<tMaintenanceHeader, Integer> tMaintenanceHeaderDao;
+    protected Dao<tMaintenanceDetail, Integer> tMaintenanceDetailDao;
+    protected Dao<tInfoProgramHeader, Integer> tInfoProgramHeaderDao;
+    protected Dao<tInfoProgramDetail, Integer> tInfoProgramDetailDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -117,6 +124,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, mUserMappingArea.class);
             TableUtils.createTableIfNotExists(connectionSource, tProgramVisitSubActivityAttachment.class);
             TableUtils.createTableIfNotExists(connectionSource, mCounterData.class);
+            TableUtils.createTableIfNotExists(connectionSource, tMaintenanceHeader.class);
+            TableUtils.createTableIfNotExists(connectionSource, tMaintenanceDetail.class);
+            TableUtils.createTableIfNotExists(connectionSource, tInfoProgramHeader.class);
+            TableUtils.createTableIfNotExists(connectionSource, tInfoProgramDetail.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,6 +163,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, mUserMappingArea.class, true);
             TableUtils.dropTable(connectionSource, tProgramVisitSubActivityAttachment.class, true);
             TableUtils.dropTable(connectionSource, mCounterData.class, true);
+            TableUtils.dropTable(connectionSource, tMaintenanceHeader.class, true);
+            TableUtils.dropTable(connectionSource, tMaintenanceDetail.class, true);
+            TableUtils.dropTable(connectionSource, tInfoProgramHeader.class, true);
+            TableUtils.dropTable(connectionSource, tInfoProgramDetail.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {
@@ -179,6 +194,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.clearTable(connectionSource, tRealisasiVisitPlan.class);
             TableUtils.clearTable(connectionSource, tProgramVisitSubActivityAttachment.class);
             TableUtils.clearTable(connectionSource, mCounterData.class);
+            TableUtils.clearTable(connectionSource, tMaintenanceHeader.class);
+            TableUtils.clearTable(connectionSource, tMaintenanceDetail.class);
+            TableUtils.clearTable(connectionSource, tInfoProgramHeader.class);
+            TableUtils.clearTable(connectionSource, tInfoProgramDetail.class);
 
 //            onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -327,6 +346,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mCounterDataDao;
     }
 
+    public Dao<tMaintenanceHeader, Integer> gettMaintenanceHeaderDao() throws SQLException {
+        if (tMaintenanceHeaderDao == null) {
+            tMaintenanceHeaderDao = getDao(tMaintenanceHeader.class);
+        }
+        return tMaintenanceHeaderDao;
+    }
+
+    public Dao<tMaintenanceDetail, Integer> gettMaintenanceDetailDao() throws SQLException {
+        if (tMaintenanceDetailDao == null) {
+            tMaintenanceDetailDao = getDao(tMaintenanceDetail.class);
+        }
+        return tMaintenanceDetailDao;
+    }
+
+    public Dao<tInfoProgramHeader, Integer> gettInfoProgramHeaderDao() throws SQLException {
+        if (tInfoProgramHeaderDao == null) {
+            tInfoProgramHeaderDao = getDao(tInfoProgramHeader.class);
+        }
+        return tInfoProgramHeaderDao;
+    }
+
+    public Dao<tInfoProgramDetail, Integer> gettInfoProgramDetailDao() throws SQLException {
+        if (tInfoProgramDetailDao == null) {
+            tInfoProgramDetailDao = getDao(tInfoProgramDetail.class);
+        }
+        return tInfoProgramDetailDao;
+    }
+
     @Override
     public void close() {
         mConfigDao = null;
@@ -349,5 +396,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mUserMappingAreaDao = null;
         tProgramVisitSubActivityAttachmentDao = null;
         mCounterDataDao = null;
+        tMaintenanceHeaderDao = null;
+        tMaintenanceDetailDao = null;
+        tInfoProgramHeaderDao = null;
+        tInfoProgramDetailDao = null;
     }
 }

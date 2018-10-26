@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_add"
-        android:icon="@mipmap/ic_add_orange"
+        android:icon="@mipmap/ic_add_photo"
         android:title="Add Image" />
     <item
         android:id="@+id/action_save"

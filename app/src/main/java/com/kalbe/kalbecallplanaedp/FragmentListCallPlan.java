@@ -69,80 +69,85 @@ public class FragmentListCallPlan extends Fragment{
         repoRealisasi = new tRealisasiVisitPlanRepo(getContext());
         repoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
         repoActivity = new mActivityRepo(getContext());
-        try {
-            listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.findAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         listDataHeader.clear();
         listDataChild.clear();
         swipeListPlan.clear();
         swipeListUnplan.clear();
-        if (listRealisasi!=null){
-            if (listRealisasi.size()>0){
-                for (tRealisasiVisitPlan data : listRealisasi){
-                    clsListItemAdapter swpItem =  new clsListItemAdapter();
-                    if (data.getIntPlanType()==1){
-                        mActivity dtActivity = null;
-                        try {
-                            dtActivity = (mActivity) repoActivity.findById(data.getIntVisitType());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        if (dtActivity!=null){
-                            swpItem.setTxtTittle(dtActivity.getTxtName());
-                            if (dtActivity.getIntActivityId()==1){
-                                swpItem.setTxtSubTittle(data.getTxtDokterName());
-                            }else if (dtActivity.getIntActivityId()==2){
-                                swpItem.setTxtSubTittle(data.getTxtApotekName());
-                            }
-                        }else {
-                            swpItem.setTxtTittle("");
-                            swpItem.setTxtSubTittle("");
-                        }
-//                        swpItem.setTxtTittle("Visit Dokter");
-//                        swpItem.setTxtSubTittle("Visit Dokter Fauziyah");
-                        swpItem.setTxtDate(parseDate(data.getDtDateRealisasi()));
-                        swpItem.setIntColor(R.color.purple_600);
-                        swpItem.setBoolSection(false);
-                        swpItem.setTxtImgName("PL");
-                        swpItem.setTxtId(data.getTxtRealisasiVisitId());
-                        swipeListPlan.add(swpItem);
-                    }else if (data.getIntPlanType()==2){
-                        mActivity dtActivity = null;
-                        try {
-                            dtActivity = (mActivity) repoActivity.findById(data.getIntVisitType());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        if (dtActivity!=null){
-                            swpItem.setTxtTittle(dtActivity.getTxtName());
-                            if (dtActivity.getIntActivityId()==1){
-                                swpItem.setTxtSubTittle(data.getTxtDokterName());
-                            }else if (dtActivity.getIntActivityId()==2){
-                                swpItem.setTxtSubTittle(data.getTxtApotekName());
-                            }
-                        }else {
-                            swpItem.setTxtTittle("");
-                            swpItem.setTxtSubTittle("");
-                        }
-//                        swpItem.setTxtTittle("Visit Dokter");
-//                        swpItem.setTxtSubTittle("Visit Dokter Azizah");
-                        swpItem.setTxtDate(parseDate(data.getDtDateRealisasi()));
-                        swpItem.setIntColor(getResources().getColor(R.color.blue_500));
-                        swpItem.setBoolSection(false);
-                        swpItem.setTxtImgName("NP");
-                        swpItem.setTxtId(data.getTxtRealisasiVisitId());
-                        swipeListUnplan.add(swpItem);
-                    }
-                }
 
-                listDataHeader.add("Plan");
-                listDataHeader.add("Unplan");
-                listDataChild.put(listDataHeader.get(0), swipeListPlan);
-                listDataChild.put(listDataHeader.get(1), swipeListUnplan);
+        try {
+            listVisitDetail = (List<tProgramVisitSubActivity>) repoProgramVisitSubActivity.findAll();
+//            listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.findAll();
+            if (listVisitDetail!=null){
+                if (listVisitDetail.size()>0){
+                    for (tProgramVisitSubActivity data : listVisitDetail){
+//                        tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtId(data.getTxtProgramVisitSubActivityId());
+                        clsListItemAdapter swpItem =  new clsListItemAdapter();
+                        if (data.getIntType()==1){
+                            mActivity dtActivity = null;
+                            try {
+                                dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            if (dtActivity!=null){
+                                swpItem.setTxtTittle(dtActivity.getTxtName());
+                                if (dtActivity.getIntActivityId()==1){
+                                    swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
+                                }else if (dtActivity.getIntActivityId()==2){
+                                    swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                                }else {
+                                    if (data.getTxtNotes()!=null)
+                                    swpItem.setTxtSubTittle(data.getTxtNotes());
+                                }
+                            }else {
+                                swpItem.setTxtTittle("");
+                                swpItem.setTxtSubTittle("");
+                            }
+                            swpItem.setTxtDate(parseDate(data.getDtStart()));
+                            swpItem.setIntColor(R.color.purple_600);
+                            swpItem.setBoolSection(false);
+                            swpItem.setTxtImgName("PL");
+                            swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
+                            swipeListPlan.add(swpItem);
+                        }else if (data.getIntType()==2){
+                            mActivity dtActivity = null;
+                            try {
+                                dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            if (dtActivity!=null){
+                                swpItem.setTxtTittle(dtActivity.getTxtName());
+                                if (dtActivity.getIntActivityId()==1){
+                                    swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
+                                }else if (dtActivity.getIntActivityId()==2){
+                                    swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                                }
+                            }else {
+                                swpItem.setTxtTittle("");
+                                swpItem.setTxtSubTittle("");
+                            }
+                            swpItem.setTxtDate(parseDate(data.getDtStart()));
+                            swpItem.setIntColor(getResources().getColor(R.color.blue_500));
+                            swpItem.setBoolSection(false);
+                            swpItem.setTxtImgName("NP");
+                            swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
+                            swipeListUnplan.add(swpItem);
+                        }
+                    }
+
+                    listDataHeader.add("Plan");
+                    listDataHeader.add("Unplan");
+                    listDataChild.put(listDataHeader.get(0), swipeListPlan);
+                    listDataChild.put(listDataHeader.get(1), swipeListUnplan);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+
 
 //        clsListItemAdapter swpItem;
 //        _clsMainBL=new clsMainBL();

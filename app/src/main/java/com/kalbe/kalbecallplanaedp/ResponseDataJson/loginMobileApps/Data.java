@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class Data{
 
+	@SerializedName("dtDateLogin")
+	private String dtDateLogin;
+
 	@SerializedName("IntLOBID")
 	private int intLOBID;
 
@@ -56,6 +59,14 @@ public class Data{
 
 	@SerializedName("TxtCompanyCode")
 	private String txtCompanyCode;
+
+	public void setDtDateLogin(String dtDateLogin){
+		this.dtDateLogin = dtDateLogin;
+	}
+
+	public String getDtDateLogin(){
+		return dtDateLogin;
+	}
 
 	public void setIntLOBID(int intLOBID){
 		this.intLOBID = intLOBID;
@@ -197,7 +208,8 @@ public class Data{
  	public String toString(){
 		return 
 			"Data{" + 
-			"intLOBID = '" + intLOBID + '\'' + 
+			"dtDateLogin = '" + dtDateLogin + '\'' + 
+			",intLOBID = '" + intLOBID + '\'' + 
 			",txtUserName = '" + txtUserName + '\'' + 
 			",txtNick = '" + txtNick + '\'' + 
 			",txtEmail = '" + txtEmail + '\'' + 

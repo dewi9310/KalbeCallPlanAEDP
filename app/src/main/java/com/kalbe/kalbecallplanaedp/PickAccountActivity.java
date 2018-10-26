@@ -66,6 +66,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -198,6 +199,23 @@ public class PickAccountActivity extends Activity {
                 }
             }
         });
+    }
+
+    private String parseDate(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
     }
 
     public void getRole(final String[] data_token, final Activity activity, final AccountManager mAccountManager, View parent_view){
@@ -394,7 +412,6 @@ public class PickAccountActivity extends Activity {
                         gson = gsonBuilder.create();
                         JSONObject jsonObject = new JSONObject(response);
                         LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
-                        JSONObject jsn = jsonObject.getJSONObject("result");
                         boolean txtStatus = model.getResult().isStatus();
                         String txtMessage = model.getResult().getMessage();
                         String txtMethode_name = model.getResult().getMethodName();
@@ -412,8 +429,11 @@ public class PickAccountActivity extends Activity {
                             data.setIntDepartmentID(model.getData().getIntDepartmentID());
                             data.setIntLOBID(model.getData().getIntLOBID());
                             data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
-//                            data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
-//                            data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
+                            if (model.getData().getMUserRole()!=null){
+                                data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
+                                data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
+                            }
+                            data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");

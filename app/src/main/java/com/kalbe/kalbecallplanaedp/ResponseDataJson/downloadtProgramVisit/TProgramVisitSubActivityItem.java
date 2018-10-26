@@ -1,20 +1,66 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit;
 
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
 public class TProgramVisitSubActivityItem{
+
+	@SerializedName("txtDescription")
+	private String txtDescription;
+
+	@SerializedName("txtApotekName")
 	private String txtApotekName;
+
+	@SerializedName("intType")
 	private int intType;
+
+	@SerializedName("txtProgramVisitSubActivityId")
 	private String txtProgramVisitSubActivityId;
+
+	@SerializedName("txtAreaName")
 	private String txtAreaName;
+
+	@SerializedName("txtDokterId")
 	private String txtDokterId;
+
+	@SerializedName("txtNotes")
 	private String txtNotes;
+
+	@SerializedName("txtDokterName")
 	private String txtDokterName;
+
+	@SerializedName("txtProgramVisitId")
 	private String txtProgramVisitId;
+
+	@SerializedName("txtApotekId")
 	private String txtApotekId;
+
+	@SerializedName("intActivityId")
 	private int intActivityId;
+
+	@SerializedName("intSubActivityId")
 	private int intSubActivityId;
+
+	@SerializedName("txtAreaId")
 	private String txtAreaId;
+
+	@SerializedName("dtStart")
 	private String dtStart;
+
+	@SerializedName("intFlag")
+	private int intFlag;
+
+	@SerializedName("dtEnd")
 	private String dtEnd;
+
+	public void setTxtDescription(String txtDescription){
+		this.txtDescription = txtDescription;
+	}
+
+	public String getTxtDescription(){
+		return txtDescription;
+	}
 
 	public void setTxtApotekName(String txtApotekName){
 		this.txtApotekName = txtApotekName;
@@ -120,6 +166,14 @@ public class TProgramVisitSubActivityItem{
 		return dtStart;
 	}
 
+	public void setIntFlag(int intFlag){
+		this.intFlag = intFlag;
+	}
+
+	public int getIntFlag(){
+		return intFlag;
+	}
+
 	public void setDtEnd(String dtEnd){
 		this.dtEnd = dtEnd;
 	}
@@ -132,7 +186,8 @@ public class TProgramVisitSubActivityItem{
  	public String toString(){
 		return 
 			"TProgramVisitSubActivityItem{" + 
-			"txtApotekName = '" + txtApotekName + '\'' + 
+			"txtDescription = '" + txtDescription + '\'' + 
+			",txtApotekName = '" + txtApotekName + '\'' + 
 			",intType = '" + intType + '\'' + 
 			",txtProgramVisitSubActivityId = '" + txtProgramVisitSubActivityId + '\'' + 
 			",txtAreaName = '" + txtAreaName + '\'' + 
@@ -145,6 +200,7 @@ public class TProgramVisitSubActivityItem{
 			",intSubActivityId = '" + intSubActivityId + '\'' + 
 			",txtAreaId = '" + txtAreaId + '\'' + 
 			",dtStart = '" + dtStart + '\'' + 
+			",intFlag = '" + intFlag + '\'' + 
 			",dtEnd = '" + dtEnd + '\'' + 
 			"}";
 		}

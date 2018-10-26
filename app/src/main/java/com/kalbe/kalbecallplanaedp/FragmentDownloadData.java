@@ -3,9 +3,13 @@ package com.kalbe.kalbecallplanaedp;
 import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -74,9 +78,18 @@ import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileA
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -290,7 +303,12 @@ public class FragmentDownloadData extends Fragment{
                 if (dataListDokter!=null){
                     if (dataListDokter.size()>0){
                         for (mDokter data : dataListDokter){
-                            itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName());
+                            if (data.getTxtLastName()!=null){
+                                itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName() + " " + data.getTxtLastName());
+                            }else {
+                                itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName());
+                            }
+
                         }
                     }else {
                         itemList.add(" - ");
@@ -946,7 +964,11 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtType(model.getData().get(i).getType());
 
                                         dokterRepo.createOrUpdate(data);
-                                        itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname());
+                                        if (model.getData().get(i).getLastname()!=null){
+                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname() + " " + model.getData().get(i).getLastname());
+                                        }else {
+                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname());
+                                        }
                                     }
                                 }
                                 if (!isFromDownloadAll){
@@ -1010,8 +1032,8 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtProgramVisitId(model.getData().getTProgramVisit().get(i).getTxtProgramVisitId());
                                         data.setIntUserId(model.getData().getTProgramVisit().get(i).getIntUserId());
                                         data.setIntRoleId(model.getData().getTProgramVisit().get(i).getIntRoleId());
-                                        data.setDtStart(model.getData().getTProgramVisit().get(i).getDtStart());
-                                        data.setDtEnd(model.getData().getTProgramVisit().get(i).getDtEnd());
+                                        data.setDtStart(parseDate(model.getData().getTProgramVisit().get(i).getDtStart()));
+                                        data.setDtEnd(parseDate(model.getData().getTProgramVisit().get(i).getDtEnd()));
                                         data.setIntStatus(model.getData().getTProgramVisit().get(i).getIntStatus());
                                         data.setIntType(model.getData().getTProgramVisit().get(i).getIntType());
                                         data.setTxtNotes(model.getData().getTProgramVisit().get(i).getTxtNotes());
@@ -1020,7 +1042,6 @@ public class FragmentDownloadData extends Fragment{
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
-//                                tv_count_download_subsubactivity.setText(String.valueOf(model.getData().getLtSubActivityDetailData().size()));
                             }
                             if (model.getData().getTProgramVisitSubActivity()!=null){
                                 if (model.getData().getTProgramVisitSubActivity().size()>0){
@@ -1038,25 +1059,10 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtDokterName(model.getData().getTProgramVisitSubActivity().get(i).getTxtDokterName());
                                         data.setIntSubActivityId(model.getData().getTProgramVisitSubActivity().get(i).getIntSubActivityId());
                                         data.setIntActivityId(model.getData().getTProgramVisitSubActivity().get(i).getIntActivityId());
-                                        data.setDtStart(model.getData().getTProgramVisitSubActivity().get(i).getDtStart());
-                                        data.setDtEnd(model.getData().getTProgramVisitSubActivity().get(i).getDtEnd());
+                                        data.setDtStart(parseDate(model.getData().getTProgramVisitSubActivity().get(i).getDtStart()));
+                                        data.setDtEnd(parseDate(model.getData().getTProgramVisitSubActivity().get(i).getDtEnd()));
                                         data.setTxtNotes(model.getData().getTProgramVisitSubActivity().get(i).getTxtNotes());
                                         dtRepoProgramVisitSubActivity.createOrUpdate(data);
-                                    }
-                                }
-                            }
-                            if (model.getData().getTProgramVisitSubActivityAttachment()!=null){
-                                if (model.getData().getTProgramVisitSubActivityAttachment().size()>0){
-                                    dtRepoProVisitAttch = new tProgramVisitSubActivityAttachmentRepo(getContext());
-                                    for (int i = 0; i <model.getData().getTProgramVisitSubActivityAttachment().size(); i++){
-                                        tProgramVisitSubActivityAttachment data = new tProgramVisitSubActivityAttachment();
-                                        data.setTxtProgramVisitSubActivityAttachmentId(model.getData().getTProgramVisitSubActivityAttachment().get(i).getTxtProgramVisitSubActivityAttachmentId());
-                                        data.setTxtFileName(model.getData().getTProgramVisitSubActivityAttachment().get(i).getTxtFilePath());
-//                                        data.setBlobFile();
-                                        data.setTxtNoDocument(model.getData().getTProgramVisitSubActivityAttachment().get(i).getTxtNoDocument());
-                                        data.setTxtProgramVisitSubActivityId(model.getData().getTProgramVisitSubActivityAttachment().get(i).getTxtProgramVisitSubActivityId());
-                                        data.setDtExpiredDate(model.getData().getTProgramVisitSubActivityAttachment().get(i).getDtExpiredDate());
-                                        dtRepoProVisitAttch.createOrUpdate(data);
                                     }
                                 }
                             }
@@ -1065,10 +1071,8 @@ public class FragmentDownloadData extends Fragment{
                                     dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
                                     for (int i = 0; i <model.getData().getRealisasiData().size(); i++){
                                         tRealisasiVisitPlan data = new tRealisasiVisitPlan();
-                                        data.setTxtProgramVisitId(model.getData().getRealisasiData().get(i).getTxtProgramVisitId());
+                                        data.setTxtProgramVisitSubActivityId(model.getData().getRealisasiData().get(i).getTxtProgramVisitSubActivityId());
                                         data.setTxtRealisasiVisitId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
-                                        data.setIntVisitType(model.getData().getRealisasiData().get(i).getIntVisitType());
-                                        data.setIntPlanType(model.getData().getRealisasiData().get(i).getIntPlanType());
                                         data.setIntRoleID(model.getData().getRealisasiData().get(i).getIntRoleId());
                                         data.setTxtDokterId(model.getData().getRealisasiData().get(i).getTxtDokterId());
                                         data.setIntUserId(model.getData().getRealisasiData().get(i).getIntUserId());
@@ -1078,14 +1082,19 @@ public class FragmentDownloadData extends Fragment{
                                         data.setDtCheckIn(parseDate(model.getData().getRealisasiData().get(i).getDtCheckin()));
                                         data.setDtCheckOut(parseDate(model.getData().getRealisasiData().get(i).getDtChekout()));
                                         data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
+                                        data.setDtDatePlan(parseDate(model.getData().getRealisasiData().get(i).getDtDatePlan()));
                                         data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
                                         data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
                                         data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
                                         data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
                                         data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
                                         data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
-//                                        data.setBlobImg1(model.getData().getRealisasiData().get(i).);
-//                                        data.setBlobImg2();
+                                        if (getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage1Path())!=null){
+                                            data.setBlobImg1(getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage1Path()));
+                                        }
+                                        if (getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage2Path())!=null){
+                                            data.setBlobImg2(getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage2Path()));
+                                        }
                                         dtRepoRealisasi.createOrUpdate(data);
                                         itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
                                     }
@@ -1203,5 +1212,36 @@ public class FragmentDownloadData extends Fragment{
         }else {
             return "";
         }
+    }
+
+    private byte[] getLogoImage(String url) {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            URL imageUrl = new URL(url);
+            URLConnection ucon = imageUrl.openConnection();
+            String contentType = ucon.getHeaderField("Content-Type");
+            boolean image = contentType.startsWith("image/");
+            boolean text = contentType.startsWith("application/");
+
+            if (image || text) {
+                InputStream is = ucon.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
+
+                ByteArrayBuffer baf = new ByteArrayBuffer(500);
+                int current;
+                while ((current = bis.read()) != -1) {
+                    baf.append((byte) current);
+                }
+
+                return baf.toByteArray();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Log.d("ImageManager", "Error: " + e.toString());
+        }
+        return null;
     }
 }

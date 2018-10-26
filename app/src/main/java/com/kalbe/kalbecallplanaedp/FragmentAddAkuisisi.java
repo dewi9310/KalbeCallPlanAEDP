@@ -99,6 +99,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     private RecyclerView lv_akuisisi;
     private RecyclerGridImageAdapter adapter;
     private AppCompatSpinner spnAddSubAkuisisi;
+    TextView etDtExpired;
     List<clsListImageAdapter> listImage = new ArrayList<>();
     private static final int CAMERA_CAPTURE_IMAGE1_REQUEST_CODE = 100;
     private String fileName, selectedSubAkuisisi;
@@ -109,7 +110,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     public List<String> NamaTab = new ArrayList<>();
     public HashMap<String, Integer> MapTab = new HashMap<>();
     String txtSubSubActivity;
-    TextInputEditText etDtExpired, etNoDoc;
+    TextInputEditText etNoDoc;
     tAkuisisiDetailRepo dtDetailRepo;
     tAkuisisiHeaderRepo dtHeaderRepo;
     mUserLogin dtUserLogin;
@@ -129,7 +130,8 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         v = inflater.inflate(R.layout.fragment_add_akuisisi, container, false);
         lv_akuisisi = (RecyclerView) v.findViewById(R.id.lv_akuisisi);
         spnAddSubAkuisisi = (AppCompatSpinner) v.findViewById(R.id.spn_add_sub_akuisisi);
-        etDtExpired = (TextInputEditText) v.findViewById(R.id.et_exp_date);
+//        etDtExpired = (TextInputEditText) v.findViewById(R.id.et_exp_date);
+        etDtExpired = (TextView) v.findViewById(R.id.tv_exp_date);
 
         etNoDoc = (TextInputEditText) v.findViewById(R.id.et_no_doc);
 
@@ -147,10 +149,11 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        NamaTab.clear();
+        MapTab.clear();
+        NamaTab.add("Select One");
+        MapTab.put("Select One", 0);
         if (_mSubSubActivity!=null&&_mSubSubActivity.size()>0){
-            NamaTab.add("Select One");
-            MapTab.put("Select One", 0);
             for (int i = 0; i < _mSubSubActivity.size(); i++){
                 NamaTab.add(_mSubSubActivity.get(i).getTxtName());
                 MapTab.put(_mSubSubActivity.get(i).getTxtName(), _mSubSubActivity.get(i).getIntSubSubActivityid());
@@ -292,16 +295,22 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         args.putLong(CustomDatePicker.DATE_MIN, c.getTimeInMillis());
         //set hint for date
         CustomDatePicker.showHint(etDtExpired, args, CustomDatePicker.format.standard1);
-
-        etDtExpired.setOnTouchListener(new DrawableClickListener.RightDrawableClickListener(etDtExpired) {
+        etDtExpired.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onDrawableClick() {
-//                clsDatePicker.showDatePicker(getContext(), etDtExpired, "Select Date", args, clsDatePicker.format.standard1, AlertDialog.THEME_HOLO_LIGHT);
-                CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
-//                dialogDatePickerLight();
-                return false;
+            public void onClick(View v) {
+             CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
             }
         });
+
+//        etDtExpired.setOnTouchListener(new DrawableClickListener.RightDrawableClickListener(etDtExpired) {
+//            @Override
+//            public boolean onDrawableClick() {
+////                clsDatePicker.showDatePicker(getContext(), etDtExpired, "Select Date", args, clsDatePicker.format.standard1, AlertDialog.THEME_HOLO_LIGHT);
+//                CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
+////                dialogDatePickerLight();
+//                return false;
+//            }
+//        });
 
         return v;
     }

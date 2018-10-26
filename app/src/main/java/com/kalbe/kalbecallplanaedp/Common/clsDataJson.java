@@ -176,9 +176,7 @@ public class clsDataJson {
             for (tRealisasiVisitPlan data : this.getListOfDatatRealisasiVisitPlan()){
                 JSONObject item = new JSONObject();
                 item.put(dataRealisasi.Property_txtRealisasiVisitId, String.valueOf(data.getTxtRealisasiVisitId()));
-                item.put(dataRealisasi.Property_txtProgramVisitId, String.valueOf(data.getTxtProgramVisitId()));
-                item.put(dataRealisasi.Property_intVisitType, String.valueOf(data.getIntVisitType()));
-                item.put(dataRealisasi.Property_intPlanType, String.valueOf(data.getIntPlanType()));
+                item.put(dataRealisasi.Property_txtProgramVisitSubActivityId, String.valueOf(data.getTxtProgramVisitSubActivityId()));
                 item.put(dataRealisasi.Property_intUserId, String.valueOf(data.getIntUserId()));
                 item.put(dataRealisasi.Property_intRoleID, String.valueOf(data.getIntRoleID()));
                 item.put(dataRealisasi.Property_txtDokterId, String.valueOf(data.getTxtDokterId()));
@@ -188,6 +186,7 @@ public class clsDataJson {
                 item.put(dataRealisasi.Property_dtCheckIn, String.valueOf(data.getDtCheckIn()));
                 item.put(dataRealisasi.Property_dtCheckOut, String.valueOf(data.getDtCheckOut()));
                 item.put(dataRealisasi.Property_dtDateRealisasi, String.valueOf(data.getDtDateRealisasi()));
+                item.put(dataRealisasi.Property_dtDatePlan, String.valueOf(data.getDtDatePlan()));
                 item.put(dataRealisasi.Property_intNumberRealisasi, String.valueOf(dataRealisasi.getIntNumberRealisasi()));
                 item.put(dataRealisasi.Property_txtAcc, String.valueOf(data.getTxtAcc()));
                 item.put(dataRealisasi.Property_txtLong, String.valueOf(data.getTxtLong()));

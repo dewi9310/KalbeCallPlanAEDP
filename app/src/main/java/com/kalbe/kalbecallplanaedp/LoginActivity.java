@@ -56,9 +56,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -370,9 +372,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         txtUsername = etUsername.getText().toString();
         txtPassword = etPassword.getText().toString();
         int intRoleId = HMRole.get(spnRoleLogin.getSelectedItem());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        final String now = dateFormat.format(cal.getTime()).toString();
         String strLinkAPI = new clsHardCode().linkLogin;
         JSONObject resJson = new JSONObject();
         JSONObject jData = new JSONObject();
@@ -414,7 +413,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
-                        JSONObject jsn = jsonObject.getJSONObject("result");
                         boolean txtStatus = model.getResult().isStatus();
                         String txtMessage = model.getResult().getMessage();
                         String txtMethode_name = model.getResult().getMethodName();
@@ -423,7 +421,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
                         if (txtStatus == true){
                             loginRepo = new mUserLoginRepo(getApplicationContext());
-//                            JSONObject objData = jsonObject.getJSONObject("data");
                             mUserLogin data = new mUserLogin();
                             data.setIntUserID(model.getData().getIntUserID());
                             data.setTxtUserName(model.getData().getTxtUserName());
@@ -437,10 +434,10 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                 data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
                                 data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
                             }
+                            data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");
-//                            listMenu(LoginActivity.this);
 
                             datum.putString(AccountManager.KEY_ACCOUNT_NAME, txtUsername);
                             datum.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
@@ -458,7 +455,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
                         } else {
                             ToastCustom.showToasty(LoginActivity.this,txtMessage,4);
-//                            Toast.makeText(getApplicationContext(), txtMessage, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -470,6 +466,22 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         });
     }
 
+    private String parseDate(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
+    }
     public void finishLogin(Intent intent, AccountManager mAccountManager) {
         Log.d("kalbe", TAG + "> finishLogin");
 
@@ -532,11 +544,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(response);
-//                        com.kalbe.kalbecallplanaedp.Common.Response model= gson.fromJson(jsonObject.toString(), com.kalbe.kalbecallplanaedp.Common.Response.class);
                         JSONObject jsn = jsonObject.getJSONObject("result");
-//                        boolean txtStatus = model.getResult().isStatus();
-//                        String txtMessage = model.getResult().getMessage();
-//                        String txtMethode_name = model.getResult().getMethodName();
                         boolean txtStatus = jsn.getBoolean("status");
                         String txtMessage = jsn.getString("message");
                         String txtMethode_name = jsn.getString("method_name");
@@ -567,27 +575,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                     }
                                     spnRoleLogin.setEnabled(true);
                                 }
-//                            if (model.getData2()!= null) {
-//                                if (model.getData2().size()>0){
-//                                    int index = 0;
-//                                    for (int i = 0; i < model.getData2().size(); i++){
-//
-//                                        String txtRoleName = model.getData2().get(i).getTxtRoleName();
-//                                        int intRoleId = model.getData2().get(i).getIntRoleId();
-//                                        roleName.add(txtRoleName);
-//
-//                                        mUserRole data = new mUserRole();
-//                                        data.setTxtId(String.valueOf(index));
-//                                        data.setIntRoleId(intRoleId);
-//                                        data.setTxtRoleName(txtRoleName);;
-//                                        mUserRoleRepo userRoleRepo = new mUserRoleRepo(getApplicationContext());
-//                                        userRoleRepo.createOrUpdate(data);
-//
-//                                        HMRole.put(txtRoleName, intRoleId);
-//                                        index++;
-//                                    }
-//                                    spnRoleLogin.setEnabled(true);
-//                                }
                                 else {
                                     spnRoleLogin.setEnabled(false);
                                 }
