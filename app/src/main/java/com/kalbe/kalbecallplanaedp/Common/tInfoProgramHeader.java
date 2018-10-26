@@ -112,5 +112,6 @@ public class tInfoProgramHeader implements Serializable {
     public String Property_intApotekId = "intApotekId";
     public String Property_intAreaId = "intAreaId";
     public String Property_intFlagPush = "intFlagPush";
+    public String Property_ListOfDatatInforProgramHeader = "ListOfDatatInforProgramHeader";
 
 }

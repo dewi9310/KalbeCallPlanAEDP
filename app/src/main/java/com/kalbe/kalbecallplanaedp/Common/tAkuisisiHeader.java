@@ -39,6 +39,8 @@ public class tAkuisisiHeader implements Serializable {
     public int intAreaId;
     @DatabaseField(columnName = "intFlagPush")
     public int intFlagPush;
+    @DatabaseField
+    public String txtRealisasiVisitId = "txtRealisasiVisitId";
 
     public String Property_intSubSubActivityId = "intSubSubActivityId";
     public String Property_intHeaderId = "intHeaderId";
@@ -53,6 +55,7 @@ public class tAkuisisiHeader implements Serializable {
     public String Property_intApotekID = "intApotekID";
 //    public String Property_intOutletId = "intOutletId";
     public String Property_intAreaId = "intAreaId";
+    public String Property_txtRealisasiVisitId = "txtRealisasiVisitId";
     public String Property_ListDataOftAkuisisiHeader = "ListDataOftAkuisisiHeader";
 
     public String getTxtHeaderId() {
@@ -165,5 +168,13 @@ public class tAkuisisiHeader implements Serializable {
 
     public void setIntFlagPush(int intFlagPush) {
         this.intFlagPush = intFlagPush;
+    }
+
+    public String getTxtRealisasiVisitId() {
+        return txtRealisasiVisitId;
+    }
+
+    public void setTxtRealisasiVisitId(String txtRealisasiVisitId) {
+        this.txtRealisasiVisitId = txtRealisasiVisitId;
     }
 }

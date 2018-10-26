@@ -1210,7 +1210,7 @@ public class FragmentDownloadData extends Fragment{
         if (date!=null){
             return dateFormat.format(date);
         }else {
-            return "";
+            return null;
         }
     }
 

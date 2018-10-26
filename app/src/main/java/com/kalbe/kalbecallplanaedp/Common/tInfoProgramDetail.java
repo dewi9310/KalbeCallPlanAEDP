@@ -35,6 +35,7 @@ public class tInfoProgramDetail implements Serializable {
     public String Property_blobFile = "blobFile";
     public String Property_intFlagChecklist = "intFlagChecklist";
     public String Property_dtChecklist = "dtChecklist";
+    public String Property_ListOfDatatInfoProgramDetail = "ListOfDatatInfoProgramDetail";
 
     public String getTxtDetailId() {
         return txtDetailId;

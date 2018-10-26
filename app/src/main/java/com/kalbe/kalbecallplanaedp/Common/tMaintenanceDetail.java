@@ -27,6 +27,7 @@ public class tMaintenanceDetail implements Serializable {
     public String Property_intSubDetailActivityId = "intSubDetailActivityId";
     public String Property_txtNoResep = "txtNoResep";
     public String Property_txtNoOrder = "txtNoOrder";
+    public String Property_ListOfDataTMaintenanceDetail = "ListOfDataTMaintenanceDetail";
 
     public String getTxtDetailId() {
         return txtDetailId;

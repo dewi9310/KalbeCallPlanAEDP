@@ -45,6 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
@@ -52,6 +53,7 @@ import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsListImageAdapter;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
@@ -60,6 +62,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.SpacingItemDecoration;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
@@ -122,6 +125,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     mActivity _mActivity;
     mSubSubActivityRepo subSubActivityRepo;
     mSubActivityRepo subActivityRepo;
+    tRealisasiVisitPlanRepo absenRepo;
     mActivityRepo activityRepo;
 
     @Nullable
@@ -135,13 +139,14 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 
         etNoDoc = (TextInputEditText) v.findViewById(R.id.et_no_doc);
 
+        absenRepo = new tRealisasiVisitPlanRepo(getContext());
         dtDetailRepo = new tAkuisisiDetailRepo(getContext());
         dtHeaderRepo = new tAkuisisiHeaderRepo(getContext());
         dtUserLogin = new clsMainBL().getUserLogin(getContext());
         lv_akuisisi.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         lv_akuisisi.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 3), true));
         lv_akuisisi.setHasFixedSize(true);
-
+        final tRealisasiVisitPlan dataCheckinActive = absenRepo.getDataCheckinActive();
 
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
         try {
@@ -227,7 +232,6 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                             ToastCustom.showToasty(getContext(), "Please select type of akuisisi", 4);
                         }else {
                             if (dtHeader==null){
-
                                 tAkuisisiHeader dt = new tAkuisisiHeader();
                                 dt.setTxtHeaderId(new clsActivity().GenerateGuid());
                                 dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
@@ -235,6 +239,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                 dt.setIntFlagPush(new clsHardCode().Draft);
                                 dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                                 dt.setIntUserId(dtUserLogin.getIntUserID());
+                                dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
                                 try {
                                     dtHeaderRepo.createOrUpdate(dt);
                                 } catch (SQLException e) {
@@ -266,6 +271,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                             dt.setIntFlagPush(new clsHardCode().Save);
                             dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                             dt.setIntUserId(dtUserLogin.getIntUserID());
+                            dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
                             try {
                                 dtHeaderRepo.createOrUpdate(dt);
                             } catch (SQLException e) {

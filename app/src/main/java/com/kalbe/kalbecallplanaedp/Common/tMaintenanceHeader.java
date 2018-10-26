@@ -40,6 +40,8 @@ public class tMaintenanceHeader implements Serializable {
     public String Property_intApotekID = "intApotekID";
     public String Property_intAreaId = "intAreaId";
     public String Property_intFlagPush = "intFlagPush";
+    public String Property_ListOfDatatMaintenanceHeader = "ListOfDatatMaintenanceHeader";
+
 
     public String getTxtHeaderId() {
         return txtHeaderId;

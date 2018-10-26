@@ -8,9 +8,11 @@ import android.util.TypedValue;
 
 import com.kalbe.kalbecallplanaedp.Common.clsStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.enumStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenu;
 import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenuItem;
 import com.kalbe.mobiledevknlibs.library.swipemenu.interfaces.SwipeMenuCreator;
@@ -61,5 +63,12 @@ public class clsMainBL {
             e.printStackTrace();
         }
         return dtList.get(0);
+    }
+
+    public tRealisasiVisitPlan getDataCheckinActive(Context context){
+        tRealisasiVisitPlan data = null;
+        tRealisasiVisitPlanRepo absenRepo= new tRealisasiVisitPlanRepo(context);
+        data = (tRealisasiVisitPlan) absenRepo.getDataCheckinActive();
+        return data;
     }
 }

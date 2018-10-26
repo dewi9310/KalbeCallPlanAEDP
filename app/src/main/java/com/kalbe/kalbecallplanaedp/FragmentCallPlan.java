@@ -122,7 +122,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 dtVisitPlan = (tProgramVisitSubActivity) visitPlanRepo.findBytxtId(dataHeader.getString(DT_CALL_PLAN));
 //                dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtId(dataHeader.getString(DT_CALL_PLAN));
                 if (dtVisitPlan!=null){
-                    dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtId(dtVisitPlan.getTxtProgramVisitSubActivityId());
+                    dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtPlanId(dtVisitPlan.getTxtProgramVisitSubActivityId());
 //                   dtVisitPlan = (tProgramVisitSubActivity) visitPlanRepo.findBytxtId(dtRealisasiVisit.getTxtProgramVisitSubActivityId());
                    if (dtVisitPlan.getIntActivityId()==1){
                        tvOutlet.setText("Doctor Name  : ");
@@ -235,8 +235,8 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setTxtApotekId(dtRealisasiVisit.getTxtApotekId());
                 data.setTxtApotekName(dtRealisasiVisit.getTxtApotekName());
                 data.setDtCheckIn(dateTimeFormat.format(cal.getTime()));
-                data.setDtCheckOut("");
-                data.setDtDateRealisasi(dateFormat.format(cal.getTime())); ///tanggal login
+                data.setDtCheckOut(null);
+                data.setDtDateRealisasi(null); ///tanggal login
                 data.setDtDatePlan(dtRealisasiVisit.getDtDatePlan());
                 data.setIntNumberRealisasi(dtRealisasiVisit.getIntNumberRealisasi()); //generate number
                 data.setTxtAcc(tvAcc.getText().toString());
@@ -246,7 +246,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setBlobImg1(dtTemp.getBlobImg1());
                 data.setTxtImgName2(dtTemp.getTxtImgName2());
                 data.setBlobImg2(dtTemp.getBlobImg2());
-                data.setIntStatusRealisasi(new clsHardCode().CheckIn);
+                data.setIntStatusRealisasi(new clsHardCode().VisitPlan);
                 data.setIntFlagPush(new clsHardCode().Draft);
                 realisasiVisitPlanRepo.createOrUpdate(data);
             } catch (SQLException e) {

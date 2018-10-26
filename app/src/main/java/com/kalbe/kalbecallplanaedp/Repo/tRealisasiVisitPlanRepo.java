@@ -3,7 +3,9 @@ package com.kalbe.kalbecallplanaedp.Repo;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
@@ -101,6 +103,19 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
         return item;
     }
 
+    public tRealisasiVisitPlan findBytxtPlanId(String txtId) throws SQLException {
+        tRealisasiVisitPlan item = new tRealisasiVisitPlan();
+        QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtProgramVisitSubActivityId, txtId);
+            item = queryBuilder.queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
     public List<tRealisasiVisitPlan> getAllPushData () {
         tRealisasiVisitPlan item = new tRealisasiVisitPlan();
         List<tRealisasiVisitPlan> listData = new ArrayList<>();
@@ -113,5 +128,25 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
             e.printStackTrace();
         }
         return listData;
+    }
+
+    public tRealisasiVisitPlan getDataCheckinActive () {
+        tRealisasiVisitPlan item = new tRealisasiVisitPlan();
+//        List<tRealisasiVisitPlan> listData = new ArrayList<>();
+        QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
+//            Where<tRealisasiVisitPlan, Integer> where = queryBuilder.where();
+//                where.eq(item.Property_intFlagPush, new clsHardCode().Draft).and().eq(item.Property_intStatusRealisasi, new clsHardCode().CheckIn);
+//            where.and();
+//                where.eq(item.Property_intFlagPush, new clsHardCode().Draft).and().eq(item.Property_intStatusRealisasi, new clsHardCode().Realisasi);
+//            PreparedQuery<tRealisasiVisitPlan> preparedQuery = queryBuilder.prepare();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Draft).and().isNotNull(item.Property_dtCheckIn).and().isNull(item.Property_dtCheckOut);
+            item = queryBuilder.queryForFirst();
+//            listData = helper.gettRealisasiVisitPlanDao().query(preparedQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
     }
 }

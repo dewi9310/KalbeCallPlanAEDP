@@ -20,6 +20,10 @@ public class clsDataJson {
     private List<tProgramVisit> ListDataOftProgramVisit;
     private List<tProgramVisitSubActivityAttachment> ListOfDatatProgramVisitSubActivityAttachment;
     private List<tRealisasiVisitPlan> ListOfDatatRealisasiVisitPlan;
+    private List<tMaintenanceHeader> ListOfDatatMaintenanceHeader;
+    private List<tMaintenanceDetail> ListOfDatatMaintenanceDetail;
+    private List<tInfoProgramHeader> ListOfDatatInfoProogramHeader;
+    private List<tInfoProgramDetail> ListOfDatatInfoProgramDetail;
     private String txtUserId;
     private String txtSessionLogiId;
     private String intRoleId;
@@ -84,6 +88,38 @@ public class clsDataJson {
 
     public void setListOfDatatRealisasiVisitPlan(List<tRealisasiVisitPlan> listOfDatatRealisasiVisitPlan) {
         ListOfDatatRealisasiVisitPlan = listOfDatatRealisasiVisitPlan;
+    }
+
+    public List<tMaintenanceHeader> getListOfDatatMaintenanceHeader() {
+        return ListOfDatatMaintenanceHeader;
+    }
+
+    public void setListOfDatatMaintenanceHeader(List<tMaintenanceHeader> listOfDatatMaintenanceHeader) {
+        ListOfDatatMaintenanceHeader = listOfDatatMaintenanceHeader;
+    }
+
+    public List<tMaintenanceDetail> getListOfDatatMaintenanceDetail() {
+        return ListOfDatatMaintenanceDetail;
+    }
+
+    public void setListOfDatatMaintenanceDetail(List<tMaintenanceDetail> listOfDatatMaintenanceDetail) {
+        ListOfDatatMaintenanceDetail = listOfDatatMaintenanceDetail;
+    }
+
+    public List<tInfoProgramHeader> getListOfDatatInfoProogramHeader() {
+        return ListOfDatatInfoProogramHeader;
+    }
+
+    public void setListOfDatatInfoProogramHeader(List<tInfoProgramHeader> listOfDatatInfoProogramHeader) {
+        ListOfDatatInfoProogramHeader = listOfDatatInfoProogramHeader;
+    }
+
+    public List<tInfoProgramDetail> getListOfDatatInfoProgramDetail() {
+        return ListOfDatatInfoProgramDetail;
+    }
+
+    public void setListOfDatatInfoProgramDetail(List<tInfoProgramDetail> listOfDatatInfoProgramDetail) {
+        ListOfDatatInfoProgramDetail = listOfDatatInfoProgramDetail;
     }
 
     public String getTxtUserId() {
@@ -170,6 +206,30 @@ public class clsDataJson {
             }
         }
 
+        if(this.getListOfDatatProgramVisitSubActivity()!=null){
+            tProgramVisitSubActivity dataVisit = new tProgramVisitSubActivity();
+            itemLIstQuery = new ArrayList<>();
+            for (tProgramVisitSubActivity data : this.getListOfDatatProgramVisitSubActivity()){
+                JSONObject item = new JSONObject();
+                item.put(dataVisit.Property_txtProgramVisitSubActivityId, String.valueOf(data.getTxtProgramVisitSubActivityId()));
+                item.put(dataVisit.Property_txtApotekName, String.valueOf(data.getTxtProgramVisitId()));
+                item.put(dataVisit.Property_intType, String.valueOf(data.getIntType()));
+                item.put(dataVisit.Property_txtAreaName, String.valueOf(data.getTxtAreaName()));
+                item.put(dataVisit.Property_txtDokterId, String.valueOf(data.getTxtDokterId()));
+                item.put(dataVisit.Property_txtNotes, String.valueOf(data.getTxtNotes()));
+                item.put(dataVisit.Property_txtDokterName, String.valueOf(data.getTxtDokterName()));
+                item.put(dataVisit.Property_txtProgramVisitId, String.valueOf(data.getTxtProgramVisitId()));
+                item.put(dataVisit.Property_txtApotekId, String.valueOf(data.getTxtApotekId()));
+                item.put(dataVisit.Property_intActivityId, String.valueOf(data.getIntActivityId()));
+                item.put(dataVisit.Property_intSubActivityId, String.valueOf(data.getIntSubActivityId()));
+                item.put(dataVisit.Property_txtAreaId, String.valueOf(data.getTxtAreaId()));
+                item.put(dataVisit.Property_dtStart, String.valueOf(data.getDtStart()));
+                item.put(dataVisit.Property_dtEnd, String.valueOf(data.getDtEnd()));
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataVisit.Property_ListOfDatatProgramVisitSubActivity, new JSONArray(itemLIstQuery));
+        }
+
         if (this.getListOfDatatRealisasiVisitPlan()!=null){
             tRealisasiVisitPlan dataRealisasi = new tRealisasiVisitPlan();
             itemLIstQuery = new ArrayList<>();
@@ -233,6 +293,76 @@ public class clsDataJson {
                 itemLIstQuery.add(item);
             }
             resJson.put(akuisisiDetailData.Property_ListDataOftAkuisisiDetail, new JSONArray(itemLIstQuery));
+        }
+
+        if (this.getListOfDatatMaintenanceHeader()!=null){
+            tMaintenanceHeader dataMaintenance = new tMaintenanceHeader();
+            itemLIstQuery = new ArrayList<>();
+            for (tMaintenanceHeader data : this.getListOfDatatMaintenanceHeader()){
+                JSONObject item = new JSONObject();
+                item.put(dataMaintenance.Property_txtHeaderId, data.getTxtHeaderId());
+                item.put(dataMaintenance.Property_txtRealisasiVisitId, data.getTxtRealisasiVisitId());
+                item.put(dataMaintenance.Property_intActivityId, data.getIntActivityId());
+                item.put(dataMaintenance.Property_intUserId, data.getIntUserId());
+                item.put(dataMaintenance.Property_intRoleId, data.getIntRoleId());
+                item.put(dataMaintenance.Property_intDokterId, data.getIntDokterId());
+                item.put(dataMaintenance.Property_intApotekID, data.getIntApotekID());
+                item.put(dataMaintenance.Property_intAreaId, data.getIntAreaId());
+                item.put(dataMaintenance.Property_intFlagPush, data.getIntFlagPush());
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataMaintenance.Property_ListOfDatatMaintenanceHeader, new JSONArray(itemLIstQuery));
+        }
+
+        if (this.getListOfDatatMaintenanceDetail()!=null){
+            tMaintenanceDetail dataMDetail = new tMaintenanceDetail();
+            itemLIstQuery = new ArrayList<>();
+            for (tMaintenanceDetail data : this.getListOfDatatMaintenanceDetail()){
+                JSONObject item = new JSONObject();
+                item.put(dataMDetail.Property_txtDetailId, data.getTxtDetailId());
+                item.put(dataMDetail.Property_txtHeaderId, data.getTxtHeaderId());
+                item.put(dataMDetail.Property_intSubDetailActivityId, data.getIntSubDetailActivityId());
+                item.put(dataMDetail.Property_txtNoResep, data.getTxtNoResep());
+                item.put(dataMDetail.Property_txtNoOrder, data.getTxtNoOrder());
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataMDetail.Property_ListOfDataTMaintenanceDetail, new JSONArray(itemLIstQuery));
+        }
+
+        if (this.getListOfDatatInfoProogramHeader()!=null){
+            tInfoProgramHeader dataInfoHeader = new tInfoProgramHeader();
+            itemLIstQuery = new ArrayList<>();
+            for (tInfoProgramHeader data : this.getListOfDatatInfoProogramHeader()){
+                JSONObject item = new JSONObject();
+                item.put(dataInfoHeader.Property_txtHeaderId, data.getTxtHeaderId());
+                item.put(dataInfoHeader.Property_txtRealisasiVisitId, data.getTxtRealisasiVisitId());
+                item.put(dataInfoHeader.Property_intActivityId, data.getIntActivityId());
+                item.put(dataInfoHeader.Property_intUserId, data.getIntUserId());
+                item.put(dataInfoHeader.Property_intRoleId, data.getIntRoleId());
+                item.put(dataInfoHeader.Property_intDokterId, data.getIntDokterId());
+                item.put(dataInfoHeader.Property_intApotekId, data.getIntApotekId());
+                item.put(dataInfoHeader.Property_intAreaId, data.getIntAreaId());
+                item.put(dataInfoHeader.Property_intFlagPush, data.getIntFlagPush());
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataInfoHeader.Property_ListOfDatatInforProgramHeader, new JSONArray(itemLIstQuery));
+        }
+
+        if (this.getListOfDatatInfoProgramDetail()!=null){
+            tInfoProgramDetail dataInfoDeatil = new tInfoProgramDetail();
+            itemLIstQuery = new ArrayList<>();
+            for (tInfoProgramDetail data : this.getListOfDatatInfoProgramDetail()){
+                JSONObject item = new JSONObject();
+                item.put(dataInfoDeatil.Property_txtDetailId, data.getTxtDetailId());
+                item.put(dataInfoDeatil.Property_txtHeaderId, data.getTxtHeaderId());
+                item.put(dataInfoDeatil.Property_intSubDetailActivityId, data.getIntSubDetailActivityId());
+                item.put(dataInfoDeatil.Property_txtFileName, data.getTxtFileName());
+                item.put(dataInfoDeatil.Property_blobFile, data.getBlobFile());
+                item.put(dataInfoDeatil.Property_intFlagChecklist, data.getIntFlagChecklist());
+                item.put(dataInfoDeatil.Property_dtChecklist, data.getDtChecklist());
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataInfoDeatil.Property_ListOfDatatInfoProgramDetail, new JSONArray(itemLIstQuery));
         }
 
         resJson.put(Property_txtUserId, getTxtUserId());

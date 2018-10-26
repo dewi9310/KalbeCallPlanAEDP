@@ -23,6 +23,11 @@ import com.kalbe.kalbecallplanaedp.Common.mCounterData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
@@ -34,6 +39,11 @@ import com.kalbe.kalbecallplanaedp.Repo.mCounterDataRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.mobiledevknlibs.Volley.volley.VolleyMultipartRequest;
@@ -88,11 +98,20 @@ public class clsHelperBL {
             tRealisasiVisitPlanRepo _tRealisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
             tAkuisisiHeaderRepo _tAkuisisiHeaderRepo = new tAkuisisiHeaderRepo(context);
             tAkuisisiDetailRepo _tAkuisisiDetailRepo = new tAkuisisiDetailRepo(context);
-
+            tProgramVisitSubActivityRepo _tProgramVisitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
+            tMaintenanceHeaderRepo _tMaintenanceHeaderRepo = new tMaintenanceHeaderRepo(context);
+            tMaintenanceDetailRepo _tMaintenanceDetailRepo = new tMaintenanceDetailRepo(context);
+            tInfoProgramHeaderRepo _tInfoProgramHeaderRepo = new tInfoProgramHeaderRepo(context);
+            tInfoProgramDetailRepo _tInfoProgramDetailRepo = new tInfoProgramDetailRepo(context);
 
             List<tRealisasiVisitPlan> ListoftRealisasiVisitData = _tRealisasiVisitPlanRepo.getAllPushData();
             List<tAkuisisiHeader> ListOftAkuisisiHeaderData = _tAkuisisiHeaderRepo.getAllPushData();
             List<tAkuisisiDetail> ListOftAkuisisiDetailData = _tAkuisisiDetailRepo.getPushAllData(ListOftAkuisisiHeaderData);
+            List<tMaintenanceHeader> ListOftMaintenanceHeader = _tMaintenanceHeaderRepo.getAllPushData();
+            List<tMaintenanceDetail> ListOfMaintenanceDetail = _tMaintenanceDetailRepo.getPushAllData(ListOftMaintenanceHeader);
+            List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
+            List<tInfoProgramDetail> ListOftInfoProgramDetail = _tInfoProgramDetailRepo.getPushAllData(ListOftInfoProgramHeader);
+//            List<tProgramVisitSubActivity> ListOfDatatProgramSubActivity
 
             FileUpload = new HashMap<>();
             if (ListOftAkuisisiHeaderData!=null){
@@ -106,6 +125,21 @@ public class clsHelperBL {
                         FileUpload.put(data.getTxtDetailId(), data.getTxtImg());
                     }
                 }
+            }
+
+            if (ListOftMaintenanceHeader!=null){
+                dtPush.setListOfDatatMaintenanceHeader(ListOftMaintenanceHeader);
+            }
+            if (ListOfMaintenanceDetail!=null){
+                dtPush.setListOfDatatMaintenanceDetail(ListOfMaintenanceDetail);
+            }
+
+            if (ListOftInfoProgramHeader!=null){
+                dtPush.setListOfDatatInfoProogramHeader(ListOftInfoProgramHeader);
+            }
+
+            if (ListOftInfoProgramDetail!=null){
+                dtPush.setListOfDatatInfoProgramDetail(ListOftInfoProgramDetail);
             }
 
             if (ListoftRealisasiVisitData!=null){

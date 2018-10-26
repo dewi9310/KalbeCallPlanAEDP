@@ -39,19 +39,19 @@ public class tProgramVisitSubActivity {
     private String dtEnd;
 
     public String Property_txtProgramVisitSubActivityId = "txtProgramVisitSubActivityId";
-    private String Property_txtApotekName = "txtApotekName";
-    private String Property_intType = "intType";
-    private String Property_txtAreaName = "txtAreaName";
-    private String Property_txtDokterId = "txtDokterId";
-    private String Property_txtNotes = "txtNotes";
-    private String Property_txtDokterName = "txtDokterName";
-    private String Property_txtProgramVisitId = "txtProgramVisitId";
-    private String Property_txtApotekId = "txtApotekId";
-    private String Property_intActivityId = "intActivityId";
-    private String Property_intSubActivityId = "intSubActivityId";
-    private String Property_txtAreaId = "txtAreaId";
-    private String Property_dtStart = "dtStart";
-    private String Property_dtEnd = "dtEnd";
+    public String Property_txtApotekName = "txtApotekName";
+    public String Property_intType = "intType";
+    public String Property_txtAreaName = "txtAreaName";
+    public String Property_txtDokterId = "txtDokterId";
+    public String Property_txtNotes = "txtNotes";
+    public String Property_txtDokterName = "txtDokterName";
+    public String Property_txtProgramVisitId = "txtProgramVisitId";
+    public String Property_txtApotekId = "txtApotekId";
+    public String Property_intActivityId = "intActivityId";
+    public String Property_intSubActivityId = "intSubActivityId";
+    public String Property_txtAreaId = "txtAreaId";
+    public String Property_dtStart = "dtStart";
+    public String Property_dtEnd = "dtEnd";
 
     public String Property_ListOfDatatProgramVisitSubActivity = "ListOfDatatProgramVisitSubActivity";
 
