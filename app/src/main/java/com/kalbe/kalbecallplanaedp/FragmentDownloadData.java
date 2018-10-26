@@ -717,20 +717,20 @@ public class FragmentDownloadData extends Fragment{
                         String txtMethode_name = model.getResult().getMethodName();
                         if (txtStatus == true){
                             itemList.clear();
-                            if (model.getData().getActivity()!=null){
-                                if (model.getData().getActivity().size()>0){
+                            if (model.getData().getLtActivity()!=null){
+                                if (model.getData().getLtActivity().size()>0){
                                     dtActivityrepo = new mActivityRepo(getContext());
-                                    for (int i = 0; i <model.getData().getActivity().size(); i++){
+                                    for (int i = 0; i <model.getData().getLtActivity().size(); i++){
                                         mActivity data = new mActivity();
-                                        data.setIntActivityId(model.getData().getActivity().get(i).getIntActivityId());
-                                        data.setTxtName(model.getData().getActivity().get(i).getTxtTitle());
-                                        data.setTxtDesc(model.getData().getActivity().get(i).getTxtDescription());
+                                        data.setIntActivityId(model.getData().getLtActivity().get(i).getIntActivityId());
+                                        data.setTxtName(model.getData().getLtActivity().get(i).getTxtTitle());
+                                        data.setTxtDesc(model.getData().getLtActivity().get(i).getTxtDescription());
                                         dtActivityrepo.createOrUpdate(data);
-                                        itemList.add(String.valueOf(model.getData().getActivity().get(i).getIntActivityId()) + " - " + model.getData().getActivity().get(i).getTxtTitle());
+                                        itemList.add(String.valueOf(model.getData().getLtActivity().get(i).getIntActivityId()) + " - " + model.getData().getLtActivity().get(i).getTxtTitle());
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_download_activity.setText(String.valueOf(model.getData().getActivity().size()));
+                                tv_count_download_activity.setText(String.valueOf(model.getData().getLtActivity().size()));
                             }
                             Log.d("Data info", "Success Download");
 
