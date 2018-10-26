@@ -7,22 +7,22 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class Data{
 
-	@SerializedName("activity")
-	private List<ActivityItem> activity;
+	@SerializedName("LtActivity")
+	private List<LtActivityItem> ltActivity;
 
-	public void setActivity(List<ActivityItem> activity){
-		this.activity = activity;
+	public void setLtActivity(List<LtActivityItem> ltActivity){
+		this.ltActivity = ltActivity;
 	}
 
-	public List<ActivityItem> getActivity(){
-		return activity;
+	public List<LtActivityItem> getLtActivity(){
+		return ltActivity;
 	}
 
 	@Override
  	public String toString(){
 		return 
 			"Data{" + 
-			"activity = '" + activity + '\'' + 
+			"ltActivity = '" + ltActivity + '\'' + 
 			"}";
 		}
 }

@@ -103,13 +103,13 @@ public class tAkuisisiHeaderRepo implements crud {
         return listData;
     }
 
-    public tAkuisisiHeader findBySubSubIdAndDokterId(int intSubSubId, int intDokterId) throws SQLException {
+    public tAkuisisiHeader findBySubSubIdAndDokterId(int intSubSubId, String intDokterId, int intFlag) throws SQLException {
         tAkuisisiHeader item = new tAkuisisiHeader();
         tAkuisisiHeader listData = new tAkuisisiHeader();
         QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId);
+            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId).and().eq(item.Property_intFlagSow, intFlag).and().eq(item.Property_intDokterId, intDokterId);
             listData = queryBuilder.queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,13 +117,13 @@ public class tAkuisisiHeaderRepo implements crud {
         return listData;
     }
 
-    public tAkuisisiHeader findBySubSubIdAndApotekId(int intSubSubId, int intApotekId) throws SQLException {
+    public tAkuisisiHeader findBySubSubIdAndApotekId(int intSubSubId, String intApotekId, int intFlag) throws SQLException {
         tAkuisisiHeader item = new tAkuisisiHeader();
         tAkuisisiHeader listData = new tAkuisisiHeader();
         QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId);
+            queryBuilder.where().eq(item.Property_intSubSubActivityId, intSubSubId).and().eq(item.Property_intFlagSow, intFlag).and().eq(item.Property_intApotekID, intApotekId);
             listData = queryBuilder.queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,6 +152,25 @@ public class tAkuisisiHeaderRepo implements crud {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
             queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
             listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+    public List<Integer> getIntSubSubActivityId (int intActivity) {
+        tAkuisisiHeader item = new tAkuisisiHeader();
+        List<Integer> listData = new ArrayList<>();
+        QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
+            if (intActivity==1){
+                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intApotekID, new clsHardCode().VisitDokter);
+            }else if (intActivity==2){
+                queryBuilder.where().eq(item.Property_intFlagSow, new clsHardCode().Save).and().eq(item.Property_intDokterId, new clsHardCode().VisitApotek);
+            }
+//            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = (List<Integer>) queryBuilder.selectColumns(item.Property_intSubSubActivityId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
