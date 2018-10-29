@@ -17,13 +17,13 @@ public class tInfoProgramDetail implements Serializable {
     @DatabaseField
     private String txtHeaderId;
     @DatabaseField
-    private String intSubDetailActivityId;
+    private int intSubDetailActivityId;
     @DatabaseField
     private String txtFileName;
     @DatabaseField(dataType = DataType.BYTE_ARRAY)
     private byte[] blobFile;
     @DatabaseField
-    private int intFlagChecklist;
+    private boolean boolFlagChecklist;
     @DatabaseField
     private String dtChecklist;
 
@@ -53,11 +53,11 @@ public class tInfoProgramDetail implements Serializable {
         this.txtHeaderId = txtHeaderId;
     }
 
-    public String getIntSubDetailActivityId() {
+    public int getIntSubDetailActivityId() {
         return intSubDetailActivityId;
     }
 
-    public void setIntSubDetailActivityId(String intSubDetailActivityId) {
+    public void setIntSubDetailActivityId(int intSubDetailActivityId) {
         this.intSubDetailActivityId = intSubDetailActivityId;
     }
 
@@ -77,12 +77,12 @@ public class tInfoProgramDetail implements Serializable {
         this.blobFile = blobFile;
     }
 
-    public int getIntFlagChecklist() {
-        return intFlagChecklist;
+    public boolean isBoolFlagChecklist() {
+        return boolFlagChecklist;
     }
 
-    public void setIntFlagChecklist(int intFlagChecklist) {
-        this.intFlagChecklist = intFlagChecklist;
+    public void setBoolFlagChecklist(boolean boolFlagChecklist) {
+        this.boolFlagChecklist = boolFlagChecklist;
     }
 
     public String getDtChecklist() {

@@ -1,57 +1,81 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadAllData;
 
-import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
 public class Data{
 
-	@SerializedName("dataVMmUserMappingArea")
-	private List<DataVMmUserMappingAreaItem> dataVMmUserMappingArea;
+	@SerializedName("dataSubActivityDetail")
+	private DataSubActivityDetail dataSubActivityDetail;
 
-	@SerializedName("dataVMSubActvty")
-	private List<DataVMSubActvtyItem> dataVMSubActvty;
+	@SerializedName("dataSubActivity")
+	private DataSubActivity dataSubActivity;
 
-	@SerializedName("dataVMmSubDetailActivity")
-	private List<DataVMmSubDetailActivityItem> dataVMmSubDetailActivity;
+	@SerializedName("dataMappingArea")
+	private DataMappingArea dataMappingArea;
 
-	@SerializedName("dataVMActivity")
-	private List<DataVMActivityItem> dataVMActivity;
+	@SerializedName("dataMaintenanceData")
+	private DataMaintenanceData dataMaintenanceData;
+
+	@SerializedName("dataInfoProgram")
+	private DataInfoProgram dataInfoProgram;
+
+	@SerializedName("dataActivity")
+	private DataActivity dataActivity;
 
 	@SerializedName("datatProgramVisitDetail_")
 	private DatatProgramVisitDetail datatProgramVisitDetail;
 
-	public void setDataVMmUserMappingArea(List<DataVMmUserMappingAreaItem> dataVMmUserMappingArea){
-		this.dataVMmUserMappingArea = dataVMmUserMappingArea;
+	@SerializedName("dataAkuisisiData")
+	private DataAkuisisiData dataAkuisisiData;
+
+	public void setDataSubActivityDetail(DataSubActivityDetail dataSubActivityDetail){
+		this.dataSubActivityDetail = dataSubActivityDetail;
 	}
 
-	public List<DataVMmUserMappingAreaItem> getDataVMmUserMappingArea(){
-		return dataVMmUserMappingArea;
+	public DataSubActivityDetail getDataSubActivityDetail(){
+		return dataSubActivityDetail;
 	}
 
-	public void setDataVMSubActvty(List<DataVMSubActvtyItem> dataVMSubActvty){
-		this.dataVMSubActvty = dataVMSubActvty;
+	public void setDataSubActivity(DataSubActivity dataSubActivity){
+		this.dataSubActivity = dataSubActivity;
 	}
 
-	public List<DataVMSubActvtyItem> getDataVMSubActvty(){
-		return dataVMSubActvty;
+	public DataSubActivity getDataSubActivity(){
+		return dataSubActivity;
 	}
 
-	public void setDataVMmSubDetailActivity(List<DataVMmSubDetailActivityItem> dataVMmSubDetailActivity){
-		this.dataVMmSubDetailActivity = dataVMmSubDetailActivity;
+	public void setDataMappingArea(DataMappingArea dataMappingArea){
+		this.dataMappingArea = dataMappingArea;
 	}
 
-	public List<DataVMmSubDetailActivityItem> getDataVMmSubDetailActivity(){
-		return dataVMmSubDetailActivity;
+	public DataMappingArea getDataMappingArea(){
+		return dataMappingArea;
 	}
 
-	public void setDataVMActivity(List<DataVMActivityItem> dataVMActivity){
-		this.dataVMActivity = dataVMActivity;
+	public void setDataMaintenanceData(DataMaintenanceData dataMaintenanceData){
+		this.dataMaintenanceData = dataMaintenanceData;
 	}
 
-	public List<DataVMActivityItem> getDataVMActivity(){
-		return dataVMActivity;
+	public DataMaintenanceData getDataMaintenanceData(){
+		return dataMaintenanceData;
+	}
+
+	public void setDataInfoProgram(DataInfoProgram dataInfoProgram){
+		this.dataInfoProgram = dataInfoProgram;
+	}
+
+	public DataInfoProgram getDataInfoProgram(){
+		return dataInfoProgram;
+	}
+
+	public void setDataActivity(DataActivity dataActivity){
+		this.dataActivity = dataActivity;
+	}
+
+	public DataActivity getDataActivity(){
+		return dataActivity;
 	}
 
 	public void setDatatProgramVisitDetail(DatatProgramVisitDetail datatProgramVisitDetail){
@@ -62,15 +86,26 @@ public class Data{
 		return datatProgramVisitDetail;
 	}
 
+	public void setDataAkuisisiData(DataAkuisisiData dataAkuisisiData){
+		this.dataAkuisisiData = dataAkuisisiData;
+	}
+
+	public DataAkuisisiData getDataAkuisisiData(){
+		return dataAkuisisiData;
+	}
+
 	@Override
  	public String toString(){
 		return 
 			"Data{" + 
-			"dataVMmUserMappingArea = '" + dataVMmUserMappingArea + '\'' + 
-			",dataVMSubActvty = '" + dataVMSubActvty + '\'' + 
-			",dataVMmSubDetailActivity = '" + dataVMmSubDetailActivity + '\'' + 
-			",dataVMActivity = '" + dataVMActivity + '\'' + 
+			"dataSubActivityDetail = '" + dataSubActivityDetail + '\'' + 
+			",dataSubActivity = '" + dataSubActivity + '\'' + 
+			",dataMappingArea = '" + dataMappingArea + '\'' + 
+			",dataMaintenanceData = '" + dataMaintenanceData + '\'' + 
+			",dataInfoProgram = '" + dataInfoProgram + '\'' + 
+			",dataActivity = '" + dataActivity + '\'' + 
 			",datatProgramVisitDetail_ = '" + datatProgramVisitDetail + '\'' + 
+			",dataAkuisisiData = '" + dataAkuisisiData + '\'' + 
 			"}";
 		}
 }

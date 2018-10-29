@@ -13,8 +13,8 @@ public class DatatProgramVisitDetail{
 	@SerializedName("tProgramVisitSubActivity")
 	private List<TProgramVisitSubActivityItem> tProgramVisitSubActivity;
 
-	@SerializedName("tProgramVisitSubActivityAttachment")
-	private List<TProgramVisitSubActivityAttachmentItem> tProgramVisitSubActivityAttachment;
+	@SerializedName("realisasiData")
+	private List<RealisasiDataItem> realisasiData;
 
 	public void setTProgramVisit(List<TProgramVisitItem> tProgramVisit){
 		this.tProgramVisit = tProgramVisit;
@@ -32,12 +32,12 @@ public class DatatProgramVisitDetail{
 		return tProgramVisitSubActivity;
 	}
 
-	public void setTProgramVisitSubActivityAttachment(List<TProgramVisitSubActivityAttachmentItem> tProgramVisitSubActivityAttachment){
-		this.tProgramVisitSubActivityAttachment = tProgramVisitSubActivityAttachment;
+	public void setRealisasiData(List<RealisasiDataItem> realisasiData){
+		this.realisasiData = realisasiData;
 	}
 
-	public List<TProgramVisitSubActivityAttachmentItem> getTProgramVisitSubActivityAttachment(){
-		return tProgramVisitSubActivityAttachment;
+	public List<RealisasiDataItem> getRealisasiData(){
+		return realisasiData;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class DatatProgramVisitDetail{
 			"DatatProgramVisitDetail{" + 
 			"tProgramVisit = '" + tProgramVisit + '\'' + 
 			",tProgramVisitSubActivity = '" + tProgramVisitSubActivity + '\'' + 
-			",tProgramVisitSubActivityAttachment = '" + tProgramVisitSubActivityAttachment + '\'' + 
+			",realisasiData = '" + realisasiData + '\'' + 
 			"}";
 		}
 }

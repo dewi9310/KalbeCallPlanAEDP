@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class TProgramVisitSubActivityItem{
 
+	@SerializedName("txtDescription")
+	private String txtDescription;
+
 	@SerializedName("txtApotekName")
 	private String txtApotekName;
 
@@ -45,8 +48,19 @@ public class TProgramVisitSubActivityItem{
 	@SerializedName("dtStart")
 	private String dtStart;
 
+	@SerializedName("intFlag")
+	private int intFlag;
+
 	@SerializedName("dtEnd")
 	private String dtEnd;
+
+	public void setTxtDescription(String txtDescription){
+		this.txtDescription = txtDescription;
+	}
+
+	public String getTxtDescription(){
+		return txtDescription;
+	}
 
 	public void setTxtApotekName(String txtApotekName){
 		this.txtApotekName = txtApotekName;
@@ -152,6 +166,14 @@ public class TProgramVisitSubActivityItem{
 		return dtStart;
 	}
 
+	public void setIntFlag(int intFlag){
+		this.intFlag = intFlag;
+	}
+
+	public int getIntFlag(){
+		return intFlag;
+	}
+
 	public void setDtEnd(String dtEnd){
 		this.dtEnd = dtEnd;
 	}
@@ -164,7 +186,8 @@ public class TProgramVisitSubActivityItem{
  	public String toString(){
 		return 
 			"TProgramVisitSubActivityItem{" + 
-			"txtApotekName = '" + txtApotekName + '\'' + 
+			"txtDescription = '" + txtDescription + '\'' + 
+			",txtApotekName = '" + txtApotekName + '\'' + 
 			",intType = '" + intType + '\'' + 
 			",txtProgramVisitSubActivityId = '" + txtProgramVisitSubActivityId + '\'' + 
 			",txtAreaName = '" + txtAreaName + '\'' + 
@@ -177,6 +200,7 @@ public class TProgramVisitSubActivityItem{
 			",intSubActivityId = '" + intSubActivityId + '\'' + 
 			",txtAreaId = '" + txtAreaId + '\'' + 
 			",dtStart = '" + dtStart + '\'' + 
+			",intFlag = '" + intFlag + '\'' + 
 			",dtEnd = '" + dtEnd + '\'' + 
 			"}";
 		}
