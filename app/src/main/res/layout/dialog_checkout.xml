@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="David Park"
+                android:text="Realisasi"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_small"
                 android:gravity="center_vertical"
-                android:text="Customer services"
+                android:text="Please fill number realisation before you checout"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/grey_40" />
 
@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:background="@color/grey_3"
             android:gravity="top"
-            android:hint="Write review ..."
+            android:hint="Please fill number realisasi...."
             android:lines="4"
             android:padding="@dimen/spacing_middle" />
 
