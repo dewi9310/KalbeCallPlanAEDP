@@ -46,6 +46,12 @@ import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mTypeSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.mUserMappingArea;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivityAttachment;
@@ -61,6 +67,12 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mTypeSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserMappingAreaRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
@@ -112,9 +124,9 @@ public class FragmentDownloadData extends Fragment{
 
     ArrayAdapter<String> dataAdapter;
     List<String> itemList = new ArrayList<>();
-    private LinearLayout ln_download_all, ln_branch_downlaod, ln_download_apotek,ln_download_dokter, ln_download_activity,ln_download_subactivity,ln_download_subsub_activity, ln_download_realisasi;
-    private  TextView tv_download_branch, tv_download_apotek,tv_download_dokter, tv_download_activity, tv_download_subactivity, tv_download_subsubactivity, tv_download_typesubsubactivity, tv_download_realisasi;
-    private TextView tv_count_apotek,tv_count_branch,tv_count_dokter, tv_count_download_activity,tv_count_download_subactivity, tv_count_download_subsubactivity, tv_count_realisasi;
+    private LinearLayout ln_download_all, ln_branch_downlaod, ln_download_apotek,ln_download_dokter, ln_download_activity,ln_download_subactivity,ln_download_subsub_activity, ln_download_realisasi, ln_download_akuisisi, ln_download_maintenance, ln_download_infoprogram;
+    private  TextView tv_download_branch, tv_download_apotek,tv_download_dokter, tv_download_activity, tv_download_subactivity, tv_download_subsubactivity, tv_download_typesubsubactivity, tv_download_realisasi, tv_download_akuisisi, tv_download_maintenance, tv_download_infoprogram;
+    private TextView tv_count_apotek,tv_count_branch,tv_count_dokter, tv_count_download_activity,tv_count_download_subactivity, tv_count_download_subsubactivity, tv_count_realisasi, tv_count_akuisisi, tv_count_maintenance, tv_count_infoprogram;
     private Gson gson;
     List<clsToken> dataToken;
     clsTokenRepo tokenRepo;
@@ -129,6 +141,9 @@ public class FragmentDownloadData extends Fragment{
     List<tProgramVisitSubActivity> dataListProgramVisitSubActivity = new ArrayList<>();
     List<tProgramVisitSubActivityAttachment> dataListProgramVisitAttachment = new ArrayList<>();
     List<tRealisasiVisitPlan> dataListRealisasi = new ArrayList<>();
+    List<tAkuisisiHeader> dataListAkuisisi = new ArrayList<>();
+    List<tMaintenanceHeader> dataListMaintenance = new ArrayList<>();
+    List<tInfoProgramHeader> dataLIstInfoProgram = new ArrayList<>();
     mActivityRepo dtActivityrepo;
     mApotekRepo apotekRepo;
     mDokterRepo dokterRepo;
@@ -138,8 +153,14 @@ public class FragmentDownloadData extends Fragment{
     mUserMappingAreaRepo dtRepoArea;
     tProgramVisitRepo dtRepoProgramVisit;
     tProgramVisitSubActivityRepo dtRepoProgramVisitSubActivity;
-    tProgramVisitSubActivityAttachmentRepo dtRepoProVisitAttch;
+//    tProgramVisitSubActivityAttachmentRepo dtRepoProVisitAttch;
     tRealisasiVisitPlanRepo dtRepoRealisasi;
+    tAkuisisiHeaderRepo dtRepoAkuisisiHeader;
+    tAkuisisiDetailRepo dtRepoAkuisisiDetail;
+    tMaintenanceHeaderRepo dtRepoMaintenanceHeader;
+    tMaintenanceDetailRepo dtRepoMaintenanceDetail;
+    tInfoProgramHeaderRepo dtRepoInfoProgHeader;
+    tInfoProgramDetailRepo dtRepoInfoProgDetail;
 
 
     @Nullable
@@ -158,6 +179,9 @@ public class FragmentDownloadData extends Fragment{
         ln_download_subactivity = (LinearLayout)v.findViewById(R.id.ln_download_subactivity);
         ln_download_subsub_activity = (LinearLayout)v.findViewById(R.id.ln_download_subsub_activity);
         ln_download_realisasi = (LinearLayout)v.findViewById(R.id.ln_download_realisasi);
+        ln_download_akuisisi = (LinearLayout)v.findViewById(R.id.ln_download_akuisisi);
+        ln_download_maintenance = (LinearLayout)v.findViewById(R.id.ln_download_maintenance);
+        ln_download_infoprogram = (LinearLayout)v.findViewById(R.id.ln_download_infoprogram);
 //        ln_download_typesub_activity = (LinearLayout)v.findViewById(R.id.ln_download_typesub_activity);
 
         /*nama download*/
@@ -168,6 +192,9 @@ public class FragmentDownloadData extends Fragment{
         tv_download_subactivity = (TextView)v.findViewById(R.id.tv_download_subactivity);
         tv_download_subsubactivity = (TextView)v.findViewById(R.id.tv_download_subsubactivity);
         tv_download_realisasi = (TextView)v.findViewById(R.id.tv_download_realisasi);
+        tv_download_akuisisi = (TextView)v.findViewById(R.id.tv_download_akuisisi);
+        tv_download_maintenance = (TextView)v.findViewById(R.id.tv_download_maintenance);
+        tv_download_infoprogram = (TextView)v.findViewById(R.id.tv_download_infoprogram);
 //        tv_download_typesubsubactivity = (TextView)v.findViewById(R.id.tv_download_typesubsubactivity);
 
         /*count*/
@@ -178,6 +205,9 @@ public class FragmentDownloadData extends Fragment{
         tv_count_download_subactivity = (TextView) v.findViewById(R.id.tv_count_download_subactivity);
         tv_count_download_subsubactivity = (TextView) v.findViewById(R.id.tv_count_download_subsubactivity);
         tv_count_realisasi = (TextView)v.findViewById(R.id.tv_count_realisasi);
+        tv_count_akuisisi = (TextView)v.findViewById(R.id.tv_count_akuisisi);
+        tv_count_maintenance = (TextView)v.findViewById(R.id.tv_count_maintenance);
+        tv_count_infoprogram = (TextView)v.findViewById(R.id.tv_count_infoprogram);
 //        tv_count_download_typesubsubactivity = (TextView)v.findViewById(R.id.tv_count_download_typesubsubactivity);
 
 
@@ -191,8 +221,14 @@ public class FragmentDownloadData extends Fragment{
         dtRepoArea = new mUserMappingAreaRepo(getContext());
         dtRepoProgramVisit = new tProgramVisitRepo(getContext());
         dtRepoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
-        dtRepoProVisitAttch = new tProgramVisitSubActivityAttachmentRepo(getContext());
+//        dtRepoProVisitAttch = new tProgramVisitSubActivityAttachmentRepo(getContext());
         dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+        dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
+        dtRepoAkuisisiDetail = new tAkuisisiDetailRepo(getContext());
+        dtRepoMaintenanceHeader = new tMaintenanceHeaderRepo(getContext());
+        dtRepoMaintenanceDetail = new tMaintenanceDetailRepo(getContext());
+        dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
+        dtRepoInfoProgDetail = new tInfoProgramDetailRepo(getContext());
 
         try {
             dataListArea = (List<mUserMappingArea>) dtRepoArea.findAll();
@@ -231,6 +267,21 @@ public class FragmentDownloadData extends Fragment{
             dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
             if (dataListRealisasi!=null){
                 tv_count_realisasi.setText(String.valueOf(dataListRealisasi.size()));
+            }
+
+            dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+            if (dataListAkuisisi!=null){
+                tv_count_akuisisi.setText(String.valueOf(dataListAkuisisi.size()));
+            }
+
+            dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
+            if (dataListMaintenance!=null){
+                tv_count_maintenance.setText(String.valueOf(dataListMaintenance.size()));
+            }
+
+            dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
+            if (dataLIstInfoProgram!=null){
+                tv_count_infoprogram.setText(String.valueOf(dataLIstInfoProgram.size()));
             }
 //            dataListTypeSubSubActivity = (List<mTypeSubSubActivity>) dtRepoTypeSubSubActivity.findAll();
 //            if (dataListTypeSubSubActivity!=null){
@@ -407,6 +458,91 @@ public class FragmentDownloadData extends Fragment{
             }
         });
 
+
+        ln_download_akuisisi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemList.clear();
+                try {
+                    dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (dataListAkuisisi!=null){
+                    if (dataListAkuisisi.size()>0){
+                        int index = 0;
+                        for (tAkuisisiHeader data : dataListAkuisisi){
+                            index++;
+                            if (data.getIntDokterId()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
+                            }else if (data.getIntApotekID()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekID());
+                            }
+                        }
+                    }else {
+                        itemList.add(" - ");
+                    }
+                }
+                onButtonOnClick(ln_download_akuisisi, tv_download_akuisisi, "tAkuisisiHeader");
+            }
+        });
+
+        ln_download_maintenance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemList.clear();
+                try {
+                    dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (dataListMaintenance!=null){
+                    if (dataListMaintenance.size()>0){
+                        int index = 0;
+                        for (tMaintenanceHeader data : dataListMaintenance){
+                            index++;
+                            if (data.getIntDokterId()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
+                            }else if (data.getIntApotekID()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekID());
+                            }
+                        }
+                    }else {
+                        itemList.add(" - ");
+                    }
+                }
+                onButtonOnClick(ln_download_maintenance, tv_download_maintenance, "tMaintenanceHeader");
+            }
+        });
+
+        ln_download_infoprogram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemList.clear();
+                try {
+                    dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (dataLIstInfoProgram!=null){
+                    if (dataLIstInfoProgram.size()>0){
+                        int index = 0;
+                        for (tInfoProgramHeader data : dataLIstInfoProgram){
+                            index++;
+                            if (data.getIntDokterId()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
+                            }else if (data.getIntApotekId()!=null){
+                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekId());
+                            }
+                        }
+                    }else {
+                        itemList.add(" - ");
+                    }
+                }
+                onButtonOnClick(ln_download_infoprogram, tv_download_infoprogram, "tInfoProgramHeader");
+            }
+        });
+
 //        ln_download_typesub_activity.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -497,6 +633,12 @@ public class FragmentDownloadData extends Fragment{
 
         } else if (txtDownlaod.equals("tRealisasiVisitPlan")){
             downloadtCallPlan();
+        }else if (txtDownlaod.equals("tAkuisisiHeader")){
+
+        }else if (txtDownlaod.equals("tMaintenanceHeader")){
+
+        }else if (txtDownlaod.equals("tInfoProgramHeader")){
+
         }
 
     }
@@ -548,62 +690,259 @@ public class FragmentDownloadData extends Fragment{
 
                             downloadApotek(true);
                             downloadDokter(true);
-                            if (model.getData().getDataVMmUserMappingArea()!=null){
-                                if (model.getData().getDataVMmUserMappingArea().size()>0){
+                            if (model.getData().getDataMappingArea().getLtMappingArea()!=null){
+                                if (model.getData().getDataMappingArea().getLtMappingArea().size()>0){
                                     dtRepoArea = new mUserMappingAreaRepo(getContext());
-                                    for (int i = 0; i <model.getData().getDataVMmUserMappingArea().size(); i++){
+                                    for (int i = 0; i <model.getData().getDataMappingArea().getLtMappingArea().size(); i++){
                                         mUserMappingArea data = new mUserMappingArea();
-                                        data.setIntUserMappingAreaId(model.getData().getDataVMmUserMappingArea().get(i).getIntUserMappingAreaId());
-                                        data.setIntUserId(model.getData().getDataVMmUserMappingArea().get(i).getIntUserId());
-                                        data.setTxtKecamatanID(model.getData().getDataVMmUserMappingArea().get(i).getTxtKecamatanID());
+                                        data.setIntUserMappingAreaId(model.getData().getDataMappingArea().getLtMappingArea().get(i).getIntUserMappingAreaId());
+                                        data.setIntUserId(model.getData().getDataMappingArea().getLtMappingArea().get(i).getIntUserId());
+                                        data.setTxtKecamatanID(model.getData().getDataMappingArea().getLtMappingArea().get(i).getTxtKecamatanID());
                                         dtRepoArea.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_branch.setText(String.valueOf(model.getData().getDataVMmUserMappingArea().size()));
+                                tv_count_branch.setText(String.valueOf(model.getData().getDataMappingArea().getLtMappingArea().size()));
                             }
-                            if (model.getData().getDataVMActivity()!=null){
-                                if (model.getData().getDataVMActivity().size()>0){
+                            if (model.getData().getDataActivity().getLtActivity()!=null){
+                                if (model.getData().getDataActivity().getLtActivity().size()>0){
                                     dtActivityrepo = new mActivityRepo(getContext());
-                                    for (int i = 0; i <model.getData().getDataVMActivity().size(); i++){
+                                    for (int i = 0; i <model.getData().getDataActivity().getLtActivity().size(); i++){
                                         mActivity data = new mActivity();
-                                        data.setIntActivityId(model.getData().getDataVMActivity().get(i).getIntActivityId());
-                                        data.setTxtName(model.getData().getDataVMActivity().get(i).getTxtTitle());
-                                        data.setTxtDesc(model.getData().getDataVMActivity().get(i).getTxtDescription());
+                                        data.setIntActivityId(model.getData().getDataActivity().getLtActivity().get(i).getIntActivityId());
+                                        data.setTxtName(model.getData().getDataActivity().getLtActivity().get(i).getTxtTitle());
+                                        data.setTxtDesc(model.getData().getDataActivity().getLtActivity().get(i).getTxtDescription());
                                         dtActivityrepo.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_download_activity.setText(String.valueOf(model.getData().getDataVMActivity().size()));
+                                tv_count_download_activity.setText(String.valueOf(model.getData().getDataActivity().getLtActivity().size()));
                             }
 
-                            if (model.getData().getDataVMSubActvty()!=null){
-                                if (model.getData().getDataVMSubActvty().size()>0){
+                            if (model.getData().getDataSubActivity().getLtSubActivity()!=null){
+                                if (model.getData().getDataSubActivity().getLtSubActivity().size()>0){
                                     dtRepoSubActivity = new mSubActivityRepo(getContext());
-                                    for (int i = 0; i <model.getData().getDataVMSubActvty().size(); i++){
+                                    for (int i = 0; i <model.getData().getDataSubActivity().getLtSubActivity().size(); i++){
                                         mSubActivity data = new mSubActivity();
-                                        data.setIntSubActivityid(model.getData().getDataVMSubActvty().get(i).getIntSubActivityId());
-                                        data.setIntActivityid(model.getData().getDataVMSubActvty().get(i).getIntActivityId());
-                                        data.setTxtName(model.getData().getDataVMSubActvty().get(i).getTxtTitle());
-                                        data.setTxtDesc(model.getData().getDataVMSubActvty().get(i).getTxtDescription());
+                                        data.setIntSubActivityid(model.getData().getDataSubActivity().getLtSubActivity().get(i).getIntSubActivityId());
+                                        data.setIntActivityid(model.getData().getDataSubActivity().getLtSubActivity().get(i).getIntActivityId());
+                                        data.setTxtName(model.getData().getDataSubActivity().getLtSubActivity().get(i).getTxtTitle());
+                                        data.setTxtDesc(model.getData().getDataSubActivity().getLtSubActivity().get(i).getTxtDescription());
                                         dtRepoSubActivity.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_download_subactivity.setText(String.valueOf(model.getData().getDataVMSubActvty().size()));
+                                tv_count_download_subactivity.setText(String.valueOf(model.getData().getDataSubActivity().getLtSubActivity().size()));
                             }
 
-                            if (model.getData().getDataVMmSubDetailActivity()!=null){
-                                if (model.getData().getDataVMmSubDetailActivity().size()>0){
+                            if (model.getData().getDataSubActivityDetail().getLtSubActivityDetailData()!=null){
+                                if (model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().size()>0){
                                     dtRepoSubSubActivity = new mSubSubActivityRepo(getContext());
-                                    for (int i = 0; i <model.getData().getDataVMmSubDetailActivity().size(); i++){
+                                    for (int i = 0; i <model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().size(); i++){
                                         mSubSubActivity data = new mSubSubActivity();
-                                        data.setIntSubActivityid(model.getData().getDataVMmSubDetailActivity().get(i).getIntSubActivityId());
-                                        data.setIntSubSubActivityid(model.getData().getDataVMmSubDetailActivity().get(i).getIntSubDetailActivityId());
-                                        data.setTxtName(model.getData().getDataVMmSubDetailActivity().get(i).getTxtTitle());
-                                        data.setTxtDesc(model.getData().getDataVMmSubDetailActivity().get(i).getTxtDescription());
-                                        data.setIntType(model.getData().getDataVMmSubDetailActivity().get(i).getIntFlag());
+                                        data.setIntSubActivityid(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().get(i).getIntSubActivityId());
+                                        data.setIntSubSubActivityid(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId());
+                                        data.setTxtName(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().get(i).getTxtTitle());
+                                        data.setTxtDesc(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().get(i).getTxtDescription());
+                                        data.setIntType(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().get(i).getIntFlag());
                                         dtRepoSubSubActivity.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_download_subsubactivity.setText(String.valueOf(model.getData().getDataVMmSubDetailActivity().size()));
+                                tv_count_download_subsubactivity.setText(String.valueOf(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().size()));
+                            }
+
+                            if (model.getData().getDatatProgramVisitDetail().getTProgramVisit()!=null){
+                                if (model.getData().getDatatProgramVisitDetail().getTProgramVisit().size()>0){
+                                    dtRepoProgramVisit = new tProgramVisitRepo(getContext());
+                                    for (int i = 0; i <model.getData().getDatatProgramVisitDetail().getTProgramVisit().size(); i++){
+                                        tProgramVisit data = new tProgramVisit();
+                                        data.setTxtProgramVisitId(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getTxtProgramVisitId());
+                                        data.setIntUserId(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntUserId());
+                                        data.setIntRoleId(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntRoleId());
+                                        data.setDtStart(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getDtStart()));
+                                        data.setDtEnd(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getDtEnd()));
+                                        data.setIntStatus(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntStatus());
+                                        data.setIntType(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntType());
+                                        data.setTxtNotes(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getTxtNotes());
+                                        dtRepoProgramVisit.createOrUpdate(data);
+                                    }
+                                }
+                            }
+                            if (model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity()!=null){
+                                if (model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().size()>0){
+                                    dtRepoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
+                                    for (int i = 0; i <model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().size(); i++){
+                                        tProgramVisitSubActivity data = new tProgramVisitSubActivity();
+                                        data.setTxtProgramVisitSubActivityId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtProgramVisitSubActivityId());
+                                        data.setTxtProgramVisitId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtProgramVisitId());
+                                        data.setTxtApotekId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtApotekId());
+                                        data.setTxtApotekName(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtApotekName());
+                                        data.setIntType(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getIntType());
+                                        data.setTxtAreaId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtAreaId());
+                                        data.setTxtAreaName(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtAreaName());
+                                        data.setTxtDokterId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtDokterId());
+                                        data.setTxtDokterName(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtDokterName());
+                                        data.setIntSubActivityId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getIntSubActivityId());
+                                        data.setIntActivityId(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getIntActivityId());
+                                        data.setDtStart(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getDtStart()));
+                                        data.setDtEnd(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getDtEnd()));
+                                        data.setTxtNotes(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtNotes());
+                                        dtRepoProgramVisitSubActivity.createOrUpdate(data);
+                                    }
+                                }
+                            }
+                            if (model.getData().getDatatProgramVisitDetail().getRealisasiData()!=null){
+                                if (model.getData().getDatatProgramVisitDetail().getRealisasiData().size()>0){
+                                    dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
+                                    for (int i = 0; i <model.getData().getDatatProgramVisitDetail().getRealisasiData().size(); i++){
+                                        tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+                                        data.setTxtProgramVisitSubActivityId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtProgramVisitSubActivityId());
+                                        data.setTxtRealisasiVisitId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                        data.setIntRoleID(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getIntRoleId());
+                                        data.setTxtDokterId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtDokterId());
+                                        data.setIntUserId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getIntUserId());
+                                        data.setTxtDokterName(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtNamaDokter());
+                                        data.setTxtApotekId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtApotekId());
+                                        data.setTxtApotekName(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtNamaApotek());
+                                        data.setDtCheckIn(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtCheckin()));
+                                        data.setDtCheckOut(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtChekout()));
+                                        data.setDtDateRealisasi(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtDateRealisasi()));
+                                        data.setDtDatePlan(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtDatePlan()));
+                                        data.setIntNumberRealisasi(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getIntRealisasiNumber());
+                                        data.setTxtAcc(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtAccurasi());
+                                        data.setTxtLong(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtLongitude());
+                                        data.setTxtLat(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtLatitude());
+                                        data.setTxtImgName1(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Name());
+                                        data.setTxtImgName2(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Name());
+                                        if (getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Path())!=null){
+                                            data.setBlobImg1(getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Path()));
+                                        }else {
+                                            data.setBlobImg1(null);
+                                        }
+                                        if (getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Path())!=null){
+                                            data.setBlobImg2(getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Path()));
+                                        }else {
+                                            data.setBlobImg2(null);
+                                        }
+                                        dtRepoRealisasi.createOrUpdate(data);
+                                    }
+                                }
+                                tv_count_realisasi.setText(String.valueOf(model.getData().getDatatProgramVisitDetail().getRealisasiData().size()));
+                            }
+
+                            if (model.getData().getDataAkuisisiData().getAkuisisiHeader()!=null){
+                                if (model.getData().getDataAkuisisiData().getAkuisisiHeader().size()>0){
+                                    dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
+                                    for (int i = 0; i < model.getData().getDataAkuisisiData().getAkuisisiHeader().size(); i++){
+                                        tAkuisisiHeader data = new tAkuisisiHeader();
+                                        data.setTxtHeaderId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getTAkuisisiHeaderId());
+                                        data.setIntSubSubActivityId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntSubDetailActivityId());
+                                        data.setIntSubSubActivityTypeId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntFlag());
+                                        data.setTxtNoDoc(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getTxtNoDoc());
+                                        data.setDtExpiredDate(parseDate(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getDtExpiredDate()));
+                                        data.setIntUserId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntUserId());
+                                        data.setIntRoleId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntRoleId());
+                                        data.setIntDokterId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getTxtDokterId());
+                                        data.setIntApotekID(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getTxtApotekId());
+                                        data.setIntAreaId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntAreaId());
+//                                        data.setTxtRealisasiVisitId(model.getData().getDataAkuisisiData().getAkuisisiHeader().get(i).getIntFlag());
+                                        data.setIntFlagPush(new clsHardCode().Sync);
+                                        data.setIntFlagShow(new clsHardCode().Save);
+                                        dtRepoAkuisisiHeader.createOrUpdate(data);
+                                    }
+                                }
+                                tv_count_akuisisi.setText(String.valueOf(model.getData().getDataAkuisisiData().getAkuisisiHeader().size()));
+                            }
+
+                            if (model.getData().getDataAkuisisiData().getAkuisisiDetail()!=null){
+                                if (model.getData().getDataAkuisisiData().getAkuisisiDetail().size()>0){
+                                    dtRepoAkuisisiDetail = new tAkuisisiDetailRepo(getContext());
+                                    for (int i = 0; i < model.getData().getDataAkuisisiData().getAkuisisiDetail().size(); i ++){
+                                        tAkuisisiDetail data = new tAkuisisiDetail();
+                                        data.setTxtHeaderId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiHeaderId());
+                                        data.setTxtDetailId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
+                                        data.setTxtImgName(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtImageName());
+                                        if (getLogoImage(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtImagePath())!=null){
+                                            data.setTxtImg(getLogoImage(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtImagePath()));
+                                        }else {
+                                            data.setTxtImg(null);
+                                        }
+                                        dtRepoAkuisisiDetail.createOrUpdate(data);
+                                    }
+                                }
+                            }
+
+                            if (model.getData().getDataMaintenanceData().getLtMaintenanceHeader()!=null){
+                                if (model.getData().getDataMaintenanceData().getLtMaintenanceHeader().size()>0){
+                                 dtRepoMaintenanceHeader = new tMaintenanceHeaderRepo(getContext());
+                                 for (int i = 0; i < model.getData().getDataMaintenanceData().getLtMaintenanceHeader().size(); i++){
+                                     tMaintenanceHeader data = new tMaintenanceHeader();
+                                     data.setTxtHeaderId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getTxtMaintenanceHeaderId());
+                                     data.setTxtRealisasiVisitId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getTxtRealisasiVisitId());
+                                     data.setIntActivityId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntActivityId());
+                                     data.setIntUserId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntUserId());
+                                     data.setIntRoleId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntRoleId());
+                                     data.setIntDokterId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntDokterId());
+                                     data.setIntApotekID(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntApotekId());
+                                     data.setIntAreaId(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().get(i).getIntAreaId());
+                                     data.setIntFlagPush(new clsHardCode().Sync);
+                                     dtRepoMaintenanceHeader.createOrUpdate(data);
+                                 }
+                                }
+                                tv_count_maintenance.setText(String.valueOf(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().size()));
+                            }
+
+                            if (model.getData().getDataMaintenanceData().getLtMaintenanceDetail()!=null){
+                                if (model.getData().getDataMaintenanceData().getLtMaintenanceDetail().size()>0){
+                                 dtRepoMaintenanceDetail = new tMaintenanceDetailRepo(getContext());
+                                 for (int i = 0; i < model.getData().getDataMaintenanceData().getLtMaintenanceDetail().size(); i ++){
+                                     tMaintenanceDetail data = new tMaintenanceDetail();
+                                     data.setTxtDetailId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtMaintenanceDetailId());
+                                     data.setTxtHeaderId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtMaintenanceHeaderId());
+                                     data.setIntSubDetailActivityId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getIntSubDetailActivityId());
+                                     data.setTxtNoResep(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoResep());
+                                     data.setTxtNoOrder(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoOrder());
+                                     dtRepoMaintenanceDetail.createOrUpdate(data);
+                                 }
+                                }
+                            }
+
+                            if (model.getData().getDataInfoProgram().getLtInfoHeader()!=null){
+                                if (model.getData().getDataInfoProgram().getLtInfoHeader().size()>0){
+                                    dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
+                                    for (int i = 0; i < model.getData().getDataInfoProgram().getLtInfoHeader().size(); i++){
+                                        tInfoProgramHeader data = new tInfoProgramHeader();
+                                        data.setTxtHeaderId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getTxtInfoProgramHeaderId());
+                                        data.setTxtRealisasiVisitId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getTxtRealisasiVisitId());
+                                        data.setIntActivityId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntActivityId());
+                                        data.setIntUserId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntUserId());
+                                        data.setIntRoleId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntRoleId());
+                                        data.setIntDokterId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntDokterId());
+                                        data.setIntApotekId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntApotekId());
+                                        data.setIntAreaId(model.getData().getDataInfoProgram().getLtInfoHeader().get(i).getIntAreaId());
+                                        data.setIntFlagPush(new clsHardCode().Sync);
+                                        dtRepoInfoProgHeader.createOrUpdate(data);
+                                    }
+                                }
+                                tv_count_infoprogram.setText(String.valueOf(model.getData().getDataInfoProgram().getLtInfoHeader().size()));
+                            }
+
+                            if (model.getData().getDataInfoProgram().getLtInfoDetail()!=null){
+                                if (model.getData().getDataInfoProgram().getLtInfoDetail().size()>0){
+                                    dtRepoInfoProgDetail = new tInfoProgramDetailRepo(getContext());
+                                    for (int i = 0; i < model.getData().getDataInfoProgram().getLtInfoDetail().size(); i++){
+                                        tInfoProgramDetail data = new tInfoProgramDetail();
+                                        data.setTxtHeaderId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramHeaderId());
+                                        data.setTxtDetailId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId());
+                                        data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getIntSubDetailActivityId());
+                                        data.setTxtFileName(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileName());
+                                        if (getLogoImage(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFilePath())!=null){
+                                            data.setBlobFile(getLogoImage(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFilePath()));
+                                        }else {
+                                            data.setBlobFile(null);
+                                        }
+                                        data.setBoolFlagChecklist(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).isBitCheck());
+//                                        data.setDtChecklist(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).);
+
+                                    }
+                                }
                             }
                             Log.d("Data info", "Success Download");
 
