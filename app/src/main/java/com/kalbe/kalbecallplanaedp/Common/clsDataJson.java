@@ -274,7 +274,7 @@ public class clsDataJson {
                 item.put(dataAkuisisiHeader.Property_intRoleId, String.valueOf(data.getIntRoleId()));
                 item.put(dataAkuisisiHeader.Property_intDokterId, String.valueOf(data.getIntDokterId()));
                 item.put(dataAkuisisiHeader.Property_intApotekID, String.valueOf(data.getIntApotekID()));
-//                item.put(dataAkuisisiHeader.Property_intOutletId, String.valueOf(data.getIntOutletId()));
+                item.put(dataAkuisisiHeader.Property_txtRealisasiVisitId, String.valueOf(data.getTxtRealisasiVisitId()));
                 item.put(dataAkuisisiHeader.Property_intAreaId, String.valueOf(data.getIntAreaId()));
                 itemLIstQuery.add(item);
             }
@@ -358,7 +358,7 @@ public class clsDataJson {
                 item.put(dataInfoDeatil.Property_intSubDetailActivityId, data.getIntSubDetailActivityId());
                 item.put(dataInfoDeatil.Property_txtFileName, data.getTxtFileName());
                 item.put(dataInfoDeatil.Property_blobFile, data.getBlobFile());
-                item.put(dataInfoDeatil.Property_intFlagChecklist, data.getIntFlagChecklist());
+                item.put(dataInfoDeatil.Property_intFlagChecklist, data.isBoolFlagChecklist());
                 item.put(dataInfoDeatil.Property_dtChecklist, data.getDtChecklist());
                 itemLIstQuery.add(item);
             }
