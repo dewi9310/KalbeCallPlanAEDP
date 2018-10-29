@@ -74,7 +74,7 @@ public class MyServiceNative extends Service {
             new clsHelperBL().makeJsonObjectRequestPushData(getApplicationContext(), linkPushData, dtJson, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

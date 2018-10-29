@@ -15,41 +15,46 @@
             app:actionLayout="@layout/menu_counter"/>
 
         <item
-            android:id="@+id/mnDownloadData"
-            android:icon="@mipmap/ic_download"
-            android:orderInCategory="0"
-            android:title="Download Data" />
-
-
-        <item
-            android:id="@+id/mnpushData"
-            android:icon="@mipmap/ic_push_data"
-            android:orderInCategory="0"
-            android:title="Push Data" />
-        <item
             android:id="@+id/mnCallPlan"
             android:icon="@mipmap/ic_download"
             android:orderInCategory="0"
             android:title="Call Plan" />
 
+    </group>
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/groupMenuDinamis">
         <item
             android:id="@+id/mnAkusisi"
             android:icon="@mipmap/ic_asg_unplan"
             android:orderInCategory="0"
             android:title="Akuisisi" />
 
-    </group>
-    <group
-        android:checkableBehavior="single"
-        android:id="@+id/groupMenuDinamis">
-
+        <item
+            android:id="@+id/mnMaintenance"
+            android:icon="@mipmap/ic_asg_unplan"
+            android:orderInCategory="0"
+            android:title="Maintenance" />
     </group>
     <group
         android:checkableBehavior="single"
         android:id="@+id/groupListfooter">
-
         <item
-            android:id="@+id/logout"
+            android:id="@+id/mnCheckOut"
+            android:orderInCategory="0"
+            android:title="Check Out" />
+        <item
+            android:id="@+id/mnDownloadData"
+            android:icon="@mipmap/ic_download"
+            android:orderInCategory="0"
+            android:title="Download Data" />
+        <item
+            android:id="@+id/mnpushData"
+            android:icon="@mipmap/ic_push_data"
+            android:orderInCategory="0"
+            android:title="Push Data" />
+        <item
+            android:id="@+id/mnLogout"
             android:checked="false"
             android:orderInCategory="2"
             android:title="Logout" />

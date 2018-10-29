@@ -15,14 +15,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -35,6 +39,7 @@ public class FragmentPushData extends Fragment{
 
     private TableLayout tablePushData;
     Button button_push_data;
+    private Gson gson;
 
     @Nullable
     @Override
@@ -42,6 +47,9 @@ public class FragmentPushData extends Fragment{
         v = inflater.inflate(R.layout.fragment_push_data, container, false);
         tablePushData = (TableLayout) v.findViewById(R.id.tablePushData);
         button_push_data = (Button)v.findViewById(R.id.button_push_data);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+
         ListData();
         button_push_data.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +84,17 @@ public class FragmentPushData extends Fragment{
 
                 @Override
                 public void onResponse(String response, Boolean status, String strErrorMsg) {
+                    if (response!=null){
+                        JSONObject jsonObject = new JSONObject();
+                        ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
+                        boolean isStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethod = model.getResult().getMethodName();
+                        if (isStatus==true){
 
+                        }
+
+                    }
                 }
             });
             /*new clsHelperBL().volleyRequestSendData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {

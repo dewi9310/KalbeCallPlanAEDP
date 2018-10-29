@@ -3,6 +3,7 @@ package com.kalbe.kalbecallplanaedp;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -32,13 +33,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,10 +60,12 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
+import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
@@ -68,6 +75,7 @@ import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 
 
@@ -278,27 +286,42 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         }
 
         // get menu from db SQLite
+
         int menuActive = 0;
         menuActive = R.id.groupMenuDinamis;
-        try {
-            menuRepo = new mMenuRepo(getApplicationContext());
-            dataMenu = (List<mMenuData>) menuRepo.findAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        boolean isDataReady = new clsMainBL().isDataReady(getApplicationContext());
+
+        if (!isDataReady){
+            header.removeItem(R.id.mnCallPlan);
         }
 
-        linkMenu = new String[dataMenu.size()];
-        listMenu = new String[dataMenu.size()];
-
-        for (int i = 0; i < dataMenu.size(); i++) {
-            int resId = getResources().getIdentifier(String.valueOf(dataMenu.get(i).txtDescription.toLowerCase()), "drawable", MainMenu.this.getPackageName());
-            Drawable icon = MainMenu.this.getResources().getDrawable(resId);
-
-            header.add(menuActive, i, 1, dataMenu.get(i).getTxtMenuName()).setIcon(icon).setCheckable(true);
-
-            linkMenu[i] = dataMenu.get(i).getTxtLink();
-            listMenu[i] = dataMenu.get(i).getTxtMenuName();
+        final tRealisasiVisitPlan dataCheckinActive = new tRealisasiVisitPlanRepo(getApplicationContext()).getDataCheckinActive();
+        if (dataCheckinActive==null){
+            header.removeGroup(R.id.groupMenuDinamis);
+            header.removeItem(R.id.mnCheckOut);
+        } else {
+            header.removeItem(R.id.mnCallPlan);
+            header.removeItem(R.id.mnLogout);
         }
+//        try {
+//            menuRepo = new mMenuRepo(getApplicationContext());
+//            dataMenu = (List<mMenuData>) menuRepo.findAll();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        linkMenu = new String[dataMenu.size()];
+//        listMenu = new String[dataMenu.size()];
+//
+//        for (int i = 0; i < dataMenu.size(); i++) {
+//            int resId = getResources().getIdentifier(String.valueOf(dataMenu.get(i).txtDescription.toLowerCase()), "drawable", MainMenu.this.getPackageName());
+//            Drawable icon = MainMenu.this.getResources().getDrawable(resId);
+//
+//            header.add(menuActive, i, 1, dataMenu.get(i).getTxtMenuName()).setIcon(icon).setCheckable(true);
+//
+//            linkMenu[i] = dataMenu.get(i).getTxtLink();
+//            listMenu[i] = dataMenu.get(i).getTxtMenuName();
+//        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -309,7 +332,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                 Fragment fragment = null;
                 switch (menuItem.getItemId()) {
-                    case R.id.logout:
+                    case R.id.mnLogout:
                         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainMenu.this);
 
                         builder.setTitle("Confirm");
@@ -417,6 +440,33 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         fragmentTransactionAkuisisi.replace(R.id.frame, fragmentAkuisisi);
                         fragmentTransactionAkuisisi.commit();
                         selectedId = 99;
+
+                        return true;
+                    case R.id.mnMaintenance:
+                        toolbar.setTitle("Maintenance");
+                        toolbar.setSubtitle(null);
+
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                        FragmentMaintenance fragmentMaintenance = new FragmentMaintenance();
+                        FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
+                        fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
+                        fragmentTransactionMaintenance.commit();
+                        selectedId = 99;
+
+                        return true;
+
+                    case R.id.mnCheckOut:
+//                        toolbar.setTitle("Maintenance");
+//                        toolbar.setSubtitle(null);
+//
+//                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//
+//                        FragmentMaintenance fragmentMaintenance = new FragmentMaintenance();
+//                        FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
+//                        fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
+//                        fragmentTransactionMaintenance.commit();
+//                        selectedId = 99;
 
                         return true;
                     default:
@@ -574,6 +624,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             });*/
         }
     }
+
+
 
 
     private void selectImageProfile() {
@@ -843,5 +895,72 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 return true;
             }
         }
+    }
+
+    public void checkout(){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+
+        builder.setTitle("Exit");
+        builder.setMessage("Are you sure to check out?");
+
+        builder.setPositiveButton("CHECK OUT", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void showCustomDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_checkout);
+        dialog.setCancelable(true);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        final EditText et_post = (EditText) dialog.findViewById(R.id.et_post);
+        ((AppCompatButton) dialog.findViewById(R.id.bt_cancel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_submit)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String review = et_post.getText().toString().trim();
+//                if (review.isEmpty()) {
+//                    Toast.makeText(getApplicationContext(), "Please fill review text", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    items.add("(" + rating_bar.getRating() + ") " + review);
+//                    adapter.notifyDataSetChanged();
+//                }
+//                if (!adapter.isEmpty()) {
+//                    txt_no_item.setVisibility(View.GONE);
+//                }
+                dialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 }

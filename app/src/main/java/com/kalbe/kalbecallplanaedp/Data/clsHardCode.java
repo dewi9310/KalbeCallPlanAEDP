@@ -62,7 +62,7 @@ public class clsHardCode {
 
     public int TypeFoto = 1;
     public int TypeText = 2;
-    
+
     public int VisitDokter = 1;
     public int VisitApotek = 2;
 
