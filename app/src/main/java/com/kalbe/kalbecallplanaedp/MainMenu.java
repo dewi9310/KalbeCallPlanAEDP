@@ -77,6 +77,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
 import org.json.JSONException;
@@ -88,8 +89,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -132,6 +136,9 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest locationRequest;
     int REQUEST_CHECK_SETTINGS = 100;
+    tRealisasiVisitPlan dataCheckinActive;
+    tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
+    String numberRealisasi;
 
     @Override
     public void onBackPressed() {
@@ -220,6 +227,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         tvUsername = (TextView) vwHeader.findViewById(R.id.username);
         tvEmail = (TextView) vwHeader.findViewById(R.id.email);
 
+        realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(getApplicationContext());
+
         // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -295,7 +304,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             header.removeItem(R.id.mnCallPlan);
         }
 
-        final tRealisasiVisitPlan dataCheckinActive = new tRealisasiVisitPlanRepo(getApplicationContext()).getDataCheckinActive();
+         dataCheckinActive = new tRealisasiVisitPlanRepo(getApplicationContext()).getDataCheckinActive();
         if (dataCheckinActive==null){
             header.removeGroup(R.id.groupMenuDinamis);
             header.removeItem(R.id.mnCheckOut);
@@ -457,15 +466,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         return true;
 
                     case R.id.mnCheckOut:
-//                        toolbar.setTitle("Maintenance");
-//                        toolbar.setSubtitle(null);
-//
-//                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//
-//                        FragmentMaintenance fragmentMaintenance = new FragmentMaintenance();
-//                        FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
-//                        fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
-//                        fragmentTransactionMaintenance.commit();
+                        showCustomDialog();
 //                        selectedId = 99;
 
                         return true;
@@ -906,8 +907,46 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         builder.setPositiveButton("CHECK OUT", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
+
+                try {
+                    mUserLogin dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
+
+                    DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar cal = Calendar.getInstance();
+                    tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+                    data.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
+                    data.setTxtProgramVisitSubActivityId(dataCheckinActive.getTxtProgramVisitSubActivityId());
+                    data.setIntUserId(dataCheckinActive.getIntUserId());
+                    data.setIntRoleID(dataCheckinActive.getIntRoleID());
+                    data.setTxtDokterId(dataCheckinActive.getTxtDokterId());
+                    data.setTxtDokterName(dataCheckinActive.getTxtDokterName());
+                    data.setTxtApotekId(dataCheckinActive.getTxtApotekId());
+                    data.setTxtApotekName(dataCheckinActive.getTxtApotekName());
+                    data.setDtCheckIn(dataCheckinActive.getDtCheckIn());
+                    data.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
+                    data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.dtLogIn))); ///tanggal login
+                    data.setDtDatePlan(dataCheckinActive.getDtDatePlan());
+                    data.setIntNumberRealisasi(Integer.parseInt(numberRealisasi)); //generate number
+                    data.setTxtAcc(dataCheckinActive.getTxtAcc());
+                    data.setTxtLat(dataCheckinActive.getTxtLat());
+                    data.setTxtLong(dataCheckinActive.getTxtLong());
+                    data.setTxtImgName1(dataCheckinActive.getTxtImgName1());
+                    data.setBlobImg1(dataCheckinActive.getBlobImg1());
+                    data.setTxtImgName2(dataCheckinActive.getTxtImgName2());
+                    data.setBlobImg2(dataCheckinActive.getBlobImg2());
+                    data.setIntStatusRealisasi(new clsHardCode().Realisasi);
+                    data.setIntFlagPush(new clsHardCode().Save);
+                    realisasiVisitPlanRepo.createOrUpdate(data);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Intent nextScreen = new Intent(getApplicationContext(), MainMenu.class);
+                nextScreen.putExtra("keyMainMenu", "main_menu");
                 finish();
-                System.exit(0);
+                startActivity(nextScreen);
             }
         });
 
@@ -934,29 +973,23 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
-        final EditText et_post = (EditText) dialog.findViewById(R.id.et_post);
-        ((AppCompatButton) dialog.findViewById(R.id.bt_cancel)).setOnClickListener(new View.OnClickListener() {
+        final EditText et_int_number_realisasi = (EditText) dialog.findViewById(R.id.et_int_number_realisasi);
+        ((AppCompatButton) dialog.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        ((AppCompatButton) dialog.findViewById(R.id.bt_submit)).setOnClickListener(new View.OnClickListener() {
+        ((AppCompatButton) dialog.findViewById(R.id.btn_submit_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String review = et_post.getText().toString().trim();
-//                if (review.isEmpty()) {
-//                    Toast.makeText(getApplicationContext(), "Please fill review text", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    items.add("(" + rating_bar.getRating() + ") " + review);
-//                    adapter.notifyDataSetChanged();
-//                }
-//                if (!adapter.isEmpty()) {
-//                    txt_no_item.setVisibility(View.GONE);
-//                }
-                dialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
+                numberRealisasi = et_int_number_realisasi.getText().toString().trim();
+                if (numberRealisasi.equals("")) {
+                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realisasi...",4);
+                } else {
+                   checkout();
+                }
             }
         });
 
