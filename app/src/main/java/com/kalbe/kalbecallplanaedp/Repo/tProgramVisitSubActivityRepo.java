@@ -5,10 +5,13 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,7 +102,19 @@ public class tProgramVisitSubActivityRepo implements crud{
         }
         return item;
     }
-
+    public List<tProgramVisitSubActivity> getAllPushData () {
+        tProgramVisitSubActivity item = new tProgramVisitSubActivity();
+        List<tProgramVisitSubActivity> listData = new ArrayList<>();
+        QueryBuilder<tProgramVisitSubActivity, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettProgramVisitSubActivityDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
 
 
 }

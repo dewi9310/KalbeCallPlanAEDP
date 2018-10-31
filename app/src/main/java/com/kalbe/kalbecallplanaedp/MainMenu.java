@@ -3,6 +3,7 @@ package com.kalbe.kalbecallplanaedp;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -76,7 +77,9 @@ import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.mobiledevknlibs.Service.ServiceRunningChecker;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
@@ -207,6 +210,10 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             pInfo = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+
+        if (!isMyServiceRunning(MyServiceNative.class)){
+            startService(new Intent(MainMenu.this, MyServiceNative.class));
         }
 
         setContentView(R.layout.activity_home);
@@ -364,7 +371,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                                 new Handler().postDelayed(
                                         new Runnable() {
                                             public void run() {
-
+                                                stopService(new Intent(getApplicationContext(), MyServiceNative.class));
                                                 // On complete call either onLoginSuccess or onLoginFailed
                                                 clearData();
                                                 // onLoginFailed();
@@ -996,4 +1003,24 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         dialog.show();
         dialog.getWindow().setAttributes(lp);
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        boolean isDataReady = new clsMainBL().isDataReady(getApplicationContext());
+//        if (!isDataReady){
+//            Menu header = navigationView.getMenu();
+//            header.removeItem(R.id.mnCallPlan);
+//        }
+//    }
 }

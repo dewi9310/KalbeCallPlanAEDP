@@ -1,7 +1,9 @@
 package com.kalbe.kalbecallplanaedp;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -32,6 +35,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
@@ -88,6 +93,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
     tRealisasiVisitPlan dtRealisasiVisit;
     tProgramVisitSubActivity dtVisitPlan;
     tProgramVisitSubActivityRepo visitPlanRepo;
+    CardView cvImgview;
 
 
     @Nullable
@@ -111,6 +117,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         etOutlet = (EditText) v.findViewById(R.id.etOutlet);
         etDesc = (EditText) v.findViewById(R.id.etDesc);
         etDate = (EditText) v.findViewById(R.id.etDate);
+        cvImgview = (CardView)v.findViewById(R.id.llimgview);
         toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
 
         realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(getContext());
@@ -130,6 +137,11 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                    }else if (dtVisitPlan.getIntActivityId()==2){
                        tvOutlet.setText("Pharmacy Name  : ");
                        etOutlet.setText(dtVisitPlan.getTxtApotekName());
+                   }else {
+                       tvOutlet.setVisibility(View.GONE);
+                       etOutlet.setVisibility(View.GONE);
+                       btnCheckin.setText("REALIZATION");
+                       cvImgview.setVisibility(View.GONE);
                    }
                     etDate.setText(parseDate(dtVisitPlan.getDtStart()));
                     etDesc.setText(dtVisitPlan.getTxtNotes());
@@ -202,13 +214,40 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         btnCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Are You sure?");
+
+                builder.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (dtVisitPlan.getIntActivityId()==1||dtVisitPlan.getIntActivityId()==2){
+                            saveDataVisit();
+                        }else {
+                            saveData();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
         return v;
     }
 
-    private void saveData(){
+    private void saveDataVisit(){
         boolean valid = false;
         if (dtTemp==null){
             valid = false;
@@ -223,7 +262,6 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         } else {
             try {
                 DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 tRealisasiVisitPlan data = new tRealisasiVisitPlan();
                 data.setTxtRealisasiVisitId(dtRealisasiVisit.getTxtRealisasiVisitId());
@@ -254,6 +292,55 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             }
             ToastCustom.showToasty(getContext(),"Submit",1);
 //            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            Intent myIntent = new Intent(getContext(), MainMenu.class);
+            getActivity().finish();
+            startActivity(myIntent);
+        }
+
+
+    }
+
+    private void saveData(){
+        if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")){
+            ToastCustom.showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
+        }else if (tvLatUser.getText()==null && tvLongUser.getText()==null){
+            ToastCustom.showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
+        } else {
+            try {
+                mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
+                DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                tRealisasiVisitPlan data = new tRealisasiVisitPlan();
+                data.setTxtRealisasiVisitId(dtRealisasiVisit.getTxtRealisasiVisitId());
+                data.setTxtProgramVisitSubActivityId(dtRealisasiVisit.getTxtProgramVisitSubActivityId());
+                data.setIntUserId(dtRealisasiVisit.getIntUserId());
+                data.setIntRoleID(dtRealisasiVisit.getIntRoleID());
+                data.setTxtDokterId(dtRealisasiVisit.getTxtDokterId());
+                data.setTxtDokterName(dtRealisasiVisit.getTxtDokterName());
+                data.setTxtApotekId(dtRealisasiVisit.getTxtApotekId());
+                data.setTxtApotekName(dtRealisasiVisit.getTxtApotekName());
+                data.setDtCheckIn(dateTimeFormat.format(cal.getTime()));
+                data.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
+                data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.dtLogIn))); ///tanggal login
+                data.setDtDatePlan(dtRealisasiVisit.getDtDatePlan());
+                data.setIntNumberRealisasi(dtRealisasiVisit.getIntNumberRealisasi()); //generate number
+                data.setTxtAcc(tvAcc.getText().toString());
+                data.setTxtLat(tvLatUser.getText().toString());
+                data.setTxtLong(tvLongUser.getText().toString());
+                data.setTxtImgName1(null);
+                data.setBlobImg1(null);
+                data.setTxtImgName2(null);
+                data.setBlobImg2(null);
+                data.setIntStatusRealisasi(new clsHardCode().Realisasi);
+                data.setIntFlagPush(new clsHardCode().Save);
+                realisasiVisitPlanRepo.createOrUpdate(data);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            ToastCustom.showToasty(getContext(),"Submit",1);
             Intent myIntent = new Intent(getContext(), MainMenu.class);
             getActivity().finish();
             startActivity(myIntent);

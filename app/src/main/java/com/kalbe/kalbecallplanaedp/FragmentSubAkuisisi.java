@@ -87,9 +87,9 @@ public class FragmentSubAkuisisi extends Fragment {
             ln_image = (LinearLayout) v.findViewById(R.id.ln_image_sub_akuisisi);
             ln_resgistrasi = (LinearLayout) v.findViewById(R.id.ln_resgistrasi_sub_akuisisi);
 
-            if (intTypeSubSubId ==1){
+            if (intTypeSubSubId ==new clsHardCode().TypeFoto){
                 ln_resgistrasi.setVisibility(View.GONE);
-            }else if (intTypeSubSubId==2){
+            }else if (intTypeSubSubId==new clsHardCode().TypeText){
                 ln_image.setVisibility(View.GONE);
             }
             headerRepo = new tAkuisisiHeaderRepo(getContext());

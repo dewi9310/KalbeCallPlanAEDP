@@ -48,6 +48,9 @@ public class clsHardCode {
     public String linkSubSubActivity = new  mConfigRepo(context).API + "downloadSubActivityDetail";
     public String linkDownloadArea = new mConfigRepo(context).API + "downloadtMappingArea";
     public String linkProgramVisit = new mConfigRepo(context).API + "downloadtProgramVisit";
+    public String linkAkuisisi = new mConfigRepo(context).API + "downloadtAkuisisi";
+    public String linkMaintenance = new mConfigRepo(context).API + "downloadtMaintenance";
+    public String linkInfoProgram = new mConfigRepo(context).API + "downloadtInfoProgram";
 //    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
     public String linkPushData = new mConfigRepo(context).API +"PushAllData";
 

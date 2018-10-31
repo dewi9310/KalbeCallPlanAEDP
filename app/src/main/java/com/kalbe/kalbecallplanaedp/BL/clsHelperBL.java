@@ -45,7 +45,9 @@ import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.kalbe.mobiledevknlibs.Volley.volley.VolleyMultipartRequest;
 
 import org.apache.http.HttpStatus;
@@ -111,7 +113,7 @@ public class clsHelperBL {
             List<tMaintenanceDetail> ListOfMaintenanceDetail = _tMaintenanceDetailRepo.getPushAllData(ListOftMaintenanceHeader);
             List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
             List<tInfoProgramDetail> ListOftInfoProgramDetail = _tInfoProgramDetailRepo.getPushAllData(ListOftInfoProgramHeader);
-//            List<tProgramVisitSubActivity> ListOfDatatProgramSubActivity
+            List<tProgramVisitSubActivity> ListOftProgramSubActivity = _tProgramVisitSubActivityRepo.getAllPushData();
 
             FileUpload = new HashMap<>();
             if (ListOftAkuisisiHeaderData!=null){
@@ -125,6 +127,10 @@ public class clsHelperBL {
                         FileUpload.put(data.getTxtDetailId(), data.getTxtImg());
                     }
                 }
+            }
+
+            if (ListOftProgramSubActivity!=null){
+                dtPush.setListOfDatatProgramVisitSubActivity(ListOftProgramSubActivity);
             }
 
             if (ListOftMaintenanceHeader!=null){
@@ -164,6 +170,43 @@ public class clsHelperBL {
         return dtclsPushData;
     }
 
+    public void SavePushData(Context context, clsDataJson dtJson, ResponsePushData jsonResult){
+        try {
+            for (int i = 0; i < jsonResult.getData().getModelData().size(); i++){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatRealisasiVisitPlan"){
+                    for (tRealisasiVisitPlan data : dtJson.getListOfDatatRealisasiVisitPlan()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
+                    }
+                }
+
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListDataOftAkuisisiHeader"){
+                    for (tAkuisisiHeader data : dtJson.getListDataOftAkuisisiHeader()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tAkuisisiHeaderRepo(context).createOrUpdate(data);
+                    }
+                }
+
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatInforProgramHeader"){
+                    for (tInfoProgramHeader data : dtJson.getListOfDatatInfoProogramHeader()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tInfoProgramHeaderRepo(context).createOrUpdate(data);
+                    }
+                }
+
+
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatMaintenanceHeader"){
+                    for (tMaintenanceHeader data : dtJson.getListOfDatatMaintenanceHeader()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tMaintenanceHeaderRepo(context).createOrUpdate(data);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void makeJsonObjectRequestPushData(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final VolleyResponseListener listener) {
         final String boundary = "apiclient-" + System.currentTimeMillis();
@@ -824,7 +867,8 @@ public class clsHelperBL {
                     }
                     finalDialog1.dismiss();
                 } else {
-                    Toast.makeText(context, "Error 500, Server Error", Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(context,"Failed Download Data, please check your connection",4);
+//                    Toast.makeText(context, "Failed Download Data Doctor/Pharmacy", Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
             }

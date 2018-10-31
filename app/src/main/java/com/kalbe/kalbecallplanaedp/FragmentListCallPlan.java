@@ -16,6 +16,7 @@ import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsListItemAdapter;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
@@ -81,64 +82,69 @@ public class FragmentListCallPlan extends Fragment{
             if (listVisitDetail!=null){
                 if (listVisitDetail.size()>0){
                     for (tProgramVisitSubActivity data : listVisitDetail){
-//                        tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtId(data.getTxtProgramVisitSubActivityId());
-                        clsListItemAdapter swpItem =  new clsListItemAdapter();
-                        if (data.getIntType()==1){
-                            mActivity dtActivity = null;
-                            try {
-                                dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            if (dtActivity!=null){
-                                swpItem.setTxtTittle(dtActivity.getTxtName());
-                                if (dtActivity.getIntActivityId()==1){
-                                    swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
-                                }else if (dtActivity.getIntActivityId()==2){
-                                    swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                        tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtPlanId(data.getTxtProgramVisitSubActivityId());
+                        if (dtRealisasi.getIntStatusRealisasi()== new clsHardCode().VisitPlan){
+                            clsListItemAdapter swpItem =  new clsListItemAdapter();
+                            if (data.getIntType()==1){
+                                mActivity dtActivity = null;
+                                try {
+                                    dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                if (dtActivity!=null){
+                                    swpItem.setTxtTittle(dtActivity.getTxtName());
+                                    if (dtActivity.getIntActivityId()==1){
+                                        swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
+                                    }else if (dtActivity.getIntActivityId()==2){
+                                        swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                                    }else {
+                                        if (data.getTxtNotes()!=null)
+                                            swpItem.setTxtSubTittle(data.getTxtNotes());
+                                    }
                                 }else {
-                                    if (data.getTxtNotes()!=null)
-                                    swpItem.setTxtSubTittle(data.getTxtNotes());
+                                    swpItem.setTxtTittle("");
+                                    swpItem.setTxtSubTittle("");
                                 }
-                            }else {
-                                swpItem.setTxtTittle("");
-                                swpItem.setTxtSubTittle("");
-                            }
-                            swpItem.setTxtDate(parseDate(data.getDtStart()));
-                            swpItem.setIntColor(R.color.purple_600);
-                            swpItem.setBoolSection(false);
-                            swpItem.setTxtImgName("PL");
-                            swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
-                            swipeListPlan.add(swpItem);
-                        }else if (data.getIntType()==2){
-                            mActivity dtActivity = null;
-                            try {
-                                dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            if (dtActivity!=null){
-                                swpItem.setTxtTittle(dtActivity.getTxtName());
-                                if (dtActivity.getIntActivityId()==1){
-                                    swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
-                                }else if (dtActivity.getIntActivityId()==2){
-                                    swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                                swpItem.setTxtDate(parseDate(data.getDtStart()));
+                                swpItem.setIntColor(R.color.purple_600);
+                                swpItem.setBoolSection(false);
+                                swpItem.setTxtImgName("PL");
+                                swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
+                                swipeListPlan.add(swpItem);
+                            }else if (data.getIntType()==2){
+                                mActivity dtActivity = null;
+                                try {
+                                    dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
-                            }else {
-                                swpItem.setTxtTittle("");
-                                swpItem.setTxtSubTittle("");
+                                if (dtActivity!=null){
+                                    swpItem.setTxtTittle(dtActivity.getTxtName());
+                                    if (dtActivity.getIntActivityId()==1){
+                                        swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
+                                    }else if (dtActivity.getIntActivityId()==2){
+                                        swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
+                                    }else {
+                                        if (data.getTxtNotes()!=null)
+                                            swpItem.setTxtSubTittle(data.getTxtNotes());
+                                    }
+                                }else {
+                                    swpItem.setTxtTittle("");
+                                    swpItem.setTxtSubTittle("");
+                                }
+                                swpItem.setTxtDate(parseDate(data.getDtStart()));
+                                swpItem.setIntColor(getResources().getColor(R.color.blue_500));
+                                swpItem.setBoolSection(false);
+                                swpItem.setTxtImgName("NP");
+                                swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
+                                swipeListUnplan.add(swpItem);
                             }
-                            swpItem.setTxtDate(parseDate(data.getDtStart()));
-                            swpItem.setIntColor(getResources().getColor(R.color.blue_500));
-                            swpItem.setBoolSection(false);
-                            swpItem.setTxtImgName("NP");
-                            swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
-                            swipeListUnplan.add(swpItem);
                         }
                     }
 
-                    listDataHeader.add("Plan");
-                    listDataHeader.add("Unplan");
+                    listDataHeader.add("Plan (" + String.valueOf(swipeListPlan.size()) + ")");
+                    listDataHeader.add("Unplan (" + String.valueOf(swipeListUnplan.size()) + ")");
                     listDataChild.put(listDataHeader.get(0), swipeListPlan);
                     listDataChild.put(listDataHeader.get(1), swipeListUnplan);
                 }

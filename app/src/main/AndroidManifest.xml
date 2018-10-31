@@ -113,6 +113,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
+
+        <service android:name="com.kalbe.kalbecallplanaedp.Service.MyServiceNative">
+            <intent-filter>
+                <action android:name=".Service.MyServiceNative" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

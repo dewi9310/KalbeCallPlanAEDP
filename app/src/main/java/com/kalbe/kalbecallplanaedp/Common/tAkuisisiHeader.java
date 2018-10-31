@@ -19,10 +19,6 @@ public class tAkuisisiHeader implements Serializable {
     public int intSubSubActivityTypeId;
     @DatabaseField(columnName = "txtNoDoc")
     public String txtNoDoc;
-//    @DatabaseField(columnName = "txtName")
-//    public String txtName;
-//    @DatabaseField(columnName = "txtDesc")
-//    public String txtDesc;
     @DatabaseField(columnName = "dtExpiredDate")
     public String dtExpiredDate;
     @DatabaseField(columnName = "intUserId")
@@ -33,8 +29,6 @@ public class tAkuisisiHeader implements Serializable {
     public  String intDokterId;
     @DatabaseField(columnName = "intApotekID")
     public String intApotekID;
-//    @DatabaseField(columnName = "intOutletId")
-//    public int intOutletId;
     @DatabaseField(columnName = "intAreaId")
     public String intAreaId;
     @DatabaseField(columnName = "intFlagPush")

@@ -30,20 +30,6 @@
                     android:layout_height="wrap_content"
                     android:text="Branch :"
                     android:textColor="#000" />
-
-                <TextView
-                    android:id="@+id/txtHDId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="txthdId"
-                    android:visibility="gone" />
-                <!--<Spinner
-                    android:id="@+id/spnType"
-                    android:layout_below="@+id/tvBranch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:background="@drawable/bg_edtext"/>-->
                 <EditText
                     android:id="@+id/etBranch"
                     android:layout_width="match_parent"
@@ -54,6 +40,20 @@
                     android:text="Branch"
                     android:textColor="@color/grey_700"
                     android:textSize="14dp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/txtHDId"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="txthdId"-->
+                    <!--android:visibility="gone" />-->
+                <!--<Spinner
+                    android:id="@+id/spnType"
+                    android:layout_below="@+id/tvBranch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/bg_edtext"/>-->
+
 
                 <View
                     android:id="@+id/view1"

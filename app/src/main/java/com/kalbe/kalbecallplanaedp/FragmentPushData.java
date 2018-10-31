@@ -1,5 +1,6 @@
 package com.kalbe.kalbecallplanaedp;
 
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,11 +25,14 @@ import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by Dewi Oktaviani on 9/26/2018.
@@ -40,6 +44,7 @@ public class FragmentPushData extends Fragment{
     private TableLayout tablePushData;
     Button button_push_data;
     private Gson gson;
+    SweetAlertDialog pDialog;
 
     @Nullable
     @Override
@@ -49,6 +54,7 @@ public class FragmentPushData extends Fragment{
         button_push_data = (Button)v.findViewById(R.id.button_push_data);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
 
         ListData();
         button_push_data.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +71,16 @@ public class FragmentPushData extends Fragment{
     }
 
     private void pushData() throws JSONException {
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Pushing Data");
+        pDialog.setCancelable(false);
+        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+        pDialog.show();
         String versionName = "";
         try {
             versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
@@ -72,28 +88,43 @@ public class FragmentPushData extends Fragment{
             // TODO Auto-generated catch block
             e2.printStackTrace();
         }
-        clsPushData dtJson = new clsHelperBL().pushData(versionName, getContext());
+        final clsPushData dtJson = new clsHelperBL().pushData(versionName, getContext());
         if (dtJson == null){
         }else {
             String linkPushData = new clsHardCode().linkPushData;
             new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(getContext(),message,4);
+//                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    pDialog.dismiss();
                 }
 
                 @Override
                 public void onResponse(String response, Boolean status, String strErrorMsg) {
                     if (response!=null){
-                        JSONObject jsonObject = new JSONObject();
-                        ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
-                        boolean isStatus = model.getResult().isStatus();
-                        String txtMessage = model.getResult().getMessage();
-                        String txtMethod = model.getResult().getMethodName();
-                        if (isStatus==true){
-
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
+                            boolean isStatus = model.getResult().isStatus();
+                            String txtMessage = model.getResult().getMessage();
+                            String txtMethod = model.getResult().getMethodName();
+                            if (isStatus==true){
+                                if (model.getData().getModelData()!=null){
+                                    if (model.getData().getModelData().size()>0){
+                                        new  clsHelperBL().SavePushData(getContext(), dtJson.getDataJson(), model);
+                                    }
+                                }
+                            }
+                            ToastCustom.showToasty(getContext(),"Success Push Data",1);
+                            pDialog.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
+                    }else {
+                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                        pDialog.dismiss();
                     }
                 }
             });

@@ -1,10 +1,10 @@
-package com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData;
+package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtInfoProgram;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
-public class ResponsePushData{
+public class DownloadtInfoProgram{
 
 	@SerializedName("result")
 	private Result result;
@@ -31,7 +31,7 @@ public class ResponsePushData{
 	@Override
  	public String toString(){
 		return 
-			"ResponsePushData{" + 
+			"DownloadtInfoProgram{" + 
 			"result = '" + result + '\'' + 
 			",data = '" + data + '\'' + 
 			"}";
