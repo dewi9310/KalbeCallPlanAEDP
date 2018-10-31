@@ -493,6 +493,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 dataPlan.setTxtAreaId(spnArea.getSelectedItem().toString());
                 dataPlan.setDtStart(dateTimeFormat.format(cal.getTime()));
                 dataPlan.setDtEnd(dateTimeFormat.format(cal.getTime()));
+                dataPlan.setIntFlagPush(new clsHardCode().Save);
                 visitSubActivityRepo.createOrUpdate(dataPlan);
 
                 tRealisasiVisitPlan data = new tRealisasiVisitPlan();
