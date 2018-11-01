@@ -23,6 +23,9 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="RippleStyleBlack" parent="RippleStyleWhite">
+        <item name="mrl_rippleColor">#8096989A</item>
+    </style>
 
     <style name="Cropper.Widget.Drawer.Seperator" parent="android:Widget.DeviceDefault.Light.TextView">
         <item name="android:layout_width">match_parent</item>
