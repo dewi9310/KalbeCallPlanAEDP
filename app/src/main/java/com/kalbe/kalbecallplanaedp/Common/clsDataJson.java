@@ -360,6 +360,7 @@ public class clsDataJson {
                 item.put(dataInfoDeatil.Property_blobFile, data.getBlobFile());
                 item.put(dataInfoDeatil.Property_intFlagChecklist, data.isBoolFlagChecklist());
                 item.put(dataInfoDeatil.Property_dtChecklist, data.getDtChecklist());
+                item.put(dataInfoDeatil.Property_Description, data.getDescription());
                 itemLIstQuery.add(item);
             }
             resJson.put(dataInfoDeatil.Property_ListOfDatatInfoProgramDetail, new JSONArray(itemLIstQuery));

@@ -12,9 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Utils.TouchImageView;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
@@ -29,7 +32,7 @@ public class ImageViewerActivity extends AppCompatActivity {
 
     private TouchImageView imageView;
     private String ZOOM_IMAGE = "zoom image";
-    private String ZOOM_DIRECTORY = "zoom directory";
+    private String ZOOM_IMAGE_INFO ="zoom image info program";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,36 +44,28 @@ public class ImageViewerActivity extends AppCompatActivity {
         imageView = (TouchImageView) findViewById(R.id.img_viewer);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-           tAkuisisiDetailRepo detailRepo = new tAkuisisiDetailRepo(getApplicationContext());
-            tAkuisisiDetail data = null;
-            try {
-                data = (tAkuisisiDetail) detailRepo.findByDetailId(bundle.getString(ZOOM_IMAGE));
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (bundle.getString(ZOOM_IMAGE)!=null){
+                tAkuisisiDetailRepo detailRepo = new tAkuisisiDetailRepo(getApplicationContext());
+                tAkuisisiDetail data = null;
+                try {
+                    data = (tAkuisisiDetail) detailRepo.findByDetailId(bundle.getString(ZOOM_IMAGE));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(data.getTxtImg());
+                imageView.setImageBitmap(bitmap);
+            }else if (bundle.getString(ZOOM_IMAGE_INFO)!=null){
+                tInfoProgramDetailRepo detailRepo = new tInfoProgramDetailRepo(getApplicationContext());
+                tInfoProgramDetail dtDetail = null;
+                try {
+                    dtDetail = (tInfoProgramDetail) detailRepo.findByDetailId(bundle.getString(ZOOM_IMAGE_INFO));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(new clsMainBL().arrayDecryptFile(dtDetail.getBlobFile()));
+                imageView.setImageBitmap(bitmap);
             }
-//            Uri uri = UriData.getOutputMediaImageUri(ImageViewerActivity.this, bundle.getString(ZOOM_DIRECTORY), bundle.getString(ZOOM_IMAGE));
-            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(data.getTxtImg());
-//            Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getApplicationContext(), uri);
-            ExifInterface exif = null;
-//            String path = uri.toString();
-//            try {
-//                if (path.startsWith("file://")) {
-//                    exif = new ExifInterface(path);
-//                }
-//                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                    if (path.startsWith("content://")) {
-//                        InputStream inputStream = getApplicationContext().getContentResolver().openInputStream(uri);
-//                        exif = new ExifInterface(inputStream);
-//                    }
-//                }
-//
-//                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-//                Bitmap rotatedBitmap = rotateBitmap(bitmap, orientation);
-//                imageView.setImageBitmap(rotatedBitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            imageView.setImageBitmap(bitmap);
+
         }
     }
 

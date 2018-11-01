@@ -11,13 +11,13 @@ import java.io.Serializable;
 @DatabaseTable
 public class mApotek implements Serializable{
     @DatabaseField(id = true, columnName = "txtCode")
-    public String txtCode;
+    private String txtCode;
     @DatabaseField(columnName ="txtName")
-    public String txtName;
+    private String txtName;
     @DatabaseField(columnName = "txtKecId")
-    public String txtKecId;
+    private String txtKecId;
     @DatabaseField(columnName = "txtKecName")
-    public String txtKecName;
+    private String txtKecName;
 
     public String Property_txtCode = "txtCode";
 

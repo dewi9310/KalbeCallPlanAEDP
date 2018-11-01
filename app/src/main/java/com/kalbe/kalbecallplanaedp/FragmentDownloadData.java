@@ -268,9 +268,14 @@ public class FragmentDownloadData extends Fragment{
 
             }
 
-            dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
-            if (dataListRealisasi!=null){
-                tv_count_realisasi.setText(String.valueOf(dataListRealisasi.size()));
+//            dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
+//            if (dataListRealisasi!=null){
+//                tv_count_realisasi.setText(String.valueOf(dataListRealisasi.size()));
+//            }
+
+            dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>)dtRepoProgramVisitSubActivity.findAll();
+            if (dataListProgramVisitSubActivity!=null){
+                tv_count_realisasi.setText(String.valueOf(dataListProgramVisitSubActivity.size()));
             }
 
             dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
@@ -406,7 +411,13 @@ public class FragmentDownloadData extends Fragment{
                 if (dataListSubActivity!=null){
                     if (dataListSubActivity.size()>0){
                         for (mSubActivity data : dataListSubActivity){
-                            itemList.add(String.valueOf(data.getIntSubActivityid() + " - " + data.getTxtName()));
+                            mActivity activity = null;
+                            try {
+                                activity = (mActivity) dtActivityrepo.findById(data.getIntActivityid());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            itemList.add(String.valueOf(data.getIntSubActivityid()) + ". " + activity.getTxtName() + " - " + data.getTxtName());
                         }
                     }else {
                         itemList.add(" - ");
@@ -422,18 +433,21 @@ public class FragmentDownloadData extends Fragment{
                 itemList.clear();
                 try {
                     dataListSubSubActivity = (List<mSubSubActivity>) dtRepoSubSubActivity.findAll();
+                    if (dataListSubSubActivity!=null){
+                        if (dataListSubSubActivity.size()>0){
+                            for (mSubSubActivity data : dataListSubSubActivity){
+                                mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
+                                mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
+                                itemList.add(String.valueOf(data.getIntSubSubActivityid()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + data.getTxtName());
+                            }
+                        }else {
+                            itemList.add(" - ");
+                        }
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                if (dataListSubSubActivity!=null){
-                    if (dataListSubSubActivity.size()>0){
-                        for (mSubSubActivity data : dataListSubSubActivity){
-                            itemList.add(String.valueOf(data.getIntSubSubActivityid() + " - " + data.getTxtName()));
-                        }
-                    }else {
-                        itemList.add(" - ");
-                    }
-                }
+
                 onButtonOnClick(ln_download_subsub_activity, tv_download_subsubactivity, "mSubSubActivity");
             }
         });
@@ -443,16 +457,28 @@ public class FragmentDownloadData extends Fragment{
             public void onClick(View v) {
                 itemList.clear();
                 try {
-                    dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
+                    dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                if (dataListRealisasi!=null){
-                    if (dataListRealisasi.size()>0){
+                if (dataListProgramVisitSubActivity!=null){
+                    if (dataListProgramVisitSubActivity.size()>0){
                         int index = 0;
-                        for (tRealisasiVisitPlan data : dataListRealisasi){
+                        for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
                             index++;
-                            itemList.add(String.valueOf(index)+ " - " + data.getTxtRealisasiVisitId());
+                            mActivity activity = null;
+                            try {
+                                activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            if (data.getIntActivityId()==1){
+                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
+                            }else if (data.getIntActivityId()==2){
+                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
+                            }else {
+                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
+                            }
                         }
                     }else {
                         itemList.add(" - ");
@@ -547,27 +573,6 @@ public class FragmentDownloadData extends Fragment{
             }
         });
 
-//        ln_download_typesub_activity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                itemList.clear();
-//                try {
-//                    dataListTypeSubSubActivity = (List<mTypeSubSubActivity>) dtRepoTypeSubSubActivity.findAll();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//                if (dataListTypeSubSubActivity!=null){
-//                    if (dataListTypeSubSubActivity.size()>0){
-//                        for (mTypeSubSubActivity data : dataListTypeSubSubActivity){
-//                            itemList.add(String.valueOf(data.getIntTypeSubSubActivityId() + " - " + data.getTxtName()));
-//                        }
-//                    }
-//                }
-//                itemList.add("1" + " - " + "tipe sub sub activity");
-//                onButtonOnClick(ln_download_typesub_activity, tv_download_typesubsubactivity, "mTypeSubSubActivity");
-//
-//            }
-//        });
         return v;
     }
 
@@ -621,27 +626,55 @@ public class FragmentDownloadData extends Fragment{
         dialog.getWindow().setAttributes(lp);
     }
     private void displayDataResult(String txtDownlaod) {
+        boolean isDataReady = new clsMainBL().isDataReady(getContext());
         if (txtDownlaod.equals("mActivity")){
             downloadActivity();
         }else if (txtDownlaod.equals("mSubActivity")){
-            downloadSubActivity();
+            try {
+                dataListActivity = (List<mActivity>) dtActivityrepo.findAll();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (dataListActivity.size()>0){
+                downloadSubActivity();
+            }else {
+                ToastCustom.showToasty(getContext(),"Please download data activity",4);
+            }
+
         } else if (txtDownlaod.equals("mSubSubActivity")){
-            downloadSubSubActivity();
+            try {
+                dataListSubActivity = (List<mSubActivity>) dtRepoSubActivity.findAll();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (dataListSubActivity.size()>0){
+                downloadSubSubActivity();
+            }else {
+                ToastCustom.showToasty(getContext(),"Please download data sub activity",4);
+            }
+
         } else if (txtDownlaod.equals("mApotek")){
             downloadApotek(false);
         } else if (txtDownlaod.equals("mDokter")){
             downloadDokter(false);
         } else if (txtDownlaod.equals("mUserMappingArea")){
             downloadArea();
-        } else if (txtDownlaod.equals("tRealisasiVisitPlan")){
-            downloadtCallPlan();
-        }else if (txtDownlaod.equals("tAkuisisiHeader")){
-            downloadtAkuisisi();
-        }else if (txtDownlaod.equals("tMaintenanceHeader")){
-            downloadtMaintenace();
-        }else if (txtDownlaod.equals("tInfoProgramHeader")){
-            downloadtInfoProgram();
+        }else{
+            if (isDataReady){
+                if (txtDownlaod.equals("tRealisasiVisitPlan")){
+                    downloadtCallPlan();
+                }else if (txtDownlaod.equals("tAkuisisiHeader")){
+                    downloadtAkuisisi();
+                }else if (txtDownlaod.equals("tMaintenanceHeader")){
+                    downloadtMaintenace();
+                }else if (txtDownlaod.equals("tInfoProgramHeader")){
+                    downloadtInfoProgram();
+                }
+            }else {
+                ToastCustom.showToasty(getContext(),"Please download all data master",4);
+            }
         }
+
 
     }
 
@@ -675,7 +708,8 @@ public class FragmentDownloadData extends Fragment{
         new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                ToastCustom.showToasty(getContext(),message,4);
+//                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1136,7 +1170,8 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtName(model.getData().getLtSubActivity().get(i).getTxtTitle());
                                         data.setTxtDesc(model.getData().getLtSubActivity().get(i).getTxtDescription());
                                         dtRepoSubActivity.createOrUpdate(data);
-                                        itemList.add(String.valueOf(model.getData().getLtSubActivity().get(i).getIntSubActivityId()) + " - " + model.getData().getLtSubActivity().get(i).getTxtTitle());
+                                        mActivity activity = (mActivity) dtActivityrepo.findById(model.getData().getLtSubActivity().get(i).getIntActivityId());
+                                        itemList.add(String.valueOf(1+i) + ". " + activity.getTxtName() + " - " + model.getData().getLtSubActivity().get(i).getTxtTitle());
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
@@ -1201,7 +1236,11 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtDesc(model.getData().getLtSubActivityDetailData().get(i).getTxtDescription());
                                         data.setIntType(model.getData().getLtSubActivityDetailData().get(i).getIntFlag());
                                         dtRepoSubSubActivity.createOrUpdate(data);
-                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
+
+                                        mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
+                                        mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
+                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
+//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
@@ -1444,11 +1483,25 @@ public class FragmentDownloadData extends Fragment{
                                             data.setBlobImg2(getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage2Path()));
                                         }
                                         dtRepoRealisasi.createOrUpdate(data);
-                                        itemList.add(String.valueOf(i+1)+ " - " + model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
                                     }
                                 }
+                                dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
+//                                dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
+                                int index = 0;
+                                for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
+                                    index++;
+                                    mActivity activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
+                                    if (data.getIntActivityId()==1){
+                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
+                                    }else if (data.getIntActivityId()==2){
+                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
+                                    }else {
+                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
+                                    }
+
+                                }
+                                tv_count_realisasi.setText(String.valueOf(dataListProgramVisitSubActivity.size()));
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_realisasi.setText(String.valueOf(model.getData().getRealisasiData().size()));
                             }
                             Log.d("Data info", "Success Download");
 
@@ -1501,7 +1554,9 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getAkuisisiHeader()!=null){
                                 if (model.getData().getAkuisisiHeader().size()>0){
                                     dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
+                                    int index = 0;
                                     for (int i = 0; i <model.getData().getAkuisisiHeader().size(); i++){
+                                        index++;
                                         tAkuisisiHeader data = new tAkuisisiHeader();
                                         data.setTxtHeaderId(model.getData().getAkuisisiHeader().get(i).getTAkuisisiHeaderId());
                                         data.setIntSubSubActivityId(model.getData().getAkuisisiHeader().get(i).getIntSubDetailActivityId());
@@ -1517,7 +1572,13 @@ public class FragmentDownloadData extends Fragment{
 //                                        data.setTxtRealisasiVisitId(model.getData().getAkuisisiHeader().get(i).txr);
                                         data.setIntFlagShow(new clsHardCode().Save);
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
-//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
+                                        String name ="";
+                                        if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
+                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).txtFirstName + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).txtLastName;
+                                        }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
+                                            name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+                                        }
+                                        itemList.add(String.valueOf(index) + " - Akuisisi " + name);
                                     }
                                     tv_count_akuisisi.setText(String.valueOf(model.getData().getAkuisisiHeader().size()));
                                 }
@@ -1591,7 +1652,9 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getLtMaintenanceHeader()!=null){
                                 if (model.getData().getLtMaintenanceHeader().size()>0){
                                     dtRepoMaintenanceHeader = new tMaintenanceHeaderRepo(getContext());
+                                    int index = 0;
                                     for (int i = 0; i <model.getData().getLtMaintenanceHeader().size(); i++){
+                                        index++;
                                         tMaintenanceHeader data = new tMaintenanceHeader();
                                         data.setTxtHeaderId(model.getData().getLtMaintenanceHeader().get(i).getTxtMaintenanceHeaderId());
                                         data.setTxtRealisasiVisitId(model.getData().getLtMaintenanceHeader().get(i).getTxtRealisasiVisitId());
@@ -1603,6 +1666,13 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntAreaId(model.getData().getLtMaintenanceHeader().get(i).getIntAreaId());
                                         data.setIntFlagPush(new clsHardCode().Sync);
                                         dtRepoMaintenanceHeader.createOrUpdate(data);
+                                        String name ="";
+                                        if (model.getData().getLtMaintenanceHeader().get(i).getIntActivityId()==1){
+                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).txtFirstName + " " +dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).txtLastName;
+                                        }else {
+                                            name = apotekRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntApotekId()).getTxtName();
+                                        }
+                                        itemList.add(String.valueOf(index) + " - Maintenace " + name);
 //                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
                                     }
                                     tv_count_maintenance.setText(String.valueOf(model.getData().getLtMaintenanceHeader().size()));
@@ -1675,7 +1745,9 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getLtInfoHeader()!=null){
                                 if (model.getData().getLtInfoHeader().size()>0){
                                     dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
+                                    int index = 0;
                                     for (int i = 0; i <model.getData().getLtInfoHeader().size(); i++){
+                                        index++;
                                         tInfoProgramHeader data = new tInfoProgramHeader();
                                         data.setTxtHeaderId(model.getData().getLtInfoHeader().get(i).getTxtInfoProgramHeaderId());
                                         data.setTxtRealisasiVisitId(model.getData().getLtInfoHeader().get(i).getTxtRealisasiVisitId());
@@ -1687,7 +1759,13 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntAreaId(model.getData().getLtInfoHeader().get(i).getIntAreaId());
                                         data.setIntFlagPush(new clsHardCode().Draft);
                                         dtRepoInfoProgHeader.createOrUpdate(data);
-//                                        itemList.add(String.valueOf(model.getData().getLtInfoHeader().get(i).get()) + " - " + model.getData().getLtInfoHeader().get(i).getTxtTitle());
+                                        String name ="";
+                                        if (model.getData().getLtInfoHeader().get(i).getIntActivityId()==1){
+                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).txtFirstName + " " +dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).txtLastName;
+                                        }else {
+                                            name = apotekRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntApotekId()).getTxtName();
+                                        }
+                                        itemList.add(String.valueOf(index) + " - Info Program " + name);
                                     }
                                     tv_count_infoprogram.setText(String.valueOf(model.getData().getLtInfoHeader().size()));
                                 }

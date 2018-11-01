@@ -75,6 +75,11 @@ public class clsHardCode {
     public int Plan = 1;
     public int UnPlan = 2;
 
+    //yang di tampilin di info program
+    public int AllInfo = 1;
+    public int OnlyDesc = 2;
+    public int OnlyFile = 3;
+
     public String copydb(Context context) throws IOException {
         String CURRENT_DATABASE_PATH = "data/data/" + context.getPackageName() + "/databases/"+ new clsHardCode().dbName;
 

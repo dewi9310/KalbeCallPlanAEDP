@@ -114,6 +114,12 @@
                 android:value=".MainMenu" />
         </activity>
 
+        <activity android:name=".PDFViewer">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenu" />
+        </activity>
+
         <service android:name="com.kalbe.kalbecallplanaedp.Service.MyServiceNative">
             <intent-filter>
                 <action android:name=".Service.MyServiceNative" />

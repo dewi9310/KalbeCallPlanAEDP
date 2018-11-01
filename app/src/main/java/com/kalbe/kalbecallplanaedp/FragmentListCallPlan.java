@@ -85,7 +85,7 @@ public class FragmentListCallPlan extends Fragment{
                         tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtPlanId(data.getTxtProgramVisitSubActivityId());
                         if (dtRealisasi.getIntStatusRealisasi()== new clsHardCode().VisitPlan){
                             clsListItemAdapter swpItem =  new clsListItemAdapter();
-                            if (data.getIntType()==1){
+                            if (data.getIntType()==new clsHardCode().Plan){
                                 mActivity dtActivity = null;
                                 try {
                                     dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
@@ -112,7 +112,7 @@ public class FragmentListCallPlan extends Fragment{
                                 swpItem.setTxtImgName("PL");
                                 swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
                                 swipeListPlan.add(swpItem);
-                            }else if (data.getIntType()==2){
+                            }else if (data.getIntType()==new clsHardCode().UnPlan){
                                 mActivity dtActivity = null;
                                 try {
                                     dtActivity = (mActivity) repoActivity.findById(data.getIntActivityId());
@@ -154,29 +154,6 @@ public class FragmentListCallPlan extends Fragment{
         }
 
 
-
-//        clsListItemAdapter swpItem;
-//        _clsMainBL=new clsMainBL();
-
-//        swpItem = new clsListItemAdapter();
-//        swpItem.setTxtTittle("Visit Dokter");
-//        swpItem.setTxtSubTittle("Visit Dokter Fauziyah");
-//        swpItem.setTxtDate("02-10-2018");
-//        swpItem.setIntColor(R.color.purple_600);
-//        swpItem.setBoolSection(false);
-//        swpItem.setTxtImgName("PL");
-//        swipeListPlan.add(swpItem);
-//        swpItem = new clsListItemAdapter();
-//        swpItem.setTxtTittle("Visit Dokter");
-//        swpItem.setTxtSubTittle("Visit Dokter Azizah");
-//        swpItem.setTxtDate("02-10-2018");
-//        swpItem.setIntColor(getResources().getColor(R.color.blue_500));
-//        swpItem.setBoolSection(false);
-//        swpItem.setTxtImgName("NP");
-//        swipeListUnplan.add(swpItem);
-
-
-
         mExpandableListAdapter = new com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
         mExpandableListView.setAdapter(mExpandableListAdapter);
         mExpandableListView.setEmptyView(v.findViewById(R.id.ln_empty));
@@ -186,7 +163,6 @@ public class FragmentListCallPlan extends Fragment{
                 Bundle data = new Bundle();
 
                 data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
-//                data.putSerializable(DT_CALL_PLAN, listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                 FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
                 fragmentCallPlan.setArguments(data);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

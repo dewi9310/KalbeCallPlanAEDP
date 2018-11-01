@@ -35,6 +35,12 @@
             android:icon="@mipmap/ic_asg_unplan"
             android:orderInCategory="0"
             android:title="Maintenance" />
+
+        <item
+            android:id="@+id/mnInfoProgram"
+            android:icon="@mipmap/ic_asg_unplan"
+            android:orderInCategory="0"
+            android:title="Info Program" />
     </group>
     <group
         android:checkableBehavior="single"

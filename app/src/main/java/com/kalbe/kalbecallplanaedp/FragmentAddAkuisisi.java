@@ -280,45 +280,66 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                         return true;
 
                     case R.id.action_save:
-                        if (lv_akuisisi.getChildCount()==0){
-                            ToastCustom.showToasty(getContext(), "Please take at least one picture", 4);
-                        }else if (etDtExpired.getText().toString().equals("")){
-                        ToastCustom.showToasty(getContext(), "Please select the date", 4);
-                        }else if (etNoDoc.getText().toString().equals("")){
-                        ToastCustom.showToasty(getContext(), "Please fill number of document", 4);
-                        }else if (MapTab.get(spnAddSubAkuisisi.getSelectedItem())==0){
-                            ToastCustom.showToasty(getContext(), "Please select type of akuisisi", 4);
-                        }else {
-                            tAkuisisiHeader dt = new tAkuisisiHeader();
-                            dt.setTxtHeaderId(dtHeader.getTxtHeaderId());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                        builder.setTitle("Confirm");
+                        builder.setMessage("Are You sure?");
+
+                        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (lv_akuisisi.getChildCount()==0){
+                                    ToastCustom.showToasty(getContext(), "Please take at least one picture", 4);
+                                }else if (etDtExpired.getText().toString().equals("")){
+                                    ToastCustom.showToasty(getContext(), "Please select the date", 4);
+                                }else if (etNoDoc.getText().toString().equals("")){
+                                    ToastCustom.showToasty(getContext(), "Please fill number of document", 4);
+                                }else if (MapTab.get(spnAddSubAkuisisi.getSelectedItem())==0){
+                                    ToastCustom.showToasty(getContext(), "Please select type of akuisisi", 4);
+                                }else {
+                                    tAkuisisiHeader dt = new tAkuisisiHeader();
+                                    dt.setTxtHeaderId(dtHeader.getTxtHeaderId());
 //                            dt.setDtExpiredDate(etDtExpired.getText().toString());
-                            dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
-                            dt.setTxtNoDoc(etNoDoc.getText().toString());
-                            dt.setIntFlagPush(new clsHardCode().Save);
-                            dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
-                            dt.setIntUserId(dtUserLogin.getIntUserID());
-                            dt.setIntRoleId(dtUserLogin.getIntRoleID());
-                            dt.setIntAreaId(dataPlan.getTxtAreaId());
-                            if (dataPlan.getIntActivityId()==1){
-                                dt.setIntDokterId(dataCheckinActive.getTxtDokterId());
-                            }else if (dataPlan.getIntActivityId()==2){
-                                dt.setIntApotekID(dataCheckinActive.getTxtApotekId());
-                            }
-                            dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
-                            dt.setIntFlagShow(new clsHardCode().Save);
-                            dt.setIntSubSubActivityTypeId(new clsHardCode().TypeFoto);
-                            try {
-                                dtHeaderRepo.createOrUpdate(dt);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        ToastCustom.showToasty(getContext(), "Saved", 1);
-                            Bundle bundle = new Bundle();
-                            bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-                            Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
+                                    dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
+                                    dt.setTxtNoDoc(etNoDoc.getText().toString());
+                                    dt.setIntFlagPush(new clsHardCode().Save);
+                                    dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
+                                    dt.setIntUserId(dtUserLogin.getIntUserID());
+                                    dt.setIntRoleId(dtUserLogin.getIntRoleID());
+                                    dt.setIntAreaId(dataPlan.getTxtAreaId());
+                                    if (dataPlan.getIntActivityId()==1){
+                                        dt.setIntDokterId(dataCheckinActive.getTxtDokterId());
+                                    }else if (dataPlan.getIntActivityId()==2){
+                                        dt.setIntApotekID(dataCheckinActive.getTxtApotekId());
+                                    }
+                                    dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
+                                    dt.setIntFlagShow(new clsHardCode().Save);
+                                    dt.setIntSubSubActivityTypeId(new clsHardCode().TypeFoto);
+                                    try {
+                                        dtHeaderRepo.createOrUpdate(dt);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    ToastCustom.showToasty(getContext(), "Saved", 1);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
+                                    Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
 
-                        }
+                                }
+                                dialog.dismiss();
+                            }
+                        });
 
+                        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
                         return true;
 
                     default:
@@ -457,7 +478,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
             @Override
             public void onItemClick(View view, clsListImageAdapter obj, int position) {
                 Intent intent1 = new Intent(getContext(), ImageViewerActivity.class);
-                intent1.putExtra(ZOOM_DIRECTORY, new clsHardCode().txtFolderAkuisisi);
+//                intent1.putExtra(ZOOM_DIRECTORY, new clsHardCode().txtFolderAkuisisi);
                 intent1.putExtra(ZOOM_IMAGE, obj.getTxtId());
                 startActivity(intent1);
             }

@@ -472,6 +472,20 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                         return true;
 
+                    case R.id.mnInfoProgram:
+                        toolbar.setTitle("Info Program");
+                        toolbar.setSubtitle(null);
+
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                        FragementInfoProgram fragementInfoProgram = new FragementInfoProgram();
+                        FragmentTransaction fragmentTransactionInfoProgram = getSupportFragmentManager().beginTransaction();
+                        fragmentTransactionInfoProgram.replace(R.id.frame, fragementInfoProgram);
+                        fragmentTransactionInfoProgram.commit();
+                        selectedId = 99;
+
+                        return true;
+
                     case R.id.mnCheckOut:
                         showCustomDialog();
 //                        selectedId = 99;

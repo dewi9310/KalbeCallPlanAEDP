@@ -101,6 +101,23 @@ public class tInfoProgramHeaderRepo implements crud {
         return item;
     }
 
+    public tInfoProgramHeader findByOutletId(String intOutletId, int intActivityId) throws SQLException {
+        tInfoProgramHeader item = new tInfoProgramHeader();
+        QueryBuilder<tInfoProgramHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettInfoProgramHeaderDao().queryBuilder();
+            if (intActivityId==new clsHardCode().VisitDokter){
+                queryBuilder.where().eq(item.Property_intDokterId, intOutletId);
+            }else if (intActivityId==new clsHardCode().VisitApotek){
+                queryBuilder.where().eq(item.Property_intApotekId, intOutletId);
+            }
+            item = queryBuilder.queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
     public List<tInfoProgramHeader> getAllPushData () {
         tInfoProgramHeader item = new tInfoProgramHeader();
         List<tInfoProgramHeader> listData = new ArrayList<>();

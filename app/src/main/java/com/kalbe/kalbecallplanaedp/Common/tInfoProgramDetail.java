@@ -26,6 +26,8 @@ public class tInfoProgramDetail implements Serializable {
     private boolean boolFlagChecklist;
     @DatabaseField
     private String dtChecklist;
+    @DatabaseField
+    private String Description;
 
 
     public String Property_txtDetailId = "txtDetailId";
@@ -35,6 +37,7 @@ public class tInfoProgramDetail implements Serializable {
     public String Property_blobFile = "blobFile";
     public String Property_intFlagChecklist = "intFlagChecklist";
     public String Property_dtChecklist = "dtChecklist";
+    public String Property_Description = "Description";
     public String Property_ListOfDatatInfoProgramDetail = "ListOfDatatInfoProgramDetail";
 
     public String getTxtDetailId() {
@@ -91,5 +94,13 @@ public class tInfoProgramDetail implements Serializable {
 
     public void setDtChecklist(String dtChecklist) {
         this.dtChecklist = dtChecklist;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 }

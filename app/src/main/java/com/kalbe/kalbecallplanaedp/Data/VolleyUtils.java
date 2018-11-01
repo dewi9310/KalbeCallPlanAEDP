@@ -118,6 +118,9 @@ public class VolleyUtils {
 
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
+
+                alert.setCanceledOnTouchOutside(false);
+                alert.setCancelable(false);
             }
         }) {
             @Override

@@ -135,7 +135,7 @@ public class FragmentSubAkuisisi extends Fragment {
                 @Override
                 public void onItemClick(View view, tAkuisisiDetail obj) {
                     Intent intent1 = new Intent(getContext(), ImageViewerActivity.class);
-                    intent1.putExtra(ZOOM_DIRECTORY, new clsHardCode().txtFolderAkuisisi);
+//                    intent1.putExtra(ZOOM_DIRECTORY, new clsHardCode().txtFolderAkuisisi);
                     intent1.putExtra(ZOOM_IMAGE, obj.getTxtDetailId());
                     startActivity(intent1);
                 }
