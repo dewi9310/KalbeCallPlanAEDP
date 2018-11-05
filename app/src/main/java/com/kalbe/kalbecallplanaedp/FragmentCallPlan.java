@@ -285,7 +285,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setTxtImgName2(dtTemp.getTxtImgName2());
                 data.setBlobImg2(dtTemp.getBlobImg2());
                 data.setIntStatusRealisasi(new clsHardCode().VisitPlan);
-                data.setIntFlagPush(new clsHardCode().Draft);
+                data.setIntFlagPush(new clsHardCode().Save);
                 realisasiVisitPlanRepo.createOrUpdate(data);
             } catch (SQLException e) {
                 e.printStackTrace();

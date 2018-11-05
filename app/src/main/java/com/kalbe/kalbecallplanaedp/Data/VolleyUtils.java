@@ -19,6 +19,7 @@ import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -233,17 +234,22 @@ public class VolleyUtils {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 NetworkResponse networkResponse = error.networkResponse;
-                int a = networkResponse.statusCode;
-                listener.onError(error.getMessage());
-                try {
-                    String responseBody = new String( error.networkResponse.data, "utf-8" );
-                    JSONObject jsonObject = new JSONObject( responseBody );
-                } catch ( JSONException e ) {
-                    //Handle a malformed json response
-                    String b = "hasd";
-                } catch (UnsupportedEncodingException e){
-                    String c = "hasd";
+//                int a = networkResponse.statusCode;
+                if (networkResponse==null){
+                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
+                }else {
+                    listener.onError(error.getMessage());
+                    try {
+                        String responseBody = new String( error.networkResponse.data, "utf-8" );
+                        JSONObject jsonObject = new JSONObject( responseBody );
+                    } catch ( JSONException e ) {
+                        //Handle a malformed json response
+                        String b = "hasd";
+                    } catch (UnsupportedEncodingException e){
+                        String c = "hasd";
+                    }
                 }
+
             }
         }) {
             @Override

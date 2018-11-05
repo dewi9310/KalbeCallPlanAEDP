@@ -12,8 +12,20 @@ public class LtInfoDetailItem{
 	@SerializedName("txtInfoProgramDetailId")
 	private String txtInfoProgramDetailId;
 
+	@SerializedName("dtDateChecklist")
+	private String dtDateChecklist;
+
+	@SerializedName("txtFileLinkEncrypt")
+	private String txtFileLinkEncrypt;
+
 	@SerializedName("txtFileName")
 	private String txtFileName;
+
+	@SerializedName("txtFileLink")
+	private String txtFileLink;
+
+	@SerializedName("txtDesc")
+	private String txtDesc;
 
 	@SerializedName("txtInfoProgramHeaderId")
 	private String txtInfoProgramHeaderId;
@@ -40,12 +52,44 @@ public class LtInfoDetailItem{
 		return txtInfoProgramDetailId;
 	}
 
+	public void setDtDateChecklist(String dtDateChecklist){
+		this.dtDateChecklist = dtDateChecklist;
+	}
+
+	public String getDtDateChecklist(){
+		return dtDateChecklist;
+	}
+
+	public void setTxtFileLinkEncrypt(String txtFileLinkEncrypt){
+		this.txtFileLinkEncrypt = txtFileLinkEncrypt;
+	}
+
+	public String getTxtFileLinkEncrypt(){
+		return txtFileLinkEncrypt;
+	}
+
 	public void setTxtFileName(String txtFileName){
 		this.txtFileName = txtFileName;
 	}
 
 	public String getTxtFileName(){
 		return txtFileName;
+	}
+
+	public void setTxtFileLink(String txtFileLink){
+		this.txtFileLink = txtFileLink;
+	}
+
+	public String getTxtFileLink(){
+		return txtFileLink;
+	}
+
+	public void setTxtDesc(String txtDesc){
+		this.txtDesc = txtDesc;
+	}
+
+	public String getTxtDesc(){
+		return txtDesc;
 	}
 
 	public void setTxtInfoProgramHeaderId(String txtInfoProgramHeaderId){
@@ -78,7 +122,11 @@ public class LtInfoDetailItem{
 			"LtInfoDetailItem{" + 
 			"txtFilePath = '" + txtFilePath + '\'' + 
 			",txtInfoProgramDetailId = '" + txtInfoProgramDetailId + '\'' + 
+			",dtDateChecklist = '" + dtDateChecklist + '\'' + 
+			",txtFileLinkEncrypt = '" + txtFileLinkEncrypt + '\'' + 
 			",txtFileName = '" + txtFileName + '\'' + 
+			",txtFileLink = '" + txtFileLink + '\'' + 
+			",txtDesc = '" + txtDesc + '\'' + 
 			",txtInfoProgramHeaderId = '" + txtInfoProgramHeaderId + '\'' + 
 			",intSubDetailActivityId = '" + intSubDetailActivityId + '\'' + 
 			",bitCheck = '" + bitCheck + '\'' + 

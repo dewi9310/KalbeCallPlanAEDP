@@ -37,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -994,7 +995,12 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
+        TextView tv_title = (TextView)dialog.findViewById(R.id.cd_title);
+        TextView tv_subtitle = (TextView)dialog.findViewById(R.id.cd_subtitle);
+        tv_title.setText("Realisasi");
+        tv_subtitle.setText("Please fill number realization before you checkout");
         final EditText et_int_number_realisasi = (EditText) dialog.findViewById(R.id.et_int_number_realisasi);
+        et_int_number_realisasi.setInputType(InputType.TYPE_CLASS_NUMBER);
         ((AppCompatButton) dialog.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1007,7 +1013,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             public void onClick(View v) {
                 numberRealisasi = et_int_number_realisasi.getText().toString().trim();
                 if (numberRealisasi.equals("")) {
-                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realisasi...",4);
+                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realization...",4);
                 } else {
                    checkout();
                 }

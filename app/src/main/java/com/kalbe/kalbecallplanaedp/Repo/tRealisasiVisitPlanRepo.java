@@ -141,7 +141,7 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
 //            where.and();
 //                where.eq(item.Property_intFlagPush, new clsHardCode().Draft).and().eq(item.Property_intStatusRealisasi, new clsHardCode().Realisasi);
 //            PreparedQuery<tRealisasiVisitPlan> preparedQuery = queryBuilder.prepare();
-            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Draft).and().isNotNull(item.Property_dtCheckIn).and().isNull(item.Property_dtCheckOut);
+            queryBuilder.where().isNotNull(item.Property_dtCheckIn).and().isNull(item.Property_dtCheckOut);
             item = queryBuilder.queryForFirst();
 //            listData = helper.gettRealisasiVisitPlanDao().query(preparedQuery);
         } catch (SQLException e) {

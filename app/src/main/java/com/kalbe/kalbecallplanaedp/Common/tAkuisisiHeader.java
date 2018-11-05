@@ -12,32 +12,33 @@ import java.io.Serializable;
 @DatabaseTable
 public class tAkuisisiHeader implements Serializable {
     @DatabaseField(id = true, columnName = "txtHeaderId")
-    public String txtHeaderId;
+    private String txtHeaderId;
     @DatabaseField(columnName = "intSubSubActivityId")
-    public int intSubSubActivityId;
+    private int intSubSubActivityId;
     @DatabaseField(columnName = "intSubSubActivityTypeId")
-    public int intSubSubActivityTypeId;
+    private int intSubSubActivityTypeId;
     @DatabaseField(columnName = "txtNoDoc")
-    public String txtNoDoc;
+    private String txtNoDoc;
     @DatabaseField(columnName = "dtExpiredDate")
-    public String dtExpiredDate;
+    private String dtExpiredDate;
     @DatabaseField(columnName = "intUserId")
-    public int intUserId;
+    private int intUserId;
     @DatabaseField(columnName = "intRoleId")
-    public int intRoleId;
+    private int intRoleId;
     @DatabaseField(columnName = "intDokterId")
-    public  String intDokterId;
+    private  String intDokterId;
     @DatabaseField(columnName = "intApotekID")
-    public String intApotekID;
+    private String intApotekID;
     @DatabaseField(columnName = "intAreaId")
-    public String intAreaId;
+    private String intAreaId;
     @DatabaseField(columnName = "intFlagPush")
-    public int intFlagPush;
+    private int intFlagPush;
     @DatabaseField
-    public String txtRealisasiVisitId;
+    private String txtRealisasiVisitId;
     @DatabaseField
-    public int  intFlagShow;
-
+    private int  intFlagShow;
+    @DatabaseField
+    private String txtUserName;
 
 
     public String Property_intSubSubActivityId = "intSubSubActivityId";
@@ -56,6 +57,7 @@ public class tAkuisisiHeader implements Serializable {
     public String Property_txtRealisasiVisitId = "txtRealisasiVisitId";
     public String Property_ListDataOftAkuisisiHeader = "ListDataOftAkuisisiHeader";
     public String Property_intFlagSow = "intFlagShow";
+    public String Property_txtUserName = "txtUserName";
 
     public String getTxtHeaderId() {
         return txtHeaderId;
@@ -184,5 +186,13 @@ public class tAkuisisiHeader implements Serializable {
 
     public void setIntFlagShow(int intFlagShow) {
         this.intFlagShow = intFlagShow;
+    }
+
+    public String getTxtUserName() {
+        return txtUserName;
+    }
+
+    public void setTxtUserName(String txtUserName) {
+        this.txtUserName = txtUserName;
     }
 }

@@ -102,7 +102,7 @@ public class tInfoProgramDetailRepo implements crud {
         return item;
     }
 
-    public List<tInfoProgramDetail> findByHeaderId(String intHeaderId, int intSubSubActivity) throws SQLException {
+    public List<tInfoProgramDetail> findByHeaderIdandSubsubId(String intHeaderId, int intSubSubActivity) throws SQLException {
         tInfoProgramDetail item = new tInfoProgramDetail();
         List<tInfoProgramDetail> listData = new ArrayList<>();
         QueryBuilder<tInfoProgramDetail, Integer> queryBuilder = null;
@@ -116,6 +116,19 @@ public class tInfoProgramDetailRepo implements crud {
         return listData;
     }
 
+    public List<tInfoProgramDetail> findByHeaderId(String intHeaderId) throws SQLException {
+        tInfoProgramDetail item = new tInfoProgramDetail();
+        List<tInfoProgramDetail> listData = new ArrayList<>();
+        QueryBuilder<tInfoProgramDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettInfoProgramDetailDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtHeaderId, intHeaderId);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
     public List<tInfoProgramDetail> getPushAllData(List<tInfoProgramHeader> headerList){
         List<String> headerIdList = new ArrayList<>();
         List<tInfoProgramDetail> detailList = new ArrayList<>();

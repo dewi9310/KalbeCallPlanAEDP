@@ -23,6 +23,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -40,7 +41,7 @@ public class FragmentListCallPlan extends Fragment{
 
     View v;
     ExpandableListView mExpandableListView;
-    com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter mExpandableListAdapter;
+    ExpandableListAdapter mExpandableListAdapter;
     private FloatingActionButton fab;
     private static List<clsListItemAdapter> swipeListPlan = new ArrayList<>();
     private static List<clsListItemAdapter> swipeListUnplan = new ArrayList<>();

@@ -173,21 +173,28 @@ public class clsHelperBL {
     public void SavePushData(Context context, clsDataJson dtJson, ResponsePushData jsonResult){
         try {
             for (int i = 0; i < jsonResult.getData().getModelData().size(); i++){
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatRealisasiVisitPlan"){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatRealisasiVisitPlan")){
                     for (tRealisasiVisitPlan data : dtJson.getListOfDatatRealisasiVisitPlan()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
                     }
                 }
 
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListDataOftAkuisisiHeader"){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("")){
+                    for (tProgramVisitSubActivity data : dtJson.getListOfDatatProgramVisitSubActivity()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tProgramVisitSubActivityRepo(context).createOrUpdate(data);
+                    }
+                }
+
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListDataOftAkuisisiHeader")){
                     for (tAkuisisiHeader data : dtJson.getListDataOftAkuisisiHeader()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tAkuisisiHeaderRepo(context).createOrUpdate(data);
                     }
                 }
 
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatInforProgramHeader"){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatInforProgramHeader")){
                     for (tInfoProgramHeader data : dtJson.getListOfDatatInfoProogramHeader()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tInfoProgramHeaderRepo(context).createOrUpdate(data);
@@ -195,7 +202,7 @@ public class clsHelperBL {
                 }
 
 
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName()=="ListOfDatatMaintenanceHeader"){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatMaintenanceHeader")){
                     for (tMaintenanceHeader data : dtJson.getListOfDatatMaintenanceHeader()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tMaintenanceHeaderRepo(context).createOrUpdate(data);

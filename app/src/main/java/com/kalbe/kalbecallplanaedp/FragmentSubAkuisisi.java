@@ -29,10 +29,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.kalbe.kalbecallplanaedp.Common.mApotek;
+import com.kalbe.kalbecallplanaedp.Common.mDokter;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.Image;
+import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
@@ -66,9 +70,13 @@ public class FragmentSubAkuisisi extends Fragment {
 //    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
-    private TextView tvNoDoc, tvExpDate;
+    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName;
     LinearLayout ln_resgistrasi, ln_image;
     FloatingActionButton fab;
+    mDokterRepo dokterRepo;
+    mDokter dokter;
+    mApotek apotek;
+    mApotekRepo apotekRepo;
 
     public FragmentSubAkuisisi(tAkuisisiHeader dtHeader, int intTypeSubSubId, FloatingActionButton fab){
         this.dtHeader = dtHeader;
@@ -86,23 +94,44 @@ public class FragmentSubAkuisisi extends Fragment {
             tvExpDate = (TextView) v.findViewById(R.id.tv_exp_date_sub);
             ln_image = (LinearLayout) v.findViewById(R.id.ln_image_sub_akuisisi);
             ln_resgistrasi = (LinearLayout) v.findViewById(R.id.ln_resgistrasi_sub_akuisisi);
+            tvOutlet = (TextView)v.findViewById(R.id.tv_nama_outlet_akuisisi);
+            tvUserName = (TextView)v.findViewById(R.id.tv_username_akuisisi);
 
-            if (intTypeSubSubId ==new clsHardCode().TypeFoto){
-                ln_resgistrasi.setVisibility(View.GONE);
-            }else if (intTypeSubSubId==new clsHardCode().TypeText){
-                ln_image.setVisibility(View.GONE);
-            }
+
             headerRepo = new tAkuisisiHeaderRepo(getContext());
             detailRepo = new tAkuisisiDetailRepo(getContext());
+            dokterRepo = new mDokterRepo(getContext());
+            apotekRepo = new mApotekRepo(getContext());
 
             try {
-//                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
-                if (dtHeader!=null){
+                if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                    ln_resgistrasi.setVisibility(View.GONE);
+                    if (dtHeader!=null){
 
-                    tvNoDoc.setText(dtHeader.getTxtNoDoc());
-                    tvExpDate.setText(String.valueOf(dtHeader.getDtExpiredDate()));
-                    dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                        tvNoDoc.setText(dtHeader.getTxtNoDoc());
+                        tvExpDate.setText(String.valueOf(dtHeader.getDtExpiredDate()));
+                        dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                    }
+                }else if (intTypeSubSubId==new clsHardCode().TypeText){
+                    ln_image.setVisibility(View.GONE);
+                    if (dtHeader!=null){
+                        if (dtHeader.getIntApotekID()!=null){
+                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
+                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+                        }else if (dtHeader.getIntDokterId()!=null){
+                            dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
+                            if (dokter.getTxtLastName()!=null){
+                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
+                            }else {
+                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
+                            }
+                        }
+                        tvUserName.setText(dtHeader.getTxtUserName());
+                        dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                    }
                 }
+//                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }

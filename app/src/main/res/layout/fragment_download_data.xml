@@ -596,7 +596,7 @@
                                     android:layout_height="20dp"
                                     android:layout_centerInParent="true"
                                     android:tint="@android:color/white"
-                                    app:srcCompat="@mipmap/ic_assigment" />
+                                    app:srcCompat="@mipmap/ic_asg_unplan" />
 
                             </RelativeLayout>
 
@@ -673,7 +673,7 @@
                                     android:layout_height="20dp"
                                     android:layout_centerInParent="true"
                                     android:tint="@android:color/white"
-                                    app:srcCompat="@mipmap/ic_lobfind" />
+                                    app:srcCompat="@mipmap/ic_akuisisi" />
 
                             </RelativeLayout>
 
@@ -759,7 +759,7 @@
                                     android:layout_height="20dp"
                                     android:layout_centerInParent="true"
                                     android:tint="@android:color/white"
-                                    app:srcCompat="@mipmap/ic_store" />
+                                    app:srcCompat="@mipmap/ic_assigment" />
 
                             </RelativeLayout>
 
@@ -835,7 +835,7 @@
                                     android:layout_height="20dp"
                                     android:layout_centerInParent="true"
                                     android:tint="@android:color/white"
-                                    app:srcCompat="@mipmap/ic_convinience" />
+                                    app:srcCompat="@mipmap/ic_info_program" />
 
                             </RelativeLayout>
 

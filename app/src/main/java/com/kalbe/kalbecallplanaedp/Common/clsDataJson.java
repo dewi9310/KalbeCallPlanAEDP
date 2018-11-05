@@ -265,7 +265,7 @@ public class clsDataJson {
             itemLIstQuery  = new ArrayList<>();
             for (tAkuisisiHeader data : this.getListDataOftAkuisisiHeader()){
                 JSONObject item = new JSONObject();
-                item.put(dataAkuisisiHeader.Property_intSubSubActivityId, String.valueOf(data.intSubSubActivityId));
+                item.put(dataAkuisisiHeader.Property_intSubSubActivityId, String.valueOf(data.getIntSubSubActivityId()));
                 item.put(dataAkuisisiHeader.Property_intHeaderId, String.valueOf(data.getTxtHeaderId()));
                 item.put(dataAkuisisiHeader.Property_intSubSubActivityTypeId, String.valueOf(data.getIntSubSubActivityTypeId()));
                 item.put(dataAkuisisiHeader.Property_txtNoDoc, String.valueOf(data.getTxtNoDoc()));
@@ -276,6 +276,7 @@ public class clsDataJson {
                 item.put(dataAkuisisiHeader.Property_intApotekID, String.valueOf(data.getIntApotekID()));
                 item.put(dataAkuisisiHeader.Property_txtRealisasiVisitId, String.valueOf(data.getTxtRealisasiVisitId()));
                 item.put(dataAkuisisiHeader.Property_intAreaId, String.valueOf(data.getIntAreaId()));
+                item.put(dataAkuisisiHeader.Property_txtUserName, String.valueOf(data.getTxtUserName()));
                 itemLIstQuery.add(item);
             }
             resJson.put(dataAkuisisiHeader.Property_ListDataOftAkuisisiHeader, new JSONArray(itemLIstQuery));

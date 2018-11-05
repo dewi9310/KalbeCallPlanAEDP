@@ -15,6 +15,9 @@ public class AkuisisiDetailItem{
 	@SerializedName("txtAkuisisiDetailId")
 	private String txtAkuisisiDetailId;
 
+	@SerializedName("txtLink")
+	private String txtLink;
+
 	@SerializedName("txtImageName")
 	private String txtImageName;
 
@@ -42,6 +45,14 @@ public class AkuisisiDetailItem{
 		return txtAkuisisiDetailId;
 	}
 
+	public void setTxtLink(String txtLink){
+		this.txtLink = txtLink;
+	}
+
+	public String getTxtLink(){
+		return txtLink;
+	}
+
 	public void setTxtImageName(String txtImageName){
 		this.txtImageName = txtImageName;
 	}
@@ -57,6 +68,7 @@ public class AkuisisiDetailItem{
 			"txtAkuisisiHeaderId = '" + txtAkuisisiHeaderId + '\'' + 
 			",txtImagePath = '" + txtImagePath + '\'' + 
 			",txtAkuisisiDetailId = '" + txtAkuisisiDetailId + '\'' + 
+			",txtLink = '" + txtLink + '\'' + 
 			",txtImageName = '" + txtImageName + '\'' + 
 			"}";
 		}

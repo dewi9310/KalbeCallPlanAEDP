@@ -12,17 +12,17 @@ import java.io.Serializable;
 @DatabaseTable
 public class mDokter implements Serializable {
     @DatabaseField(id = true, columnName = "txtId")
-    public String txtId;
+    private String txtId;
     @DatabaseField(columnName = "txtFirstName")
-    public String txtFirstName;
+    private String txtFirstName;
     @DatabaseField(columnName = "txtLastName")
-    public String txtLastName;
+    private String txtLastName;
     @DatabaseField(columnName = "txtGender")
-    public String txtGender;
+    private String txtGender;
     @DatabaseField(columnName = "txtType")
-    public String txtType;
+    private String txtType;
     @DatabaseField(columnName = "txtSpecialist")
-    public String txtSpecialist;
+    private String txtSpecialist;
 
     public String Property_txtId = "txtId";
 

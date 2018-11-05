@@ -95,7 +95,7 @@ public class FragementInfoProgram extends Fragment {
                 e.printStackTrace();
             }
 
-            adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubActivityid()), _mSubSubActivity.get(i).getTxtName());
+            adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid()), _mSubSubActivity.get(i).getTxtName());
         }
         viewPager.setAdapter(adapter);
     }

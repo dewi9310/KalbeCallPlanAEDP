@@ -138,7 +138,7 @@ public class clsMainBL {
     }
 
     public byte[] arrayDecryptFile(byte[] blobFile){
-        String key = "1234567890123456";
+        String key = "kalbenutritionals";
         byte[] arrayFileDecrypt = null;
         try {
             byte[] array = blobFile;

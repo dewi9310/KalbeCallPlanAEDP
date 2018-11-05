@@ -265,6 +265,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                 }
                                 dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());
                                 dt.setIntFlagShow(new clsHardCode().Draft);
+                                dt.setTxtUserName("");
                                 try {
                                     dtHeaderRepo.createOrUpdate(dt);
                                 } catch (SQLException e) {
@@ -303,6 +304,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                     dt.setDtExpiredDate(parseDateTime(etDtExpired.getText().toString()));
                                     dt.setTxtNoDoc(etNoDoc.getText().toString());
                                     dt.setIntFlagPush(new clsHardCode().Save);
+                                    dt.setTxtUserName("");
                                     dt.setIntSubSubActivityId(MapTab.get(txtSubSubActivity));
                                     dt.setIntUserId(dtUserLogin.getIntUserID());
                                     dt.setIntRoleId(dtUserLogin.getIntRoleID());

@@ -66,16 +66,19 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getSupportActionBar().setHomeButtonEnabled(false);
+//        getSupportActionBar().setHomeButtonEnabled(false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdfviewer);
         pdfView = (PDFView)findViewById(R.id.pdfViewInfo);
         Bundle bundle = getIntent().getExtras();
+        infoProgramDetailRepo = new tInfoProgramDetailRepo(getApplicationContext());
         if (bundle!=null){
             try {
+                String tes = bundle.getString(PDF_View);
                 dtDetail = (tInfoProgramDetail) infoProgramDetailRepo.findByDetailId(bundle.getString(PDF_View));
 //                decryptFile(dtDetail.getBlobFile(), dtDetail.getTxtFileName());
-                display(dtDetail.getTxtFileName(), new clsMainBL().arrayDecryptFile(dtDetail.getBlobFile()));
+                byte[] array = new clsMainBL().arrayDecryptFile(dtDetail.getBlobFile());
+                display(dtDetail.getTxtFileName(), array);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -9,9 +9,6 @@ public class LtInfoHeaderItem{
 	@SerializedName("intUserId")
 	private int intUserId;
 
-	@SerializedName("intOutletId")
-	private String intOutletId;
-
 	@SerializedName("intRoleId")
 	private int intRoleId;
 
@@ -39,14 +36,6 @@ public class LtInfoHeaderItem{
 
 	public int getIntUserId(){
 		return intUserId;
-	}
-
-	public void setIntOutletId(String intOutletId){
-		this.intOutletId = intOutletId;
-	}
-
-	public String getIntOutletId(){
-		return intOutletId;
 	}
 
 	public void setIntRoleId(int intRoleId){
@@ -110,7 +99,6 @@ public class LtInfoHeaderItem{
 		return 
 			"LtInfoHeaderItem{" + 
 			"intUserId = '" + intUserId + '\'' + 
-			",intOutletId = '" + intOutletId + '\'' + 
 			",intRoleId = '" + intRoleId + '\'' + 
 			",intDokterId = '" + intDokterId + '\'' + 
 			",intAreaId = '" + intAreaId + '\'' + 

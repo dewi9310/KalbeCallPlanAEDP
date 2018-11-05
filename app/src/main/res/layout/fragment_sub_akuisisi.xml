@@ -38,17 +38,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:gravity="center_vertical"
-                    android:text="Address"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="@color/grey_80" />
+                    android:text=""
+                    android:id="@+id/tv_nama_outlet_akuisisi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Tooltip"
+                    android:textColor="@color/grey_40" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text="14321 Saddle Wood Dr, North Little Rock \nAR, 72117"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/grey_40" />
+                    android:text=""
+                    android:id="@+id/tv_username_akuisisi"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="@color/grey_80" />
 
             </LinearLayout>
 

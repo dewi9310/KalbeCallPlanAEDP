@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Realisasi"
+                android:text=""
+                android:id="@+id/cd_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold" />
@@ -44,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_small"
                 android:gravity="center_vertical"
-                android:text="Please fill number realisation before you checout"
+                android:id="@+id/cd_subtitle"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/grey_40" />
 
@@ -74,7 +76,6 @@
             android:hint="1234"
             android:singleLine="true"
             android:maxLines="1"
-            android:inputType="number"
             android:padding="@dimen/spacing_middle" />
 
     </LinearLayout>
