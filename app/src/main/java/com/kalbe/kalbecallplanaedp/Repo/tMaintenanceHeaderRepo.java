@@ -102,6 +102,23 @@ public class tMaintenanceHeaderRepo implements crud {
         return item;
     }
 
+    public tMaintenanceHeader findByOutletId(String intOutletId, int intActivityId) throws SQLException {
+        tMaintenanceHeader item = new tMaintenanceHeader();
+        QueryBuilder<tMaintenanceHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettMaintenanceHeaderDao().queryBuilder();
+            if (intActivityId==new clsHardCode().VisitDokter){
+                queryBuilder.where().eq(item.Property_intDokterId, intOutletId);
+            }else if (intActivityId==new clsHardCode().VisitApotek){
+                queryBuilder.where().eq(item.Property_intApotekID, intOutletId);
+            }
+            item = queryBuilder.queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
     public List<tMaintenanceHeader> getAllPushData () {
         tMaintenanceHeader item = new tMaintenanceHeader();
         List<tMaintenanceHeader> listData = new ArrayList<>();

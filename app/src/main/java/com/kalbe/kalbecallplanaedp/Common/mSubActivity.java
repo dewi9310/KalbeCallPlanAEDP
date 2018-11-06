@@ -12,13 +12,16 @@ import java.io.Serializable;
 @DatabaseTable
 public class mSubActivity implements Serializable {
     @DatabaseField(id = true, columnName = "intSubActivityid")
-    public int intSubActivityid;
+    private int intSubActivityid;
     @DatabaseField(columnName = "intActivityid")
-    public int intActivityid;
+    private int intActivityid;
     @DatabaseField(columnName = "txtName")
-    public String txtName;
+    private String txtName;
     @DatabaseField(columnName = "txtDesc")
-    public String txtDesc;
+    private String txtDesc;
+
+    public String Property_intActivityid = "intActivityid";
+//    private String txtName;
 
     public int getIntSubActivityid() {
         return intSubActivityid;

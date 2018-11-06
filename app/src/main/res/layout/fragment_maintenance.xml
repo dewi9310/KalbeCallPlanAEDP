@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -12,13 +13,13 @@
         android:background="@color/green_300">
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
+            android:id="@+id/tab_layout_maintenance"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/amber_500"
             app:tabIndicatorHeight="3dp"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabMaxWidth="0dp"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextAppearance="@style/TextAppearance.Subhead.Bold"
@@ -27,13 +28,13 @@
     </android.support.design.widget.AppBarLayout>
 
     <com.kalbe.kalbecallplanaedp.Utils.CustomViewPager
-        android:id="@+id/view_pager_akuisisi"
+        android:id="@+id/view_pager_maintenance"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_akuisisi"
+        android:id="@+id/fab_maintenance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end|right"

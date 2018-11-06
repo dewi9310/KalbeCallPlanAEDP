@@ -4,11 +4,14 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,5 +88,19 @@ public class mSubActivityRepo implements crud {
             e.printStackTrace();
         }
         return items;
+    }
+
+    public List<mSubActivity> findByActivityId(int intActivityId) throws SQLException {
+        mSubActivity item = new mSubActivity();
+        List<mSubActivity> listData = new ArrayList<>();
+        QueryBuilder<mSubActivity, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getmSubActivityDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intActivityid, intActivityId);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 }

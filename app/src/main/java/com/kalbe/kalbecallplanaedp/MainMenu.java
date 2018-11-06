@@ -16,7 +16,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -73,6 +71,12 @@ import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.Fragment.FragementInfoProgram;
+import com.kalbe.kalbecallplanaedp.Fragment.FragementMaintenance;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentAkuisisi;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentDownloadData;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
@@ -80,7 +84,6 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
-import com.kalbe.mobiledevknlibs.Service.ServiceRunningChecker;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
@@ -465,7 +468,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        FragmentMaintenance fragmentMaintenance = new FragmentMaintenance();
+                        FragementMaintenance fragmentMaintenance = new FragementMaintenance();
                         FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
                         fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
                         fragmentTransactionMaintenance.commit();

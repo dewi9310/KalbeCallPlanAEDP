@@ -8,6 +8,7 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -116,6 +117,7 @@ public class tInfoProgramDetailRepo implements crud {
         return listData;
     }
 
+
     public List<tInfoProgramDetail> findByHeaderId(String intHeaderId) throws SQLException {
         tInfoProgramDetail item = new tInfoProgramDetail();
         List<tInfoProgramDetail> listData = new ArrayList<>();
@@ -128,6 +130,26 @@ public class tInfoProgramDetailRepo implements crud {
             e.printStackTrace();
         }
         return listData;
+    }
+
+
+    public List<Integer> getIntSubSubActivityId (String txtHeaderId) {
+        tInfoProgramDetail item = new tInfoProgramDetail();
+        List<Integer> listId = new ArrayList<>();
+        List<tInfoProgramDetail> listData = new ArrayList<>();
+        QueryBuilder<tInfoProgramDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettInfoProgramDetailDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtHeaderId, txtHeaderId);
+            listData = queryBuilder.query();
+            for (tInfoProgramDetail data : listData){
+                listId.add(data.getIntSubDetailActivityId());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listId;
     }
     public List<tInfoProgramDetail> getPushAllData(List<tInfoProgramHeader> headerList){
         List<String> headerIdList = new ArrayList<>();

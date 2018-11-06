@@ -116,6 +116,21 @@ public class tMaintenanceDetailRepo implements crud {
         return listData;
     }
 
+    public List<tMaintenanceDetail> findByHeaderIdandSubsubId(String intHeaderId, int intSubSubActivity) throws SQLException {
+        tMaintenanceDetail item = new tMaintenanceDetail();
+        List<tMaintenanceDetail> listData = new ArrayList<>();
+        QueryBuilder<tMaintenanceDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettMaintenanceDetailDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtHeaderId, intHeaderId).and().eq(item.Property_intSubDetailActivityId, intSubSubActivity);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+
     public List<tMaintenanceDetail> getPushAllData(List<tMaintenanceHeader> headerList){
         List<String> headerIdList = new ArrayList<>();
         List<tMaintenanceDetail> detailList = new ArrayList<>();
