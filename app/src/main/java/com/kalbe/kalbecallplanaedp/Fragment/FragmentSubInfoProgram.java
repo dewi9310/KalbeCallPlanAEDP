@@ -112,7 +112,7 @@ public class FragmentSubInfoProgram extends Fragment {
                             itemAdapter.setIntColor(R.color.purple_600);
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setChecked(data.isBoolFlagChecklist());
-                            if ((data.getDescription()!=null&&!data.getDescription().equals("")) && (data.getBlobFile()!=null)){
+                            if ((data.getDescription()!=null&&!data.getDescription().equals("")) && (data.getTxtFileName()!=null&& !data.getTxtFileName().equals(""))){
                                 itemAdapter.setTxtSubTittle(data.getDescription());
                                 itemAdapter.setTxtDesc(data.getTxtFileName());
                                 itemAdapter.setTxtFileName(data.getTxtFileName());
@@ -122,7 +122,7 @@ public class FragmentSubInfoProgram extends Fragment {
                                 itemAdapter.setTxtDesc("");
                                 itemAdapter.setTxtFileName("");
                                 itemAdapter.setIntFlagContent(new clsHardCode().OnlyDesc);
-                            }else if (data.getBlobFile()!=null){
+                            }else if (data.getTxtFileName()!=null&& !data.getTxtFileName().equals("")){
                                 itemAdapter.setTxtSubTittle("");
                                 itemAdapter.setTxtDesc(data.getTxtFileName());
                                 itemAdapter.setTxtFileName(data.getTxtFileName());
@@ -158,15 +158,25 @@ public class FragmentSubInfoProgram extends Fragment {
             public void onItemClick(View view, clsInfoProgram obj, int position) {
 //                ToastCustom.showToasty(getActivity(),"anyeong",4);
                 String fileExtension = (obj.getTxtFileName()).substring((obj.getTxtFileName()).lastIndexOf("."));
-                if (fileExtension.equals(".jpg")){
-                    Intent intent = new Intent(getContext(), ImageViewerActivity.class);
-                    intent.putExtra(ZOOM_IMAGE_INFO, obj.getTxtId());
-                    startActivity(intent);
-                }else if (fileExtension.equals(".pdf")){
-                    Intent intent1 = new Intent(getContext(), PDFViewer.class);
-                    intent1.putExtra(PDF_View, obj.getTxtId());
-                    startActivity(intent1);
+                try {
+                    tInfoProgramDetail data = (tInfoProgramDetail) detailRepo.findByDetailId(obj.getTxtId());
+                    if (data.getBlobFile()==null){
+                        ToastCustom.showToasty(getContext(),"Please download file info program...",4);
+                    }else {
+                        if (fileExtension.equals(".jpg")){
+                            Intent intent = new Intent(getContext(), ImageViewerActivity.class);
+                            intent.putExtra(ZOOM_IMAGE_INFO, obj.getTxtId());
+                            startActivity(intent);
+                        }else if (fileExtension.equals(".pdf")){
+                            Intent intent1 = new Intent(getContext(), PDFViewer.class);
+                            intent1.putExtra(PDF_View, obj.getTxtId());
+                            startActivity(intent1);
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+
             }
         });
 
@@ -235,6 +245,7 @@ public class FragmentSubInfoProgram extends Fragment {
             data.setDtChecklist(dateTimeFormat.format(cal.getTime()));
 //            data.setDescription(data.getDescription());
             detailRepo.createOrUpdate(data);
+            ToastCustom.showToasty(getContext(),"Saved",1);
         } catch (SQLException e) {
             e.printStackTrace();
         }

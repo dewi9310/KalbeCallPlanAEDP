@@ -5,9 +5,11 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -47,6 +49,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
 import com.kalbe.kalbecallplanaedp.Utils.DrawableClickListener;
+import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.mobiledevknlibs.InputFilter.InputFilters;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
@@ -449,6 +452,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             res.putExtras(datum);
                             finishLogin(res, mAccountManager);
 
+//                            List<Long> listId = new ArrayList<>();
+//                            registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+//                                    DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                             Intent intent = new Intent(LoginActivity.this, MainMenu.class);
                             finish();
                             startActivity(intent);

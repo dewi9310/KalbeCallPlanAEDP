@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.ImageViewCompat;
@@ -180,12 +181,14 @@ public class FragmentDownloadData extends Fragment{
     tInfoProgramHeaderRepo dtRepoInfoProgHeader;
     tInfoProgramDetailRepo dtRepoInfoProgDetail;
     List<Long> listId = new ArrayList<>();
+     CoordinatorLayout cl;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_download_data, container, false);
+        cl = (CoordinatorLayout) v.findViewById(R.id.cons_sb);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -772,6 +775,7 @@ public class FragmentDownloadData extends Fragment{
                         String txtMethode_name = model.getResult().getMethodName();
                         if (txtStatus == true){
 
+                            listId.clear();
                             downloadApotek(true);
                             downloadDokter(true);
                             if (model.getData().getDataMappingArea().getLtMappingArea()!=null){
@@ -895,17 +899,24 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtLat(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtLatitude());
                                         data.setTxtImgName1(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Name());
                                         data.setTxtImgName2(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Name());
-                                        byte[] file1 = getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link());
-                                        if (file1!=null){
-                                            data.setBlobImg1(file1);
-                                        }else {
-                                            data.setBlobImg1(null);
+//                                        byte[] file1 = getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link());
+//                                        if (file1!=null){
+//                                            data.setBlobImg1(file1);
+//                                        }else {
+//                                            data.setBlobImg1(null);
+//                                        }
+                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link().length()>0){
+                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
-                                        byte[] file2 = getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
-                                        if (file2!=null){
-                                            data.setBlobImg2(file2);
-                                        }else {
-                                            data.setBlobImg2(null);
+
+//                                        byte[] file2 = getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
+//                                        if (file2!=null){
+//                                            data.setBlobImg2(file2);
+//                                        }else {
+//                                            data.setBlobImg2(null);
+//                                        }
+                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link().length()>0){
+                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
                                         dtRepoRealisasi.createOrUpdate(data);
                                     }
@@ -946,11 +957,15 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtHeaderId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiHeaderId());
                                         data.setTxtDetailId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
                                         data.setTxtImgName(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtImageName());
-                                        byte[] file = getLogoImage(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink());
-                                        if (file!=null){
-                                            data.setTxtImg(file);
-                                        }else {
-                                            data.setTxtImg(null);
+//                                        byte[] file = getLogoImage(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink());
+//                                        if (file!=null){
+//                                            data.setTxtImg(file);
+//                                        }else {
+//                                            data.setTxtImg(null);
+//                                        }
+
+                                        if (model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink()!=null &&model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink().length()>0){
+                                            downloadFile(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
                                         }
                                         dtRepoAkuisisiDetail.createOrUpdate(data);
                                     }
@@ -1031,6 +1046,9 @@ public class FragmentDownloadData extends Fragment{
                                         data.setBoolFlagChecklist(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).isBitCheck());
                                         data.setDtChecklist(parseDate(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getDtDateChecklist()));
                                         data.setDescription(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtDesc());;
+                                        if (model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt().length()>0){
+                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
+                                        }
                                         dtRepoInfoProgDetail.createOrUpdate(data);
                                     }
                                 }
@@ -1649,8 +1667,11 @@ public class FragmentDownloadData extends Fragment{
                                             data.setTxtHeaderId(model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiHeaderId());
                                             data.setTxtDetailId(model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
                                             data.setTxtImgName(model.getData().getAkuisisiDetail().get(i).getTxtImageName());
-                                            if (getLogoImage(model.getData().getAkuisisiDetail().get(i).getTxtImagePath())!=null){
-                                                data.setTxtImg(getLogoImage(model.getData().getAkuisisiDetail().get(i).getTxtImagePath()));
+//                                            if (getLogoImage(model.getData().getAkuisisiDetail().get(i).getTxtImagePath())!=null){
+//                                                data.setTxtImg(getLogoImage(model.getData().getAkuisisiDetail().get(i).getTxtImagePath()));
+//                                            }
+                                            if (model.getData().getAkuisisiDetail().get(i).getTxtImagePath()!=null &&model.getData().getAkuisisiDetail().get(i).getTxtImagePath().length()>0){
+                                                downloadFile(model.getData().getAkuisisiDetail().get(i).getTxtImagePath(),"Akuisisi", model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
                                             }
                                             dtRepoAkuisisiDetail.createOrUpdate(data);
                                         }
@@ -1947,8 +1968,7 @@ public class FragmentDownloadData extends Fragment{
     }
 
     private void downloadfile(){
-        getActivity().registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
     }
 
     private void downloadFile(String link, String groupDownload, String txtId, int index){
@@ -1960,9 +1980,9 @@ public class FragmentDownloadData extends Fragment{
         request.setAllowedOverRoaming(false);
         request.setTitle("Downloading " + groupDownload + String.valueOf(index));
         request.setDescription(txtId);
-        request.setVisibleInDownloadsUi(false);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/testing/"  + file.substring(1, file.length()));
+        request.setVisibleInDownloadsUi(true);
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+        request.setDestinationInExternalPublicDir(new clsHardCode().txtPathTempData, "/Download/"  + file.substring(1, file.length()));
 
         long enqueue = dm.enqueue(request);
         listId.add(enqueue);

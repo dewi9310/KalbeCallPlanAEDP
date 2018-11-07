@@ -5,11 +5,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -84,6 +86,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
@@ -219,11 +222,15 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         if (!isMyServiceRunning(MyServiceNative.class)){
             startService(new Intent(MainMenu.this, MyServiceNative.class));
         }
+        List<Long> listId = null;
+        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         setContentView(R.layout.activity_home);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
+
 
         HomeFragment homFragment = new HomeFragment();
         FragmentTransaction fragmentTransactionHome = getSupportFragmentManager().beginTransaction();
@@ -376,6 +383,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                                         new Runnable() {
                                             public void run() {
                                                 stopService(new Intent(getApplicationContext(), MyServiceNative.class));
+                                                List<Long> listId = new ArrayList<>();
+//                                                unregisterReceiver(new ReceiverDownloadManager(listId).receiver);
                                                 // On complete call either onLoginSuccess or onLoginFailed
                                                 clearData();
                                                 // onLoginFailed();
@@ -1037,13 +1046,16 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         return false;
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
 //        boolean isDataReady = new clsMainBL().isDataReady(getApplicationContext());
 //        if (!isDataReady){
 //            Menu header = navigationView.getMenu();
 //            header.removeItem(R.id.mnCallPlan);
 //        }
-//    }
+        List<Long> listId = null;
+        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
 }

@@ -5,10 +5,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +55,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
+import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.kalbecallplanaedp.adapter.CardAppAdapter;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
@@ -445,6 +448,9 @@ public class PickAccountActivity extends Activity {
                             res.putExtras(datum);
                             new LoginActivity().finishLogin(res, mAccountManager);
 
+                            List<Long> listId = new ArrayList<>();
+//                            registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+//                                    DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                             Intent intent = new Intent(activity, MainMenu.class);
                             activity.finish();
                             activity.startActivity(intent);

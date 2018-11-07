@@ -36,6 +36,7 @@ public class clsHardCode {
     public String txtFolderCheckIn = txtPathUserData + "Absen" + File.separator;
     public String txtFolderAkuisisi = txtPathUserData + "Akuisisi" + File.separator;
     public String txtFolderData = txtPathUserData + "Image_Person" + File.separator;
+    public String txtFolderDownload = txtPathTempData + "Download" + File.separator;
     public String linkMaster = new mConfigRepo(context).API + "mProduct";
     public String linkLogin = new mConfigRepo(context).API + "loginMobileApps";
     public String linkToken = new mConfigRepo(context).APIToken + "token";
