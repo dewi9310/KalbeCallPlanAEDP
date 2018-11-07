@@ -9,38 +9,41 @@ public class AkuisisiHeaderItem{
 	@SerializedName("intUserId")
 	private int intUserId;
 
-	@SerializedName("txtDokterId")
-	private String txtDokterId;
-
-	@SerializedName("intOutletId")
-	private String intOutletId;
-
 	@SerializedName("intRoleId")
 	private int intRoleId;
-
-	@SerializedName("intAreaId")
-	private String intAreaId;
 
 	@SerializedName("txtNoDoc")
 	private String txtNoDoc;
 
+	@SerializedName("txtUserName")
+	private String txtUserName;
+
 	@SerializedName("bitActive")
 	private int bitActive;
+
+	@SerializedName("dtExpiredDate")
+	private String dtExpiredDate;
+
+	@SerializedName("txtDokterId")
+	private String txtDokterId;
+
+	@SerializedName("txtAkuisisiHeaderId")
+	private String txtAkuisisiHeaderId;
+
+	@SerializedName("intAreaId")
+	private String intAreaId;
 
 	@SerializedName("txtApotekId")
 	private String txtApotekId;
 
-	@SerializedName("tAkuisisiHeaderId")
-	private String tAkuisisiHeaderId;
-
 	@SerializedName("intFlag")
 	private int intFlag;
 
+	@SerializedName("txtRealisasiVisitId")
+	private String txtRealisasiVisitId;
+
 	@SerializedName("intSubDetailActivityId")
 	private int intSubDetailActivityId;
-
-	@SerializedName("dtExpiredDate")
-	private String dtExpiredDate;
 
 	public void setIntUserId(int intUserId){
 		this.intUserId = intUserId;
@@ -48,22 +51,6 @@ public class AkuisisiHeaderItem{
 
 	public int getIntUserId(){
 		return intUserId;
-	}
-
-	public void setTxtDokterId(String txtDokterId){
-		this.txtDokterId = txtDokterId;
-	}
-
-	public String getTxtDokterId(){
-		return txtDokterId;
-	}
-
-	public void setIntOutletId(String intOutletId){
-		this.intOutletId = intOutletId;
-	}
-
-	public String getIntOutletId(){
-		return intOutletId;
 	}
 
 	public void setIntRoleId(int intRoleId){
@@ -74,20 +61,20 @@ public class AkuisisiHeaderItem{
 		return intRoleId;
 	}
 
-	public void setIntAreaId(String intAreaId){
-		this.intAreaId = intAreaId;
-	}
-
-	public String getIntAreaId(){
-		return intAreaId;
-	}
-
 	public void setTxtNoDoc(String txtNoDoc){
 		this.txtNoDoc = txtNoDoc;
 	}
 
 	public String getTxtNoDoc(){
 		return txtNoDoc;
+	}
+
+	public void setTxtUserName(String txtUserName){
+		this.txtUserName = txtUserName;
+	}
+
+	public String getTxtUserName(){
+		return txtUserName;
 	}
 
 	public void setBitActive(int bitActive){
@@ -98,20 +85,44 @@ public class AkuisisiHeaderItem{
 		return bitActive;
 	}
 
+	public void setDtExpiredDate(String dtExpiredDate){
+		this.dtExpiredDate = dtExpiredDate;
+	}
+
+	public String getDtExpiredDate(){
+		return dtExpiredDate;
+	}
+
+	public void setTxtDokterId(String txtDokterId){
+		this.txtDokterId = txtDokterId;
+	}
+
+	public String getTxtDokterId(){
+		return txtDokterId;
+	}
+
+	public void setTxtAkuisisiHeaderId(String txtAkuisisiHeaderId){
+		this.txtAkuisisiHeaderId = txtAkuisisiHeaderId;
+	}
+
+	public String getTxtAkuisisiHeaderId(){
+		return txtAkuisisiHeaderId;
+	}
+
+	public void setIntAreaId(String intAreaId){
+		this.intAreaId = intAreaId;
+	}
+
+	public String getIntAreaId(){
+		return intAreaId;
+	}
+
 	public void setTxtApotekId(String txtApotekId){
 		this.txtApotekId = txtApotekId;
 	}
 
 	public String getTxtApotekId(){
 		return txtApotekId;
-	}
-
-	public void setTAkuisisiHeaderId(String tAkuisisiHeaderId){
-		this.tAkuisisiHeaderId = tAkuisisiHeaderId;
-	}
-
-	public String getTAkuisisiHeaderId(){
-		return tAkuisisiHeaderId;
 	}
 
 	public void setIntFlag(int intFlag){
@@ -122,6 +133,14 @@ public class AkuisisiHeaderItem{
 		return intFlag;
 	}
 
+	public void setTxtRealisasiVisitId(String txtRealisasiVisitId){
+		this.txtRealisasiVisitId = txtRealisasiVisitId;
+	}
+
+	public String getTxtRealisasiVisitId(){
+		return txtRealisasiVisitId;
+	}
+
 	public void setIntSubDetailActivityId(int intSubDetailActivityId){
 		this.intSubDetailActivityId = intSubDetailActivityId;
 	}
@@ -130,30 +149,23 @@ public class AkuisisiHeaderItem{
 		return intSubDetailActivityId;
 	}
 
-	public void setDtExpiredDate(String dtExpiredDate){
-		this.dtExpiredDate = dtExpiredDate;
-	}
-
-	public String getDtExpiredDate(){
-		return dtExpiredDate;
-	}
-
 	@Override
  	public String toString(){
 		return 
 			"AkuisisiHeaderItem{" + 
 			"intUserId = '" + intUserId + '\'' + 
-			",txtDokterId = '" + txtDokterId + '\'' + 
-			",intOutletId = '" + intOutletId + '\'' + 
 			",intRoleId = '" + intRoleId + '\'' + 
-			",intAreaId = '" + intAreaId + '\'' + 
 			",txtNoDoc = '" + txtNoDoc + '\'' + 
+			",txtUserName = '" + txtUserName + '\'' + 
 			",bitActive = '" + bitActive + '\'' + 
-			",txtApotekId = '" + txtApotekId + '\'' + 
-			",tAkuisisiHeaderId = '" + tAkuisisiHeaderId + '\'' + 
-			",intFlag = '" + intFlag + '\'' + 
-			",intSubDetailActivityId = '" + intSubDetailActivityId + '\'' + 
 			",dtExpiredDate = '" + dtExpiredDate + '\'' + 
+			",txtDokterId = '" + txtDokterId + '\'' + 
+			",txtAkuisisiHeaderId = '" + txtAkuisisiHeaderId + '\'' + 
+			",intAreaId = '" + intAreaId + '\'' + 
+			",txtApotekId = '" + txtApotekId + '\'' + 
+			",intFlag = '" + intFlag + '\'' + 
+			",txtRealisasiVisitId = '" + txtRealisasiVisitId + '\'' + 
+			",intSubDetailActivityId = '" + intSubDetailActivityId + '\'' + 
 			"}";
 		}
 }

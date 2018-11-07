@@ -23,6 +23,7 @@ import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
@@ -47,7 +48,7 @@ public class FragementInfoProgram extends Fragment {
     tRealisasiVisitPlan dtCheckinActive;
     tProgramVisitSubActivity dataPlan;
     tInfoProgramHeader dtHeader;
-//    tInfoProgramDetail
+    tInfoProgramDetailRepo detailRepo;
 
     @Nullable
     @Override
@@ -74,16 +75,18 @@ public class FragementInfoProgram extends Fragment {
             e.printStackTrace();
         }
 
+        detailRepo = new tInfoProgramDetailRepo(getContext());
+        _mSubSubActivity = detailRepo.getIntSubSubActivityId(getContext(), dtHeader.getTxtHeaderId());
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
-        try {
-            if (dataPlan.getIntActivityId()==1){
-                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(3);
-            }else if (dataPlan.getIntActivityId()==2){
-                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(6);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (dataPlan.getIntActivityId()==1){
+//                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(3);
+//            }else if (dataPlan.getIntActivityId()==2){
+//                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(6);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         setupViewPager(customViewPager);
         tabLayout.setupWithViewPager(customViewPager);

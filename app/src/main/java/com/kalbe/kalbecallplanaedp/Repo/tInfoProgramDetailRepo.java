@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
@@ -133,17 +134,18 @@ public class tInfoProgramDetailRepo implements crud {
     }
 
 
-    public List<Integer> getIntSubSubActivityId (String txtHeaderId) {
+    public List<mSubSubActivity> getIntSubSubActivityId (Context context, String txtHeaderId) {
         tInfoProgramDetail item = new tInfoProgramDetail();
-        List<Integer> listId = new ArrayList<>();
+        List<mSubSubActivity> listId = new ArrayList<>();
         List<tInfoProgramDetail> listData = new ArrayList<>();
         QueryBuilder<tInfoProgramDetail, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.gettInfoProgramDetailDao().queryBuilder();
             queryBuilder.where().eq(item.Property_txtHeaderId, txtHeaderId);
-            listData = queryBuilder.query();
+            listData = queryBuilder.groupBy(item.Property_intSubDetailActivityId).query();
             for (tInfoProgramDetail data : listData){
-                listId.add(data.getIntSubDetailActivityId());
+                mSubSubActivity dt =(mSubSubActivity) new mSubSubActivityRepo(context).findById(data.getIntSubDetailActivityId());
+                listId.add(dt);
             }
 
         } catch (SQLException e) {
