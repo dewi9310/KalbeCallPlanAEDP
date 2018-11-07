@@ -286,6 +286,10 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setIntStatusRealisasi(new clsHardCode().VisitPlan);
                 data.setIntFlagPush(new clsHardCode().Save);
                 realisasiVisitPlanRepo.createOrUpdate(data);
+
+                tProgramVisitSubActivity dtVisit = dtVisitPlan;
+                dtVisit.setIntFlagPush(new clsHardCode().Save);
+                visitPlanRepo.createOrUpdate(dtVisit);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -334,6 +338,10 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setIntStatusRealisasi(new clsHardCode().Realisasi);
                 data.setIntFlagPush(new clsHardCode().Save);
                 realisasiVisitPlanRepo.createOrUpdate(data);
+
+                tProgramVisitSubActivity dtVisit = dtVisitPlan;
+                dtVisit.setIntFlagPush(new clsHardCode().Save);
+                visitPlanRepo.createOrUpdate(dtVisit);
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (ParseException e) {

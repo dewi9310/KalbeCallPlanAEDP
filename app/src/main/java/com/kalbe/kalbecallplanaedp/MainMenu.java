@@ -67,6 +67,7 @@ import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
@@ -83,6 +84,7 @@ import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
@@ -1039,6 +1041,10 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                     data.setIntStatusRealisasi(new clsHardCode().Realisasi);
                     data.setIntFlagPush(new clsHardCode().Save);
                     realisasiVisitPlanRepo.createOrUpdate(data);
+
+                    tProgramVisitSubActivity dtVisit = new tProgramVisitSubActivityRepo(getApplicationContext()).findBytxtId(dataCheckinActive.getTxtProgramVisitSubActivityId());
+                    dtVisit.setIntFlagPush(new clsHardCode().Save);
+                    new tProgramVisitSubActivityRepo(getApplicationContext()).createOrUpdate(dtVisit);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ParseException e) {
