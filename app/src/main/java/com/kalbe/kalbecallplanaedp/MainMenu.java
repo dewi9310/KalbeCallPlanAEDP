@@ -84,6 +84,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
@@ -91,6 +92,7 @@ import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -638,7 +640,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             new VolleyUtils().makeJsonObjectRequestPushData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -659,7 +661,72 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             });*/
         }
     }
-
+//    private void pushData() throws JSONException {
+////        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+////        pDialog.setTitleText("Pushing Data");
+////        pDialog.setTitle("Pushing Your data");
+//        pDialog.setMessage("Pushing Your data");
+//        pDialog.setCancelable(false);
+//        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//
+//            }
+//        });
+//        pDialog.show();
+//        String versionName = "";
+//        try {
+//            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+//        } catch (PackageManager.NameNotFoundException e2) {
+//            // TODO Auto-generated catch block
+//            e2.printStackTrace();
+//        }
+//        final clsPushData dtJson = new clsHelperBL().pushData(versionName, getContext());
+//        if (dtJson == null){
+//        }else {
+//            String linkPushData = new clsHardCode().linkPushData;
+//            new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
+//                @Override
+//                public void onError(String message) {
+//                    ToastCustom.showToasty(getContext(),message,4);
+////                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+//                    pDialog.dismiss();
+//                }
+//
+//                @Override
+//                public void onResponse(String response, Boolean status, String strErrorMsg) {
+//                    if (response!=null){
+//                        JSONObject jsonObject = null;
+//                        try {
+//                            jsonObject = new JSONObject(response);
+//                            ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
+//                            boolean isStatus = model.getResult().isStatus();
+//                            String txtMessage = model.getResult().getMessage();
+//                            String txtMethod = model.getResult().getMethodName();
+//                            if (isStatus==true){
+//                                if (model.getData().getModelData()!=null){
+//                                    if (model.getData().getModelData().size()>0){
+//                                        new  clsHelperBL().SavePushData(getContext(), dtJson.getDataJson(), model);
+//                                    }
+//                                }
+//                                setListData();
+//                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
+//                            }else {
+//                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+//                            }
+//
+//                            pDialog.dismiss();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }else {
+//                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+//                        pDialog.dismiss();
+//                    }
+//                }
+//            });
+//        }
+//    }
 
 
 

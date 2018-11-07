@@ -317,17 +317,22 @@ public void setListData(){
         if (listRealisasi!=null){
             if (listRealisasi.size()>0){
                 for (tRealisasiVisitPlan data : listRealisasi){
-                    tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtPlanId(data.getTxtProgramVisitSubActivityId());
+//                    tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtPlanId(data.getTxtProgramVisitSubActivityId());
                     clsListItemAdapter swpItem =  new clsListItemAdapter();
                     mDokter dokter;
                     mApotek apotek;
                     String name = null;
-                    if (data.getTxtDokterId()!=null){
+                    if (!data.getTxtDokterId().equals("null")){
                         dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
                         dokter = dokterRepo.findBytxtId(data.getTxtDokterId());
-                        name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                        if (!dokter.getTxtLastName().equals("null")){
+                            name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                        }else {
+                            name = "Visit Doctor " + dokter.getTxtFirstName();
+                        }
+
                         swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
-                    }else if (data.getTxtApotekId()!=null){
+                    }else if (!data.getTxtApotekId().equals("null")){
                         dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
                         apotek = apotekRepo.findBytxtId(data.getTxtApotekId());
                         name = "Visit " + apotek.getTxtName();

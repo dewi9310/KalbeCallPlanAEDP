@@ -524,7 +524,7 @@ public class FragmentDownloadData extends Fragment{
                             String name = null;
                             try {
                                 if (data.getIntDokterId()!=null){
-                                    name = "Dokter" + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
                                 }else if (data.getIntApotekID()!=null){
                                     name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
                                 }
@@ -563,7 +563,7 @@ public class FragmentDownloadData extends Fragment{
                             String name = null;
                             try {
                                 if (data.getIntActivityId()==1){
-                                    name = "Dokter" + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
                                 }else if (data.getIntActivityId()==2){
                                     name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
                                 }
@@ -602,7 +602,7 @@ public class FragmentDownloadData extends Fragment{
                             String name = null;
                             try {
                                 if (data.getIntActivityId()==1){
-                                    name = "Dokter" + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
                                 }else if (data.getIntActivityId()==2){
                                     name = apotekRepo.findBytxtId(data.getIntApotekId()).getTxtName();
                                 }
@@ -1649,7 +1649,7 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
                                         String name ="";
                                         if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
-                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
+                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
                                         }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
                                             name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
                                         }
@@ -1746,7 +1746,7 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoMaintenanceHeader.createOrUpdate(data);
                                         String name ="";
                                         if (model.getData().getLtMaintenanceHeader().get(i).getIntActivityId()==1){
-                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtLastName();
+                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtLastName();
                                         }else {
                                             name = apotekRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntApotekId()).getTxtName();
                                         }
@@ -1841,7 +1841,7 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoInfoProgHeader.createOrUpdate(data);
                                         String name ="";
                                         if (model.getData().getLtInfoHeader().get(i).getIntActivityId()==1){
-                                            name = "Dokter" + dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtLastName();
+                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtLastName();
                                         }else {
                                             name = apotekRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntApotekId()).getTxtName();
                                         }
