@@ -198,6 +198,7 @@ public class FragmentPushData extends Fragment{
                                         new  clsHelperBL().SavePushData(getContext(), dtJson.getDataJson(), model);
                                     }
                                 }
+                                setListData();
                                 ToastCustom.showToasty(getContext(),"Success Push Data",1);
                             }else {
                                 ToastCustom.showToasty(getContext(),txtMessage, 4);
@@ -436,7 +437,7 @@ public void setListData(){
                         swpItem.setIntColor(R.color.green_500);
                         swpItem.setBoolSection(false);
                         swpItem.setTxtId(data.getTxtHeaderId());
-                        swipeListMaintenance.add(swpItem);
+                        swipeListInfoProgram.add(swpItem);
                     }
                 }
             }

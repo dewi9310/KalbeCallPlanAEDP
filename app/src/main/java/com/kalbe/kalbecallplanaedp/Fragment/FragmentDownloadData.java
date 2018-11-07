@@ -188,7 +188,7 @@ public class FragmentDownloadData extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_download_data, container, false);
-        cl = (CoordinatorLayout) v.findViewById(R.id.cons_sb);
+//        cl = (CoordinatorLayout) v.findViewById(R.id.cons_sb);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
