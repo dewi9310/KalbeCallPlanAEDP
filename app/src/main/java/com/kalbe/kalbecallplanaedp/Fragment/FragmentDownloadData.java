@@ -1000,9 +1000,7 @@ public class FragmentDownloadData extends Fragment{
                                      data.setTxtDetailId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtMaintenanceDetailId());
                                      data.setTxtHeaderId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtMaintenanceHeaderId());
                                      data.setIntSubDetailActivityId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getIntSubDetailActivityId());
-                                     data.setTxtNoDoc(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoResep());
-//                                     data.setTxtNoResep(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoResep());
-//                                     data.setTxtNoOrder(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoOrder());
+                                     data.setTxtNoDoc(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoDocument());
                                      dtRepoMaintenanceDetail.createOrUpdate(data);
                                  }
                                 }

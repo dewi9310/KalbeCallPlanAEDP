@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class LtMaintenanceDetailItem{
 
+	@SerializedName("txtNoDocument")
+	private String txtNoDocument;
+
 	@SerializedName("txtMaintenanceDetailId")
 	private String txtMaintenanceDetailId;
-
-	@SerializedName("txtNoResep")
-	private String txtNoResep;
 
 	@SerializedName("txtMaintenanceHeaderId")
 	private String txtMaintenanceHeaderId;
@@ -18,8 +18,13 @@ public class LtMaintenanceDetailItem{
 	@SerializedName("intSubDetailActivityId")
 	private int intSubDetailActivityId;
 
-	@SerializedName("txtNoOrder")
-	private String txtNoOrder;
+	public void setTxtNoDocument(String txtNoDocument){
+		this.txtNoDocument = txtNoDocument;
+	}
+
+	public String getTxtNoDocument(){
+		return txtNoDocument;
+	}
 
 	public void setTxtMaintenanceDetailId(String txtMaintenanceDetailId){
 		this.txtMaintenanceDetailId = txtMaintenanceDetailId;
@@ -27,14 +32,6 @@ public class LtMaintenanceDetailItem{
 
 	public String getTxtMaintenanceDetailId(){
 		return txtMaintenanceDetailId;
-	}
-
-	public void setTxtNoResep(String txtNoResep){
-		this.txtNoResep = txtNoResep;
-	}
-
-	public String getTxtNoResep(){
-		return txtNoResep;
 	}
 
 	public void setTxtMaintenanceHeaderId(String txtMaintenanceHeaderId){
@@ -53,23 +50,14 @@ public class LtMaintenanceDetailItem{
 		return intSubDetailActivityId;
 	}
 
-	public void setTxtNoOrder(String txtNoOrder){
-		this.txtNoOrder = txtNoOrder;
-	}
-
-	public String getTxtNoOrder(){
-		return txtNoOrder;
-	}
-
 	@Override
  	public String toString(){
 		return 
 			"LtMaintenanceDetailItem{" + 
-			"txtMaintenanceDetailId = '" + txtMaintenanceDetailId + '\'' + 
-			",txtNoResep = '" + txtNoResep + '\'' + 
+			"txtNoDocument = '" + txtNoDocument + '\'' + 
+			",txtMaintenanceDetailId = '" + txtMaintenanceDetailId + '\'' + 
 			",txtMaintenanceHeaderId = '" + txtMaintenanceHeaderId + '\'' + 
 			",intSubDetailActivityId = '" + intSubDetailActivityId + '\'' + 
-			",txtNoOrder = '" + txtNoOrder + '\'' + 
 			"}";
 		}
 }
