@@ -322,21 +322,25 @@ public void setListData(){
                     mDokter dokter;
                     mApotek apotek;
                     String name = null;
-                    if (!data.getTxtDokterId().equals("null")&&data.getTxtDokterId()!=null){
-                        dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
-                        dokter = dokterRepo.findBytxtId(data.getTxtDokterId());
-                        if (!dokter.getTxtLastName().equals("null")&&dokter.getTxtLastName()!=null){
-                            name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                        }else {
-                            name = "Visit Doctor " + dokter.getTxtFirstName();
-                        }
+                    if (data.getTxtDokterId()!=null){
+                        if (!data.getTxtDokterId().equals("null")){
+                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
+                            dokter = dokterRepo.findBytxtId(data.getTxtDokterId());
+                            if (!dokter.getTxtLastName().equals("null")&&dokter.getTxtLastName()!=null){
+                                name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                            }else {
+                                name = "Visit Doctor " + dokter.getTxtFirstName();
+                            }
 
-                        swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
-                    }else if (!data.getTxtApotekId().equals("null")&&data.getTxtApotekId()!=null){
-                        dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
-                        apotek = apotekRepo.findBytxtId(data.getTxtApotekId());
-                        name = "Visit " + apotek.getTxtName();
-                        swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                            swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                        }
+                    }else if (data.getTxtApotekId()!=null){
+                        if (!data.getTxtApotekId().equals("null")&&data.getTxtApotekId()!=null){
+                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
+                            apotek = apotekRepo.findBytxtId(data.getTxtApotekId());
+                            name = "Visit " + apotek.getTxtName();
+                            swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                        }
                     }
                     swpItem.setTxtTittle(dtActivity.getTxtName());
                     swpItem.setTxtSubTittle(name);
