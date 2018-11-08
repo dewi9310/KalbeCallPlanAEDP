@@ -231,9 +231,9 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         if (!isMyServiceRunning(MyServiceNative.class)){
             startService(new Intent(MainMenu.this, MyServiceNative.class));
         }
-        List<Long> listId = null;
-        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//        List<Long> listId = null;
+//        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         setContentView(R.layout.activity_home);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -360,11 +360,10 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         try {
             List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getApplicationContext()).findOutletId();
             if (notificationList!=null){
-                badge.setText(String.valueOf(notificationList.size()));
-//                circularTextView.setStrokeWidth(1);
-//                circularTextView.setStrokeColor("#ffffff");
-                badge.setSolidColor("#81C784");
-//                badge.setText("22222");
+                if (notificationList.size()>0){
+                    badge.setText(String.valueOf(notificationList.size()));
+                    badge.setSolidColor("#81C784");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1177,8 +1176,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 //            Menu header = navigationView.getMenu();
 //            header.removeItem(R.id.mnCallPlan);
 //        }
-        List<Long> listId = null;
-        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//        List<Long> listId = null;
+//        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 }

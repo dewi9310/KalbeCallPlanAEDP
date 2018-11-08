@@ -123,7 +123,7 @@ public class ReceiverDownloadManager {
                         deleteMediaStorageDirtemp();
                         NotificationCompat.Builder mBuilder =
                                 new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.ic_notif)
+                                        .setSmallIcon(R.drawable.places_ic_clear)
                                         .setContentTitle("Anyeong")
                                         .setContentText("All Download completed");
 

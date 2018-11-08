@@ -885,6 +885,7 @@ public class FragmentDownloadData extends Fragment{
                                         data.setDtStart(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getDtStart()));
                                         data.setDtEnd(parseDate(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getDtEnd()));
                                         data.setTxtNotes(model.getData().getDatatProgramVisitDetail().getTProgramVisitSubActivity().get(i).getTxtDescription());
+                                        data.setIntFlagPush(new clsHardCode().Sync);
                                         dtRepoProgramVisitSubActivity.createOrUpdate(data);
                                     }
                                 }

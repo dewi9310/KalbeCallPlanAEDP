@@ -180,7 +180,7 @@ public class clsHelperBL {
                     }
                 }
 
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("")){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatProgramVisitSubActivity")){
                     for (tProgramVisitSubActivity data : dtJson.getListOfDatatProgramVisitSubActivity()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tProgramVisitSubActivityRepo(context).createOrUpdate(data);

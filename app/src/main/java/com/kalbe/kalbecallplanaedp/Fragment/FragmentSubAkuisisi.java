@@ -118,38 +118,37 @@ public class FragmentSubAkuisisi extends Fragment {
                     tvDesc_akuisisi.setText("Please download or create data Akuisisi");
                 }else {
                     dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
-                    if (dtDetail.size()>0){
-                        if (isDetailReady(dtDetail)){
-                            if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                    if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                        if (dtDetail.size()>0){
+                            if (isDetailNotReady(dtDetail)){
+                                ln_emptyAkuisisi.setVisibility(View.VISIBLE);
+                                ln_resgistrasi.setVisibility(View.GONE);
+                                ln_image.setVisibility(View.GONE);
+                                tvDesc_akuisisi.setText("Please download File Akuisisi");
+                            }else {
                                 ln_resgistrasi.setVisibility(View.GONE);
                                 ln_emptyAkuisisi.setVisibility(View.GONE);
                                 ln_image.setVisibility(View.VISIBLE);
                                 tvNoDoc.setText(dtHeader.getTxtNoDoc());
                                 tvExpDate.setText(parseDate(dtHeader.getDtExpiredDate()));
-                            }else if (intTypeSubSubId==new clsHardCode().TypeText){
-                                ln_image.setVisibility(View.GONE);
-                                ln_emptyAkuisisi.setVisibility(View.GONE);
-                                ln_resgistrasi.setVisibility(View.VISIBLE);
-                                if (dtHeader.getIntApotekID()!=null){
-                                    apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
-                                    tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
-                                }else if (dtHeader.getIntDokterId()!=null){
-                                    dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
-                                    if (dokter.getTxtLastName()!=null){
-                                        tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
-                                    }else {
-                                        tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
-                                    }
-                                }
-                                tvUserName.setText(dtHeader.getTxtUserName());
                             }
-                        }else {
-                            ln_emptyAkuisisi.setVisibility(View.VISIBLE);
-                            ln_resgistrasi.setVisibility(View.GONE);
-                            ln_image.setVisibility(View.GONE);
-                            tvDesc_akuisisi.setText("Please download File Akuisisi");
                         }
-
+                    }else if (intTypeSubSubId==new clsHardCode().TypeText){
+                        ln_image.setVisibility(View.GONE);
+                        ln_emptyAkuisisi.setVisibility(View.GONE);
+                        ln_resgistrasi.setVisibility(View.VISIBLE);
+                        if (dtHeader.getIntApotekID()!=null){
+                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
+                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+                        }else if (dtHeader.getIntDokterId()!=null){
+                            dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
+                            if (dokter.getTxtLastName()!=null){
+                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
+                            }else {
+                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
+                            }
+                        }
+                        tvUserName.setText(dtHeader.getTxtUserName());
                     }
                 }
 
@@ -285,11 +284,11 @@ public class FragmentSubAkuisisi extends Fragment {
 
     }
 
-    private boolean isDetailReady(List<tAkuisisiDetail>dtDetailAkuisisi){
-        boolean valid = true;
+    private boolean isDetailNotReady(List<tAkuisisiDetail>dtDetailAkuisisi){
+        boolean valid = false;
         for (tAkuisisiDetail data: dtDetailAkuisisi){
             if (data.getTxtImg()==null){
-                valid = false;
+                valid = true;
                 break;
             }
         }
