@@ -313,37 +313,37 @@ public void setListData(){
     swipeListMaintenance.clear();
 
     try {
-        listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.getAllPushData();
-        if (listRealisasi!=null){
-            if (listRealisasi.size()>0){
-                for (tRealisasiVisitPlan data : listRealisasi){
+        listVisitDetail = (List<tProgramVisitSubActivity>) repoProgramVisitSubActivity.getAllPushData();
+//        listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.getAllPushData();
+        if (listVisitDetail!=null){
+            if (listVisitDetail.size()>0){
+                for (tProgramVisitSubActivity data : listVisitDetail){
 //                    tRealisasiVisitPlan dtRealisasi = (tRealisasiVisitPlan) repoRealisasi.findBytxtPlanId(data.getTxtProgramVisitSubActivityId());
                     clsListItemAdapter swpItem =  new clsListItemAdapter();
                     mDokter dokter;
                     mApotek apotek;
                     String name = null;
-                    if (data.getTxtDokterId()!=null){
-                        if (!data.getTxtDokterId().equals("null")){
-                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
-                            dokter = dokterRepo.findBytxtId(data.getTxtDokterId());
-                            if (!dokter.getTxtLastName().equals("null")&&dokter.getTxtLastName()!=null){
-                                name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                            }else {
-                                name = "Visit Doctor " + dokter.getTxtFirstName();
-                            }
+                    dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
+                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                        dokter = dokterRepo.findBytxtId(data.getTxtDokterId());
+                        if (!dokter.getTxtLastName().equals("null")&&dokter.getTxtLastName()!=null){
+                            name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                        }else {
+                            name = "Visit Doctor " + dokter.getTxtFirstName();
+                        }
 
-                            swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
-                        }
-                    }else if (data.getTxtApotekId()!=null){
-                        if (!data.getTxtApotekId().equals("null")&&data.getTxtApotekId()!=null){
-                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
-                            apotek = apotekRepo.findBytxtId(data.getTxtApotekId());
-                            name = "Visit " + apotek.getTxtName();
-                            swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
-                        }
+                        swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                        swpItem.setTxtSubTittle(name);
+                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                        apotek = apotekRepo.findBytxtId(data.getTxtApotekId());
+                        name = "Visit " + apotek.getTxtName();
+                        swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                        swpItem.setTxtSubTittle(name);
+                    }else {
+                        swpItem.setTxtSubTittle("");
+                        swpItem.setTxtImgName((dtActivity.getTxtName().substring(0,1)).toUpperCase());
                     }
                     swpItem.setTxtTittle(dtActivity.getTxtName());
-                    swpItem.setTxtSubTittle(name);
                     swpItem.setIntColor(R.color.purple_600);
                     swpItem.setBoolSection(false);
                     swpItem.setTxtId(data.getTxtProgramVisitSubActivityId());
@@ -361,15 +361,19 @@ public void setListData(){
                         mDokter dokter;
                         mApotek apotek;
                         if (data.getIntDokterId()!=null){
-                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
-                            dokter = dokterRepo.findBytxtId(data.getIntDokterId());
-                            name = "Visit Doctor" + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                            swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                            if (!data.getIntDokterId().equals("null")){
+                                dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
+                                dokter = dokterRepo.findBytxtId(data.getIntDokterId());
+                                name = "Visit Doctor" + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                                swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                            }
                         }else if (data.getIntApotekID()!=null){
-                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
-                            apotek = apotekRepo.findBytxtId(data.getIntApotekID());
-                            name = "Visit " + apotek.getTxtName();
-                            swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                            if (!data.getIntApotekID().equals("null")){
+                                dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
+                                apotek = apotekRepo.findBytxtId(data.getIntApotekID());
+                                name = "Visit " + apotek.getTxtName();
+                                swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                            }
                         }
                         listAkuisisiDetail = (List<tAkuisisiDetail>) akuisisiDetailRepo.findByHeaderId(data.getTxtHeaderId());
                         if (listAkuisisiDetail!=null){
