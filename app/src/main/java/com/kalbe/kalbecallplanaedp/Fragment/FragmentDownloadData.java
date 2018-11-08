@@ -3,7 +3,9 @@ package com.kalbe.kalbecallplanaedp.Fragment;
 import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +63,7 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tNotification;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivityAttachment;
@@ -84,6 +87,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tNotificationRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
@@ -106,6 +110,8 @@ import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
+import com.kalbe.mobiledevknlibs.library.badgeall.viewbadger.ShortcutBadger;
+
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,12 +182,14 @@ public class FragmentDownloadData extends Fragment{
     tRealisasiVisitPlanRepo dtRepoRealisasi;
     tAkuisisiHeaderRepo dtRepoAkuisisiHeader;
     tAkuisisiDetailRepo dtRepoAkuisisiDetail;
+    tNotificationRepo dtRepoNotification;
     tMaintenanceHeaderRepo dtRepoMaintenanceHeader;
     tMaintenanceDetailRepo dtRepoMaintenanceDetail;
     tInfoProgramHeaderRepo dtRepoInfoProgHeader;
     tInfoProgramDetailRepo dtRepoInfoProgDetail;
     List<Long> listId = new ArrayList<>();
      CoordinatorLayout cl;
+     private String NOTIFICATION ="FragmentNotification";
 
 
     @Nullable
@@ -247,6 +255,7 @@ public class FragmentDownloadData extends Fragment{
         dtRepoRealisasi = new tRealisasiVisitPlanRepo(getContext());
         dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
         dtRepoAkuisisiDetail = new tAkuisisiDetailRepo(getContext());
+        dtRepoNotification = new tNotificationRepo(getContext());
         dtRepoMaintenanceHeader = new tMaintenanceHeaderRepo(getContext());
         dtRepoMaintenanceDetail = new tMaintenanceDetailRepo(getContext());
         dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
@@ -969,6 +978,24 @@ public class FragmentDownloadData extends Fragment{
                                         }
                                         dtRepoAkuisisiDetail.createOrUpdate(data);
                                     }
+                                }
+                            }
+
+                            if (model.getData().getDataNotification().getNotification()!=null){
+                                if (model.getData().getDataNotification().getNotification().size()>0){
+                                    dtRepoNotification = new tNotificationRepo(getContext());
+                                    for (int i=0; i < model.getData().getDataNotification().getNotification().size(); i++){
+                                        tNotification data = new tNotification();
+                                        data.setIntHeaderAkuisisiId(model.getData().getDataNotification().getNotification().get(i).getTxtAkuisisiHeaderId());
+                                        data.setIntActivityId(model.getData().getDataNotification().getNotification().get(i).getIntActivityId());
+                                        data.setIntDokterId(model.getData().getDataNotification().getNotification().get(i).getTxtDokterId());
+                                        data.setIntApotekId(model.getData().getDataNotification().getNotification().get(i).getTxtApotekId());
+                                        data.setDtExpired(parseDate(model.getData().getDataNotification().getNotification().get(i).getDtExpiredDate()));
+                                        data.setIntSubDetailActivityId(model.getData().getDataNotification().getNotification().get(i).getIntSubDetailActivityId());
+                                        data.setTxtNoDoc(model.getData().getDataNotification().getNotification().get(i).getTxtNoDoc());
+                                        dtRepoNotification.createOrUpdate(data);
+                                    }
+                                    createNotification(model.getData().getDataNotification().getNotification().size());
                                 }
                             }
 
@@ -1985,5 +2012,34 @@ public class FragmentDownloadData extends Fragment{
         long enqueue = dm.enqueue(request);
         listId.add(enqueue);
         new ReceiverDownloadManager(listId);
+    }
+
+    private void createNotification(int size){
+        Intent i = new Intent(getContext(), MainMenu.class);
+        i.putExtra(NOTIFICATION, "FragmentNotification");
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),(int)System.currentTimeMillis(), i, PendingIntent.FLAG_ONE_SHOT);
+
+        int icon = R.drawable.ic_notif;
+        String tickerText = "어서 오십시오";
+        long when = System.currentTimeMillis();
+        Notification tnotification = new Notification.Builder(getActivity())
+                .setContentIntent(pendingIntent)
+                .setContentTitle("안녕하세요")
+                .setContentText("내 가장 친한 친구")
+                .setSmallIcon(icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
+                        R.mipmap.ic_launcher))
+                .setWhen(when)
+                .setTicker(tickerText)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setNumber(1)
+                .setDefaults(Notification.DEFAULT_ALL | Notification.FLAG_SHOW_LIGHTS | Notification.PRIORITY_DEFAULT)
+                .build();
+        NotificationManager tnotificationManager=(NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        tnotification.flags |= Notification.FLAG_AUTO_CANCEL;
+        tnotification.defaults=Notification.DEFAULT_ALL;
+        tnotificationManager.notify(1993,tnotification);
+        ShortcutBadger.applyCount(getActivity(), size);
     }
 }

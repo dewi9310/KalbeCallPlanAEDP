@@ -48,7 +48,10 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImageCustom;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,8 +75,8 @@ public class FragmentSubAkuisisi extends Fragment {
 //    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
-    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName;
-    LinearLayout ln_resgistrasi, ln_image;
+    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName, tvDesc_akuisisi;
+    LinearLayout ln_resgistrasi, ln_image, ln_emptyAkuisisi;
     FloatingActionButton fab;
     mDokterRepo dokterRepo;
     mDokter dokter;
@@ -96,8 +99,10 @@ public class FragmentSubAkuisisi extends Fragment {
             tvExpDate = (TextView) v.findViewById(R.id.tv_exp_date_sub);
             ln_image = (LinearLayout) v.findViewById(R.id.ln_image_sub_akuisisi);
             ln_resgistrasi = (LinearLayout) v.findViewById(R.id.ln_resgistrasi_sub_akuisisi);
+            ln_emptyAkuisisi = (LinearLayout)v.findViewById(R.id.ln_emptyAkuisisi);
             tvOutlet = (TextView)v.findViewById(R.id.tv_nama_outlet_akuisisi);
             tvUserName = (TextView)v.findViewById(R.id.tv_username_akuisisi);
+            tvDesc_akuisisi = (TextView) v.findViewById(R.id.tvDesc_akuisisi);
 
 
             headerRepo = new tAkuisisiHeaderRepo(getContext());
@@ -106,32 +111,48 @@ public class FragmentSubAkuisisi extends Fragment {
             apotekRepo = new mApotekRepo(getContext());
 
             try {
-                if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                if (dtHeader==null){
+                    ln_emptyAkuisisi.setVisibility(View.VISIBLE);
                     ln_resgistrasi.setVisibility(View.GONE);
-                    if (dtHeader!=null){
-
-                        tvNoDoc.setText(dtHeader.getTxtNoDoc());
-                        tvExpDate.setText(String.valueOf(dtHeader.getDtExpiredDate()));
-                        dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
-                    }
-                }else if (intTypeSubSubId==new clsHardCode().TypeText){
                     ln_image.setVisibility(View.GONE);
-                    if (dtHeader!=null){
-                        if (dtHeader.getIntApotekID()!=null){
-                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
-                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
-                        }else if (dtHeader.getIntDokterId()!=null){
-                            dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
-                            if (dokter.getTxtLastName()!=null){
-                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
-                            }else {
-                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
+                    tvDesc_akuisisi.setText("Please download or create data Akuisisi");
+                }else {
+                    dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                    if (dtDetail.size()>0){
+                        if (isDetailReady(dtDetail)){
+                            if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                                ln_resgistrasi.setVisibility(View.GONE);
+                                ln_emptyAkuisisi.setVisibility(View.GONE);
+                                ln_image.setVisibility(View.VISIBLE);
+                                tvNoDoc.setText(dtHeader.getTxtNoDoc());
+                                tvExpDate.setText(parseDate(dtHeader.getDtExpiredDate()));
+                            }else if (intTypeSubSubId==new clsHardCode().TypeText){
+                                ln_image.setVisibility(View.GONE);
+                                ln_emptyAkuisisi.setVisibility(View.GONE);
+                                ln_resgistrasi.setVisibility(View.VISIBLE);
+                                if (dtHeader.getIntApotekID()!=null){
+                                    apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
+                                    tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+                                }else if (dtHeader.getIntDokterId()!=null){
+                                    dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
+                                    if (dokter.getTxtLastName()!=null){
+                                        tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
+                                    }else {
+                                        tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
+                                    }
+                                }
+                                tvUserName.setText(dtHeader.getTxtUserName());
                             }
+                        }else {
+                            ln_emptyAkuisisi.setVisibility(View.VISIBLE);
+                            ln_resgistrasi.setVisibility(View.GONE);
+                            ln_image.setVisibility(View.GONE);
+                            tvDesc_akuisisi.setText("Please download File Akuisisi");
                         }
-                        tvUserName.setText(dtHeader.getTxtUserName());
-                        dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+
                     }
                 }
+
 //                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
 
             } catch (SQLException e) {
@@ -262,5 +283,33 @@ public class FragmentSubAkuisisi extends Fragment {
 
         }
 
+    }
+
+    private boolean isDetailReady(List<tAkuisisiDetail>dtDetailAkuisisi){
+        boolean valid = true;
+        for (tAkuisisiDetail data: dtDetailAkuisisi){
+            if (data.getTxtImg()==null){
+                valid = false;
+                break;
+            }
+        }
+        return valid;
+    }
+
+    private String parseDate(String dateExp){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateExp!=null&& dateExp!="")
+                date = sdf.parse(dateExp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return "";
+        }
     }
 }

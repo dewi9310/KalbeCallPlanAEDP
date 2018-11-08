@@ -29,6 +29,7 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tNotification;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivityAttachment;
@@ -46,7 +47,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = _path.dbName;
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // the DAO object we use to access the SimpleData table
     protected Dao<mConfigData, Integer> mConfigDao;
@@ -84,6 +85,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected Dao<mTypeSubSubActivity, Integer> mTypeSubSubActivityDao;
     protected RuntimeExceptionDao<clsToken, Integer> mTypeSubSubActivityRuntimeDao;
 
+
     protected Dao<mApotek, Integer> mApotekDao;
     protected Dao<mDokter, Integer> mDokterDao;
     protected Dao<tProgramVisit, Integer> tProgramVisitDao;
@@ -96,6 +98,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected Dao<tMaintenanceDetail, Integer> tMaintenanceDetailDao;
     protected Dao<tInfoProgramHeader, Integer> tInfoProgramHeaderDao;
     protected Dao<tInfoProgramDetail, Integer> tInfoProgramDetailDao;
+    protected Dao<tNotification, Integer> tNotificationDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -128,6 +131,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, tMaintenanceDetail.class);
             TableUtils.createTableIfNotExists(connectionSource, tInfoProgramHeader.class);
             TableUtils.createTableIfNotExists(connectionSource, tInfoProgramDetail.class);
+            TableUtils.createTableIfNotExists(connectionSource, tNotification.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,6 +171,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, tMaintenanceDetail.class, true);
             TableUtils.dropTable(connectionSource, tInfoProgramHeader.class, true);
             TableUtils.dropTable(connectionSource, tInfoProgramDetail.class, true);
+            TableUtils.dropTable(connectionSource, tNotification.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {
@@ -198,6 +203,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.clearTable(connectionSource, tMaintenanceDetail.class);
             TableUtils.clearTable(connectionSource, tInfoProgramHeader.class);
             TableUtils.clearTable(connectionSource, tInfoProgramDetail.class);
+            TableUtils.clearTable(connectionSource, tNotification.class);
 
 //            onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -374,6 +380,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return tInfoProgramDetailDao;
     }
 
+    public Dao<tNotification, Integer> gettNotificationDao() throws SQLException {
+        if (tNotificationDao == null) {
+            tNotificationDao = getDao(tNotification.class);
+        }
+        return tNotificationDao;
+    }
+
     @Override
     public void close() {
         mConfigDao = null;
@@ -400,5 +413,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         tMaintenanceDetailDao = null;
         tInfoProgramHeaderDao = null;
         tInfoProgramDetailDao = null;
+        tNotificationDao = null;
     }
 }

@@ -26,11 +26,14 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Utils.CustomTablayout;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kalbe.kalbecallplanaedp.Utils.CustomTablayout.getScreenSize;
 
 /**
  * Created by Dewi Oktaviani on 11/1/2018.
@@ -49,12 +52,14 @@ public class FragementInfoProgram extends Fragment {
     tProgramVisitSubActivity dataPlan;
     tInfoProgramHeader dtHeader;
     tInfoProgramDetailRepo detailRepo;
+    LinearLayout lnEmpty;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_infoprogram, container, false);
 
+        lnEmpty = (LinearLayout)v.findViewById(R.id.ln_emptyInfo);
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_InfoProgram);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout_infoprogram);
         dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
@@ -77,6 +82,7 @@ public class FragementInfoProgram extends Fragment {
 
         detailRepo = new tInfoProgramDetailRepo(getContext());
         _mSubSubActivity = detailRepo.getIntSubSubActivityId(getContext(), dtHeader.getTxtHeaderId());
+//        _mSubSubActivity = new ArrayList<>();
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
 //        try {
 //            if (dataPlan.getIntActivityId()==1){
@@ -115,10 +121,19 @@ public class FragementInfoProgram extends Fragment {
 
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-
-        for (int i =0; i < _mSubSubActivity.size(); i++){
-            adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
+        if (_mSubSubActivity!=null){
+            if (_mSubSubActivity.size()>0){
+                for (int i =0; i < _mSubSubActivity.size(); i++){
+                    adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
+                }
+                lnEmpty.setVisibility(View.GONE);
+            }else {
+                lnEmpty.setVisibility(View.VISIBLE);
+            }
+        }else {
+            lnEmpty.setVisibility(View.VISIBLE);
         }
+//        adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(0).getIntSubSubActivityid(), 0), _mSubSubActivity.get(0).getTxtName());
 
         viewPager.setAdapter(adapter);
     }
@@ -126,11 +141,18 @@ public class FragementInfoProgram extends Fragment {
     private void allotEachTabWithEqualWidth() {
 
         ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            View tab = slidingTabStrip.getChildAt(i);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tab.getLayoutParams();
-            layoutParams.weight = 1;
-            tab.setLayoutParams(layoutParams);
+        if (tabLayout.getTabCount()>1){
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                View tab = slidingTabStrip.getChildAt(i);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tab.getLayoutParams();
+                layoutParams.weight = 1;
+                tab.setLayoutParams(layoutParams);
+            }
+        }else {
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//            int[] wh = getScreenSize(getContext());
+//            tabLayout.widt(wh[0]);
         }
 
     }

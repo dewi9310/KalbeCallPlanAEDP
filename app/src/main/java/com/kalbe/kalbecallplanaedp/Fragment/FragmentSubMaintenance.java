@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
@@ -60,6 +61,7 @@ public class FragmentSubMaintenance extends Fragment {
     mDokter dokter;
     String strName;
     int index;
+    LinearLayout lnEmpty;
 
     public FragmentSubMaintenance(tMaintenanceHeader header, int intSubSubActivity, int index){
         this.header = header;
@@ -73,6 +75,7 @@ public class FragmentSubMaintenance extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_sub_infoprogram, container, false);
         listView = (ListView) v.findViewById(R.id.lv_infoprogram);
+        lnEmpty = (LinearLayout)v.findViewById(R.id.ln_emptyMain);
 
         detailRepo = new tMaintenanceDetailRepo(getContext());
         headerRepo = new tMaintenanceHeaderRepo(getContext());
@@ -132,6 +135,7 @@ public class FragmentSubMaintenance extends Fragment {
 
         listView.setAdapter(adapter);
         listView.setDivider(null);
+        listView.setEmptyView(lnEmpty);
 
         return v;
     }

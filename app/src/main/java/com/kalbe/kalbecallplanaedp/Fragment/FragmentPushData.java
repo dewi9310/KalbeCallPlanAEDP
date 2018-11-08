@@ -393,12 +393,14 @@ public void setListData(){
                         String name = null;
                         mDokter dokter;
                         mApotek apotek;
-                        if (data.getIntDokterId()!=null){
-                            dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
-                            dokter = dokterRepo.findBytxtId(data.getIntDokterId());
-                            name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                            swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
-                        }else if (data.getIntApotekID()!=null){
+                        if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                            if (!data.getIntDokterId().equals("null")){
+                                dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
+                                dokter = dokterRepo.findBytxtId(data.getIntDokterId());
+                                name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                                swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                            }
+                        }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
                             dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
                             apotek = apotekRepo.findBytxtId(data.getIntApotekID());
                             name = "Visit " + apotek.getTxtName();
@@ -426,12 +428,12 @@ public void setListData(){
                         String name = null;
                         mDokter dokter;
                         mApotek apotek;
-                        if (data.getIntDokterId()!=null){
+                        if (data.getIntActivityId()==new clsHardCode().VisitDokter){
                             dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
                             dokter = dokterRepo.findBytxtId(data.getIntDokterId());
                             name = "Visit Doctor " + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
                             swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
-                        }else if (data.getIntApotekId()!=null){
+                        }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
                             dtActivity =  (mActivity) repoActivity.findById(data.getIntActivityId());
                             apotek = apotekRepo.findBytxtId(data.getIntApotekId());
                             name = "Visit " + apotek.getTxtName();

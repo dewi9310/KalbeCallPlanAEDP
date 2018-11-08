@@ -286,18 +286,13 @@ public class FragementMaintenance extends Fragment {
                     }else {
                         tMaintenanceHeader dt = dtHeader;
                         dt.setIntFlagPush(new clsHardCode().Save);
+                        headerRepo.createOrUpdate(dt);
                     }
                     tMaintenanceDetail detail = new tMaintenanceDetail();
                     detail.setTxtDetailId(new clsActivity().GenerateGuid());
                     detail.setTxtHeaderId(dtHeader.getTxtHeaderId());
                     detail.setIntSubDetailActivityId(IntSubSubActivityid);
                     detail.setTxtNoDoc(txtNoDoc);
-//                    if (txtSubSubActivity.contains("Order")){
-//                        detail.setTxtNoOrder(txtNoDoc);
-//                    }else if (txtSubSubActivity.contains("Resep"))
-//                    {
-//                        detail.setTxtNoResep(txtNoDoc);
-//                    }
                     detailRepo.createOrUpdate(detail);
 
                     ToastCustom.showToasty(getContext(), "Saved", 1);

@@ -21,6 +21,9 @@ public class Data{
 	@SerializedName("dataInfoProgram")
 	private DataInfoProgram dataInfoProgram;
 
+	@SerializedName("dataNotification")
+	private DataNotification dataNotification;
+
 	@SerializedName("dataActivity")
 	private DataActivity dataActivity;
 
@@ -70,6 +73,14 @@ public class Data{
 		return dataInfoProgram;
 	}
 
+	public void setDataNotification(DataNotification dataNotification){
+		this.dataNotification = dataNotification;
+	}
+
+	public DataNotification getDataNotification(){
+		return dataNotification;
+	}
+
 	public void setDataActivity(DataActivity dataActivity){
 		this.dataActivity = dataActivity;
 	}
@@ -103,6 +114,7 @@ public class Data{
 			",dataMappingArea = '" + dataMappingArea + '\'' + 
 			",dataMaintenanceData = '" + dataMaintenanceData + '\'' + 
 			",dataInfoProgram = '" + dataInfoProgram + '\'' + 
+			",dataNotification = '" + dataNotification + '\'' + 
 			",dataActivity = '" + dataActivity + '\'' + 
 			",datatProgramVisitDetail_ = '" + datatProgramVisitDetail + '\'' + 
 			",dataAkuisisiData = '" + dataAkuisisiData + '\'' + 

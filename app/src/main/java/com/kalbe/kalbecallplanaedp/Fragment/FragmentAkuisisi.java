@@ -43,9 +43,11 @@ import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,9 +98,9 @@ public class FragmentAkuisisi extends Fragment{
         headerRepo = new tAkuisisiHeaderRepo(getContext());
         try {
 //            mSubActivity subActivity = (mSubActivity) subActivityRepo.findByActivityId(dataPlan.getIntActivityId());
-            if (dataPlan.getIntActivityId()==1){
+            if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
                 _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
-            }else if (dataPlan.getIntActivityId()==2){
+            }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
                 _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(4);
             }
         } catch (SQLException e) {
@@ -127,9 +129,9 @@ public class FragmentAkuisisi extends Fragment{
         final int iterator = customViewPager.getCurrentItem();
         if (iterator==0){
             try {
-                if (dataPlan.getIntActivityId()==1){
+                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
                     dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                }else if (dataPlan.getIntActivityId()==2){
+                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
                     dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
                 }
             } catch (SQLException e) {
@@ -150,9 +152,9 @@ public class FragmentAkuisisi extends Fragment{
                 final int i = tab.getPosition();
 
                 try {
-                    if (dataPlan.getIntActivityId()==1){
+                    if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
                         dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                    }else if (dataPlan.getIntActivityId()==2){
+                    }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
                         dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
                     }
                 } catch (SQLException e) {
@@ -198,9 +200,9 @@ public class FragmentAkuisisi extends Fragment{
         tAkuisisiHeader dtHeader = null;
         for (int i =0; i < _mSubSubActivity.size(); i++){
             try {
-                if (dataPlan.getIntActivityId()==1){
+                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
                     dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                }else if (dataPlan.getIntActivityId()==2){
+                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
                     dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
                 }
 

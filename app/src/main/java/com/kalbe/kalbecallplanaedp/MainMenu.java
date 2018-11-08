@@ -67,6 +67,7 @@ import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.tNotification;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
@@ -79,15 +80,18 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragementMaintenance;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentAkuisisi;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentDownloadData;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentNotification;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tNotificationRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
+import com.kalbe.kalbecallplanaedp.Utils.CircularTextView;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -153,6 +157,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     tRealisasiVisitPlan dataCheckinActive;
     tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
     String numberRealisasi;
+    private String NOTIFICATION ="FragmentNotification";
 
     @Override
     public void onBackPressed() {
@@ -232,15 +237,29 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
         setContentView(R.layout.activity_home);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
-        setSupportActionBar(toolbar);
+
+        if (getIntent().getStringExtra(NOTIFICATION)!=null){
+            toolbar.setTitle("Notification");
+            setSupportActionBar(toolbar);
 
 
-        HomeFragment homFragment = new HomeFragment();
-        FragmentTransaction fragmentTransactionHome = getSupportFragmentManager().beginTransaction();
-        fragmentTransactionHome.replace(R.id.frame, homFragment);
-        fragmentTransactionHome.commit();
-        selectedId = 99;
+            FragmentNotification fragmentNotification = new FragmentNotification();
+            FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
+            fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
+            fragmentTransactionNotification.commit();
+            selectedId = 99;
+        }else {
+            toolbar.setTitle("Home");
+            setSupportActionBar(toolbar);
+
+
+            HomeFragment homFragment = new HomeFragment();
+            FragmentTransaction fragmentTransactionHome = getSupportFragmentManager().beginTransaction();
+            fragmentTransactionHome.replace(R.id.frame, homFragment);
+            fragmentTransactionHome.commit();
+            selectedId = 99;
+        }
+
 //        addProductAndOrder();
 
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -334,6 +353,23 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             header.removeItem(R.id.mnCallPlan);
             header.removeItem(R.id.mnLogout);
         }
+
+//        TextView view = (TextView) navigationView.getMenu().findItem(R.id.mnNotification).setTitle(" (" +String.valueOf(notificationList.size())+ ")");
+        CircularTextView badge = (CircularTextView) header.findItem(R.id.mnNotification).getActionView().findViewById(R.id.text);
+
+        try {
+            List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getApplicationContext()).findOutletId();
+            if (notificationList!=null){
+                badge.setText(String.valueOf(notificationList.size()));
+//                circularTextView.setStrokeWidth(1);
+//                circularTextView.setStrokeColor("#ffffff");
+                badge.setSolidColor("#81C784");
+//                badge.setText("22222");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 //        try {
 //            menuRepo = new mMenuRepo(getApplicationContext());
 //            dataMenu = (List<mMenuData>) menuRepo.findAll();
@@ -499,6 +535,20 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         FragmentTransaction fragmentTransactionInfoProgram = getSupportFragmentManager().beginTransaction();
                         fragmentTransactionInfoProgram.replace(R.id.frame, fragementInfoProgram);
                         fragmentTransactionInfoProgram.commit();
+                        selectedId = 99;
+
+                        return true;
+
+                    case R.id.mnNotification:
+                        toolbar.setTitle("Notification");
+                        toolbar.setSubtitle(null);
+
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                        FragmentNotification fragmentNotification = new FragmentNotification();
+                        FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
+                        fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
+                        fragmentTransactionNotification.commit();
                         selectedId = 99;
 
                         return true;
