@@ -533,9 +533,13 @@ public class FragmentDownloadData extends Fragment{
                             String name = null;
                             try {
                                 if (data.getIntDokterId()!=null){
-                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    if (!data.getIntDokterId().equals("null")){
+                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    }
                                 }else if (data.getIntApotekID()!=null){
-                                    name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                    if (!data.getIntApotekID().equals("null")){
+                                        name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                    }
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
