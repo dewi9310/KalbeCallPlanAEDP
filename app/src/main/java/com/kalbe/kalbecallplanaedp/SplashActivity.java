@@ -258,7 +258,18 @@ public class SplashActivity extends AppCompatActivity {
                     if (dtLogin!=null){
                         logout();
                     }else {
-                        new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                        try {
+                            tokenRepo = new clsTokenRepo(getApplicationContext());
+                            dataToken = (List<clsToken>) tokenRepo.findAll();
+                            if (dataToken.size() == 0) {
+                                requestToken(this);
+                            }else {
+                                checkVersion(this);
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+//                        new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                     }
 //                    logout();
 //                    if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
@@ -679,7 +690,8 @@ public class SplashActivity extends AppCompatActivity {
                             notificationManager.cancelAll();
                             DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
                             helper.clearDataAfterLogout();
-                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                            checkVersion(SplashActivity.this);
+//                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             Log.d("Data info", "logout Success");
 
                         } else {
@@ -688,7 +700,8 @@ public class SplashActivity extends AppCompatActivity {
                             notificationManager.cancelAll();
                             DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
                             helper.clearDataAfterLogout();
-                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                            checkVersion(SplashActivity.this);
+//                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             ToastCustom.showToasty(SplashActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
