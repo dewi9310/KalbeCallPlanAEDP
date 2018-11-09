@@ -4,6 +4,7 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,11 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mConfigData;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
@@ -44,7 +47,10 @@ import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.enumStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
+import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,6 +96,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         mAccountManager = AccountManager.get(this);
         DatabaseManager.init(getApplicationContext());
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
@@ -246,7 +254,13 @@ public class SplashActivity extends AppCompatActivity {
             _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
             if (_clsStatusMenuStart.get_intStatus() != null){
                 if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.FormLogin) {
-                    new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                    mUserLogin dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
+                    if (dtLogin!=null){
+                        logout();
+                    }else {
+                        new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                    }
+//                    logout();
 //                    if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
 //                        myIntent = new Intent(getApplicationContext(), LoginActivity.class);
 //                        finish();
@@ -614,9 +628,82 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+//    private void logout() {
+//        DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+//        helper.clearDataAfterLogout();
+////        new AuthenticatorUtil().addNewAccount(SplashActivity.this, mAccountManager, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS);
+//    }
+
     private void logout() {
-        DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
-        helper.clearDataAfterLogout();
-//        new AuthenticatorUtil().addNewAccount(SplashActivity.this, mAccountManager, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS);
+        String strLinkAPI = new clsHardCode().linkLogout;
+        JSONObject resJson = new JSONObject();
+        mUserLogin dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
+        JSONObject dataJson = new JSONObject();
+
+
+        try {
+            dataJson.put("GuiId", dtLogin.getTxtGuID() );
+            tokenRepo = new clsTokenRepo(getApplicationContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", dataJson);
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+
+        new clsHelperBL().volleyLogin(SplashActivity.this, strLinkAPI, mRequestBody, "Please Wait.....", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                ToastCustom.showToasty(SplashActivity.this,message,4);
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
+
+                        if (txtStatus == true){
+
+                            stopService(new Intent(SplashActivity.this, MyServiceNative.class));
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+                            helper.clearDataAfterLogout();
+                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                            Log.d("Data info", "logout Success");
+
+                        } else {
+                            stopService(new Intent(SplashActivity.this, MyServiceNative.class));
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+                            helper.clearDataAfterLogout();
+                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                            ToastCustom.showToasty(SplashActivity.this,txtMessage,4);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
+
+
+//    private void clearData() {
+//        Intent intent = new Intent(Sp, SplashActivity.class);
+//
+//        getActivity().finish();
+//        startActivity(intent);
+//    }
 }
