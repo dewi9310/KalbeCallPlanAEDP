@@ -11,30 +11,32 @@ import java.io.Serializable;
 
 @DatabaseTable
 public class mUserLogin implements Serializable {
-    @DatabaseField(id = true, columnName = "IntUserID")
-    public int IntUserID;
+    @DatabaseField(id = true)
+    private String txtGuID;
+    @DatabaseField
+    private int IntUserID;
     @DatabaseField(columnName = "TxtUserName")
-    public String TxtUserName;
+    private String TxtUserName;
     @DatabaseField(columnName = "TxtNick")
-    public String TxtNick;
+    private String TxtNick;
     @DatabaseField(columnName = "TxtEmpID")
-    public String TxtEmpID;
+    private String TxtEmpID;
     @DatabaseField(columnName = "TxtEmail")
-    public String TxtEmail;
+    private String TxtEmail;
     @DatabaseField(columnName = "intRoleID")
-    public int intRoleID;
+    private int intRoleID;
     @DatabaseField(columnName = "txtRoleName")
-    public String txtRoleName;
+    private String txtRoleName;
     @DatabaseField(columnName = "IntDepartmentID")
-    public int IntDepartmentID;
+    private int IntDepartmentID;
     @DatabaseField(columnName = "IntLOBID")
-    public int IntLOBID;
+    private int IntLOBID;
     @DatabaseField(columnName = "TxtCompanyCode")
-    public String TxtCompanyCode;
+    private String TxtCompanyCode;
     @DatabaseField
-    public String dtLogOut;
+    private String dtLogOut;
     @DatabaseField
-    public String dtLogIn;
+    private String dtLogIn;
 
 
     public String Property_IntUserID = "IntUserID";
@@ -144,5 +146,13 @@ public class mUserLogin implements Serializable {
 
     public void setDtLogIn(String dtLogIn) {
         this.dtLogIn = dtLogIn;
+    }
+
+    public String getTxtGuID() {
+        return txtGuID;
+    }
+
+    public void setTxtGuID(String txtGuID) {
+        this.txtGuID = txtGuID;
     }
 }

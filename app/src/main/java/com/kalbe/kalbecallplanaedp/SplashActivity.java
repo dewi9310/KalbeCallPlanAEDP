@@ -76,6 +76,7 @@ public class SplashActivity extends AppCompatActivity {
     String clientId = "";
     ProgressDialog mProgressDialog;
     private Gson gson;
+    private String i_View ="Fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,12 +136,6 @@ public class SplashActivity extends AppCompatActivity {
                 && hasCameraPermission == PackageManager.PERMISSION_GRANTED
                 && hasReadPhoneState == PackageManager.PERMISSION_GRANTED
                 ){
-
-            try {
-                new mConfigRepo(getApplicationContext()).InsertDefaultmConfig();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             StartAnimations();
             checkStatusMenu();
 
@@ -225,6 +220,12 @@ public class SplashActivity extends AppCompatActivity {
     Intent myIntent = null;
     clsStatusMenuStart _clsStatusMenuStart = null;
     private void checkStatusMenu() {
+        try {
+            new mConfigRepo(getApplicationContext()).InsertDefaultmConfig();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 //        Timer runProgress = new Timer();
 //        TimerTask viewTask = new TimerTask() {
 //
@@ -245,9 +246,18 @@ public class SplashActivity extends AppCompatActivity {
             _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
             if (_clsStatusMenuStart.get_intStatus() != null){
                 if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.FormLogin) {
-                    myIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                    finish();
-                    startActivity(myIntent);
+                    new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+//                    if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
+//                        myIntent = new Intent(getApplicationContext(), LoginActivity.class);
+//                        finish();
+//                        startActivity(myIntent);
+////                            logout();
+//                    } else {
+//                        myIntent = new Intent(getApplicationContext(), Pi.class);
+//                        finish();
+//                        startActivity(myIntent);
+//                    }
+
                 } else if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.UserActiveLogin) {
                     if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
                         myIntent = new Intent(getApplicationContext(), MainMenu.class);
@@ -259,6 +269,11 @@ public class SplashActivity extends AppCompatActivity {
                         finish();
                         startActivity(myIntent);
                     }
+                }else if (_clsStatusMenuStart.get_intStatus()== enumStatusMenuStart.PushDataMobile){
+                    myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                    myIntent.putExtra(i_View, "FragmentPushData");
+                    finish();
+                    startActivity(myIntent);
                 }
             } else {
 //                new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
@@ -275,6 +290,8 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

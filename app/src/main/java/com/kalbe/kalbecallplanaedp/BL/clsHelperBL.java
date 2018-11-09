@@ -78,6 +78,7 @@ public class clsHelperBL {
         clsPushData dtclsPushData = new clsPushData();
         clsDataJson dtPush = new clsDataJson();
         mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        List<Boolean> isDataNull = new ArrayList<>();
         HashMap<String, byte[]> FileUpload = null;
         List<String> FileName = new ArrayList<>();
         if (loginRepo.getContactCount(context)>0){
@@ -98,9 +99,9 @@ public class clsHelperBL {
                 e.printStackTrace();
             }
             tRealisasiVisitPlanRepo _tRealisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
+            tProgramVisitSubActivityRepo _tProgramVisitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
             tAkuisisiHeaderRepo _tAkuisisiHeaderRepo = new tAkuisisiHeaderRepo(context);
             tAkuisisiDetailRepo _tAkuisisiDetailRepo = new tAkuisisiDetailRepo(context);
-            tProgramVisitSubActivityRepo _tProgramVisitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
             tMaintenanceHeaderRepo _tMaintenanceHeaderRepo = new tMaintenanceHeaderRepo(context);
             tMaintenanceDetailRepo _tMaintenanceDetailRepo = new tMaintenanceDetailRepo(context);
             tInfoProgramHeaderRepo _tInfoProgramHeaderRepo = new tInfoProgramHeaderRepo(context);
@@ -117,7 +118,10 @@ public class clsHelperBL {
 
             FileUpload = new HashMap<>();
             if (ListOftAkuisisiHeaderData!=null){
+                isDataNull.add(false);
                 dtPush.setListDataOftAkuisisiHeader(ListOftAkuisisiHeaderData);
+            }else {
+                isDataNull.add(true);
             }
             if (ListOftAkuisisiDetailData!=null){
                 dtPush.setListDataOftAkuisisiDetail(ListOftAkuisisiDetailData);
@@ -129,9 +133,6 @@ public class clsHelperBL {
                 }
             }
 
-            if (ListOftProgramSubActivity!=null){
-                dtPush.setListOfDatatProgramVisitSubActivity(ListOftProgramSubActivity);
-            }
 
             if (ListOftMaintenanceHeader!=null){
                 dtPush.setListOfDatatMaintenanceHeader(ListOftMaintenanceHeader);
@@ -146,6 +147,10 @@ public class clsHelperBL {
 
             if (ListOftInfoProgramDetail!=null){
                 dtPush.setListOfDatatInfoProgramDetail(ListOftInfoProgramDetail);
+            }
+
+            if (ListOftProgramSubActivity!=null){
+                dtPush.setListOfDatatProgramVisitSubActivity(ListOftProgramSubActivity);
             }
 
             if (ListoftRealisasiVisitData!=null){

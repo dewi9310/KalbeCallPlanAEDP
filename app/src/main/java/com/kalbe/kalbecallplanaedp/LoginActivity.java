@@ -403,7 +403,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         final boolean newAccount = getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false);
 
         final Bundle datum = new Bundle();
-         new clsHelperBL().volleyLogin(LoginActivity.this, strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(LoginActivity.this, strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -425,6 +425,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                         if (txtStatus == true){
                             loginRepo = new mUserLoginRepo(getApplicationContext());
                             mUserLogin data = new mUserLogin();
+                            data.setTxtGuID(model.getData().getTxtGuiID());
                             data.setIntUserID(model.getData().getIntUserID());
                             data.setTxtUserName(model.getData().getTxtUserName());
                             data.setTxtNick(model.getData().getTxtNick());

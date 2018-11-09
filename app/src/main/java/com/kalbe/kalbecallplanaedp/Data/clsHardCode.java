@@ -39,6 +39,7 @@ public class clsHardCode {
     public String txtFolderDownload = txtPathTempData + "Download" + File.separator;
     public String linkMaster = new mConfigRepo(context).API + "mProduct";
     public String linkLogin = new mConfigRepo(context).API + "loginMobileApps";
+    public String linkLogout = new mConfigRepo(context).API + "logoutMobileApps";
     public String linkToken = new mConfigRepo(context).APIToken + "token";
     //    public String LinkUser = new mConfigRepo(context).API + "loginMobileApps";
     public  String LinkMobileVersion = new mConfigRepo(context).API + "getLatestAndroidVersion";

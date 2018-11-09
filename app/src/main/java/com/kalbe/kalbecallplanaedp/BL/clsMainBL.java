@@ -14,6 +14,13 @@ import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.mUserMappingArea;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.R;
@@ -26,6 +33,13 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mTypeSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserMappingAreaRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenu;
 import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenuItem;
@@ -62,25 +76,96 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class clsMainBL {
-    public clsStatusMenuStart checkUserActive(Context context) throws ParseException {
-        mUserLoginRepo login = new mUserLoginRepo(context);
+
+    public clsStatusMenuStart checkUserActive(Context context) throws ParseException, SQLException {
+        tRealisasiVisitPlanRepo realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
+        tProgramVisitSubActivityRepo visitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
         clsStatusMenuStart _clsStatusMenuStart =new clsStatusMenuStart();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        String now = dateFormat.format(cal.getTime()).toString();
-//        if(repo.CheckLoginNow()){
-        List<mUserLogin> listDataLogin = new ArrayList<>();
-        try {
-            listDataLogin = (List<mUserLogin>) login.findAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-//        if (listDataLogin!=null)
-        for (mUserLogin data : listDataLogin){
-            if (!data.getTxtUserName().equals(null)){
-                _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.UserActiveLogin);
+        if(loginRepo.CheckLoginNow(context)){
+            _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.UserActiveLogin);
+        }else {
+            mUserLogin dtLogin = getUserLogin(context);
+            boolean valid = false;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1);
+
+            tRealisasiVisitPlan dataCheckinActive = realisasiVisitPlanRepo.getDataCheckinActive();
+            if (dataCheckinActive!=null){
+                //checkout
+                dataCheckinActive.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.getDtLogIn())));
+                dataCheckinActive.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
+                dataCheckinActive.setIntStatusRealisasi(new clsHardCode().Realisasi);
+                dataCheckinActive.setIntFlagPush(new clsHardCode().Save);
+                dataCheckinActive.setIntNumberRealisasi(0);
+                realisasiVisitPlanRepo.createOrUpdate(dataCheckinActive);
+
+                tProgramVisitSubActivity dtVisit = visitSubActivityRepo.findBytxtId(dataCheckinActive.getTxtProgramVisitSubActivityId());
+                dtVisit.setIntFlagPush(new clsHardCode().Save);
+                visitSubActivityRepo.createOrUpdate(dtVisit);
+            }
+
+            tRealisasiVisitPlanRepo _tRealisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
+            tProgramVisitSubActivityRepo _tProgramVisitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
+            tAkuisisiHeaderRepo _tAkuisisiHeaderRepo = new tAkuisisiHeaderRepo(context);
+            tAkuisisiDetailRepo _tAkuisisiDetailRepo = new tAkuisisiDetailRepo(context);
+            tMaintenanceHeaderRepo _tMaintenanceHeaderRepo = new tMaintenanceHeaderRepo(context);
+            tMaintenanceDetailRepo _tMaintenanceDetailRepo = new tMaintenanceDetailRepo(context);
+            tInfoProgramHeaderRepo _tInfoProgramHeaderRepo = new tInfoProgramHeaderRepo(context);
+            tInfoProgramDetailRepo _tInfoProgramDetailRepo = new tInfoProgramDetailRepo(context);
+
+            List<tRealisasiVisitPlan> ListoftRealisasiVisitData = _tRealisasiVisitPlanRepo.getAllPushData();
+            List<tProgramVisitSubActivity> ListOftProgramSubActivity = _tProgramVisitSubActivityRepo.getAllPushData();
+            List<tAkuisisiHeader> ListOftAkuisisiHeaderData = _tAkuisisiHeaderRepo.getAllPushData();
+            List<tMaintenanceHeader> ListOftMaintenanceHeader = _tMaintenanceHeaderRepo.getAllPushData();
+            List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
+
+
+            if (ListoftRealisasiVisitData.size()>0 && valid==false){
+                valid = true;
+            }
+
+            if (ListOftProgramSubActivity.size()>0 && valid==false){
+                valid = true;
+            }
+
+            if (ListOftAkuisisiHeaderData.size()>0 && valid==false){
+                valid = true;
+            }
+
+            if (ListOftMaintenanceHeader.size()>0 && valid==false){
+                valid = true;
+            }
+
+            if (ListOftInfoProgramHeader.size()>0 && valid==false){
+                valid = true;
+            }
+
+
+            if (valid==true){
+                _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.PushDataMobile);
+            }else {
+                _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.FormLogin);
             }
         }
+//        List<mUserLogin> listDataLogin = new ArrayList<>();
+//        try {
+//            listDataLogin = (List<mUserLogin>) login.findAll();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        if (listDataLogin!=null)
+
+
+//        for (mUserLogin data : listDataLogin){
+//            if (data.getTxtUserName()!=null){
+//                if (!data.getTxtUserName().equals("null")||!data.getTxtUserName().equals(null)){
+//
+//                }
+//            }
+//        }
 
         return _clsStatusMenuStart;
     }
@@ -93,7 +178,11 @@ public class clsMainBL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return dtList.get(0);
+        if (dtList.size()>0){
+            return dtList.get(0);
+        }else {
+            return null;
+        }
     }
 
     public tRealisasiVisitPlan getDataCheckinActive(Context context){

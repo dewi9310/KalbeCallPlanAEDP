@@ -324,7 +324,6 @@ public class clsDataJson {
                 item.put(dataMDetail.Property_txtHeaderId, data.getTxtHeaderId());
                 item.put(dataMDetail.Property_intSubDetailActivityId, data.getIntSubDetailActivityId());
                 item.put(dataMDetail.Property_txtNoDoc, data.getTxtNoDoc());
-//                item.put(dataMDetail.Property_txtNoOrder, data.getTxtNoOrder());
                 itemLIstQuery.add(item);
             }
             resJson.put(dataMDetail.Property_ListOfDataTMaintenanceDetail, new JSONArray(itemLIstQuery));

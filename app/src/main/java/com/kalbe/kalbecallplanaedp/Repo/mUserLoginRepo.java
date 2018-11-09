@@ -3,11 +3,16 @@ package com.kalbe.kalbecallplanaedp.Repo;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -90,5 +95,26 @@ public class mUserLoginRepo implements crud {
         }
         count = data.size();
         return count;
+    }
+
+    public boolean CheckLoginNow(Context context) throws ParseException {
+        boolean valid = false;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        List<mUserLogin> data = null;
+        try {
+            data = (List<mUserLogin>) loginRepo.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (mUserLogin dt : data){
+            if (dateFormat.format(cal.getTime()).compareTo(dateFormat.format(sdf.parse(dt.getDtLogIn())))==0){
+                valid = true;
+                break;
+            }
+        }
+        return valid;
     }
 }

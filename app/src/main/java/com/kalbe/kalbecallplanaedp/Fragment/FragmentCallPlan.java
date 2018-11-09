@@ -325,7 +325,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 data.setTxtApotekName(dtRealisasiVisit.getTxtApotekName());
                 data.setDtCheckIn(dateTimeFormat.format(cal.getTime()));
                 data.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
-                data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.dtLogIn))); ///tanggal login
+                data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.getDtLogIn()))); ///tanggal login
                 data.setDtDatePlan(dtRealisasiVisit.getDtDatePlan());
                 data.setIntNumberRealisasi(dtRealisasiVisit.getIntNumberRealisasi()); //generate number
                 data.setTxtAcc(tvAcc.getText().toString());

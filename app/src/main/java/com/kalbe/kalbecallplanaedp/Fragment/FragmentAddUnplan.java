@@ -499,7 +499,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 data.setTxtRealisasiVisitId(new clsActivity().GenerateGuid());
                 data.setTxtProgramVisitSubActivityId(dataPlan.getTxtProgramVisitSubActivityId());
                 data.setIntUserId(dtUserLogin.getIntUserID());
-                data.setIntRoleID(dtUserLogin.intRoleID);
+                data.setIntRoleID(dtUserLogin.getIntRoleID());
                 if (mapActivity.get(spnActivity.getSelectedItem()) == 1) {
                     if (cbOutlet.isChecked()){
                         data.setTxtDokterName(etOutlet.getText().toString());

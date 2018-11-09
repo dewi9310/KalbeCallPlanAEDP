@@ -1,11 +1,13 @@
 package com.kalbe.kalbecallplanaedp;
 
 import android.Manifest;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -60,11 +62,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
+import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tNotification;
@@ -83,12 +88,14 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentNotification;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
+import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tNotificationRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.CircularTextView;
@@ -117,6 +124,10 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_USER_PASS;
 
 /**
  * Created by Rian Andrivani on 11/22/2017.
@@ -157,7 +168,11 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     tRealisasiVisitPlan dataCheckinActive;
     tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
     String numberRealisasi;
-    private String NOTIFICATION ="FragmentNotification";
+    private String i_View ="Fragment";
+    ProgressDialog pDialog;
+    private Gson gson;
+    List<clsToken> dataToken;
+    clsTokenRepo tokenRepo;
 
     @Override
     public void onBackPressed() {
@@ -237,17 +252,40 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
         setContentView(R.layout.activity_home);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        pDialog = new ProgressDialog(MainMenu.this, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+        if (getIntent().getStringExtra(i_View)!=null){
+            if (getIntent().getStringExtra(i_View).equals("FragmentNotification")){
+                toolbar.setTitle("Notification");
+                setSupportActionBar(toolbar);
 
-        if (getIntent().getStringExtra(NOTIFICATION)!=null){
-            toolbar.setTitle("Notification");
-            setSupportActionBar(toolbar);
+                FragmentNotification fragmentNotification = new FragmentNotification();
+                FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
+                fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
+                fragmentTransactionNotification.commit();
+                selectedId = 99;
+            }else if (getIntent().getStringExtra(i_View).equals("FragmentPushData")){
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                toolbar.setTitle("Push Data");
+                setSupportActionBar(toolbar);
 
+//                toolbar.setTitle("Push Data");
+//                toolbar.setSubtitle(null);
 
-            FragmentNotification fragmentNotification = new FragmentNotification();
-            FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
-            fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
-            fragmentTransactionNotification.commit();
-            selectedId = 99;
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                Bundle bundle = new Bundle();
+                String myMessage = "notMainMenu";
+                bundle.putString("message", myMessage );
+
+                FragmentPushData fragmentPushData = new FragmentPushData();
+                fragmentPushData.setArguments(bundle);
+                FragmentTransaction fragmentTransactionPushData = getSupportFragmentManager().beginTransaction();
+                fragmentTransactionPushData.replace(R.id.frame, fragmentPushData);
+                fragmentTransactionPushData.commit();
+                selectedId = 99;
+            }
         }else {
             toolbar.setTitle("Home");
             setSupportActionBar(toolbar);
@@ -402,34 +440,34 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainMenu.this);
 
                         builder.setTitle("Confirm");
-                        builder.setMessage("Are you sure ?");
+                        builder.setMessage("Logout Application?");
 
-                        builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-//                                try {
-//                                    pushData();
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
-                                dialog2.setIndeterminate(true);
-                                dialog2.setMessage("Logging out...");
-                                dialog2.setCancelable(false);
-                                dialog2.show();
-
-                                new Handler().postDelayed(
-                                        new Runnable() {
-                                            public void run() {
-                                                stopService(new Intent(getApplicationContext(), MyServiceNative.class));
-                                                List<Long> listId = new ArrayList<>();
-//                                                unregisterReceiver(new ReceiverDownloadManager(listId).receiver);
-                                                // On complete call either onLoginSuccess or onLoginFailed
-                                                clearData();
-                                                // onLoginFailed();
-                                                dialog2.dismiss();
-                                            }
-                                        }, 3000);
+                                try {
+                                    pushData();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+//                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
+//                                dialog2.setIndeterminate(true);
+//                                dialog2.setMessage("Logging out...");
+//                                dialog2.setCancelable(false);
+//                                dialog2.show();
+//
+//                                new Handler().postDelayed(
+//                                        new Runnable() {
+//                                            public void run() {
+//
+//                                                List<Long> listId = new ArrayList<>();
+////                                                unregisterReceiver(new ReceiverDownloadManager(listId).receiver);
+//                                                // On complete call either onLoginSuccess or onLoginFailed
+//                                                clearData();
+//                                                // onLoginFailed();
+//                                                dialog2.dismiss();
+//                                            }
+//                                        }, 3000);
                             }
                         });
 
@@ -586,7 +624,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             }
         });
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
 
             @Override
@@ -677,6 +715,15 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     }
 
     private void pushData() throws JSONException {
+        pDialog.setMessage("Please wait....");
+        pDialog.setCancelable(false);
+        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+        pDialog.show();
         String versionName = "";
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -684,102 +731,131 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             // TODO Auto-generated catch block
             e2.printStackTrace();
         }
-        clsPushData dtJson = new clsHelperBL().pushData(versionName, getApplicationContext());
+        final clsPushData dtJson = new clsHelperBL().pushData(versionName, getApplicationContext());
         if (dtJson == null){
         }else {
             String linkPushData = new clsHardCode().linkPushData;
-            new VolleyUtils().makeJsonObjectRequestPushData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
+            new VolleyUtils().makeJsonObjectRequestPushData(getApplicationContext(), linkPushData, dtJson, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-//                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(getApplicationContext(),message,4);
+//                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    pDialog.dismiss();
                 }
 
                 @Override
                 public void onResponse(String response, Boolean status, String strErrorMsg) {
+                    if (response!=null){
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
+                            boolean isStatus = model.getResult().isStatus();
+                            String txtMessage = model.getResult().getMessage();
+                            String txtMethod = model.getResult().getMethodName();
+                            if (isStatus==true){
+                                if (model.getData().getModelData()!=null){
+                                    if (model.getData().getModelData().size()>0){
+                                        new  clsHelperBL().SavePushData(getApplicationContext(), dtJson.getDataJson(), model);
+                                    }
+                                }
+                                logout();
+//                                ToastCustom.showToasty(getApplicationContext(),"Success Push Data",1);
+                            }else {
+                                ToastCustom.showToasty(getApplicationContext(),txtMessage, 4);
+                            }
 
+                            pDialog.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        ToastCustom.showToasty(getApplicationContext(),strErrorMsg,4);
+                        pDialog.dismiss();
+                    }
                 }
             });
-            /*new clsHelperBL().volleyRequestSendData(MainMenu.this, linkPushData, dtJson, new VolleyResponseListener() {
-                @Override
-                public void onError(String message) {
-
-                }
-
-                @Override
-                public void onResponse(String response, Boolean status, String strErrorMsg) {
-
-                }
-            });*/
         }
     }
-//    private void pushData() throws JSONException {
-////        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-////        pDialog.setTitleText("Pushing Data");
-////        pDialog.setTitle("Pushing Your data");
-//        pDialog.setMessage("Pushing Your data");
-//        pDialog.setCancelable(false);
-//        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialog) {
-//
-//            }
-//        });
-//        pDialog.show();
-//        String versionName = "";
-//        try {
-//            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-//        } catch (PackageManager.NameNotFoundException e2) {
-//            // TODO Auto-generated catch block
-//            e2.printStackTrace();
-//        }
-//        final clsPushData dtJson = new clsHelperBL().pushData(versionName, getContext());
-//        if (dtJson == null){
-//        }else {
-//            String linkPushData = new clsHardCode().linkPushData;
-//            new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
-//                @Override
-//                public void onError(String message) {
-//                    ToastCustom.showToasty(getContext(),message,4);
-////                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//                    pDialog.dismiss();
-//                }
-//
-//                @Override
-//                public void onResponse(String response, Boolean status, String strErrorMsg) {
-//                    if (response!=null){
-//                        JSONObject jsonObject = null;
-//                        try {
-//                            jsonObject = new JSONObject(response);
-//                            ResponsePushData model = gson.fromJson(jsonObject.toString(), ResponsePushData.class);
-//                            boolean isStatus = model.getResult().isStatus();
-//                            String txtMessage = model.getResult().getMessage();
-//                            String txtMethod = model.getResult().getMethodName();
-//                            if (isStatus==true){
-//                                if (model.getData().getModelData()!=null){
-//                                    if (model.getData().getModelData().size()>0){
-//                                        new  clsHelperBL().SavePushData(getContext(), dtJson.getDataJson(), model);
-//                                    }
-//                                }
-//                                setListData();
-//                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
-//                            }else {
-//                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+
+    private void logout() {
+        String strLinkAPI = new clsHardCode().linkLogout;
+        JSONObject resJson = new JSONObject();
+        mUserLogin dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
+        JSONObject dataJson = new JSONObject();
+
+
+        try {
+            dataJson.put("GuiId", dtLogin.getTxtGuID() );
+            tokenRepo = new clsTokenRepo(getApplicationContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", dataJson);
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+
+        new clsHelperBL().volleyLogin(MainMenu.this, strLinkAPI, mRequestBody, "Logout....", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
+
+                        if (txtStatus == true){
+
+                            stopService(new Intent(getApplicationContext(), MyServiceNative.class));
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            clearData();
+//                            loginRepo = new mUserLoginRepo(getApplicationContext());
+//                            mUserLogin data = new mUserLogin();
+//                            data.setTxtGuID(model.getData().getTxtGuiID());
+//                            data.setIntUserID(model.getData().getIntUserID());
+//                            data.setTxtUserName(model.getData().getTxtUserName());
+//                            data.setTxtNick(model.getData().getTxtNick());
+//                            data.setTxtEmpID(model.getData().getTxtEmpID());
+//                            data.setTxtEmail(model.getData().getTxtEmail());
+//                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
+//                            data.setIntLOBID(model.getData().getIntLOBID());
+//                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
+//                            if (model.getData().getMUserRole()!=null){
+//                                data.setIntRoleID(model.getData().getMUserRole().getIntRoleID());
+//                                data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
 //                            }
-//
-//                            pDialog.dismiss();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }else {
-//                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
-//                        pDialog.dismiss();
-//                    }
-//                }
-//            });
-//        }
-//    }
+//                            data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
+//                            loginRepo.createOrUpdate(data);
 
+                            Log.d("Data info", "logout Success");
 
+//                            Intent intent = new Intent(MainMenu.this, SplashActivity.class);
+//                            finish();
+//                            startActivity(intent);
+
+                        } else {
+                            ToastCustom.showToasty(MainMenu.this,txtMessage,4);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 
     private void selectImageProfile() {
         final CharSequence[] items = { "Ambil Foto", "Pilih dari Galeri",
@@ -1077,7 +1153,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                     data.setTxtApotekName(dataCheckinActive.getTxtApotekName());
                     data.setDtCheckIn(dataCheckinActive.getDtCheckIn());
                     data.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
-                    data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.dtLogIn))); ///tanggal login
+                    data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.getDtLogIn()))); ///tanggal login
                     data.setDtDatePlan(dataCheckinActive.getDtDatePlan());
                     data.setIntNumberRealisasi(Integer.parseInt(numberRealisasi)); //generate number
                     data.setTxtAcc(dataCheckinActive.getTxtAcc());

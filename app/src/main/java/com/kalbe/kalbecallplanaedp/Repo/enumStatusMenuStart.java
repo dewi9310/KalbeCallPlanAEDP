@@ -2,8 +2,8 @@ package com.kalbe.kalbecallplanaedp.Repo;
 
 public enum enumStatusMenuStart {
 	 FormLogin  (1),
-	 UserActiveLogin  (2);
-//	 PushDataSPGMobile (3),
+	 UserActiveLogin  (2),
+	 PushDataMobile (3);
 //	 PushDataSalesForce (4);
 	
 	enumStatusMenuStart(int id) {

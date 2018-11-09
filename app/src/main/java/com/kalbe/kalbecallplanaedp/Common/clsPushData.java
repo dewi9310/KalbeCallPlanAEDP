@@ -11,7 +11,7 @@ public class clsPushData {
     private clsDataJson dataJson;
     private HashMap<String, byte[]> FileUpload;
     private List<String> FileName;
-
+    private boolean isDataNull;
     public clsDataJson getDataJson() {
         return dataJson;
     }
@@ -34,5 +34,13 @@ public class clsPushData {
 
     public void setFileName(List<String> fileName) {
         FileName = fileName;
+    }
+
+    public boolean isDataNull() {
+        return isDataNull;
+    }
+
+    public void setDataNull(boolean dataNull) {
+        isDataNull = dataNull;
     }
 }

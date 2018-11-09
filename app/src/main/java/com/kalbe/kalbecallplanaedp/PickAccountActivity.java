@@ -421,6 +421,7 @@ public class PickAccountActivity extends Activity {
                         if (txtStatus == true){
                             loginRepo = new mUserLoginRepo(activity);
                             mUserLogin data = new mUserLogin();
+                            data.setTxtGuID(model.getData().getTxtGuiID());
                             data.setIntUserID(model.getData().getIntUserID());
                             data.setTxtUserName(model.getData().getTxtUserName());
                             data.setTxtNick(model.getData().getTxtNick());

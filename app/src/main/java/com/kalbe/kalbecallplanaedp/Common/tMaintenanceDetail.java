@@ -19,14 +19,11 @@ public class tMaintenanceDetail implements Serializable {
     private int intSubDetailActivityId;
     @DatabaseField
     private String txtNoDoc;
-//    @DatabaseField
-//    private String txtNoOrder;
 
     public String Property_txtDetailId = "txtDetailId";
     public String Property_txtHeaderId = "txtHeaderId";
     public String Property_intSubDetailActivityId = "intSubDetailActivityId";
     public String Property_txtNoDoc = "txtNoDoc";
-//    public String Property_txtNoOrder = "txtNoOrder";
     public String Property_ListOfDataTMaintenanceDetail = "ListOfDataTMaintenanceDetail";
 
     public String getTxtDetailId() {
@@ -52,23 +49,6 @@ public class tMaintenanceDetail implements Serializable {
     public void setIntSubDetailActivityId(int intSubDetailActivityId) {
         this.intSubDetailActivityId = intSubDetailActivityId;
     }
-
-//    public String getTxtNoResep() {
-//        return txtNoResep;
-//    }
-//
-//    public void setTxtNoResep(String txtNoResep) {
-//        this.txtNoResep = txtNoResep;
-//    }
-//
-//    public String getTxtNoOrder() {
-//        return txtNoOrder;
-//    }
-//
-//    public void setTxtNoOrder(String txtNoOrder) {
-//        this.txtNoOrder = txtNoOrder;
-//    }
-
 
     public String getTxtNoDoc() {
         return txtNoDoc;

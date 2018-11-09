@@ -36,6 +36,9 @@ public class RealisasiDataItem{
 	@SerializedName("dtChekout")
 	private String dtChekout;
 
+	@SerializedName("txtImage2Link")
+	private String txtImage2Link;
+
 	@SerializedName("txtProgramVisitSubActivityId")
 	private String txtProgramVisitSubActivityId;
 
@@ -59,6 +62,9 @@ public class RealisasiDataItem{
 
 	@SerializedName("txtRealisasiVisitId")
 	private String txtRealisasiVisitId;
+
+	@SerializedName("txtImage1Link")
+	private String txtImage1Link;
 
 	@SerializedName("intRealisasiNumber")
 	private int intRealisasiNumber;
@@ -149,6 +155,14 @@ public class RealisasiDataItem{
 		return dtChekout;
 	}
 
+	public void setTxtImage2Link(String txtImage2Link){
+		this.txtImage2Link = txtImage2Link;
+	}
+
+	public String getTxtImage2Link(){
+		return txtImage2Link;
+	}
+
 	public void setTxtProgramVisitSubActivityId(String txtProgramVisitSubActivityId){
 		this.txtProgramVisitSubActivityId = txtProgramVisitSubActivityId;
 	}
@@ -213,6 +227,14 @@ public class RealisasiDataItem{
 		return txtRealisasiVisitId;
 	}
 
+	public void setTxtImage1Link(String txtImage1Link){
+		this.txtImage1Link = txtImage1Link;
+	}
+
+	public String getTxtImage1Link(){
+		return txtImage1Link;
+	}
+
 	public void setIntRealisasiNumber(int intRealisasiNumber){
 		this.intRealisasiNumber = intRealisasiNumber;
 	}
@@ -251,6 +273,7 @@ public class RealisasiDataItem{
 			",txtLatitude = '" + txtLatitude + '\'' + 
 			",txtNamaApotek = '" + txtNamaApotek + '\'' + 
 			",dtChekout = '" + dtChekout + '\'' + 
+			",txtImage2Link = '" + txtImage2Link + '\'' + 
 			",txtProgramVisitSubActivityId = '" + txtProgramVisitSubActivityId + '\'' + 
 			",txtImage1Name = '" + txtImage1Name + '\'' + 
 			",txtDokterId = '" + txtDokterId + '\'' + 
@@ -259,6 +282,7 @@ public class RealisasiDataItem{
 			",txtImage1Path = '" + txtImage1Path + '\'' + 
 			",txtApotekId = '" + txtApotekId + '\'' + 
 			",txtRealisasiVisitId = '" + txtRealisasiVisitId + '\'' + 
+			",txtImage1Link = '" + txtImage1Link + '\'' + 
 			",intRealisasiNumber = '" + intRealisasiNumber + '\'' + 
 			",intRealisasiStatus = '" + intRealisasiStatus + '\'' + 
 			",txtImage2Name = '" + txtImage2Name + '\'' + 

@@ -1,7 +1,10 @@
 package com.kalbe.kalbecallplanaedp.Fragment;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +29,11 @@ import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
+import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
@@ -37,11 +43,15 @@ import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
+import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
+import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.MainMenu;
 import com.kalbe.kalbecallplanaedp.Model.clsListItemAdapter;
 import com.kalbe.kalbecallplanaedp.R;
+import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
@@ -54,7 +64,10 @@ import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
+import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
+import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -111,6 +124,9 @@ public class FragmentPushData extends Fragment{
     FloatingActionButton button_push_data;
     private Gson gson;
     ProgressDialog pDialog;
+    String myValue;
+    List<clsToken> dataToken;
+    clsTokenRepo tokenRepo;
 
     @Nullable
     @Override
@@ -134,6 +150,14 @@ public class FragmentPushData extends Fragment{
         infoProgramHeaderRepo = new tInfoProgramHeaderRepo(getContext());
         apotekRepo = new mApotekRepo(getContext());
         dokterRepo = new mDokterRepo(getContext());
+
+        if(this.getArguments()!=null){
+            myValue = this.getArguments().getString("message");
+            getContext().stopService(new Intent(getContext(), MyServiceNative.class));
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+        }
+
 
         setListData();
 //        ListData();
@@ -200,6 +224,13 @@ public class FragmentPushData extends Fragment{
                                 }
                                 setListData();
                                 ToastCustom.showToasty(getContext(),"Success Push Data",1);
+
+                                if (myValue!=null){
+                                    if (myValue.equals("notMainMenu")){
+                                        //logout
+                                        logout();
+                                    }
+                                }
                             }else {
                                 ToastCustom.showToasty(getContext(),txtMessage, 4);
                             }
@@ -216,92 +247,6 @@ public class FragmentPushData extends Fragment{
             });
         }
     }
-//    private void ListData(){
-//        tablePushData.removeAllViews();
-////        clsMobile_trVisitPlan_Detail _clsMobile_trVisitPlan_Detail=new clsMobile_trVisitPlan_Detail();
-////        List<clsMobile_trVisitPlan_Detail> ListOfclsMobile_trVisitPlan_Detail=new Select().from(clsMobile_trVisitPlan_Detail.class).where(_clsMobile_trVisitPlan_Detail.txtConstintSubmit+"=2").execute();
-//        final TableRow row = new TableRow(getContext());
-//        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f);
-//        params.setMargins(1, 1, 1, 1);
-//        TableRow tr = new TableRow(getContext());
-//        String[] colTextHeader = {"No.", "Plan Date", "Category", "Desc"};
-//        for (String text : colTextHeader) {
-//            TextView tv = new TextView(getContext());
-//
-//            tv.setTextSize(14);
-//            tv.setPadding(10, 10, 10, 10);
-//            tv.setText(text);
-//            tv.setGravity(Gravity.CENTER);
-//            tv.setBackgroundColor(Color.parseColor("#81C784"));
-//            tv.setTextColor(Color.WHITE);
-//            tv.setLayoutParams(params);
-//
-//            tr.addView(tv);
-//        }
-//        tablePushData.addView(tr,0);
-//
-////        if(ListOfclsMobile_trVisitPlan_Detail.size()>0){
-////            int index = 1;
-////            for (clsMobile_trVisitPlan_Detail _DtDetail:ListOfclsMobile_trVisitPlan_Detail) {
-////                tr = new TableRow(getContext());
-////                TextView tv_index = new TextView(getContext());
-////                tv_index.setTextSize(12);
-////                tv_index.setPadding(10, 10, 10, 10);
-////                tv_index.setBackgroundColor(Color.parseColor("#f0f0f0"));
-////                tv_index.setTextColor(Color.BLACK);
-////                tv_index.setGravity(Gravity.CENTER);
-////                tv_index.setText(String.valueOf(index + "."));
-////                tv_index.setLayoutParams(params);
-////
-////                tr.addView(tv_index);
-////
-////                TextView outlet_code = new TextView(getContext());
-////                outlet_code.setTextSize(12);
-////                outlet_code.setPadding(10, 10, 10, 10);
-////                outlet_code.setBackgroundColor(Color.parseColor("#f0f0f0"));
-////                outlet_code.setTextColor(Color.BLACK);
-////                outlet_code.setGravity(Gravity.CENTER);
-////                String txtPlanDate=_DtDetail.dtPlanDate;
-////                if(txtPlanDate==null){
-////                    txtPlanDate="Unplan";
-////                }
-////                outlet_code.setText(txtPlanDate);
-////                outlet_code.setLayoutParams(params);
-////
-////                tr.addView(outlet_code);
-////
-////                TextView outlet_name = new TextView(getContext());
-////                outlet_name.setTextSize(12);
-////                outlet_name.setPadding(10, 10, 10, 10);
-////                outlet_name.setBackgroundColor(Color.parseColor("#f0f0f0"));
-////                outlet_name.setTextColor(Color.BLACK);
-////                outlet_name.setGravity(Gravity.CENTER);
-////                clsMobile_mVisitPlanCategory _dtclsMobile_mVisitPlanCategory=new clsMobile_mVisitPlanCategory();
-////                List<clsMobile_mVisitPlanCategory> ListOfDataclsMobile_mVisitPlanCategory=new Select().from(clsMobile_mVisitPlanCategory.class).where(_dtclsMobile_mVisitPlanCategory.txtConstintCategoryID+"=?",_DtDetail.intCategoryID).execute();
-////                if(ListOfDataclsMobile_mVisitPlanCategory.size()>0){
-////                    outlet_name.setText(ListOfDataclsMobile_mVisitPlanCategory.get(0).txtCategoryName);
-////                }else {
-////                    outlet_name.setText("-");
-////                }
-////                outlet_name.setLayoutParams(params);
-////
-////                tr.addView(outlet_name);
-////
-////                TextView date = new TextView(getContext());
-////                date.setTextSize(12);
-////                date.setPadding(10, 10, 10, 10);
-////                date.setBackgroundColor(Color.parseColor("#f0f0f0"));
-////                date.setTextColor(Color.BLACK);
-////                date.setGravity(Gravity.CENTER);
-////                date.setText(_DtDetail.txtDescription);
-////                date.setLayoutParams(params);
-////
-////                tr.addView(date);
-////
-////                tablePushData.addView(tr,index++);
-////            }
-////        }
-//    }
 
 public void setListData(){
     listDataHeader.clear();
@@ -479,4 +424,71 @@ public void setListData(){
     mExpandableListView.setAdapter(mExpandableListAdapter);
     mExpandableListView.setEmptyView(v.findViewById(R.id.ln_empty));
 }
+
+    private void logout() {
+        String strLinkAPI = new clsHardCode().linkLogout;
+        JSONObject resJson = new JSONObject();
+        mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
+        JSONObject dataJson = new JSONObject();
+
+
+        try {
+            dataJson.put("GuiId", dtLogin.getTxtGuID() );
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", dataJson);
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+
+        new clsHelperBL().volleyLogin(getContext(), strLinkAPI, mRequestBody, "Logout....", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                ToastCustom.showToasty(getContext(),message,4);
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
+
+                        if (txtStatus == true){
+
+                            getActivity().stopService(new Intent(getContext(), MyServiceNative.class));
+                            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.cancelAll();
+                            clearData();
+
+                            Log.d("Data info", "logout Success");
+
+                        } else {
+                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void clearData() {
+        Intent intent = new Intent(getContext(), SplashActivity.class);
+        DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+        helper.clearDataAfterLogout();
+        getActivity().finish();
+        startActivity(intent);
+    }
 }

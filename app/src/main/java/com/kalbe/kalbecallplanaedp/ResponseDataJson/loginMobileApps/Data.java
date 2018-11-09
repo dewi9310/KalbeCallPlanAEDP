@@ -12,6 +12,9 @@ public class Data{
 	@SerializedName("IntLOBID")
 	private int intLOBID;
 
+	@SerializedName("txtGuiID")
+	private String txtGuiID;
+
 	@SerializedName("TxtUserName")
 	private String txtUserName;
 
@@ -74,6 +77,14 @@ public class Data{
 
 	public int getIntLOBID(){
 		return intLOBID;
+	}
+
+	public void setTxtGuiID(String txtGuiID){
+		this.txtGuiID = txtGuiID;
+	}
+
+	public String getTxtGuiID(){
+		return txtGuiID;
 	}
 
 	public void setTxtUserName(String txtUserName){
@@ -210,6 +221,7 @@ public class Data{
 			"Data{" + 
 			"dtDateLogin = '" + dtDateLogin + '\'' + 
 			",intLOBID = '" + intLOBID + '\'' + 
+			",txtGuiID = '" + txtGuiID + '\'' + 
 			",txtUserName = '" + txtUserName + '\'' + 
 			",txtNick = '" + txtNick + '\'' + 
 			",txtEmail = '" + txtEmail + '\'' + 

@@ -1,5 +1,6 @@
 package com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtAkuisisi;
 
+import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,6 +9,9 @@ public class DownloadtAkuisisi{
 
 	@SerializedName("result")
 	private Result result;
+
+	@SerializedName("notificationData")
+	private List<NotificationDataItem> notificationData;
 
 	@SerializedName("data")
 	private Data data;
@@ -18,6 +22,14 @@ public class DownloadtAkuisisi{
 
 	public Result getResult(){
 		return result;
+	}
+
+	public void setNotificationData(List<NotificationDataItem> notificationData){
+		this.notificationData = notificationData;
+	}
+
+	public List<NotificationDataItem> getNotificationData(){
+		return notificationData;
 	}
 
 	public void setData(Data data){
@@ -33,6 +45,7 @@ public class DownloadtAkuisisi{
 		return 
 			"DownloadtAkuisisi{" + 
 			"result = '" + result + '\'' + 
+			",notificationData = '" + notificationData + '\'' + 
 			",data = '" + data + '\'' + 
 			"}";
 		}

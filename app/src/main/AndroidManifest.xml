@@ -44,7 +44,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <!-- for android badge -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -62,13 +62,13 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".MyApplication"
         tools:overrideLibrary="com.google.android.gms.appindexing"
         tools:replace="android:icon">
         <activity android:name=".SplashActivity">
@@ -92,8 +92,8 @@
         <activity
             android:name=".PickAccountActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
@@ -115,14 +115,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
-
         <activity android:name=".PDFViewer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainMenu" />
         </activity>
 
-        <service android:name="com.kalbe.kalbecallplanaedp.Service.MyServiceNative">
+        <service android:name=".Service.MyServiceNative">
             <intent-filter>
                 <action android:name=".Service.MyServiceNative" />
             </intent-filter>

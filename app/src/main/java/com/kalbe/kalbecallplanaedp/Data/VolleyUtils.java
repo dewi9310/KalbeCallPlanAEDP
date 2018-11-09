@@ -294,7 +294,7 @@ public class VolleyUtils {
             }
         };
         multipartRequest.setRetryPolicy(new
-                DefaultRetryPolicy(50000,
+                DefaultRetryPolicy(500000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 

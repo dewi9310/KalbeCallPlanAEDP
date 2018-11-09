@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.DownloadManager;
 import android.content.IntentFilter;
 
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentDownloadData;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         List<Long> listId = null;
-        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
+        registerReceiver( new FragmentDownloadData().receiver, new IntentFilter(
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 }
