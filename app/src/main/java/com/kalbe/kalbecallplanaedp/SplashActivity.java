@@ -128,25 +128,29 @@ public class SplashActivity extends AppCompatActivity {
         int hasReadPhoneState = ContextCompat.checkSelfPermission(SplashActivity.this,
                 Manifest.permission.READ_PHONE_STATE);
 
-        if (Build.VERSION.SDK_INT >= 23
-                && hasWriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED
-                && hasReadExternalStoragePermission != PackageManager.PERMISSION_GRANTED
-                && hasAccessFineLocationPermission != PackageManager.PERMISSION_GRANTED
-                && hasCameraPermission != PackageManager.PERMISSION_GRANTED
-                && hasReadPhoneState != PackageManager.PERMISSION_GRANTED
-                ) {
-            boolean checkPermission = checkPermission();
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (hasWriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED
+                    || hasReadExternalStoragePermission != PackageManager.PERMISSION_GRANTED
+                    || hasAccessFineLocationPermission != PackageManager.PERMISSION_GRANTED
+                    || hasCameraPermission != PackageManager.PERMISSION_GRANTED
+                    || hasReadPhoneState != PackageManager.PERMISSION_GRANTED){
+                boolean checkPermission = checkPermission();
+            }else {
+                StartAnimations();
+                checkStatusMenu();
+            }
+//        } else if (Build.VERSION.SDK_INT >= 23
+//                && hasWriteExternalStoragePermission == PackageManager.PERMISSION_GRANTED
+//                && hasReadExternalStoragePermission == PackageManager.PERMISSION_GRANTED
+//                && hasAccessFineLocationPermission == PackageManager.PERMISSION_GRANTED
+//                && hasCameraPermission == PackageManager.PERMISSION_GRANTED
+//                && hasReadPhoneState == PackageManager.PERMISSION_GRANTED
+//                ){
 
-        } else if (Build.VERSION.SDK_INT >= 23
-                && hasWriteExternalStoragePermission == PackageManager.PERMISSION_GRANTED
-                && hasReadExternalStoragePermission == PackageManager.PERMISSION_GRANTED
-                && hasAccessFineLocationPermission == PackageManager.PERMISSION_GRANTED
-                && hasCameraPermission == PackageManager.PERMISSION_GRANTED
-                && hasReadPhoneState == PackageManager.PERMISSION_GRANTED
-                ){
+        }
+        else {
             StartAnimations();
             checkStatusMenu();
-
         }
 // else if (Build.VERSION.SDK_INT >= 23
 //                && hasCameraPermission != PackageManager.PERMISSION_GRANTED){

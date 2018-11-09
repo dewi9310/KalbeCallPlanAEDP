@@ -81,11 +81,16 @@ public class clsMainBL {
         tRealisasiVisitPlanRepo realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
         tProgramVisitSubActivityRepo visitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
         mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        mUserLogin dtLogin = getUserLogin(context);
         clsStatusMenuStart _clsStatusMenuStart =new clsStatusMenuStart();
+//        if (dtLogin!=null){
+//
+//        }
+
         if(loginRepo.CheckLoginNow(context)){
             _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.UserActiveLogin);
         }else {
-            mUserLogin dtLogin = getUserLogin(context);
+
             boolean valid = false;
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -150,6 +155,7 @@ public class clsMainBL {
                 _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.FormLogin);
             }
         }
+
 //        List<mUserLogin> listDataLogin = new ArrayList<>();
 //        try {
 //            listDataLogin = (List<mUserLogin>) login.findAll();
