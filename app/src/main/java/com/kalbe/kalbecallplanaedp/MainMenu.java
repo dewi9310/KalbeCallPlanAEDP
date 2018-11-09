@@ -356,7 +356,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         tvUsername.setText(new clsActivity().greetings() + dataLogin.get(0).getTxtUserName().toString());
         tvEmail.setText(dataLogin.get(0).getTxtEmail().toString());
 
-        String linkAPI = new mConfigRepo(getApplicationContext()).API_menu;
+        String linkAPI = new mConfigRepo(getApplicationContext()).APIToken;
         try {
             URL u = new URL(linkAPI);
             linkAPI = u.getHost();
@@ -368,7 +368,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         SubMenu subMenuVersion = header.addSubMenu(R.id.groupVersion, 0, 3, "Version");
         try {
             subMenuVersion.add(getPackageManager().getPackageInfo(getPackageName(), 0).versionName + " \u00a9 KN-IT").setIcon(R.mipmap.ic_android).setEnabled(false);
-            subMenuVersion.add("callplanaedp.kalbe.com").setIcon(R.mipmap.ic_link).setEnabled(false);
+            subMenuVersion.add(linkAPI).setIcon(R.mipmap.ic_link).setEnabled(false);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
