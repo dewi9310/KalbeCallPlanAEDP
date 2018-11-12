@@ -137,16 +137,31 @@ public class FragmentSubAkuisisi extends Fragment {
                         ln_image.setVisibility(View.GONE);
                         ln_emptyAkuisisi.setVisibility(View.GONE);
                         ln_resgistrasi.setVisibility(View.VISIBLE);
+                        boolean isDokter = false;
                         if (dtHeader.getIntApotekID()!=null){
-                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
-                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+                            if (!dtHeader.getIntApotekID().equals("null")){
+                                isDokter = false;
+                            }else {
+                                isDokter = true;
+                            }
                         }else if (dtHeader.getIntDokterId()!=null){
+                            if (!dtHeader.getIntDokterId().equals("null")){
+                               isDokter = true;
+                            }else {
+                                isDokter = false;
+                            }
+                        }
+
+                        if (isDokter){
                             dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
                             if (dokter.getTxtLastName()!=null){
                                 tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
                             }else {
                                 tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
                             }
+                        }else {
+                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
+                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
                         }
                         tvUserName.setText(dtHeader.getTxtUserName());
                     }

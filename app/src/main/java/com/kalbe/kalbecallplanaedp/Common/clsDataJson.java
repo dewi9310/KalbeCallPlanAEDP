@@ -212,7 +212,7 @@ public class clsDataJson {
             for (tProgramVisitSubActivity data : this.getListOfDatatProgramVisitSubActivity()){
                 JSONObject item = new JSONObject();
                 item.put(dataVisit.Property_txtProgramVisitSubActivityId, String.valueOf(data.getTxtProgramVisitSubActivityId()));
-                item.put(dataVisit.Property_txtApotekName, String.valueOf(data.getTxtProgramVisitId()));
+                item.put(dataVisit.Property_txtApotekName, String.valueOf(data.getTxtApotekName()));
                 item.put(dataVisit.Property_intType, String.valueOf(data.getIntType()));
                 item.put(dataVisit.Property_txtAreaName, String.valueOf(data.getTxtAreaName()));
                 item.put(dataVisit.Property_txtDokterId, String.valueOf(data.getTxtDokterId()));

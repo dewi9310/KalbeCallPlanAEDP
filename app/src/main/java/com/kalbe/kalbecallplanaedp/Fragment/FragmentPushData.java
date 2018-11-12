@@ -305,20 +305,30 @@ public void setListData(){
                         String name = null;
                         mDokter dokter;
                         mApotek apotek;
+                        boolean isDokter = false;
                         if (data.getIntDokterId()!=null){
                             if (!data.getIntDokterId().equals("null")){
-                                dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
-                                dokter = dokterRepo.findBytxtId(data.getIntDokterId());
-                                name = "Visit Doctor" + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                                swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                                isDokter = true;
+                            }else {
+                                isDokter = false;
                             }
                         }else if (data.getIntApotekID()!=null){
                             if (!data.getIntApotekID().equals("null")){
-                                dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
-                                apotek = apotekRepo.findBytxtId(data.getIntApotekID());
-                                name = "Visit " + apotek.getTxtName();
-                                swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
+                                isDokter = false;
+                            }else {
+                                isDokter = true;
                             }
+                        }
+                        if (isDokter){
+                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
+                            dokter = dokterRepo.findBytxtId(data.getIntDokterId());
+                            name = "Visit Doctor" + dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                            swpItem.setTxtImgName((dokter.getTxtFirstName().substring(0,1)).toUpperCase());
+                        }else {
+                            dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitApotek);
+                            apotek = apotekRepo.findBytxtId(data.getIntApotekID());
+                            name = "Visit " + apotek.getTxtName();
+                            swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
                         }
                         listAkuisisiDetail = (List<tAkuisisiDetail>) akuisisiDetailRepo.findByHeaderId(data.getTxtHeaderId());
                         if (listAkuisisiDetail!=null){

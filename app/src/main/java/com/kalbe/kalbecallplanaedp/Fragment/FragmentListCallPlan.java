@@ -122,9 +122,9 @@ public class FragmentListCallPlan extends Fragment{
                                 }
                                 if (dtActivity!=null){
                                     swpItem.setTxtTittle(dtActivity.getTxtName());
-                                    if (dtActivity.getIntActivityId()==1){
+                                    if (dtActivity.getIntActivityId()==new clsHardCode().VisitDokter){
                                         swpItem.setTxtSubTittle("Visit Doctor " + data.getTxtDokterName());
-                                    }else if (dtActivity.getIntActivityId()==2){
+                                    }else if (dtActivity.getIntActivityId()==new clsHardCode().VisitApotek){
                                         swpItem.setTxtSubTittle("Visit " + data.getTxtApotekName());
                                     }else {
                                         if (data.getTxtNotes()!=null)

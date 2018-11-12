@@ -228,9 +228,9 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                 dt.setIntUserId(dtUserLogin.getIntUserID());
                                 dt.setIntRoleId(dtUserLogin.getIntRoleID());
                                 dt.setIntAreaId(dataPlan.getTxtAreaId());
-                                if (dataPlan.getIntActivityId()==1){
+                                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
                                     dt.setIntDokterId(dataCheckinActive.getTxtDokterId());
-                                }else if (dataPlan.getIntActivityId()==2){
+                                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
                                     dt.setIntApotekID(dataCheckinActive.getTxtApotekId());
                                 }
                                 dt.setTxtRealisasiVisitId(dataCheckinActive.getTxtRealisasiVisitId());

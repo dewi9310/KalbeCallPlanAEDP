@@ -137,7 +137,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+//    DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
     List<mUserLogin> dataLogin = null;
     List<mMenuData> dataMenu = null;
     List<clsPhotoProfile> dataImageProfile = null;

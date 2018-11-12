@@ -8,10 +8,15 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -490,6 +495,7 @@ public class clsHelperBL {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
+                String msg = null;
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {
@@ -546,8 +552,24 @@ public class clsHelperBL {
 
                     finalDialog1.dismiss();
 
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
                 } else {
-                    Toast.makeText(context, "Error 500, Server Error", Toast.LENGTH_SHORT).show();
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
             }
@@ -618,6 +640,7 @@ public class clsHelperBL {
             public void onErrorResponse(VolleyError error) {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
+                String msg = null;
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
@@ -674,8 +697,24 @@ public class clsHelperBL {
 
                     finalDialog1.dismiss();
 
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
                 } else {
-                    Toast.makeText(context, "Error 500, Server Error", Toast.LENGTH_SHORT).show();
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
             }
@@ -747,6 +786,7 @@ public class clsHelperBL {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
+                String msg = null;
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {
@@ -803,8 +843,24 @@ public class clsHelperBL {
 
                     finalDialog1.dismiss();
 
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
                 } else {
-                    Toast.makeText(context, "Error 500, Server Error", Toast.LENGTH_SHORT).show();
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
             }
@@ -865,6 +921,7 @@ public class clsHelperBL {
             @Override
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
+                String msg = null;
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {
@@ -879,11 +936,33 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
                     finalDialog1.dismiss();
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
                 } else {
-                    ToastCustom.showToasty(context,"Failed Download Data, please check your connection",4);
-//                    Toast.makeText(context, "Failed Download Data Doctor/Pharmacy", Toast.LENGTH_SHORT).show();
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
+
+//
+//                else {
+//                    ToastCustom.showToasty(context,"Failed Download Data, please check your connection",4);
+////                    Toast.makeText(context, "Failed Download Data Doctor/Pharmacy", Toast.LENGTH_SHORT).show();
+//                    finalDialog1.dismiss();
+//                }
             }
         }) {
 
