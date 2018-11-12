@@ -42,6 +42,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 /**
  * Created by ASUS on 01/11/2018.
  */
@@ -51,7 +54,6 @@ public class FragmentNotification extends Fragment {
     ExpandableListAdapterNotif mExpandableListAdapter;
     private static List<clsItemGroupNotifAdapter> listDataHeader = new ArrayList<>();
     private static HashMap<clsItemGroupNotifAdapter, List<clsListItemAdapter>> listDataChild = new HashMap<>();
-    List<clsListItemAdapter> listChildAdapter = new ArrayList<>();
     tNotificationRepo notificationRepo;
     List<tNotification> notificationList = new ArrayList<>();
     List<tNotification> listChild = new ArrayList<>();
@@ -69,6 +71,7 @@ public class FragmentNotification extends Fragment {
         try {
             notificationList = (List<tNotification>) notificationRepo.findOutletId();
             if (notificationList!=null){
+                ShortcutBadger.removeCountOrThrow(getActivity());
                 if (notificationList.size()>0){
                     int index = 0;
                     for (tNotification data : notificationList){
@@ -93,7 +96,7 @@ public class FragmentNotification extends Fragment {
                         itemAdapter.setIntColor(getResources().getColor(R.color.pink_400));
                         listDataHeader.add(itemAdapter);
 
-                        listChildAdapter.clear();
+                        List<clsListItemAdapter> listChildAdapter = new ArrayList<>();
                         for (tNotification child : listChild){
                             mSubSubActivity subSubActivity = (mSubSubActivity)new mSubSubActivityRepo(getContext()).findById(child.getIntSubDetailActivityId()) ;
                             clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
@@ -108,6 +111,8 @@ public class FragmentNotification extends Fragment {
                 }
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ShortcutBadgeException e) {
             e.printStackTrace();
         }
 

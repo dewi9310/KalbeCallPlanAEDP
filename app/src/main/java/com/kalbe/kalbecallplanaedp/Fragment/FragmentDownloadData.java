@@ -4,6 +4,7 @@ import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatSpinner;
@@ -110,6 +113,7 @@ import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
+import com.kalbe.mobiledevknlibs.library.badgeall.viewbadger.ShortcutBadgeException;
 import com.kalbe.mobiledevknlibs.library.badgeall.viewbadger.ShortcutBadger;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -999,9 +1003,12 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtNoDoc(model.getData().getDataNotification().getNotification().get(i).getTxtNoDoc());
                                         dtRepoNotification.createOrUpdate(data);
                                     }
-                                    createNotification(model.getData().getDataNotification().getNotification().size());
+                                    List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+                                    createNotification(notificationList.size());
                                 }
                             }
+
+
 
                             if (model.getData().getDataMaintenanceData().getLtMaintenanceHeader()!=null){
                                 if (model.getData().getDataMaintenanceData().getLtMaintenanceHeader().size()>0){
@@ -1732,7 +1739,9 @@ public class FragmentDownloadData extends Fragment{
                                             data.setTxtNoDoc(model.getNotificationData().get(i).getTxtNoDoc());
                                             dtRepoNotification.createOrUpdate(data);
                                         }
-                                        createNotification(model.getNotificationData().size());
+                                        List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+                                        createNotification(notificationList.size());
+//                                        createNotification(model.getNotificationData().size());
                                     }
                                 }
 
@@ -2090,13 +2099,7 @@ public class FragmentDownloadData extends Fragment{
 
                             if (listId!=null){
                                 listId.remove(downloadId);
-//                if (longList.size()>0){
-//                    snackbar.
-//                    snackbar = SnackBar.snackbarIndefinite(coordinatorLayout, "Download File " + String.valueOf(sumAvailabe)+ "/" + String.valueOf(listAll.size()), R.color.red_bold);
-//                    snackbar.show();
-//                }
                                 if (listId.isEmpty()){
-//                    snackbar.dismiss();
 //                                        deleteMediaStorageDirtemp();
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(context)
@@ -2124,27 +2127,94 @@ public class FragmentDownloadData extends Fragment{
         i.putExtra(i_View, "FragmentNotification");
         PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),(int)System.currentTimeMillis(), i, PendingIntent.FLAG_ONE_SHOT);
 
-        int icon = R.drawable.ic_notif;
-        String tickerText = "hello";
-        long when = System.currentTimeMillis();
-        Notification tnotification = new Notification.Builder(getActivity())
-                .setContentIntent(pendingIntent)
-                .setContentTitle("haii")
-                .setContentText("tes")
-                .setSmallIcon(icon)
+//        int icon = R.drawable.ic_notif;
+//        String tickerText = "hello";
+//        long when = System.currentTimeMillis();
+//        Notification tnotification = new Notification.Builder(getActivity())
+//                .setContentIntent(pendingIntent)
+//                .setContentTitle("haii")
+//                .setContentText("tes")
+//                .setSmallIcon(icon)
+//                .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
+//                        R.mipmap.ic_launcher))
+//                .setWhen(when)
+//                .setTicker(tickerText)
+//                .setPriority(Notification.PRIORITY_HIGH)
+//                .setAutoCancel(true)
+//                .setNumber(1)
+//                .setDefaults(Notification.DEFAULT_ALL | Notification.FLAG_SHOW_LIGHTS | Notification.PRIORITY_DEFAULT)
+//                .build();
+//        NotificationManager tnotificationManager=(NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//        tnotification.flags |= Notification.FLAG_AUTO_CANCEL;
+//        tnotification.defaults=Notification.DEFAULT_ALL;
+//        tnotificationManager.notify(1993,tnotification);
+//        try {
+//            ShortcutBadger.applyCountOrThrow(getActivity(), size);
+//        } catch (ShortcutBadgeException e) {
+//            e.printStackTrace();
+//        }
+
+        try {
+            me.leolin.shortcutbadger.ShortcutBadger.applyCountOrThrow(getActivity(), size);
+        } catch (me.leolin.shortcutbadger.ShortcutBadgeException e) {
+            e.printStackTrace();
+        }
+
+
+        String CHANNEL_ID = "kalbenutritionals_channel";
+        CharSequence name = "kalbenutritionals_channel";
+        String Description = "kalbenutritionals channel";
+
+        int NOTIFICATION_ID = 234;
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+        stackBuilder.addParentStack(MainMenu.class);
+        stackBuilder.addNextIntent(i);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setContentTitle("Document Expired")
+//                .setContentText("Please check on notifications menu")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("There are some documents will expire!"))
+                .setSmallIcon(R.drawable.ic_notif)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true)
+                .setNumber(size)
                 .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
                         R.mipmap.ic_launcher))
-                .setWhen(when)
-                .setTicker(tickerText)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setNumber(1)
-                .setDefaults(Notification.DEFAULT_ALL | Notification.FLAG_SHOW_LIGHTS | Notification.PRIORITY_DEFAULT)
-                .build();
-        NotificationManager tnotificationManager=(NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        tnotification.flags |= Notification.FLAG_AUTO_CANCEL;
-        tnotification.defaults=Notification.DEFAULT_ALL;
-        tnotificationManager.notify(1993,tnotification);
-        ShortcutBadger.applyCount(getActivity(), size);
+                .setColor(getResources().getColor(android.R.color.holo_red_dark));
+//                .addAction(R.drawable.ic_launcher_foreground, "Call", resultPendingIntent)
+//                .addAction(R.drawable.ic_launcher_foreground, "More", resultPendingIntent)
+//                .addAction(R.drawable.ic_launcher_foreground, "And more", resultPendingIntent);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(true);
+
+            if (notificationManager != null) {
+
+                notificationManager.createNotificationChannel(mChannel);
+                notificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
+
+        }else {
+            Notification note = builder.build();
+            note.defaults |= Notification.DEFAULT_VIBRATE;
+            note.defaults |= Notification.DEFAULT_SOUND;
+            if (notificationManager != null) {
+
+                notificationManager.notify(NOTIFICATION_ID, note);
+            }
+        }
+
     }
 }

@@ -75,7 +75,8 @@ public class FragmentSubAkuisisi extends Fragment {
 //    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
-    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName, tvDesc_akuisisi;
+    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName, tvDesc_akuisisi, tv_image;
+    ImageView image;
     LinearLayout ln_resgistrasi, ln_image, ln_emptyAkuisisi;
     FloatingActionButton fab;
     mDokterRepo dokterRepo;
@@ -103,6 +104,9 @@ public class FragmentSubAkuisisi extends Fragment {
             tvOutlet = (TextView)v.findViewById(R.id.tv_nama_outlet_akuisisi);
             tvUserName = (TextView)v.findViewById(R.id.tv_username_akuisisi);
             tvDesc_akuisisi = (TextView) v.findViewById(R.id.tvDesc_akuisisi);
+            tv_image = (TextView) v.findViewById(R.id.image_letter_akuisisi);
+            image = (ImageView)v.findViewById(R.id.image_akuisisi);
+
 
 
             headerRepo = new tAkuisisiHeaderRepo(getContext());
@@ -159,11 +163,16 @@ public class FragmentSubAkuisisi extends Fragment {
                             }else {
                                 tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
                             }
+
                         }else {
                             apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
                             tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+//                            tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
                         }
                         tvUserName.setText(dtHeader.getTxtUserName());
+                        image.setColorFilter(R.color.red_400);
+                        image.setImageResource(R.drawable.shape_circle);
+                        tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
                     }
                 }
 

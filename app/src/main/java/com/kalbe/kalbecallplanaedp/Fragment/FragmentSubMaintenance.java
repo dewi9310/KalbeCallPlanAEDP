@@ -106,7 +106,7 @@ public class FragmentSubMaintenance extends Fragment {
                             clsMaintenance itemAdapter = new clsMaintenance();
                             itemAdapter.setTxtId(data.getTxtDetailId());
                             itemAdapter.setTxtTittle(strName); //nama dokter substring(0,1)
-                            itemAdapter.setIntColor(R.color.purple_600);
+                            itemAdapter.setIntColor(R.color.green_300);
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setTxtSubTittle(data.getTxtNoDoc());
 //                            if (data.getTxtNoOrder()!=null){

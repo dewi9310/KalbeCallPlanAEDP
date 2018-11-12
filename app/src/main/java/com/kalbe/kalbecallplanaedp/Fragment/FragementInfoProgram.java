@@ -81,7 +81,10 @@ public class FragementInfoProgram extends Fragment {
         }
 
         detailRepo = new tInfoProgramDetailRepo(getContext());
-        _mSubSubActivity = detailRepo.getIntSubSubActivityId(getContext(), dtHeader.getTxtHeaderId());
+        if (dtHeader!=null){
+            _mSubSubActivity = detailRepo.getIntSubSubActivityId(getContext(), dtHeader.getTxtHeaderId());
+        }
+
 //        _mSubSubActivity = new ArrayList<>();
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
 //        try {

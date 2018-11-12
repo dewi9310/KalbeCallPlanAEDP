@@ -47,6 +47,7 @@ import com.kalbe.kalbecallplanaedp.Utils.SpacingItemDecoration;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.kalbecallplanaedp.adapter.RecyclerGridImageAdapter;
 import com.kalbe.mobiledevknlibs.AlertDialog.CustomDatePicker;
+import com.kalbe.mobiledevknlibs.AlertDialog.clsDatePicker;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
@@ -332,6 +333,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         etDtExpired.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                clsDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args, android.R.style.Widget.DeviceDefault.Light.Spinner);
              CustomDatePicker.showDatePicker(getContext(), etDtExpired, "Expired Date", CustomDatePicker.format.standard1, args);
             }
         });
