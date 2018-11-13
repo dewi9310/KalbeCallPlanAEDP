@@ -132,4 +132,18 @@ public class tInfoProgramHeaderRepo implements crud {
         }
         return listData;
     }
+
+    public List<tInfoProgramHeader> findbyRealisasiId (String txtRealisasiId) {
+        tInfoProgramHeader item = new tInfoProgramHeader();
+        List<tInfoProgramHeader> listData = new ArrayList<>();
+        QueryBuilder<tInfoProgramHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettInfoProgramHeaderDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtRealisasiVisitId, txtRealisasiId);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
 }

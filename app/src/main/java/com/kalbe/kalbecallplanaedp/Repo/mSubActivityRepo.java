@@ -7,8 +7,12 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -102,5 +106,82 @@ public class mSubActivityRepo implements crud {
             e.printStackTrace();
         }
         return listData;
+    }
+
+    public List<mSubActivity> findSubActivityId(int intActivity, String txtRealisasiId) throws SQLException {
+        List<tAkuisisiHeader> ListData1 = new ArrayList<>();
+        List<tMaintenanceHeader> ListData2 = new ArrayList<>();
+        List<tInfoProgramHeader> ListData3 = new ArrayList<>();
+        List<mSubActivity> ListDataSubActivity = new ArrayList<>();
+        List<Integer> listId = new ArrayList<>();
+        mSubActivity item = new mSubActivity();
+        tAkuisisiHeader akusisi = new tAkuisisiHeader();
+        tMaintenanceHeader maintenance = new tMaintenanceHeader();
+        tInfoProgramHeader info = new tInfoProgramHeader();
+        QueryBuilder<mSubActivity, Integer> queryBuilder = null;
+        QueryBuilder<tAkuisisiHeader, Integer> queryBuilder1 = null;
+        QueryBuilder<tMaintenanceHeader, Integer> queryBuilder2 = null;
+        QueryBuilder<tInfoProgramHeader, Integer> queryBuilder3 = null;
+        try {
+            if (intActivity == new clsHardCode().VisitDokter){
+                queryBuilder1 = helper.getAkuisisiHeaderDao().queryBuilder();
+                queryBuilder1.where().eq(akusisi.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData1 = queryBuilder1.query();
+                if (ListData1!=null){
+                    if (ListData1.size()>0){
+                        listId.add(new clsHardCode().int_akuisisi_dokter);
+                    }
+                }
+                queryBuilder2 = helper.gettMaintenanceHeaderDao().queryBuilder();
+                queryBuilder2.where().eq(maintenance.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData2 = queryBuilder2.query();
+                if (ListData2!=null){
+                    if (ListData2.size()>0){
+                        listId.add(new clsHardCode().int_maintenance_dokter);
+                    }
+                }
+                queryBuilder3 = helper.gettInfoProgramHeaderDao().queryBuilder();
+                queryBuilder3.where().eq(info.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData3 = queryBuilder3.query();
+                if (ListData3!=null){
+                    if (ListData3.size()>0){
+                        listId.add(new clsHardCode().int_infoprogram_dokter);
+                    }
+                }
+            }else {
+                queryBuilder1 = helper.getAkuisisiHeaderDao().queryBuilder();
+                queryBuilder1.where().eq(akusisi.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData1 = queryBuilder1.query();
+                if (ListData1!=null){
+                    if (ListData1.size()>0){
+                        listId.add(new clsHardCode().int_akuisisi_apotek);
+                    }
+                }
+                queryBuilder2 = helper.gettMaintenanceHeaderDao().queryBuilder();
+                queryBuilder2.where().eq(maintenance.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData2 = queryBuilder2.query();
+                if (ListData2!=null){
+                    if (ListData2.size()>0){
+                        listId.add(new clsHardCode().int_maintenance_apotek);
+                    }
+                }
+                queryBuilder3 = helper.gettInfoProgramHeaderDao().queryBuilder();
+                queryBuilder3.where().eq(info.Property_txtRealisasiVisitId, txtRealisasiId);
+                ListData3 = queryBuilder3.query();
+                if (ListData3!=null){
+                    if (ListData3.size()>0){
+                        listId.add(new clsHardCode().int_infoprogram_apotek);
+                    }
+                }
+            }
+
+
+            queryBuilder = helper.getmSubActivityDao().queryBuilder();
+            queryBuilder.where().in(item.Property_intSubActivityid, listId);
+            ListDataSubActivity = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ListDataSubActivity;
     }
 }

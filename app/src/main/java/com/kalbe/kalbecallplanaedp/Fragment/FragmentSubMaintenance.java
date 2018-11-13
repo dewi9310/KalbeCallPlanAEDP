@@ -52,6 +52,7 @@ public class FragmentSubMaintenance extends Fragment {
     tMaintenanceHeader header;
     tMaintenanceHeaderRepo headerRepo;
     List<tMaintenanceDetail> listDetail;
+    List<String> listHeaderId;
     tMaintenanceDetailRepo detailRepo;
     int intSubSubActivity;
     AdapterListMaintenance adapter;
@@ -63,10 +64,11 @@ public class FragmentSubMaintenance extends Fragment {
     int index;
     LinearLayout lnEmpty;
 
-    public FragmentSubMaintenance(tMaintenanceHeader header, int intSubSubActivity, int index){
+    public FragmentSubMaintenance(List<String> listHeaderId, tMaintenanceHeader header, int intSubSubActivity, int index){
         this.header = header;
         this.intSubSubActivity = intSubSubActivity;
         this.index = index;
+        this.listHeaderId = listHeaderId;
     }
 
 
@@ -99,7 +101,7 @@ public class FragmentSubMaintenance extends Fragment {
                     strName = new mApotekRepo(getContext()).findBytxtId(header.getIntApotekID()).getTxtName();
                 }
 
-                listDetail = (List<tMaintenanceDetail>) detailRepo.findByHeaderIdandSubsubId(header.getTxtHeaderId(), intSubSubActivity);
+                listDetail = (List<tMaintenanceDetail>) detailRepo.findByListHeaderIdandSubsubId(listHeaderId, intSubSubActivity);
                 if (listDetail!=null){
                     if (listDetail.size()>0){
                         for (tMaintenanceDetail data : listDetail){
@@ -109,11 +111,6 @@ public class FragmentSubMaintenance extends Fragment {
                             itemAdapter.setIntColor(R.color.green_300);
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setTxtSubTittle(data.getTxtNoDoc());
-//                            if (data.getTxtNoOrder()!=null){
-//                                itemAdapter.setTxtSubTittle(data.getTxtNoOrder());
-//                            }else if (data.getTxtNoResep()!=null){
-//                                itemAdapter.setTxtSubTittle(data.getTxtNoResep());
-//                            }
                             if (index==0){
                                 itemAdapterList0.add(itemAdapter);
                             }else if (index==1){

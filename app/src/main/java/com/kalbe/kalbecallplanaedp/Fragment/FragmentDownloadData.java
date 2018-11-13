@@ -1004,7 +1004,7 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoNotification.createOrUpdate(data);
                                     }
                                     List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
-                                    createNotification(notificationList.size());
+                                        createNotification(notificationList.size());
                                 }
                             }
 

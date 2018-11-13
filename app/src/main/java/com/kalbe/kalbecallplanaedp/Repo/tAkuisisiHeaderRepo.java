@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RawRowMapper;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
@@ -160,6 +161,20 @@ public class tAkuisisiHeaderRepo implements crud {
         return listData;
     }
 
+    public List<tAkuisisiHeader> findByRealisasi (String txtRealisasiId) {
+        tAkuisisiHeader item = new tAkuisisiHeader();
+        List<tAkuisisiHeader> listData = new ArrayList<>();
+        QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtRealisasiVisitId, txtRealisasiId);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
     public List<Integer> getIntSubSubActivityId (int intActivity, String intOutlet) {
         tAkuisisiHeader item = new tAkuisisiHeader();
         List<Integer> listId = new ArrayList<>();
@@ -181,5 +196,31 @@ public class tAkuisisiHeaderRepo implements crud {
             e.printStackTrace();
         }
         return listId;
+    }
+
+    public List<mSubSubActivity> getIntSubDetailActivityId (String txtRealisasiId) {
+        tAkuisisiHeader item = new tAkuisisiHeader();
+        mSubSubActivity subSubActivity = new mSubSubActivity();
+        List<Integer> listId = new ArrayList<>();
+        List<mSubSubActivity> listData = new ArrayList<>();
+        List<tAkuisisiHeader> listAkuisisi = new ArrayList<>();
+        QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
+        QueryBuilder<mSubSubActivity, Integer> queryBuilderData = null;
+        try {
+            queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtRealisasiVisitId, txtRealisasiId);
+            listAkuisisi = queryBuilder.groupBy(item.Property_intSubSubActivityId).query();
+            for (tAkuisisiHeader data : listAkuisisi){
+                listId.add(data.getIntSubSubActivityId());
+            }
+
+            queryBuilderData = helper.getmSubSubActivityDao().queryBuilder();
+            queryBuilderData.where().in(subSubActivity.Property_intSubSubActivityid, listId);
+            listData = queryBuilderData.query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 }

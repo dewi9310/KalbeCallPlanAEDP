@@ -85,6 +85,7 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:3.2.0'
     // date & time picker
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
+    implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
     // circle image view
     //    implementation 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
     implementation 'com.hootsuite.android:nachos:1.1.1'

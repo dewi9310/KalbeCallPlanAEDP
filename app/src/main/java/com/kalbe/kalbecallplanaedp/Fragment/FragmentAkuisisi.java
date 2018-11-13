@@ -36,7 +36,9 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
+import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.InputFilter.InputFilters;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -55,7 +57,7 @@ import java.util.List;
  * Created by Dewi Oktaviani on 10/5/2018.
  */
 
-public class FragmentAkuisisi extends Fragment{
+public class FragmentAkuisisi extends Fragment implements IOBackPressed{
     View v;
     private CustomViewPager customViewPager;
     private FloatingActionButton fab;
@@ -78,6 +80,10 @@ public class FragmentAkuisisi extends Fragment{
     int IntSubSubActivityid;
     String txtSubSubActivity;
     Dialog dialogCustom;
+    private String DT_CALL_PLAN = "Realisasi id";
+    String txtRealisasiId;
+    boolean valid = false;
+
 
     @Nullable
     @Override
@@ -88,28 +94,44 @@ public class FragmentAkuisisi extends Fragment{
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_akuisisi);
         fab = (FloatingActionButton) v.findViewById(R.id.fab_akuisisi);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
-        dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
-        try {
-            dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
         headerRepo = new tAkuisisiHeaderRepo(getContext());
-        try {
-//            mSubActivity subActivity = (mSubActivity) subActivityRepo.findByActivityId(dataPlan.getIntActivityId());
-            if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
-            }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(4);
+        Bundle data = this.getArguments();
+        if (data != null) {
+             txtRealisasiId = data.getString(DT_CALL_PLAN);
+        }
+
+        if (txtRealisasiId!=null && !txtRealisasiId.equals("")){
+            valid = true;
+            _mSubSubActivity  = (List<mSubSubActivity>) headerRepo.getIntSubDetailActivityId(txtRealisasiId);
+            try {
+                dtCheckinActive = new tRealisasiVisitPlanRepo(getContext()).findBytxtId(txtRealisasiId);
+                dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            fab.setVisibility(View.GONE);
+        }else {
+            dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
+            try {
+                dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+//            mSubActivity subActivity = (mSubActivity) subActivityRepo.findByActivityId(dataPlan.getIntActivityId());
+                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                    _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(1);
+                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                    _mSubSubActivity  = (List<mSubSubActivity>) subSubActivityRepo.findBySubActivityId(4);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-        if (_mSubSubActivity!=null&&_mSubSubActivity.size()>0){
 
-        }
 
         setupViewPager(customViewPager, fab);
         tabLayout.setupWithViewPager(customViewPager);
@@ -126,24 +148,27 @@ public class FragmentAkuisisi extends Fragment{
             }
 
         }
-        final int iterator = customViewPager.getCurrentItem();
-        if (iterator==0){
-            try {
-                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+        if (!valid){
+            final int iterator = customViewPager.getCurrentItem();
+            if (iterator==0){
+                try {
+                    if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                    }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
-            if (dtHeader!=null){
-                fab.setVisibility(View.GONE);
-            }else {
-                fab.setVisibility(View.VISIBLE);
+                if (dtHeader!=null){
+                    fab.setVisibility(View.GONE);
+                }else {
+                    fab.setVisibility(View.VISIBLE);
+                }
             }
         }
+
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -151,20 +176,25 @@ public class FragmentAkuisisi extends Fragment{
             public void onTabSelected(TabLayout.Tab tab) {
                 final int i = tab.getPosition();
 
-                try {
-                    if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                    }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                if (!valid){
+                    try {
+                        if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                            dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                        }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                            dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(i).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if (dtHeader!=null){
-                    fab.setVisibility(View.GONE);
+                    if (dtHeader!=null){
+                        fab.setVisibility(View.GONE);
+                    }else {
+                        fab.setVisibility(View.VISIBLE);
+                    }
                 }else {
-                    fab.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.GONE);
                 }
+
             }
 
             @Override
@@ -355,5 +385,18 @@ public class FragmentAkuisisi extends Fragment{
 
         android.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (txtRealisasiId!=null&&!txtRealisasiId.equals("")){
+            Tools.intentFragment(FragmentHistory.class, "History", getContext());
+            return true;
+        }else {
+            return false;
+        }
+//        bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
+
+
     }
 }

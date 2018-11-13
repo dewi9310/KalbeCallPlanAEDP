@@ -84,6 +84,7 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragementInfoProgram;
 import com.kalbe.kalbecallplanaedp.Fragment.FragementMaintenance;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentAkuisisi;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentDownloadData;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentHistory;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentNotification;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
@@ -586,6 +587,21 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
                         fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
                         fragmentTransactionNotification.commit();
+                        selectedId = 99;
+
+                        return true;
+
+
+                    case R.id.mnHistory:
+                        toolbar.setTitle("History");
+                        toolbar.setSubtitle(null);
+
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                        FragmentHistory fragmentHistory = new FragmentHistory();
+                        FragmentTransaction fragmentTransactionHistory = getSupportFragmentManager().beginTransaction();
+                        fragmentTransactionHistory.replace(R.id.frame, fragmentHistory);
+                        fragmentTransactionHistory.commit();
                         selectedId = 99;
 
                         return true;

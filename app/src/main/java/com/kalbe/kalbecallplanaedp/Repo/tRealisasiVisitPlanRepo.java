@@ -103,12 +103,12 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
         return item;
     }
 
-    public tRealisasiVisitPlan findBytxtPlanId(String txtId) throws SQLException {
+    public tRealisasiVisitPlan findBytxtPlanId(String txtVisitId) throws SQLException {
         tRealisasiVisitPlan item = new tRealisasiVisitPlan();
         QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_txtProgramVisitSubActivityId, txtId);
+            queryBuilder.where().eq(item.Property_txtProgramVisitSubActivityId, txtVisitId);
             item = queryBuilder.queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,6 +123,20 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
         try {
             queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
             queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+    public List<tRealisasiVisitPlan> getAllRealisasi () {
+        tRealisasiVisitPlan item = new tRealisasiVisitPlan();
+        List<tRealisasiVisitPlan> listData = new ArrayList<>();
+        QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intStatusRealisasi, new clsHardCode().Realisasi);
             listData = queryBuilder.query();
         } catch (SQLException e) {
             e.printStackTrace();

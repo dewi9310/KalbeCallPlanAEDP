@@ -147,11 +147,14 @@ public class FragementMaintenance extends Fragment {
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         tMaintenanceHeader dtHeader = null;
+        List<String> listId = null;
         for (int i =0; i < _mSubSubActivity.size(); i++){
             try {
                 if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                    listId = new tMaintenanceHeaderRepo(getContext()).findIdByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
                     dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
                 }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                    listId = new tMaintenanceHeaderRepo(getContext()).findIdByOutletId(dtCheckinActive.getTxtApotekId(),dataPlan.getIntActivityId());
                     dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
                 }
 
@@ -159,7 +162,7 @@ public class FragementMaintenance extends Fragment {
                 e.printStackTrace();
             }
 
-            adapter.addFragment(new FragmentSubMaintenance(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
+            adapter.addFragment(new FragmentSubMaintenance(listId, dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
         }
 
         viewPager.setAdapter(adapter);
@@ -261,12 +264,13 @@ public class FragementMaintenance extends Fragment {
                 tMaintenanceHeader dtHeader = null;
                 try {
                     mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
-                    if (dataPlan.getIntActivityId()==1){
-                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
-                    }else if (dataPlan.getIntActivityId()==2){
-                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
-                    }
+//                    if (dataPlan.getIntActivityId()==1){
+//                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
+//                    }else if (dataPlan.getIntActivityId()==2){
+//                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
+//                    }
 
+                    dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
                     if (dtHeader==null){
                         tMaintenanceHeader dt = new tMaintenanceHeader();
                         dt.setTxtHeaderId(new clsActivity().GenerateGuid());
@@ -287,6 +291,25 @@ public class FragementMaintenance extends Fragment {
                         tMaintenanceHeader dt = dtHeader;
                         dt.setIntFlagPush(new clsHardCode().Save);
                         headerRepo.createOrUpdate(dt);
+//                        if (dtHeader.getTxtRealisasiVisitId().equals(dtCheckinActive.getTxtRealisasiVisitId())){
+//
+//                        }else {
+//                            tMaintenanceHeader dt = new tMaintenanceHeader();
+//                            dt.setTxtHeaderId(new clsActivity().GenerateGuid());
+//                            dt.setTxtRealisasiVisitId(dtCheckinActive.getTxtRealisasiVisitId());
+//                            dt.setIntActivityId(dataPlan.getIntActivityId());
+//                            dt.setIntUserId(dtLogin.getIntUserID());
+//                            dt.setIntRoleId(dtLogin.getIntRoleID());
+//                            dt.setIntAreaId(dataPlan.getTxtAreaId());
+//                            if (dataPlan.getIntActivityId()==1){
+//                                dt.setIntDokterId(dtCheckinActive.getTxtDokterId());
+//                            }else if (dataPlan.getIntActivityId()==2){
+//                                dt.setIntApotekID(dtCheckinActive.getTxtApotekId());
+//                            }
+//                            dt.setIntFlagPush(new clsHardCode().Save);
+//                            headerRepo.createOrUpdate(dt);
+//                            dtHeader = dt;
+//                        }
                     }
                     tMaintenanceDetail detail = new tMaintenanceDetail();
                     detail.setTxtDetailId(new clsActivity().GenerateGuid());

@@ -82,6 +82,14 @@ public class clsHardCode {
     public int OnlyDesc = 2;
     public int OnlyFile = 3;
 
+
+    public int int_akuisisi_dokter = 1;
+    public int int_maintenance_dokter = 2;
+    public int int_infoprogram_dokter = 3;
+    public int int_akuisisi_apotek = 4;
+    public int int_maintenance_apotek = 5;
+    public int int_infoprogram_apotek = 6;
+
     public String copydb(Context context) throws IOException {
         String CURRENT_DATABASE_PATH = "data/data/" + context.getPackageName() + "/databases/"+ new clsHardCode().dbName;
 

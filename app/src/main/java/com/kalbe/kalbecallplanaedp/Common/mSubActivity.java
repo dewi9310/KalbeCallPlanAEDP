@@ -21,6 +21,7 @@ public class mSubActivity implements Serializable {
     private String txtDesc;
 
     public String Property_intActivityid = "intActivityid";
+    public String Property_intSubActivityid = "intSubActivityid";
 //    private String txtName;
 
     public int getIntSubActivityid() {
