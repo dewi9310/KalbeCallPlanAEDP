@@ -389,7 +389,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
 
     @Override
     public boolean onBackPressed() {
-        if (txtRealisasiId!=null&&!txtRealisasiId.equals("")){
+        if (valid){
             Tools.intentFragment(FragmentHistory.class, "History", getContext());
             return true;
         }else {

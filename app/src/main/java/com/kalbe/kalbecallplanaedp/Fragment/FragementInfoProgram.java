@@ -26,6 +26,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomTablayout;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
 
@@ -49,10 +50,14 @@ public class FragementInfoProgram extends Fragment {
     mSubActivityRepo subActivityRepo;
     mActivityRepo activityRepo;
     tRealisasiVisitPlan dtCheckinActive;
-    tProgramVisitSubActivity dataPlan;
+//    tProgramVisitSubActivity dataPlan;
     tInfoProgramHeader dtHeader;
     tInfoProgramDetailRepo detailRepo;
     LinearLayout lnEmpty;
+    private String DT_CALL_PLAN = "Realisasi id";
+    String txtRealisasiId;
+    boolean valid = false;
+
 
     @Nullable
     @Override
@@ -62,23 +67,42 @@ public class FragementInfoProgram extends Fragment {
         lnEmpty = (LinearLayout)v.findViewById(R.id.ln_emptyInfo);
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_InfoProgram);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout_infoprogram);
-        dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
-        try {
-            dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        Bundle data = this.getArguments();
+        if (data != null) {
+            txtRealisasiId = data.getString(DT_CALL_PLAN);
+        }
+        if (txtRealisasiId!=null && !txtRealisasiId.equals("")){
+            valid = true;
         }
 
-        try {
-            if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                dtHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
-            }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                dtHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
+        if (valid){
+            try {
+                dtCheckinActive = new tRealisasiVisitPlanRepo(getContext()).findBytxtId(txtRealisasiId);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }else {
+            dtCheckinActive = new clsMainBL().getDataCheckinActive(getContext());
         }
+
+//        try {
+//            dataPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dtCheckinActive.getTxtProgramVisitSubActivityId());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
+//        try {
+//            if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+//                dtHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
+//            }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+//                dtHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
+//            }
+            dtHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findbyRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
+
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         detailRepo = new tInfoProgramDetailRepo(getContext());
         if (dtHeader!=null){

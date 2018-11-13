@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
@@ -114,6 +116,37 @@ public class tMaintenanceHeaderRepo implements crud {
             e.printStackTrace();
         }
         return item;
+    }
+
+    public List<mSubSubActivity> getIntSubDetailActivityId(String intRealisasiId) throws SQLException {
+        tMaintenanceHeader item = new tMaintenanceHeader();
+        tMaintenanceDetail detail = new tMaintenanceDetail();
+        mSubSubActivity subSubActivity = new mSubSubActivity();
+        List<Integer> listId = new ArrayList<>();
+        List<mSubSubActivity> listData = new ArrayList<>();
+        List<tMaintenanceDetail> listDetail = new ArrayList<>();
+        QueryBuilder<tMaintenanceHeader, Integer> queryBuilderHeader = null;
+        QueryBuilder<mSubSubActivity, Integer> queryBuilderData = null;
+        QueryBuilder<tMaintenanceDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilderHeader = helper.gettMaintenanceHeaderDao().queryBuilder();
+            queryBuilderHeader.where().eq(item.Property_txtRealisasiVisitId, intRealisasiId);
+            item = queryBuilderHeader.queryForFirst();
+
+            queryBuilder = helper.gettMaintenanceDetailDao().queryBuilder();
+            queryBuilder.where().eq(detail.Property_txtHeaderId, item.getTxtHeaderId());
+            listDetail = queryBuilder.groupBy(detail.Property_intSubDetailActivityId).query();
+            for (tMaintenanceDetail data : listDetail){
+                listId.add(data.getIntSubDetailActivityId());
+            }
+            queryBuilderData = helper.getmSubSubActivityDao().queryBuilder();
+            queryBuilderData.where().in(subSubActivity.Property_intSubSubActivityid, listId);
+            listData = queryBuilderData.query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 
     public tMaintenanceHeader findByOutletId(String intOutletId, int intActivityId) throws SQLException {
