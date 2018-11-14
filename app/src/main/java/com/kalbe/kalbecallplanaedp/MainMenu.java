@@ -1240,7 +1240,9 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 numberRealisasi = et_int_number_realisasi.getText().toString().trim();
                 if (numberRealisasi.equals("")) {
                     ToastCustom.showToasty(getApplicationContext(),"Please fill number realization...",4);
-                } else {
+                } else if (numberRealisasi==null){
+                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realization...",4);
+                }else {
                    checkout();
                 }
             }

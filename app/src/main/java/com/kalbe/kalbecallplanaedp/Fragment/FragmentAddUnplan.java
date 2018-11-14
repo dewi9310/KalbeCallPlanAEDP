@@ -537,7 +537,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 realisasiVisitPlanRepo.createOrUpdate(data);
 
                 ToastCustom.showToasty(getContext(),"Save",1);
-                Tools.intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
+                new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -547,7 +547,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
     }
     @Override
     public boolean onBackPressed() {
-        Tools.intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
+        new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
         return true;
     }
 }

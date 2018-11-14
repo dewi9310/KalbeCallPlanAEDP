@@ -321,35 +321,17 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
                         dt.setIntFlagPush(new clsHardCode().Save);
                         headerRepo.createOrUpdate(dt);
                         dtHeader = dt;
-                    }else {
+                    } else {
                         tMaintenanceHeader dt = dtHeader;
                         dt.setIntFlagPush(new clsHardCode().Save);
                         headerRepo.createOrUpdate(dt);
-//                        if (dtHeader.getTxtRealisasiVisitId().equals(dtCheckinActive.getTxtRealisasiVisitId())){
-//
-//                        }else {
-//                            tMaintenanceHeader dt = new tMaintenanceHeader();
-//                            dt.setTxtHeaderId(new clsActivity().GenerateGuid());
-//                            dt.setTxtRealisasiVisitId(dtCheckinActive.getTxtRealisasiVisitId());
-//                            dt.setIntActivityId(dataPlan.getIntActivityId());
-//                            dt.setIntUserId(dtLogin.getIntUserID());
-//                            dt.setIntRoleId(dtLogin.getIntRoleID());
-//                            dt.setIntAreaId(dataPlan.getTxtAreaId());
-//                            if (dataPlan.getIntActivityId()==1){
-//                                dt.setIntDokterId(dtCheckinActive.getTxtDokterId());
-//                            }else if (dataPlan.getIntActivityId()==2){
-//                                dt.setIntApotekID(dtCheckinActive.getTxtApotekId());
-//                            }
-//                            dt.setIntFlagPush(new clsHardCode().Save);
-//                            headerRepo.createOrUpdate(dt);
-//                            dtHeader = dt;
-//                        }
                     }
                     tMaintenanceDetail detail = new tMaintenanceDetail();
                     detail.setTxtDetailId(new clsActivity().GenerateGuid());
                     detail.setTxtHeaderId(dtHeader.getTxtHeaderId());
                     detail.setIntSubDetailActivityId(IntSubSubActivityid);
                     detail.setTxtNoDoc(txtNoDoc);
+                    detail.setIntFlagPush(new clsHardCode().Save);
                     detailRepo.createOrUpdate(detail);
 
                     ToastCustom.showToasty(getContext(), "Saved", 1);
@@ -359,7 +341,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
                 dialogCustom.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-                Tools.intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), bundle);
+               new Tools().intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), bundle);
             }
         });
 
@@ -378,10 +360,10 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-            Tools.intentFragment(FragmentHistory.class, "History", getContext());
+           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
             return true;
         }else {
-            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+           new Tools().intentFragment(HomeFragment.class, "Home", getContext());
             return true;
         }
     }

@@ -324,7 +324,7 @@ public class Tools {
         }
     }
 
-    public static void intentFragment(Class<?> fragmentClass, String title, Context context){
+    public void intentFragment(Class<?> fragmentClass, String title, Context context){
         try {
 
             Toolbar toolbar = (Toolbar)((Activity)context).findViewById(R.id.toolbar);
@@ -340,7 +340,7 @@ public class Tools {
         }
     }
 
-    public static void intentFragmentSetArgument(Class<?> fragmentClass, String title, Context context, Bundle bundle){
+    public void intentFragmentSetArgument(Class<?> fragmentClass, String title, Context context, Bundle bundle){
         try {
 
             Toolbar toolbar = (Toolbar)((Activity)context).findViewById(R.id.toolbar);

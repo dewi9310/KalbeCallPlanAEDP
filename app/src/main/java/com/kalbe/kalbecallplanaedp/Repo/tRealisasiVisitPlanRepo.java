@@ -144,6 +144,20 @@ public class tRealisasiVisitPlanRepo implements crud { DatabaseHelper helper;
         return listData;
     }
 
+    public List<tRealisasiVisitPlan> getAllPlan () {
+        tRealisasiVisitPlan item = new tRealisasiVisitPlan();
+        List<tRealisasiVisitPlan> listData = new ArrayList<>();
+        QueryBuilder<tRealisasiVisitPlan, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettRealisasiVisitPlanDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intStatusRealisasi, new clsHardCode().VisitPlan);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
     public tRealisasiVisitPlan getDataCheckinActive () {
         tRealisasiVisitPlan item = new tRealisasiVisitPlan();
 //        List<tRealisasiVisitPlan> listData = new ArrayList<>();

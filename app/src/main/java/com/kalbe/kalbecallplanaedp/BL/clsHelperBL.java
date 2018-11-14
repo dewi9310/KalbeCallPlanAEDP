@@ -118,7 +118,7 @@ public class clsHelperBL {
             List<tAkuisisiHeader> ListOftAkuisisiHeaderData = _tAkuisisiHeaderRepo.getAllPushData();
             List<tAkuisisiDetail> ListOftAkuisisiDetailData = _tAkuisisiDetailRepo.getPushAllData(ListOftAkuisisiHeaderData);
             List<tMaintenanceHeader> ListOftMaintenanceHeader = _tMaintenanceHeaderRepo.getAllPushData();
-            List<tMaintenanceDetail> ListOfMaintenanceDetail = _tMaintenanceDetailRepo.getPushAllData(ListOftMaintenanceHeader);
+            List<tMaintenanceDetail> ListOfMaintenanceDetail = _tMaintenanceDetailRepo.getPushAllDataDetail(ListOftMaintenanceHeader);
             List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
             List<tInfoProgramDetail> ListOftInfoProgramDetail = _tInfoProgramDetailRepo.getPushAllData(ListOftInfoProgramHeader);
             List<tProgramVisitSubActivity> ListOftProgramSubActivity = _tProgramVisitSubActivityRepo.getAllPushData();
@@ -218,6 +218,13 @@ public class clsHelperBL {
                     for (tMaintenanceHeader data : dtJson.getListOfDatatMaintenanceHeader()){
                         data.setIntFlagPush(new clsHardCode().Sync);
                         new tMaintenanceHeaderRepo(context).createOrUpdate(data);
+                    }
+                }
+
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDataTMaintenanceDetail")){
+                    for (tMaintenanceDetail data : dtJson.getListOfDatatMaintenanceDetail()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tMaintenanceDetailRepo(context).createOrUpdate(data);
                     }
                 }
             }

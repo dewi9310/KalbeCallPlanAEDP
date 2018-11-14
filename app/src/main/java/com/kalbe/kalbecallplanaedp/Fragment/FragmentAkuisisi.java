@@ -219,7 +219,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
                 }else {
                     Bundle bundle = new Bundle();
                     bundle.putString(SUB_SUB_ACTIVITY, _mSubSubActivity.get(i).getTxtName());
-                    Tools.intentFragmentSetArgument(FragmentAddAkuisisi.class, "Add Akuisisi", getContext(), bundle);
+                    new Tools().intentFragmentSetArgument(FragmentAddAkuisisi.class, "Add Akuisisi", getContext(), bundle);
                 }
             }
         });
@@ -372,7 +372,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
                 dialogCustom.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-                Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
+                new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
             }
         });
 
@@ -391,10 +391,10 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-            Tools.intentFragment(FragmentHistory.class, "History", getContext());
+            new Tools().intentFragment(FragmentHistory.class, "History", getContext());
             return true;
         }else {
-            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            new Tools().intentFragment(HomeFragment.class, "Home", getContext());
             return true;
         }
 //        bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);

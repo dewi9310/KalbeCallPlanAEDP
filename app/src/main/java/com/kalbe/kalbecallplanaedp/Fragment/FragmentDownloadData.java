@@ -540,6 +540,10 @@ public class FragmentDownloadData extends Fragment{
                                 if (data.getIntDokterId()!=null){
                                     if (!data.getIntDokterId().equals("null")){
                                         name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    }else if (data.getIntApotekID()!=null){
+                                        if (!data.getIntApotekID().equals("null")){
+                                            name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                        }
                                     }
                                 }else if (data.getIntApotekID()!=null){
                                     if (!data.getIntApotekID().equals("null")){
@@ -550,11 +554,6 @@ public class FragmentDownloadData extends Fragment{
                                 e.printStackTrace();
                             }
                             itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
-//                            if (data.getIntDokterId()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
-//                            }else if (data.getIntApotekID()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekID());
-//                            }
                         }
                     }else {
                         itemList.add(" - ");
@@ -916,6 +915,7 @@ public class FragmentDownloadData extends Fragment{
                                         data.setDtDateRealisasi(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtDateRealisasi()));
                                         data.setDtDatePlan(parseDate(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getDtDatePlan()));
                                         data.setIntNumberRealisasi(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getIntRealisasiNumber());
+                                        data.setIntStatusRealisasi(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getIntRealisasiStatus());
                                         data.setTxtAcc(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtAccurasi());
                                         data.setTxtLong(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtLongitude());
                                         data.setTxtLat(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtLatitude());
@@ -1062,6 +1062,7 @@ public class FragmentDownloadData extends Fragment{
                                      data.setTxtHeaderId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtMaintenanceHeaderId());
                                      data.setIntSubDetailActivityId(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getIntSubDetailActivityId());
                                      data.setTxtNoDoc(model.getData().getDataMaintenanceData().getLtMaintenanceDetail().get(i).getTxtNoDocument());
+                                     data.setIntFlagPush(new clsHardCode().Sync);
                                      dtRepoMaintenanceDetail.createOrUpdate(data);
                                  }
                                 }
@@ -1617,6 +1618,7 @@ public class FragmentDownloadData extends Fragment{
                                         data.setDtDateRealisasi(parseDate(model.getData().getRealisasiData().get(i).getDtDateRealisasi()));
                                         data.setDtDatePlan(parseDate(model.getData().getRealisasiData().get(i).getDtDatePlan()));
                                         data.setIntNumberRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiNumber());
+                                        data.setIntStatusRealisasi(model.getData().getRealisasiData().get(i).getIntRealisasiStatus());
                                         data.setTxtAcc(model.getData().getRealisasiData().get(i).getTxtAccurasi());
                                         data.setTxtLong(model.getData().getRealisasiData().get(i).getTxtLongitude());
                                         data.setTxtLat(model.getData().getRealisasiData().get(i).getTxtLatitude());
@@ -1732,13 +1734,29 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
                                         String name ="";
                                         if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
-                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
+                                            if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()=="null"){
+                                                name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
+                                            }else {
+                                                if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
+                                                    if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
+                                                        name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+                                                    }
+                                                }
+                                            }
                                         }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
-                                            name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+                                            if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
+                                                name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+                                            }
                                         }
                                         itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
                                     }
-                                    tv_count_akuisisi.setText(String.valueOf(model.getData().getAkuisisiHeader().size()));
+
+                                    try {
+                                        dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    tv_count_akuisisi.setText(String.valueOf(dataListAkuisisi.size()));
                                 }
                                 dataAdapter.notifyDataSetChanged();
 
@@ -1868,6 +1886,7 @@ public class FragmentDownloadData extends Fragment{
                                             data.setTxtDetailId(model.getData().getLtMaintenanceDetail().get(i).getTxtMaintenanceDetailId());
                                             data.setIntSubDetailActivityId(model.getData().getLtMaintenanceDetail().get(i).getIntSubDetailActivityId());
                                             data.setTxtNoDoc(model.getData().getLtMaintenanceDetail().get(i).getTxtNoDocument());
+                                            data.setIntFlagPush(new clsHardCode().Sync);
                                             dtRepoMaintenanceDetail.createOrUpdate(data);
                                         }
                                     }
@@ -2137,14 +2156,14 @@ public class FragmentDownloadData extends Fragment{
                                 listId.remove(downloadId);
                                 if (listId.isEmpty()){
 //                                        deleteMediaStorageDirtemp();
-                                    createNotificationDonwloadComplete();
 //                                    NotificationCompat.Builder mBuilder =
 //                                            new NotificationCompat.Builder(context)
 //                                                    .setSmallIcon(R.drawable.places_ic_clear)
 //                                                    .setContentTitle("AEDP")
 //                                                    .setContentText("Download completed");
-//
-//
+
+                                    createNotificationDonwloadComplete(context);
+
 //                                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //                                    notificationManager.notify(455, mBuilder.build());
                                 }
@@ -2162,8 +2181,6 @@ public class FragmentDownloadData extends Fragment{
     private void createNotification(int size){
         Intent i = new Intent(getContext(), MainMenu.class);
         i.putExtra(i_View, "FragmentNotification");
-//        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),(int)System.currentTimeMillis(), i, PendingIntent.FLAG_ONE_SHOT);
-
 //        int icon = R.drawable.ic_notif;
 //        String tickerText = "hello";
 //        long when = System.currentTimeMillis();
@@ -2255,32 +2272,25 @@ public class FragmentDownloadData extends Fragment{
 
     }
 
-    private void createNotificationDonwloadComplete(){
-        Intent i = new Intent(getContext(), MainMenu.class);
-        i.putExtra(i_View, "FragmentNotification");
-
+    private void createNotificationDonwloadComplete(Context context){
         String CHANNEL_ID = "kalbenutritionals_channel";
         CharSequence name = "kalbenutritionals_channel";
         String Description = "kalbenutritionals channel";
 
         int NOTIFICATION_ID = 1992;
 
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-//        stackBuilder.addParentStack(MainMenu.class);
-//        stackBuilder.addNextIntent(i);
-//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Download Completed")
 //                .setContentText("Please check on notifications menu")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText("All file have been downloaded!"))
                 .setSmallIcon(R.drawable.places_ic_clear)
 //                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                         R.mipmap.ic_launcher))
-                .setColor(getResources().getColor(android.R.color.holo_red_dark));
+                .setColor(context.getResources().getColor(android.R.color.holo_red_dark));
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 

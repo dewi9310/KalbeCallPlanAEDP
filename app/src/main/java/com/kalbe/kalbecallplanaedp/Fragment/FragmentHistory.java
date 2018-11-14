@@ -235,11 +235,11 @@ public class FragmentHistory extends Fragment {
                 Bundle data = new Bundle();
                 data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                 if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Akuisisi")){
-                    Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), data);
+                    new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), data);
                 }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Maintenance")){
-                    Tools.intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), data);
+                    new Tools().intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), data);
                 }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Info Program")){
-                    Tools.intentFragmentSetArgument(FragementInfoProgram.class, "Info Program", getContext(), data);
+                    new Tools().intentFragmentSetArgument(FragementInfoProgram.class, "Info Program", getContext(), data);
                 }
 
 //                FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();

@@ -619,7 +619,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 
     @Override
     public boolean onBackPressed() {
-        Tools.intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
+        new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
         return true;
     }
 }

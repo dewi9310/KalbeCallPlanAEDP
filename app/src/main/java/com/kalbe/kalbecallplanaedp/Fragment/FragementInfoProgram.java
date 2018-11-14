@@ -190,10 +190,10 @@ public class FragementInfoProgram extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-            Tools.intentFragment(FragmentHistory.class, "History", getContext());
+           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
             return true;
         }else {
-            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            new Tools().intentFragment(HomeFragment.class, "Home", getContext());
             return true;
         }
     }

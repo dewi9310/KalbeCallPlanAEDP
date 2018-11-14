@@ -8,6 +8,7 @@ import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -116,6 +117,20 @@ public class tMaintenanceDetailRepo implements crud {
         return listData;
     }
 
+    public List<tMaintenanceDetail> findByHeaderPushId(String intHeaderId) throws SQLException {
+        tMaintenanceDetail item = new tMaintenanceDetail();
+        List<tMaintenanceDetail> listData = new ArrayList<>();
+        QueryBuilder<tMaintenanceDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettMaintenanceDetailDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtHeaderId, intHeaderId).and().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
     public List<tMaintenanceDetail> findByHeaderIdandSubsubId(String intHeaderId, int intSubSubActivity) throws SQLException {
         tMaintenanceDetail item = new tMaintenanceDetail();
         List<tMaintenanceDetail> listData = new ArrayList<>();
@@ -161,6 +176,32 @@ public class tMaintenanceDetailRepo implements crud {
                     detailList = queryBuilder.query();
                 }
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return detailList;
+    }
+
+    public List<tMaintenanceDetail> getPushAllDataDetail(List<tMaintenanceHeader> headerList){
+        List<String> headerIdList = new ArrayList<>();
+        List<tMaintenanceDetail> detailList = new ArrayList<>();
+        tMaintenanceDetail item = new tMaintenanceDetail();
+        QueryBuilder<tMaintenanceDetail, Integer> queryBuilder = null;
+        try {
+            if (headerIdList!=null){
+                if (headerList.size()>0){
+                    for (tMaintenanceHeader header : headerList){
+                        headerIdList.add(header.getTxtHeaderId());
+                    }
+                    queryBuilder = helper.gettMaintenanceDetailDao().queryBuilder();
+                    queryBuilder.where().in(item.Property_txtHeaderId, headerIdList).and().eq(item.Property_intFlagPush, new clsHardCode().Save);
+                    detailList = queryBuilder.query();
+                }
+            }
+//            queryBuilder = helper.gettMaintenanceDetailDao().queryBuilder();
+//            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+//            detailList = queryBuilder.query();
 
         } catch (SQLException e) {
             e.printStackTrace();

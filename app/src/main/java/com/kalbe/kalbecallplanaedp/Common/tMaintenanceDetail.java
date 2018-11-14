@@ -19,11 +19,15 @@ public class tMaintenanceDetail implements Serializable {
     private int intSubDetailActivityId;
     @DatabaseField
     private String txtNoDoc;
+    @DatabaseField
+    private int intFlagPush;
+
 
     public String Property_txtDetailId = "txtDetailId";
     public String Property_txtHeaderId = "txtHeaderId";
     public String Property_intSubDetailActivityId = "intSubDetailActivityId";
     public String Property_txtNoDoc = "txtNoDoc";
+    public String Property_intFlagPush = "intFlagPush";
     public String Property_ListOfDataTMaintenanceDetail = "ListOfDataTMaintenanceDetail";
 
     public String getTxtDetailId() {
@@ -56,5 +60,13 @@ public class tMaintenanceDetail implements Serializable {
 
     public void setTxtNoDoc(String txtNoDoc) {
         this.txtNoDoc = txtNoDoc;
+    }
+
+    public int getIntFlagPush() {
+        return intFlagPush;
+    }
+
+    public void setIntFlagPush(int intFlagPush) {
+        this.intFlagPush = intFlagPush;
     }
 }

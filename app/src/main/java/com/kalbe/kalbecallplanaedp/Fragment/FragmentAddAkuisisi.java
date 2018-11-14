@@ -296,7 +296,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                     ToastCustom.showToasty(getContext(), "Saved", 1);
                                     Bundle bundle = new Bundle();
                                     bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-                                    Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
+                                    new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
 
                                 }
                                 dialog.dismiss();
@@ -542,7 +542,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
     public boolean onBackPressed() {
         Bundle bundle = new Bundle();
         bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-        Tools.intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
+        new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
         return true;
     }
 
