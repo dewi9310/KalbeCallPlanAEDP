@@ -2137,15 +2137,16 @@ public class FragmentDownloadData extends Fragment{
                                 listId.remove(downloadId);
                                 if (listId.isEmpty()){
 //                                        deleteMediaStorageDirtemp();
-                                    NotificationCompat.Builder mBuilder =
-                                            new NotificationCompat.Builder(context)
-                                                    .setSmallIcon(R.drawable.places_ic_clear)
-                                                    .setContentTitle("AEDP")
-                                                    .setContentText("Download completed");
-
-
-                                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                    notificationManager.notify(455, mBuilder.build());
+                                    createNotificationDonwloadComplete();
+//                                    NotificationCompat.Builder mBuilder =
+//                                            new NotificationCompat.Builder(context)
+//                                                    .setSmallIcon(R.drawable.places_ic_clear)
+//                                                    .setContentTitle("AEDP")
+//                                                    .setContentText("Download completed");
+//
+//
+//                                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//                                    notificationManager.notify(455, mBuilder.build());
                                 }
                             }
 
@@ -2161,7 +2162,7 @@ public class FragmentDownloadData extends Fragment{
     private void createNotification(int size){
         Intent i = new Intent(getContext(), MainMenu.class);
         i.putExtra(i_View, "FragmentNotification");
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),(int)System.currentTimeMillis(), i, PendingIntent.FLAG_ONE_SHOT);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(),(int)System.currentTimeMillis(), i, PendingIntent.FLAG_ONE_SHOT);
 
 //        int icon = R.drawable.ic_notif;
 //        String tickerText = "hello";
@@ -2224,6 +2225,62 @@ public class FragmentDownloadData extends Fragment{
 //                .addAction(R.drawable.ic_launcher_foreground, "Call", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher_foreground, "More", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher_foreground, "And more", resultPendingIntent);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(true);
+
+            if (notificationManager != null) {
+
+                notificationManager.createNotificationChannel(mChannel);
+                notificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
+
+        }else {
+            Notification note = builder.build();
+            note.defaults |= Notification.DEFAULT_VIBRATE;
+            note.defaults |= Notification.DEFAULT_SOUND;
+            if (notificationManager != null) {
+
+                notificationManager.notify(NOTIFICATION_ID, note);
+            }
+        }
+
+    }
+
+    private void createNotificationDonwloadComplete(){
+        Intent i = new Intent(getContext(), MainMenu.class);
+        i.putExtra(i_View, "FragmentNotification");
+
+        String CHANNEL_ID = "kalbenutritionals_channel";
+        CharSequence name = "kalbenutritionals_channel";
+        String Description = "kalbenutritionals channel";
+
+        int NOTIFICATION_ID = 1992;
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+//        stackBuilder.addParentStack(MainMenu.class);
+//        stackBuilder.addNextIntent(i);
+//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setContentTitle("Download Completed")
+//                .setContentText("Please check on notifications menu")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("All file have been downloaded!"))
+                .setSmallIcon(R.drawable.places_ic_clear)
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
+                        R.mipmap.ic_launcher))
+                .setColor(getResources().getColor(android.R.color.holo_red_dark));
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
