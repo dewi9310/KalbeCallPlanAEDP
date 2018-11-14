@@ -17,8 +17,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        List<Long> listId = null;
-        registerReceiver( new FragmentDownloadData().receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//        registerReceiver( new FragmentDownloadData().receiver, new IntentFilter(
+//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 }

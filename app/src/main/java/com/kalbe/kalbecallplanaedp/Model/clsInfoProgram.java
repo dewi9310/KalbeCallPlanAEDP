@@ -18,6 +18,7 @@ public class clsInfoProgram {
     private String txtImgName;
     private int intFlagContent;
     private boolean isChecked;
+    private boolean isFromHistory;
     private String txtFileName;
 
     public String getTxtId() {
@@ -91,6 +92,14 @@ public class clsInfoProgram {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public boolean isFromHistory() {
+        return isFromHistory;
+    }
+
+    public void setFromHistory(boolean fromHistory) {
+        isFromHistory = fromHistory;
     }
 
     public String getTxtFileName() {

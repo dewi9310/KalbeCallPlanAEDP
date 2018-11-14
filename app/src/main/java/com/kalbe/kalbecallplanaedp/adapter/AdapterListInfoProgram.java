@@ -72,13 +72,16 @@ public class AdapterListInfoProgram extends BaseAdapter {
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
         // displaying text view data
-
-        if (item.isChecked()){
-            holder.cb_done_info.setChecked(true);
+        if (item.isFromHistory()){
             holder.cb_done_info.setEnabled(false);
         }else {
-            holder.cb_done_info.setEnabled(true);
-            holder.cb_done_info.setChecked(false);
+            if (item.isChecked()){
+                holder.cb_done_info.setChecked(true);
+                holder.cb_done_info.setEnabled(false);
+            }else {
+                holder.cb_done_info.setEnabled(true);
+                holder.cb_done_info.setChecked(false);
+            }
         }
 
         if (item.getIntFlagContent()==new clsHardCode().AllInfo){

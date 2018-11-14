@@ -641,6 +641,9 @@ public class FragmentDownloadData extends Fragment{
                 onButtonOnClick(ln_download_infoprogram, tv_download_infoprogram, "tInfoProgramHeader");
             }
         });
+
+        getContext().registerReceiver(receiver, new IntentFilter(
+                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         return v;
     }
 
@@ -2138,7 +2141,7 @@ public class FragmentDownloadData extends Fragment{
                                             new NotificationCompat.Builder(context)
                                                     .setSmallIcon(R.drawable.places_ic_clear)
                                                     .setContentTitle("AEDP")
-                                                    .setContentText(title+" Download completed");
+                                                    .setContentText("Download completed");
 
 
                                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -184,31 +184,37 @@ public class FragmentHistory extends Fragment {
                             }
                         }
                         tMaintenanceHeader maintenance = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByRealisasiId(data.getTxtRealisasiVisitId()) ;
-                        List<tMaintenanceDetail> maintenanceList = (List<tMaintenanceDetail>) new tMaintenanceDetailRepo(getContext()).findByHeaderId(maintenance.getTxtHeaderId());
-                        if (maintenanceList!=null){
-//                            if (maintenanceList.size()>0){
-                                clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
-                            itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
-                                itemAdapter1.setTxtTittle("Maintenance");
+                        if (maintenance!=null){
+                            List<tMaintenanceDetail> maintenanceList = (List<tMaintenanceDetail>) new tMaintenanceDetailRepo(getContext()).findByHeaderId(maintenance.getTxtHeaderId());
+                            if (maintenanceList!=null){
+                                if (maintenanceList.size()>0){
+                                    clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
+                                    itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
+                                    itemAdapter1.setTxtTittle("Maintenance");
 //                                itemAdapter1.setTxtSubTittle(child.getTxtNoDoc());
-                                itemAdapter1.setTxtDate(String.valueOf(maintenanceList.size()));
-                                listChildAdapter.add(itemAdapter1);
-//                            }
+                                    itemAdapter1.setTxtDate(String.valueOf(maintenanceList.size()));
+                                    listChildAdapter.add(itemAdapter1);
+                                }
+                            }
                         }
+
 
 //                        List<tInfoProgramHeader> infoProgramList = (List<tInfoProgramHeader>) new tInfoProgramHeaderRepo(getContext()).findbyListRealisasiId(data.getTxtRealisasiVisitId());
                         tInfoProgramHeader infoProgramHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findbyRealisasiId(data.getTxtRealisasiVisitId());
-                        List<tInfoProgramDetail> infoProgramList = (List<tInfoProgramDetail>) new tInfoProgramDetailRepo(getContext()).findByHeaderId(infoProgramHeader.getTxtHeaderId());
-                        if (infoProgramList!=null){
-                            if (infoProgramList.size()>0){
-                                clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
-                                itemAdapter1.setTxtTittle("Info Program");
-                                itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
+                        if (infoProgramHeader!=null){
+                            List<tInfoProgramDetail> infoProgramList = (List<tInfoProgramDetail>) new tInfoProgramDetailRepo(getContext()).findByHeaderId(infoProgramHeader.getTxtHeaderId());
+                            if (infoProgramList!=null){
+                                if (infoProgramList.size()>0){
+                                    clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
+                                    itemAdapter1.setTxtTittle("Info Program");
+                                    itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
 //                                itemAdapter1.setTxtSubTittle(child.getTxtNoDoc());
-                                itemAdapter1.setTxtDate(String.valueOf(infoProgramList.size()));
-                                listChildAdapter.add(itemAdapter1);
+                                    itemAdapter1.setTxtDate(String.valueOf(infoProgramList.size()));
+                                    listChildAdapter.add(itemAdapter1);
+                                }
                             }
                         }
+
 
                         listDataChild.put(listDataHeader.get(index), listChildAdapter);
                         index++;

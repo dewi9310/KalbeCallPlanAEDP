@@ -30,6 +30,7 @@ import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.HomeFragment;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
@@ -393,7 +394,8 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
             Tools.intentFragment(FragmentHistory.class, "History", getContext());
             return true;
         }else {
-            return false;
+            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            return true;
         }
 //        bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
 

@@ -253,10 +253,10 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
         }else if (dtTemp.getBlobImg1()==null && dtTemp.getBlobImg2()==null){
             ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
-        }else if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")){
+        }else if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")&&tvAcc.getText().toString().equals("")){
             valid = false;
             ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
-        }else if (tvLatUser.getText()==null && tvLongUser.getText()==null){
+        }else if (tvLatUser.getText()==null && tvLongUser.getText()==null&&tvAcc.getText()==null){
             ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
         } else {
             try {

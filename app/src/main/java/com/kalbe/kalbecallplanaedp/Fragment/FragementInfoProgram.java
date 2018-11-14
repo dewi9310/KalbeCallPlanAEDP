@@ -19,6 +19,7 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.HomeFragment;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
@@ -29,6 +30,8 @@ import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.CustomTablayout;
 import com.kalbe.kalbecallplanaedp.Utils.CustomViewPager;
+import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.kalbecallplanaedp.Utils.Tools;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ import static com.kalbe.kalbecallplanaedp.Utils.CustomTablayout.getScreenSize;
  * Created by Dewi Oktaviani on 11/1/2018.
  */
 
-public class FragementInfoProgram extends Fragment {
+public class FragementInfoProgram extends Fragment implements IOBackPressed{
     View v;
     private CustomViewPager customViewPager;
     TabLayout tabLayout;
@@ -151,7 +154,7 @@ public class FragementInfoProgram extends Fragment {
         if (_mSubSubActivity!=null){
             if (_mSubSubActivity.size()>0){
                 for (int i =0; i < _mSubSubActivity.size(); i++){
-                    adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
+                    adapter.addFragment(new FragmentSubInfoProgram(dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i, valid), _mSubSubActivity.get(i).getTxtName());
                 }
                 lnEmpty.setVisibility(View.GONE);
             }else {
@@ -182,6 +185,17 @@ public class FragementInfoProgram extends Fragment {
 //            tabLayout.widt(wh[0]);
         }
 
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (valid){
+            Tools.intentFragment(FragmentHistory.class, "History", getContext());
+            return true;
+        }else {
+            Tools.intentFragment(HomeFragment.class, "Home", getContext());
+            return true;
+        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

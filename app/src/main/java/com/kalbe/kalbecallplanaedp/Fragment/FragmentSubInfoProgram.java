@@ -64,11 +64,13 @@ public class FragmentSubInfoProgram extends Fragment {
     mDokter dokter;
     String strName;
     int index;
+    boolean isFromHistory;
 
-    public FragmentSubInfoProgram(tInfoProgramHeader header, int intSubSubActivity, int index){
+    public FragmentSubInfoProgram(tInfoProgramHeader header, int intSubSubActivity, int index, boolean isFromHistory){
         this.header = header;
         this.intSubSubActivity = intSubSubActivity;
         this.index = index;
+        this.isFromHistory = isFromHistory;
     }
 
 
@@ -112,6 +114,7 @@ public class FragmentSubInfoProgram extends Fragment {
                             itemAdapter.setIntColor(R.color.purple_600);
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setChecked(data.isBoolFlagChecklist());
+                            itemAdapter.setFromHistory(isFromHistory);
                             if ((data.getDescription()!=null&&!data.getDescription().equals("")) && (data.getTxtFileName()!=null&& !data.getTxtFileName().equals(""))){
                                 itemAdapter.setTxtSubTittle(data.getDescription());
                                 itemAdapter.setTxtDesc(data.getTxtFileName());
