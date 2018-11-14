@@ -1,8 +1,10 @@
 package com.kalbe.kalbecallplanaedp.BL;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Base64;
 import android.widget.Toast;
 
@@ -513,7 +515,8 @@ public class clsHelperBL {
                     new VolleyUtils().requestTokenWithRefresh((Activity) context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            ToastCustom.showToasty(context,message,4);
                         }
 
                         @Override
@@ -536,10 +539,12 @@ public class clsHelperBL {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(context);
                                     tokenRepo.createOrUpdate(data);
-                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
+//                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
-                                        Toast.makeText(context, "Please press the button again", Toast.LENGTH_SHORT).show();
+                                        ToastCustom.showToasty(context,"Please press the button again",3);
+//                                        Toast.makeText(context, "Please press the button again", Toast.LENGTH_SHORT).show();
 //                                        login();
                                     }
 
@@ -569,7 +574,8 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(context,msg,4);
                     finalDialog1.dismiss();
                 }
             }
@@ -606,7 +612,7 @@ public class clsHelperBL {
         queue.add(request);
     }
 
-    public void volleyCheckVersion(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final VolleyResponseListener listener) {
+    public void volleyCheckVersion(final Context context, String strLinkAPI, final String mRequestBody, final AccountManager accountManager, String progressBarType, final VolleyResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String[] body = new String[1];
         final String[] message = new String[1];
@@ -682,10 +688,11 @@ public class clsHelperBL {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(context);
                                     tokenRepo.createOrUpdate(data);
-                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
+//                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
-                                       new SplashActivity().checkVersion(context);
+                                       new SplashActivity().checkVersion(context, accountManager);
                                     }
 
                                 } catch (JSONException e) {
@@ -714,8 +721,10 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(context,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
+                    popup(context, accountManager);
                 }
             }
         }) {
@@ -749,6 +758,36 @@ public class clsHelperBL {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(request);
+
+    }
+
+    public void popup(final Context context, final AccountManager accountManager) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+
+        builder.setTitle("Check Version");
+        builder.setMessage("You Have to request again");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                new SplashActivity().checkVersion(context, accountManager);
+                dialog.dismiss();
+            }
+        });
+
+//        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+
+        android.app.AlertDialog alert = builder.create();
+        alert.show();
+
+        alert.setCanceledOnTouchOutside(false);
+        alert.setCancelable(false);
     }
 
     public void volleyDownloadData(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final VolleyResponseListener listener) {
@@ -860,7 +899,8 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(context,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
             }
@@ -953,7 +993,8 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    ToastCustom.showToasty(context,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
 
@@ -1002,3 +1043,5 @@ public class clsHelperBL {
         queue.add(request);
     }
 }
+
+

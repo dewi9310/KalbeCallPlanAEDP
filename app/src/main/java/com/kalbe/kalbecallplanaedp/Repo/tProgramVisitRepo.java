@@ -4,11 +4,17 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -97,6 +103,62 @@ public class tProgramVisitRepo implements crud {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return item;
+    }
+
+    public boolean isExistProgramVisit(Context context) throws ParseException {
+        boolean valid = false;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        List<mUserLogin> data = new ArrayList<>();
+        List<tProgramVisit> dataVisit = new ArrayList<>();
+        try {
+            data = (List<mUserLogin>) loginRepo.findAll();
+            dataVisit = (List<tProgramVisit>) new tProgramVisitRepo(context).findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (tProgramVisit dtVisit : dataVisit){
+            for (mUserLogin dt : data){
+//                return dateFormat.format(sdf.parse(dtVisit.getDtStart())).compareTo(dateFormat.format(sdf.parse(dt.getDtLogIn()))) * dateFormat.format(sdf.parse(dt.getDtLogIn())).compareTo(dateFormat.format(sdf.parse(dtVisit.getDtEnd()))) >= 0;
+                if (dateFormat.format(sdf.parse(dtVisit.getDtStart())).compareTo(dateFormat.format(sdf.parse(dt.getDtLogIn()))) * dateFormat.format(sdf.parse(dt.getDtLogIn())).compareTo(dateFormat.format(sdf.parse(dtVisit.getDtEnd()))) >= 0){
+                    valid = true;
+                    break;
+                }
+            }
+        }
+
+        return valid;
+    }
+
+    public tProgramVisit getProgramVisitActive(Context context) throws ParseException {
+        boolean valid = false;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        List<mUserLogin> data = new ArrayList<>();
+        tProgramVisit item = new tProgramVisit();
+        List<tProgramVisit> dataVisit = new ArrayList<>();
+        try {
+            data = (List<mUserLogin>) loginRepo.findAll();
+            dataVisit = (List<tProgramVisit>) new tProgramVisitRepo(context).findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (tProgramVisit dtVisit : dataVisit){
+            for (mUserLogin dt : data){
+//                return dateFormat.format(sdf.parse(dtVisit.getDtStart())).compareTo(dateFormat.format(sdf.parse(dt.getDtLogIn()))) * dateFormat.format(sdf.parse(dt.getDtLogIn())).compareTo(dateFormat.format(sdf.parse(dtVisit.getDtEnd()))) >= 0;
+                if (dateFormat.format(sdf.parse(dtVisit.getDtStart())).compareTo(dateFormat.format(sdf.parse(dt.getDtLogIn()))) * dateFormat.format(sdf.parse(dt.getDtLogIn())).compareTo(dateFormat.format(sdf.parse(dtVisit.getDtEnd()))) >= 0){
+                    item = dtVisit;
+                    break;
+                }
+            }
+        }
+
         return item;
     }
 }

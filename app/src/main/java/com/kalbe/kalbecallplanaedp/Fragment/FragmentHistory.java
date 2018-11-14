@@ -17,6 +17,7 @@ import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
+import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
@@ -34,6 +35,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
@@ -194,7 +196,9 @@ public class FragmentHistory extends Fragment {
 //                            }
                         }
 
-                        List<tInfoProgramHeader> infoProgramList = (List<tInfoProgramHeader>) new tInfoProgramHeaderRepo(getContext()).findbyRealisasiId(data.getTxtRealisasiVisitId());
+//                        List<tInfoProgramHeader> infoProgramList = (List<tInfoProgramHeader>) new tInfoProgramHeaderRepo(getContext()).findbyListRealisasiId(data.getTxtRealisasiVisitId());
+                        tInfoProgramHeader infoProgramHeader = (tInfoProgramHeader) new tInfoProgramHeaderRepo(getContext()).findbyRealisasiId(data.getTxtRealisasiVisitId());
+                        List<tInfoProgramDetail> infoProgramList = (List<tInfoProgramDetail>) new tInfoProgramDetailRepo(getContext()).findByHeaderId(infoProgramHeader.getTxtHeaderId());
                         if (infoProgramList!=null){
                             if (infoProgramList.size()>0){
                                 clsListItemAdapter itemAdapter1 = new clsListItemAdapter();

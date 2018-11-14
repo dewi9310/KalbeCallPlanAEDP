@@ -268,7 +268,7 @@ public class SplashActivity extends AppCompatActivity {
                             if (dataToken.size() == 0) {
                                 requestToken(this);
                             }else {
-                                checkVersion(this);
+                                checkVersion(this, mAccountManager);
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
@@ -312,7 +312,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (dataToken.size() == 0) {
                         requestToken(this);
                     }else {
-                        checkVersion(this);
+                        checkVersion(this, mAccountManager);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -367,7 +367,7 @@ public class SplashActivity extends AppCompatActivity {
 
                         Log.d("Data info", "get access_token & refresh_token, Success");
 
-                        checkVersion(activity);
+                        checkVersion(activity, mAccountManager);
 
 //                        Toast.makeText(activity.getApplicationContext(), "Ready For Login", Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
@@ -378,10 +378,10 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
     String txtVersionName = null;
-    public void checkVersion(final Context context){
+    public void checkVersion(final Context context, final AccountManager accountManager){
 
         try {
-            txtVersionName = context.getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            txtVersionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -413,7 +413,7 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyCheckVersion(context, strLinkAPI, mRequestBody, "Checking your version......", new VolleyResponseListener() {
+        new clsHelperBL().volleyCheckVersion(context, strLinkAPI, mRequestBody, accountManager, "Checking your version......", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -460,7 +460,7 @@ public class SplashActivity extends AppCompatActivity {
                                     }
                                 });
                             }else {
-                                new AuthenticatorUtil().showAccountPicker((Activity) context, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                                new AuthenticatorUtil().showAccountPicker((Activity) context, accountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             }
                         } else {
                             Boolean resUpdate = false;
@@ -491,7 +491,7 @@ public class SplashActivity extends AppCompatActivity {
                                     }
                                 });
                             }else {
-                                new AuthenticatorUtil().showAccountPicker((Activity) context, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
+                                new AuthenticatorUtil().showAccountPicker((Activity) context, accountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             }
 //                            ToastCustom.showToasty(getApplicationContext(),txtMessage,4);
                         }
@@ -694,7 +694,7 @@ public class SplashActivity extends AppCompatActivity {
                             notificationManager.cancelAll();
                             DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
                             helper.clearDataAfterLogout();
-                            checkVersion(SplashActivity.this);
+                            checkVersion(SplashActivity.this, mAccountManager);
 //                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             Log.d("Data info", "logout Success");
 
@@ -704,7 +704,7 @@ public class SplashActivity extends AppCompatActivity {
                             notificationManager.cancelAll();
                             DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
                             helper.clearDataAfterLogout();
-                            checkVersion(SplashActivity.this);
+                            checkVersion(SplashActivity.this, mAccountManager);
 //                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             ToastCustom.showToasty(SplashActivity.this,txtMessage,4);
                         }

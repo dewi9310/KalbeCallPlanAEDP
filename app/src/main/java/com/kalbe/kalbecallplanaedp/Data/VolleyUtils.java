@@ -109,13 +109,13 @@ public class VolleyUtils {
                     }
                 });
 
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+//                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
 
                 android.app.AlertDialog alert = builder.create();
                 alert.show();

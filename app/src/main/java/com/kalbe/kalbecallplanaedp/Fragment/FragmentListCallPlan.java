@@ -72,6 +72,16 @@ public class FragmentListCallPlan extends Fragment{
         repoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
         repoActivity = new mActivityRepo(getContext());
 
+        try {
+            if (repoProgramVisit.isExistProgramVisit(getContext())){
+                fab.setVisibility(View.VISIBLE);
+            }else {
+                fab.setVisibility(View.GONE);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         listDataHeader.clear();
         listDataChild.clear();
         swipeListPlan.clear();

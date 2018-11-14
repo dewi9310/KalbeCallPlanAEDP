@@ -42,6 +42,7 @@ import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,8 +102,9 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
         realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(getContext());
 
         try {
-            visitHeader = (tProgramVisit) visitRepo.findAll().get(0);
-        } catch (SQLException e) {
+//            visitHeader = (tProgramVisit) visitRepo.findAll().get(0);
+            visitHeader = (tProgramVisit) visitRepo.getProgramVisitActive(getContext());
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
