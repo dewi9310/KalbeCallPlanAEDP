@@ -51,6 +51,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.VMDownloadFile;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
@@ -789,6 +790,7 @@ public class FragmentDownloadData extends Fragment{
                         boolean txtStatus = model.getResult().isStatus();
                         String txtMessage = model.getResult().getMessage();
                         String txtMethode_name = model.getResult().getMethodName();
+                        List<VMDownloadFile> ltVMDownload = new ArrayList<>();
                         if (txtStatus == true){
 
                             listId.clear();
@@ -923,7 +925,13 @@ public class FragmentDownloadData extends Fragment{
 //                                            data.setBlobImg1(null);
 //                                        }
                                         if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link().length()>0){
-                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
+                                            VMDownloadFile file = new VMDownloadFile();
+                                            file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link());
+                                            file.setGroupDownload("Realisasi Pertama");
+                                            file.setIndex(i+1);
+                                            file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                            ltVMDownload.add(file);
+//                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
 
 //                                        byte[] file2 = getLogoImage(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
@@ -933,7 +941,13 @@ public class FragmentDownloadData extends Fragment{
 //                                            data.setBlobImg2(null);
 //                                        }
                                         if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link().length()>0){
-                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
+                                            VMDownloadFile file = new VMDownloadFile();
+                                            file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
+                                            file.setGroupDownload("Realisasi Kedua");
+                                            file.setIndex(i+1);
+                                            file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                            ltVMDownload.add(file);
+//                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
                                         dtRepoRealisasi.createOrUpdate(data);
                                     }
@@ -982,7 +996,13 @@ public class FragmentDownloadData extends Fragment{
 //                                        }
 
                                         if (model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink()!=null &&model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink().length()>0){
-                                            downloadFile(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
+                                            VMDownloadFile file = new VMDownloadFile();
+                                            file.setLink(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink());
+                                            file.setGroupDownload("Akuisisi");
+                                            file.setIndex(i+1);
+                                            file.setTxtId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
+                                            ltVMDownload.add(file);
+//                                            downloadFile(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
                                         }
                                         dtRepoAkuisisiDetail.createOrUpdate(data);
                                     }
@@ -1083,14 +1103,27 @@ public class FragmentDownloadData extends Fragment{
                                         data.setDtChecklist(parseDate(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getDtDateChecklist()));
                                         data.setDescription(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtDesc());;
                                         if (model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt().length()>0){
-                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
+                                            VMDownloadFile file = new VMDownloadFile();
+                                            file.setLink(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt());
+                                            file.setGroupDownload("Info Program");
+                                            file.setIndex(i+1);
+                                            file.setTxtId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId());
+                                            ltVMDownload.add(file);
+//                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
                                         }
                                         dtRepoInfoProgDetail.createOrUpdate(data);
                                     }
                                 }
                             }
+                            if (ltVMDownload.size()>0){
+                                for (VMDownloadFile f :
+                                        ltVMDownload) {
+                                    downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
+                                }
+                            }
                             Log.d("Data info", "Success Download");
                             checkMenu();
+
 //
 //                            ToastCustom.showToasty(getContext(),"Success Download",1);
 //                            Intent myIntent = new Intent(getContext(), MainMenu.class);
@@ -2104,8 +2137,8 @@ public class FragmentDownloadData extends Fragment{
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(context)
                                                     .setSmallIcon(R.drawable.places_ic_clear)
-                                                    .setContentTitle("Anyeong")
-                                                    .setContentText("All Download completed");
+                                                    .setContentTitle("AEDP")
+                                                    .setContentText(title+" Download completed");
 
 
                                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
