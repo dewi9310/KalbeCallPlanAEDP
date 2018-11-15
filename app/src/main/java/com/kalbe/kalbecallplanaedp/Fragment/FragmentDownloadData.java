@@ -2381,7 +2381,7 @@ public class FragmentDownloadData extends Fragment{
                 .setContentTitle("Document Expired")
 //                .setContentText("Please check on notifications menu")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText("There are some documents will expire!"))
-                .setSmallIcon(R.drawable.ic_notif)
+                .setSmallIcon(R.mipmap.ic_notifikasi_v3_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent)
                 .setAutoCancel(true)
