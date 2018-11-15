@@ -13,9 +13,11 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Utils.TouchImageView;
@@ -55,15 +57,17 @@ public class ImageViewerActivity extends AppCompatActivity {
                 Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(data.getTxtImg());
                 if (bitmap!=null)
                 imageView.setImageBitmap(bitmap);
-            }else if (bundle.getString(ZOOM_IMAGE_INFO)!=null){
-                tInfoProgramDetailRepo detailRepo = new tInfoProgramDetailRepo(getApplicationContext());
-                tInfoProgramDetail dtDetail = null;
+            }else if (bundle.getInt(ZOOM_IMAGE_INFO)!=0){
+//                tInfoProgramDetailRepo detailRepo = new tInfoProgramDetailRepo(getApplicationContext());
+//                tInfoProgramDetail dtDetail = null;
+                mFileAttachment attach = null;
                 try {
-                    dtDetail = (tInfoProgramDetail) detailRepo.findByDetailId(bundle.getString(ZOOM_IMAGE_INFO));
+                    attach = (mFileAttachment) new mFileAttachmentRepo(getApplicationContext()).findById(bundle.getInt(ZOOM_IMAGE_INFO));
+//                    dtDetail = (tInfoProgramDetail) detailRepo.findByDetailId(bundle.getString(ZOOM_IMAGE_INFO));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                byte[] arrayImage = new clsMainBL().arrayDecryptFile(dtDetail.getBlobFile());
+                byte[] arrayImage = new clsMainBL().arrayDecryptFile(attach.getBlobFile());
                 Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(arrayImage);
                 if (bitmap!=null)
                 imageView.setImageBitmap(bitmap);

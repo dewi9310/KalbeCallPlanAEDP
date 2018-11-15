@@ -74,6 +74,11 @@ public class AdapterListInfoProgram extends BaseAdapter {
         // displaying text view data
         if (item.isFromHistory()){
             holder.cb_done_info.setEnabled(false);
+            if (item.isChecked()){
+                holder.cb_done_info.setChecked(true);
+            }else {
+                holder.cb_done_info.setEnabled(true);
+            }
         }else {
             if (item.isChecked()){
                 holder.cb_done_info.setChecked(true);

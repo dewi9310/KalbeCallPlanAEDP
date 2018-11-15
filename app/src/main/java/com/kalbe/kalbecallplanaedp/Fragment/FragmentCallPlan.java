@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -468,9 +469,11 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             }
 
             if (mLastLocation != null) {
-                int intOs = Integer.valueOf(android.os.Build.VERSION.SDK);
+                int intOs = Integer.valueOf(Build.VERSION.SDK);
                 if (intOs >= 18) {
-                    mockStatus = mLastLocation.isFromMockProvider();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        mockStatus = mLastLocation.isFromMockProvider();
+                    }
                 }
             }
             if (mockStatus){

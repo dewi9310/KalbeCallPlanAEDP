@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
+import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
@@ -27,6 +28,7 @@ import com.kalbe.kalbecallplanaedp.PDFViewer;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.adapter.AdapterListInfoProgram;
@@ -107,30 +109,53 @@ public class FragmentSubInfoProgram extends Fragment {
                 listDetail = (List<tInfoProgramDetail>) detailRepo.findByHeaderIdandSubsubId(header.getTxtHeaderId(), intSubSubActivity);
                 if (listDetail!=null){
                     if (listDetail.size()>0){
+                        boolean validAll = false;
+                        boolean validFile= false;
+                        boolean validDesc = false;
                         for (tInfoProgramDetail data : listDetail){
                             clsInfoProgram itemAdapter = new clsInfoProgram();
+                            mFileAttachment attach = (mFileAttachment) new mFileAttachmentRepo(getContext()).findById(data.getIntFileAttachmentId());
                             itemAdapter.setTxtId(data.getTxtDetailId());
+                            itemAdapter.setIntFileId(data.getIntFileAttachmentId());
                             itemAdapter.setTxtTittle(strName); //nama dokter substring(0,1)
                             itemAdapter.setIntColor(R.color.purple_600);
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setChecked(data.isBoolFlagChecklist());
                             itemAdapter.setFromHistory(isFromHistory);
-                            if ((data.getDescription()!=null&&!data.getDescription().equals("")) && (data.getTxtFileName()!=null&& !data.getTxtFileName().equals(""))){
-                                itemAdapter.setTxtSubTittle(data.getDescription());
-                                itemAdapter.setTxtDesc(data.getTxtFileName());
-                                itemAdapter.setTxtFileName(data.getTxtFileName());
+                            if ((attach.getDescription()!=null&& (attach.getTxtFileName()!=null))){
+                                if (!attach.getDescription().equals("")&&!attach.getTxtFileName().equals("")){
+                                    validAll = true;
+                                }
+                            }else if (attach.getDescription()!=null){
+                                if (!attach.getDescription().equals("")){
+                                    validDesc = true;
+                                }
+                            }else if (attach.getTxtFileName()!=null){
+                                if (!attach.getTxtFileName().equals("")){
+                                    validFile = true;
+                                }
+                            }
+
+                            if (validAll){
+                                itemAdapter.setTxtSubTittle(attach.getDescription());
+                                itemAdapter.setTxtDesc(attach.getTxtFileName());
+                                itemAdapter.setTxtFileName(attach.getTxtFileName());
                                 itemAdapter.setIntFlagContent(new clsHardCode().AllInfo);
-                            }else if (data.getDescription()!=null&&!data.getDescription().equals("")){
-                                itemAdapter.setTxtSubTittle(data.getDescription());
+                            }
+                            if (validDesc){
+                                itemAdapter.setTxtSubTittle(attach.getDescription());
                                 itemAdapter.setTxtDesc("");
                                 itemAdapter.setTxtFileName("");
                                 itemAdapter.setIntFlagContent(new clsHardCode().OnlyDesc);
-                            }else if (data.getTxtFileName()!=null&& !data.getTxtFileName().equals("")){
+                            }
+
+                            if (validFile){
                                 itemAdapter.setTxtSubTittle("");
-                                itemAdapter.setTxtDesc(data.getTxtFileName());
-                                itemAdapter.setTxtFileName(data.getTxtFileName());
+                                itemAdapter.setTxtDesc(attach.getTxtFileName());
+                                itemAdapter.setTxtFileName(attach.getTxtFileName());
                                 itemAdapter.setIntFlagContent(new clsHardCode().OnlyFile);
                             }
+
                             if (index==0){
                                 itemAdapterList0.add(itemAdapter);
                             }else if (index==1){
@@ -162,17 +187,17 @@ public class FragmentSubInfoProgram extends Fragment {
 //                ToastCustom.showToasty(getActivity(),"anyeong",4);
                 String fileExtension = (obj.getTxtFileName()).substring((obj.getTxtFileName()).lastIndexOf("."));
                 try {
-                    tInfoProgramDetail data = (tInfoProgramDetail) detailRepo.findByDetailId(obj.getTxtId());
-                    if (data.getBlobFile()==null){
+                    mFileAttachment attach = (mFileAttachment) new mFileAttachmentRepo(getContext()).findById(obj.getIntFileId());
+                    if (attach.getBlobFile()==null){
                         ToastCustom.showToasty(getContext(),"Please download file info program...",4);
                     }else {
                         if (fileExtension.equals(".jpg")){
                             Intent intent = new Intent(getContext(), ImageViewerActivity.class);
-                            intent.putExtra(ZOOM_IMAGE_INFO, obj.getTxtId());
+                            intent.putExtra(ZOOM_IMAGE_INFO, obj.getIntFileId());
                             startActivity(intent);
                         }else if (fileExtension.equals(".pdf")){
                             Intent intent1 = new Intent(getContext(), PDFViewer.class);
-                            intent1.putExtra(PDF_View, obj.getTxtId());
+                            intent1.putExtra(PDF_View, obj.getIntFileId());
                             startActivity(intent1);
                         }
                     }
@@ -246,6 +271,7 @@ public class FragmentSubInfoProgram extends Fragment {
 //            data.setBlobFile(detail.getBlobFile());
             data.setBoolFlagChecklist(checkBox.isChecked());
             data.setDtChecklist(dateTimeFormat.format(cal.getTime()));
+            data.setIntFlagPush(new clsHardCode().Save);
 //            data.setDescription(data.getDescription());
             detailRepo.createOrUpdate(data);
             ToastCustom.showToasty(getContext(),"Saved",1);

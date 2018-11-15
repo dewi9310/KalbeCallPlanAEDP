@@ -1,5 +1,7 @@
 package com.kalbe.kalbecallplanaedp.Common;
 
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -357,11 +359,13 @@ public class clsDataJson {
                 item.put(dataInfoDeatil.Property_txtDetailId, data.getTxtDetailId());
                 item.put(dataInfoDeatil.Property_txtHeaderId, data.getTxtHeaderId());
                 item.put(dataInfoDeatil.Property_intSubDetailActivityId, data.getIntSubDetailActivityId());
-                item.put(dataInfoDeatil.Property_txtFileName, data.getTxtFileName());
-                item.put(dataInfoDeatil.Property_blobFile, data.getBlobFile());
+//                item.put(dataInfoDeatil.Property_txtFileName, data.getTxtFileName());
+//                item.put(dataInfoDeatil.Property_blobFile, data.getBlobFile());
                 item.put(dataInfoDeatil.Property_intFlagChecklist, data.isBoolFlagChecklist());
                 item.put(dataInfoDeatil.Property_dtChecklist, data.getDtChecklist());
-                item.put(dataInfoDeatil.Property_Description, data.getDescription());
+                item.put(dataInfoDeatil.Property_intFileAttachmentId, String.valueOf(data.getIntFileAttachmentId()));
+                item.put(dataInfoDeatil.Property_intFlagPush, String.valueOf(data.getIntFlagPush()));
+//                item.put(dataInfoDeatil.Property_Description, data.getDescription());
                 itemLIstQuery.add(item);
             }
             resJson.put(dataInfoDeatil.Property_ListOfDatatInfoProgramDetail, new JSONArray(itemLIstQuery));

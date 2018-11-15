@@ -398,7 +398,7 @@ public void setListData(){
                             name = "Visit " + apotek.getTxtName();
                             swpItem.setTxtImgName((apotek.getTxtName().substring(0,1)).toUpperCase());
                         }
-                        listInfoDetail = (List<tInfoProgramDetail>) infoProgramDetailRepo.findByHeaderId(data.getTxtHeaderId());
+                        listInfoDetail = (List<tInfoProgramDetail>) infoProgramDetailRepo.findByHeaderPushId(data.getTxtHeaderId());
                         if (listInfoDetail!=null){
                             swpItem.setTxtDate(String.valueOf(listInfoDetail.size()));
                         }

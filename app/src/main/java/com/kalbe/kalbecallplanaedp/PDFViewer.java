@@ -20,8 +20,10 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.shockwave.pdfium.PdfDocument;
@@ -54,13 +56,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class PDFViewer extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener {
     PDFView pdfView;
-    private static final String TAG = com.kalbe.mobiledevknlibs.PDFView.PDFViewer.class.getSimpleName();
+    private static final String TAG = PDFViewer.class.getSimpleName();
     String fileName;
     int pageNumber = 0;
     boolean swipeHorizontal;
-    tInfoProgramDetailRepo infoProgramDetailRepo;
-    tInfoProgramDetail dtDetail;
+//    tInfoProgramDetailRepo infoProgramDetailRepo;
+//    tInfoProgramDetail dtDetail;
     private String PDF_View = "pdf viewer";
+    mFileAttachment attach;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,14 +74,15 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
         setContentView(R.layout.activity_pdfviewer);
         pdfView = (PDFView)findViewById(R.id.pdfViewInfo);
         Bundle bundle = getIntent().getExtras();
-        infoProgramDetailRepo = new tInfoProgramDetailRepo(getApplicationContext());
+//        infoProgramDetailRepo = new tInfoProgramDetailRepo(getApplicationContext());
         if (bundle!=null){
             try {
-                String tes = bundle.getString(PDF_View);
-                dtDetail = (tInfoProgramDetail) infoProgramDetailRepo.findByDetailId(bundle.getString(PDF_View));
+//                String tes = bundle.getString(PDF_View);
+                attach = (mFileAttachment) new mFileAttachmentRepo(getApplicationContext()).findById(bundle.getInt(PDF_View));
+//                dtDetail = (tInfoProgramDetail) infoProgramDetailRepo.findByDetailId(bundle.getString(PDF_View));
 //                decryptFile(dtDetail.getBlobFile(), dtDetail.getTxtFileName());
-                byte[] array = new clsMainBL().arrayDecryptFile(dtDetail.getBlobFile());
-                display(dtDetail.getTxtFileName(), array);
+                byte[] array = new clsMainBL().arrayDecryptFile(attach.getBlobFile());
+                display(attach.getTxtFileName(), array);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

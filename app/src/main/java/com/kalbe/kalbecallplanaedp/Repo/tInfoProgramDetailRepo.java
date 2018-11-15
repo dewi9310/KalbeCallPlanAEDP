@@ -133,6 +133,21 @@ public class tInfoProgramDetailRepo implements crud {
         return listData;
     }
 
+    public List<tInfoProgramDetail> findByHeaderPushId(String intHeaderId) throws SQLException {
+        tInfoProgramDetail item = new tInfoProgramDetail();
+        List<tInfoProgramDetail> listData = new ArrayList<>();
+        QueryBuilder<tInfoProgramDetail, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettInfoProgramDetailDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtHeaderId, intHeaderId).and().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+
 
     public List<mSubSubActivity> getIntSubSubActivityId (Context context, String txtHeaderId) {
         tInfoProgramDetail item = new tInfoProgramDetail();
@@ -165,7 +180,7 @@ public class tInfoProgramDetailRepo implements crud {
                         headerIdList.add(header.getTxtHeaderId());
                     }
                     queryBuilder = helper.gettInfoProgramDetailDao().queryBuilder();
-                    queryBuilder.where().in(item.Property_txtHeaderId, headerIdList);
+                    queryBuilder.where().in(item.Property_txtHeaderId, headerIdList).and().eq(item.Property_intFlagPush, new clsHardCode().Save);
                     detailList = queryBuilder.query();
                 }
             }

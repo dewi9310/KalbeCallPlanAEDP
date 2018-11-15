@@ -56,6 +56,7 @@ import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
+import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
 import com.kalbe.kalbecallplanaedp.Common.mSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mTypeSubSubActivity;
@@ -80,6 +81,7 @@ import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mTypeSubSubActivityRepo;
@@ -192,6 +194,7 @@ public class FragmentDownloadData extends Fragment{
     tMaintenanceDetailRepo dtRepoMaintenanceDetail;
     tInfoProgramHeaderRepo dtRepoInfoProgHeader;
     tInfoProgramDetailRepo dtRepoInfoProgDetail;
+    mFileAttachmentRepo dtFileRepo;
     List<Long> listId = new ArrayList<>();
      CoordinatorLayout cl;
      private String i_View ="Fragment";
@@ -265,6 +268,7 @@ public class FragmentDownloadData extends Fragment{
         dtRepoMaintenanceDetail = new tMaintenanceDetailRepo(getContext());
         dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
         dtRepoInfoProgDetail = new tInfoProgramDetailRepo(getContext());
+        dtFileRepo = new mFileAttachmentRepo(getContext());
 
         try {
             dataListArea = (List<mUserMappingArea>) dtRepoArea.findAll();
@@ -504,9 +508,9 @@ public class FragmentDownloadData extends Fragment{
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            if (data.getIntActivityId()==1){
+                            if (data.getIntActivityId()==new clsHardCode().VisitDokter){
                                 itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
-                            }else if (data.getIntActivityId()==2){
+                            }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
                                 itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
                             }else {
                                 itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
@@ -539,7 +543,7 @@ public class FragmentDownloadData extends Fragment{
                             try {
                                 if (data.getIntDokterId()!=null){
                                     if (!data.getIntDokterId().equals("null")){
-                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
                                     }else if (data.getIntApotekID()!=null){
                                         if (!data.getIntApotekID().equals("null")){
                                             name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
@@ -579,20 +583,15 @@ public class FragmentDownloadData extends Fragment{
                             index++;
                             String name = null;
                             try {
-                                if (data.getIntActivityId()==1){
-                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
-                                }else if (data.getIntActivityId()==2){
+                                if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                                }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
                                     name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
                             itemList.add(String.valueOf(index) + " - Maintenance - " + name);
-//                            if (data.getIntDokterId()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
-//                            }else if (data.getIntApotekID()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekID());
-//                            }
                         }
                     }else {
                         itemList.add(" - ");
@@ -618,20 +617,15 @@ public class FragmentDownloadData extends Fragment{
                             index++;
                             String name = null;
                             try {
-                                if (data.getIntActivityId()==1){
+                                if (data.getIntActivityId()==new clsHardCode().VisitDokter){
                                     name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
-                                }else if (data.getIntActivityId()==2){
+                                }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
                                     name = apotekRepo.findBytxtId(data.getIntApotekId()).getTxtName();
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
                             itemList.add(String.valueOf(index) + " - Info Program - " + name);
-//                            if (data.getIntDokterId()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntDokterId());
-//                            }else if (data.getIntApotekId()!=null){
-//                                itemList.add(String.valueOf(index)+ " - " + data.getIntApotekId());
-//                            }
                         }
                     }else {
                         itemList.add(" - ");
@@ -809,8 +803,10 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoArea.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_branch.setText(String.valueOf(model.getData().getDataMappingArea().getLtMappingArea().size()));
+                                dataListArea = (List<mUserMappingArea>) dtRepoArea.findAll();
+                                tv_count_branch.setText(String.valueOf(dataListArea.size()));
                             }
+
                             if (model.getData().getDataActivity().getLtActivity()!=null){
                                 if (model.getData().getDataActivity().getLtActivity().size()>0){
                                     dtActivityrepo = new mActivityRepo(getContext());
@@ -822,7 +818,8 @@ public class FragmentDownloadData extends Fragment{
                                         dtActivityrepo.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_download_activity.setText(String.valueOf(model.getData().getDataActivity().getLtActivity().size()));
+                                dataListActivity = (List<mActivity>) dtActivityrepo.findAll();
+                                tv_count_download_activity.setText(String.valueOf(dataListActivity.size()));
                             }
 
                             if (model.getData().getDataSubActivity().getLtSubActivity()!=null){
@@ -837,7 +834,8 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoSubActivity.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_download_subactivity.setText(String.valueOf(model.getData().getDataSubActivity().getLtSubActivity().size()));
+                                dataListSubActivity = (List<mSubActivity>) dtRepoSubActivity.findAll();
+                                tv_count_download_subactivity.setText(String.valueOf(dataListSubActivity.size()));
                             }
 
                             if (model.getData().getDataSubActivityDetail().getLtSubActivityDetailData()!=null){
@@ -853,6 +851,7 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoSubSubActivity.createOrUpdate(data);
                                     }
                                 }
+                                dataListSubSubActivity = (List<mSubSubActivity>) dtRepoSubSubActivity.findAll();
                                 tv_count_download_subsubactivity.setText(String.valueOf(model.getData().getDataSubActivityDetail().getLtSubActivityDetailData().size()));
                             }
 
@@ -955,7 +954,8 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoRealisasi.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_realisasi.setText(String.valueOf(model.getData().getDatatProgramVisitDetail().getRealisasiData().size()));
+                                dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
+                                tv_count_realisasi.setText(String.valueOf(dataListProgramVisitSubActivity.size()));
                             }
 
                             if (model.getData().getDataAkuisisiData().getAkuisisiHeader()!=null){
@@ -980,7 +980,8 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_akuisisi.setText(String.valueOf(model.getData().getDataAkuisisiData().getAkuisisiHeader().size()));
+                                dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+                                tv_count_akuisisi.setText(String.valueOf(dataListAkuisisi.size()));
                             }
 
                             if (model.getData().getDataAkuisisiData().getAkuisisiDetail()!=null){
@@ -1026,8 +1027,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtNoDoc(model.getData().getDataNotification().getNotification().get(i).getTxtNoDoc());
                                         dtRepoNotification.createOrUpdate(data);
                                     }
-                                    List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
-                                        createNotification(notificationList.size());
                                 }
                             }
 
@@ -1050,7 +1049,9 @@ public class FragmentDownloadData extends Fragment{
                                      dtRepoMaintenanceHeader.createOrUpdate(data);
                                  }
                                 }
-                                tv_count_maintenance.setText(String.valueOf(model.getData().getDataMaintenanceData().getLtMaintenanceHeader().size()));
+
+                                dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
+                                tv_count_maintenance.setText(String.valueOf(dataListMaintenance.size()));
                             }
 
                             if (model.getData().getDataMaintenanceData().getLtMaintenanceDetail()!=null){
@@ -1085,7 +1086,8 @@ public class FragmentDownloadData extends Fragment{
                                         dtRepoInfoProgHeader.createOrUpdate(data);
                                     }
                                 }
-                                tv_count_infoprogram.setText(String.valueOf(model.getData().getDataInfoProgram().getLtInfoHeader().size()));
+                                dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
+                                tv_count_infoprogram.setText(String.valueOf(dataLIstInfoProgram.size()));
                             }
 
                             if (model.getData().getDataInfoProgram().getLtInfoDetail()!=null){
@@ -1096,43 +1098,55 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtHeaderId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramHeaderId());
                                         data.setTxtDetailId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId());
                                         data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getIntSubDetailActivityId());
-                                        data.setTxtFileName(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileName());
-//                                        byte[] file = getLogoImage(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt());
-//                                        if (file!=null){
-//                                            data.setBlobFile(file);
-//                                        }else {
-//                                            data.setBlobFile(null);
-//                                        }
+                                        data.setIntFileAttachmentId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getIntFileAttachmentId());
                                         data.setBoolFlagChecklist(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).isBitCheck());
                                         data.setDtChecklist(parseDate(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getDtDateChecklist()));
-                                        data.setDescription(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtDesc());;
-                                        if (model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt().length()>0){
-                                            VMDownloadFile file = new VMDownloadFile();
-                                            file.setLink(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt());
-                                            file.setGroupDownload("Info Program");
-                                            file.setIndex(i+1);
-                                            file.setTxtId(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId());
-                                            ltVMDownload.add(file);
-//                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
-                                        }
                                         dtRepoInfoProgDetail.createOrUpdate(data);
                                     }
                                 }
                             }
+
+                            if (model.getData().getDataInfoProgram().getLtInfoAttachment()!=null){
+                                if (model.getData().getDataInfoProgram().getLtInfoAttachment().size()>0){
+                                    dtFileRepo = new mFileAttachmentRepo(getContext());
+                                    for (int i = 0; i < model.getData().getDataInfoProgram().getLtInfoAttachment().size(); i++){
+                                        mFileAttachment data = new mFileAttachment();
+                                        data.setIntFileAttachmentId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
+//                                        data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).get());
+//                                        data.setBlobFile(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
+                                        data.setTxtFileName(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtfilename());
+                                        data.setDescription(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtDescription());
+                                        dtFileRepo.createOrUpdate(data);
+                                        if (model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt().length()>0){
+                                            VMDownloadFile file = new VMDownloadFile();
+                                            file.setLink(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt());
+                                            file.setGroupDownload("Info Program");
+                                            file.setIndex(i+1);
+                                            file.setTxtId(String.valueOf(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId()));
+                                            ltVMDownload.add(file);
+//                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
+                                        }
+                                        dtFileRepo.createOrUpdate(data);
+                                    }
+                                }
+                            }
+
+
                             if (ltVMDownload.size()>0){
                                 for (VMDownloadFile f :
                                         ltVMDownload) {
                                     downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
                                 }
                             }
+                            List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+                            if (notificationList!=null){
+                                if (notificationList.size()>0){
+                                    createNotification(notificationList.size());
+                                }
+                            }
+
                             Log.d("Data info", "Success Download");
                             checkMenu();
-
-//
-//                            ToastCustom.showToasty(getContext(),"Success Download",1);
-//                            Intent myIntent = new Intent(getContext(), MainMenu.class);
-//                            getActivity().finish();
-//                            startActivity(myIntent);
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
                         }
@@ -1189,11 +1203,21 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtKecamatanID(model.getData().getLtMappingArea().get(i).getTxtKecamatanID());
 
                                        dtRepoArea.createOrUpdate(data);
-                                        itemList.add(String.valueOf(model.getData().getLtMappingArea().get(i).getIntUserMappingAreaId()) + " - " + model.getData().getLtMappingArea().get(i).getTxtKecamatanID());
+//                                        itemList.add(String.valueOf(model.getData().getLtMappingArea().get(i).getIntUserMappingAreaId()) + " - " + model.getData().getLtMappingArea().get(i).getTxtKecamatanID());
+                                    }
+                                }
+                                dataListArea = (List<mUserMappingArea>) dtRepoArea.findAll();
+                                if (dataListArea!=null){
+                                    if (dataListArea.size()>0){
+                                        for (mUserMappingArea data : dataListArea){
+                                            itemList.add(String.valueOf(data.getIntUserMappingAreaId()) + " - " + data.getTxtKecamatanID());
+                                        }
+                                    }else {
+                                        itemList.add(" - ");
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_branch.setText(String.valueOf(model.getData().getLtMappingArea().size()));
+                                tv_count_branch.setText(String.valueOf(dataListArea.size()));
                             }
                             Log.d("Data info", "Success Download");
                             checkMenu();
@@ -1252,11 +1276,21 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtName(model.getData().getLtActivity().get(i).getTxtTitle());
                                         data.setTxtDesc(model.getData().getLtActivity().get(i).getTxtDescription());
                                         dtActivityrepo.createOrUpdate(data);
-                                        itemList.add(String.valueOf(model.getData().getLtActivity().get(i).getIntActivityId()) + " - " + model.getData().getLtActivity().get(i).getTxtTitle());
+//                                        itemList.add(String.valueOf(model.getData().getLtActivity().get(i).getIntActivityId()) + " - " + model.getData().getLtActivity().get(i).getTxtTitle());
+                                    }
+                                }
+                                dataListActivity = (List<mActivity>) dtActivityrepo.findAll();
+                                if (dataListActivity!=null){
+                                    if (dataListActivity.size()>0){
+                                        for (mActivity data : dataListActivity){
+                                            itemList.add(String.valueOf(data.getIntActivityId()) + " - " + data.getTxtName());
+                                        }
+                                    }else {
+                                        itemList.add(" - ");
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_download_activity.setText(String.valueOf(model.getData().getLtActivity().size()));
+                                tv_count_download_activity.setText(String.valueOf(dataListActivity.size()));
                             }
                             Log.d("Data info", "Success Download");
                             checkMenu();
@@ -1316,12 +1350,23 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtName(model.getData().getLtSubActivity().get(i).getTxtTitle());
                                         data.setTxtDesc(model.getData().getLtSubActivity().get(i).getTxtDescription());
                                         dtRepoSubActivity.createOrUpdate(data);
-                                        mActivity activity = (mActivity) dtActivityrepo.findById(model.getData().getLtSubActivity().get(i).getIntActivityId());
-                                        itemList.add(String.valueOf(1+i) + ". " + activity.getTxtName() + " - " + model.getData().getLtSubActivity().get(i).getTxtTitle());
+//                                        mActivity activity = (mActivity) dtActivityrepo.findById(model.getData().getLtSubActivity().get(i).getIntActivityId());
+//                                        itemList.add(String.valueOf(1+i) + ". " + activity.getTxtName() + " - " + model.getData().getLtSubActivity().get(i).getTxtTitle());
+                                    }
+                                }
+                                dataListSubActivity = (List<mSubActivity>) dtRepoSubActivity.findAll();
+                                if (dataListSubActivity!=null){
+                                    if (dataListSubActivity.size()>0){
+                                        for (mSubActivity data : dataListSubActivity){
+                                            mActivity activity = (mActivity) dtActivityrepo.findById(data.getIntActivityid());
+                                            itemList.add(String.valueOf(data.getIntSubActivityid()) + ". " + activity.getTxtName() + " - " + data.getTxtName());
+                                        }
+                                    }else {
+                                        itemList.add(" - ");
                                     }
                                 }
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_download_subactivity.setText(String.valueOf(model.getData().getLtSubActivity().size()));
+                                tv_count_download_subactivity.setText(String.valueOf(dataListSubActivity.size()));
                             }
                             Log.d("Data info", "Success Download");
                             checkMenu();
@@ -1383,14 +1428,26 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntType(model.getData().getLtSubActivityDetailData().get(i).getIntFlag());
                                         dtRepoSubSubActivity.createOrUpdate(data);
 
-                                        mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
-                                        mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
-                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
+//                                        mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
+//                                        mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
+//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
 //                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
                                     }
                                 }
+                                dataListSubSubActivity = (List<mSubSubActivity>) dtRepoSubSubActivity.findAll();
+                                if (dataListSubSubActivity!=null){
+                                    if (dataListSubSubActivity.size()>0){
+                                        for (mSubSubActivity data : dataListSubSubActivity){
+                                            mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
+                                            mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
+                                            itemList.add(String.valueOf(data.getIntSubSubActivityid()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + data.getTxtName());
+                                        }
+                                    }else {
+                                        itemList.add(" - ");
+                                    }
+                                }
                                 dataAdapter.notifyDataSetChanged();
-                                tv_count_download_subsubactivity.setText(String.valueOf(model.getData().getLtSubActivityDetailData().size()));
+                                tv_count_download_subsubactivity.setText(String.valueOf(dataListSubSubActivity.size()));
                             }
                             Log.d("Data info", "Success Download");
                             checkMenu();
@@ -1439,13 +1496,23 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtKecName(model.getData().get(i).getKecName());
 
                                         apotekRepo.createOrUpdate(data);
-                                        itemList.add(model.getData().get(i).getCode() + " - " + model.getData().get(i).getName());
+//                                        itemList.add(model.getData().get(i).getCode() + " - " + model.getData().get(i).getName());
+                                    }
+                                }
+                                dataListApotek = (List<mApotek>) apotekRepo.findAll();
+                                if (dataListApotek!=null){
+                                    if (dataListApotek.size()>0){
+                                        for (mApotek data : dataListApotek){
+                                            itemList.add(String.valueOf(data.getTxtCode()) + " - " + data.getTxtName());
+                                        }
+                                    }else {
+                                        itemList.add(" - ");
                                     }
                                 }
                                 if (!isFromDownloadAll){
                                     dataAdapter.notifyDataSetChanged();
                                 }
-                                tv_count_apotek.setText(String.valueOf(model.getData().size()));
+                                tv_count_apotek.setText(String.valueOf(dataListApotek.size()));
                             }
                             Log.d("Data info", "Success Download");
                            checkMenu();
@@ -1496,11 +1563,31 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtType(model.getData().get(i).getType());
 
                                         dokterRepo.createOrUpdate(data);
-                                        if (model.getData().get(i).getLastname()!=null){
-                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname() + " " + model.getData().get(i).getLastname());
-                                        }else {
-                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname());
+//                                        if (model.getData().get(i).getLastname()!=null){
+//                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname() + " " + model.getData().get(i).getLastname());
+//                                        }else {
+//                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname());
+//                                        }
+                                    }
+                                }
+
+                                dataListDokter = (List<mDokter>) dokterRepo.findAll();
+                                if (dataListDokter!=null){
+                                    if (dataListDokter.size()>0){
+                                        for (mDokter data : dataListDokter){
+                                            if (data.getTxtLastName()!=null){
+                                                if (!data.getTxtLastName().equals("null")){
+                                                    itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName() + " " + data.getTxtLastName());
+                                                }else {
+                                                    itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName());
+                                                }
+                                            }else {
+                                                itemList.add(String.valueOf(data.getTxtId()) + " - " + data.getTxtFirstName());
+                                            }
+
                                         }
+                                    }else {
+                                        itemList.add(" - ");
                                     }
                                 }
                                 if (!isFromDownloadAll){
@@ -1713,9 +1800,7 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getAkuisisiHeader()!=null){
                                 if (model.getData().getAkuisisiHeader().size()>0){
                                     dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
-                                    int index = 0;
                                     for (int i = 0; i <model.getData().getAkuisisiHeader().size(); i++){
-                                        index++;
                                         tAkuisisiHeader data = new tAkuisisiHeader();
                                         data.setTxtHeaderId(model.getData().getAkuisisiHeader().get(i).getTxtAkuisisiHeaderId());
                                         data.setIntSubSubActivityId(model.getData().getAkuisisiHeader().get(i).getIntSubDetailActivityId());
@@ -1733,28 +1818,53 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtUserName(model.getData().getAkuisisiHeader().get(i).getTxtUserName());
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
                                         String name ="";
-                                        if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
-                                            if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()=="null"){
-                                                name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
-                                            }else {
-                                                if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
-                                                    if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
-                                                        name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
-                                                    }
-                                                }
-                                            }
-                                        }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
-                                            if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
-                                                name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
-                                            }
-                                        }
-                                        itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
+//                                        if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
+//                                            if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()=="null"){
+//                                                name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
+//                                            }else {
+//                                                if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
+//                                                    if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
+//                                                        name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+//                                                    }
+//                                                }
+//                                            }
+//                                        }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
+//                                            if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
+//                                                name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
+//                                            }
+//                                        }
+//                                        itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
                                     }
 
-                                    try {
-                                        dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
+                                    dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+                                    if (dataListAkuisisi!=null){
+                                        if (dataListAkuisisi.size()>0){
+                                            int index = 0;
+                                            for (tAkuisisiHeader data : dataListAkuisisi){
+                                                index++;
+                                                String name = null;
+                                                try {
+                                                    if (data.getIntDokterId()!=null){
+                                                        if (!data.getIntDokterId().equals("null")){
+                                                            name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                                                        }else if (data.getIntApotekID()!=null){
+                                                            if (!data.getIntApotekID().equals("null")){
+                                                                name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                                            }
+                                                        }
+                                                    }else if (data.getIntApotekID()!=null){
+                                                        if (!data.getIntApotekID().equals("null")){
+                                                            name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                                        }
+                                                    }
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
+                                            }
+                                        }else {
+                                            itemList.add(" - ");
+                                        }
                                     }
                                     tv_count_akuisisi.setText(String.valueOf(dataListAkuisisi.size()));
                                 }
@@ -1851,9 +1961,7 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getLtMaintenanceHeader()!=null){
                                 if (model.getData().getLtMaintenanceHeader().size()>0){
                                     dtRepoMaintenanceHeader = new tMaintenanceHeaderRepo(getContext());
-                                    int index = 0;
                                     for (int i = 0; i <model.getData().getLtMaintenanceHeader().size(); i++){
-                                        index++;
                                         tMaintenanceHeader data = new tMaintenanceHeader();
                                         data.setTxtHeaderId(model.getData().getLtMaintenanceHeader().get(i).getTxtMaintenanceHeaderId());
                                         data.setTxtRealisasiVisitId(model.getData().getLtMaintenanceHeader().get(i).getTxtRealisasiVisitId());
@@ -1865,15 +1973,37 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntAreaId(model.getData().getLtMaintenanceHeader().get(i).getIntAreaId());
                                         data.setIntFlagPush(new clsHardCode().Sync);
                                         dtRepoMaintenanceHeader.createOrUpdate(data);
-                                        String name ="";
-                                        if (model.getData().getLtMaintenanceHeader().get(i).getIntActivityId()==new clsHardCode().VisitDokter){
-                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtLastName();
-                                        }else {
-                                            name = apotekRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntApotekId()).getTxtName();
-                                        }
-                                        itemList.add(String.valueOf(index) + " - Maintenace - " + name);
+//                                        String name ="";
+//                                        if (model.getData().getLtMaintenanceHeader().get(i).getIntActivityId()==new clsHardCode().VisitDokter){
+//                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntDokterId()).getTxtLastName();
+//                                        }else {
+//                                            name = apotekRepo.findBytxtId(model.getData().getLtMaintenanceHeader().get(i).getIntApotekId()).getTxtName();
+//                                        }
+//                                        itemList.add(String.valueOf(index) + " - Maintenace - " + name);
                                     }
-                                    tv_count_maintenance.setText(String.valueOf(model.getData().getLtMaintenanceHeader().size()));
+                                    dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
+                                    if (dataListMaintenance!=null){
+                                        if (dataListMaintenance.size()>0){
+                                            int index = 0;
+                                            for (tMaintenanceHeader data : dataListMaintenance){
+                                                index++;
+                                                String name = null;
+                                                try {
+                                                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                                                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                                        name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                                    }
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                itemList.add(String.valueOf(index) + " - Maintenance - " + name);
+                                            }
+                                        }else {
+                                            itemList.add(" - ");
+                                        }
+                                    }
+                                    tv_count_maintenance.setText(String.valueOf(dataListMaintenance.size()));
                                 }
                                 dataAdapter.notifyDataSetChanged();
 
@@ -1943,9 +2073,7 @@ public class FragmentDownloadData extends Fragment{
                             if (model.getData().getLtInfoHeader()!=null){
                                 if (model.getData().getLtInfoHeader().size()>0){
                                     dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
-                                    int index = 0;
                                     for (int i = 0; i <model.getData().getLtInfoHeader().size(); i++){
-                                        index++;
                                         tInfoProgramHeader data = new tInfoProgramHeader();
                                         data.setTxtHeaderId(model.getData().getLtInfoHeader().get(i).getTxtInfoProgramHeaderId());
                                         data.setTxtRealisasiVisitId(model.getData().getLtInfoHeader().get(i).getTxtRealisasiVisitId());
@@ -1957,15 +2085,37 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntAreaId(model.getData().getLtInfoHeader().get(i).getIntAreaId());
                                         data.setIntFlagPush(new clsHardCode().Draft);
                                         dtRepoInfoProgHeader.createOrUpdate(data);
-                                        String name ="";
-                                        if (model.getData().getLtInfoHeader().get(i).getIntActivityId()==new clsHardCode().VisitDokter){
-                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtLastName();
-                                        }else {
-                                            name = apotekRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntApotekId()).getTxtName();
-                                        }
-                                        itemList.add(String.valueOf(index) + " - Info Program - " + name);
+//                                        String name ="";
+//                                        if (model.getData().getLtInfoHeader().get(i).getIntActivityId()==new clsHardCode().VisitDokter){
+//                                            name = "Dokter " + dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntDokterId()).getTxtLastName();
+//                                        }else {
+//                                            name = apotekRepo.findBytxtId(model.getData().getLtInfoHeader().get(i).getIntApotekId()).getTxtName();
+//                                        }
+//                                        itemList.add(String.valueOf(index) + " - Info Program - " + name);
                                     }
-                                    tv_count_infoprogram.setText(String.valueOf(model.getData().getLtInfoHeader().size()));
+                                    dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
+                                    if (dataLIstInfoProgram!=null){
+                                        if (dataLIstInfoProgram.size()>0){
+                                            int index = 0;
+                                            for (tInfoProgramHeader data : dataLIstInfoProgram){
+                                                index++;
+                                                String name = null;
+                                                try {
+                                                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                                        name = apotekRepo.findBytxtId(data.getIntApotekId()).getTxtName();
+                                                    }
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                itemList.add(String.valueOf(index) + " - Info Program - " + name);
+                                            }
+                                        }else {
+                                            itemList.add(" - ");
+                                        }
+                                    }
+                                    tv_count_infoprogram.setText(String.valueOf(dataLIstInfoProgram.size()));
                                 }
                                 dataAdapter.notifyDataSetChanged();
 
@@ -1977,20 +2127,32 @@ public class FragmentDownloadData extends Fragment{
                                             data.setTxtHeaderId(model.getData().getLtInfoDetail().get(i).getTxtInfoProgramHeaderId());
                                             data.setTxtDetailId(model.getData().getLtInfoDetail().get(i).getTxtInfoProgramDetailId());
                                             data.setIntSubDetailActivityId(model.getData().getLtInfoDetail().get(i).getIntSubDetailActivityId());
-                                            data.setTxtFileName(model.getData().getLtInfoDetail().get(i).getTxtFileName());
                                             data.setBoolFlagChecklist(model.getData().getLtInfoDetail().get(i).isBitCheck());
                                             data.setDtChecklist(parseDate(model.getData().getLtInfoDetail().get(i).getDtDateChecklist()));
-                                            if (model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt().length()>0){
-                                                downloadFile(model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
-                                            }
-//                                            byte[] file = getLogoImage(model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt());
-//                                            if (file!=null){
-//                                                data.setBlobFile(file);
-//                                            }else {
-//                                                data.setBlobFile(null);
+                                            data.setIntFileAttachmentId(model.getData().getLtInfoDetail().get(i).getIntFileAttachmentId());
+//                                            if (model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt().length()>0){
+//                                                downloadFile(model.getData().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
 //                                            }
-                                            data.setDescription(model.getData().getLtInfoDetail().get(i).getTxtDesc());
                                             dtRepoInfoProgDetail.createOrUpdate(data);
+                                        }
+                                    }
+                                }
+
+                                if (model.getData().getLtInfoAttachment()!=null){
+                                    if (model.getData().getLtInfoAttachment().size()>0){
+                                        dtFileRepo = new mFileAttachmentRepo(getContext());
+                                        for (int i = 0; i < model.getData().getLtInfoAttachment().size(); i++){
+                                            mFileAttachment data = new mFileAttachment();
+                                            data.setIntFileAttachmentId(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId());
+//                                        data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).get());
+//                                        data.setBlobFile(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
+                                            data.setTxtFileName(model.getData().getLtInfoAttachment().get(i).getTxtfilename());
+                                            data.setDescription(model.getData().getLtInfoAttachment().get(i).getTxtDescription());
+                                            dtFileRepo.createOrUpdate(data);
+                                            if (model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt().length()>0){
+                                            downloadFile(model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt(),"Info Program", String.valueOf(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId()), i+1);
+                                            }
+                                            dtFileRepo.createOrUpdate(data);
                                         }
                                     }
                                 }
@@ -2101,7 +2263,6 @@ public class FragmentDownloadData extends Fragment{
 
         long enqueue = dm.enqueue(request);
         listId.add(enqueue);
-//        new ReceiverDownloadManager(listId);
     }
 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -2128,9 +2289,9 @@ public class FragmentDownloadData extends Fragment{
                             try {
                                 byte[] file = PickFile.getByteArrayFileToSave(Uri.parse(uriString), context);
                                 if (title.contains("Info Program")){
-                                    tInfoProgramDetail data = new tInfoProgramDetailRepo(context).findByDetailId(txtId);
+                                    mFileAttachment data = (mFileAttachment) new mFileAttachmentRepo(context).findById(Integer.parseInt(txtId));
                                     data.setBlobFile(file);
-                                    new tInfoProgramDetailRepo(context).createOrUpdate(data);
+                                    new mFileAttachmentRepo(context).createOrUpdate(data);
                                 }else if (title.contains("Akuisisi")){
                                     tAkuisisiDetail data = new tAkuisisiDetailRepo(context).findByDetailId(txtId);
                                     data.setTxtImg(file);
@@ -2144,7 +2305,6 @@ public class FragmentDownloadData extends Fragment{
                                     data.setBlobImg2(file);
                                     new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
                                 }
-//                                Toast.makeText(getContext(), String.valueOf(file), Toast.LENGTH_LONG).show();
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             } catch (SQLException e) {
@@ -2155,17 +2315,7 @@ public class FragmentDownloadData extends Fragment{
                             if (listId!=null){
                                 listId.remove(downloadId);
                                 if (listId.isEmpty()){
-//                                        deleteMediaStorageDirtemp();
-//                                    NotificationCompat.Builder mBuilder =
-//                                            new NotificationCompat.Builder(context)
-//                                                    .setSmallIcon(R.drawable.places_ic_clear)
-//                                                    .setContentTitle("AEDP")
-//                                                    .setContentText("Download completed");
-
                                     createNotificationDonwloadComplete(context);
-
-//                                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//                                    notificationManager.notify(455, mBuilder.build());
                                 }
                             }
 

@@ -6,26 +6,14 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class LtInfoDetailItem{
 
-	@SerializedName("txtFilePath")
-	private String txtFilePath;
-
 	@SerializedName("txtInfoProgramDetailId")
 	private String txtInfoProgramDetailId;
 
 	@SerializedName("dtDateChecklist")
 	private String dtDateChecklist;
 
-	@SerializedName("txtFileLinkEncrypt")
-	private String txtFileLinkEncrypt;
-
-	@SerializedName("txtFileName")
-	private String txtFileName;
-
-	@SerializedName("txtFileLink")
-	private String txtFileLink;
-
-	@SerializedName("txtDesc")
-	private String txtDesc;
+	@SerializedName("intFileAttachmentId")
+	private int intFileAttachmentId;
 
 	@SerializedName("txtInfoProgramHeaderId")
 	private String txtInfoProgramHeaderId;
@@ -35,14 +23,6 @@ public class LtInfoDetailItem{
 
 	@SerializedName("bitCheck")
 	private boolean bitCheck;
-
-	public void setTxtFilePath(String txtFilePath){
-		this.txtFilePath = txtFilePath;
-	}
-
-	public String getTxtFilePath(){
-		return txtFilePath;
-	}
 
 	public void setTxtInfoProgramDetailId(String txtInfoProgramDetailId){
 		this.txtInfoProgramDetailId = txtInfoProgramDetailId;
@@ -60,36 +40,12 @@ public class LtInfoDetailItem{
 		return dtDateChecklist;
 	}
 
-	public void setTxtFileLinkEncrypt(String txtFileLinkEncrypt){
-		this.txtFileLinkEncrypt = txtFileLinkEncrypt;
+	public void setIntFileAttachmentId(int intFileAttachmentId){
+		this.intFileAttachmentId = intFileAttachmentId;
 	}
 
-	public String getTxtFileLinkEncrypt(){
-		return txtFileLinkEncrypt;
-	}
-
-	public void setTxtFileName(String txtFileName){
-		this.txtFileName = txtFileName;
-	}
-
-	public String getTxtFileName(){
-		return txtFileName;
-	}
-
-	public void setTxtFileLink(String txtFileLink){
-		this.txtFileLink = txtFileLink;
-	}
-
-	public String getTxtFileLink(){
-		return txtFileLink;
-	}
-
-	public void setTxtDesc(String txtDesc){
-		this.txtDesc = txtDesc;
-	}
-
-	public String getTxtDesc(){
-		return txtDesc;
+	public int getIntFileAttachmentId(){
+		return intFileAttachmentId;
 	}
 
 	public void setTxtInfoProgramHeaderId(String txtInfoProgramHeaderId){
@@ -120,13 +76,9 @@ public class LtInfoDetailItem{
  	public String toString(){
 		return 
 			"LtInfoDetailItem{" + 
-			"txtFilePath = '" + txtFilePath + '\'' + 
-			",txtInfoProgramDetailId = '" + txtInfoProgramDetailId + '\'' + 
+			"txtInfoProgramDetailId = '" + txtInfoProgramDetailId + '\'' + 
 			",dtDateChecklist = '" + dtDateChecklist + '\'' + 
-			",txtFileLinkEncrypt = '" + txtFileLinkEncrypt + '\'' + 
-			",txtFileName = '" + txtFileName + '\'' + 
-			",txtFileLink = '" + txtFileLink + '\'' + 
-			",txtDesc = '" + txtDesc + '\'' + 
+			",intFileAttachmentId = '" + intFileAttachmentId + '\'' + 
 			",txtInfoProgramHeaderId = '" + txtInfoProgramHeaderId + '\'' + 
 			",intSubDetailActivityId = '" + intSubDetailActivityId + '\'' + 
 			",bitCheck = '" + bitCheck + '\'' + 

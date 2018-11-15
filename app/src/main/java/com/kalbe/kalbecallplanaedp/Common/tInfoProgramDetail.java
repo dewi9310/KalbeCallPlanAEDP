@@ -19,25 +19,22 @@ public class tInfoProgramDetail implements Serializable {
     @DatabaseField
     private int intSubDetailActivityId;
     @DatabaseField
-    private String txtFileName;
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
-    private byte[] blobFile;
+    private int intFileAttachmentId;
     @DatabaseField
     private boolean boolFlagChecklist;
     @DatabaseField
     private String dtChecklist;
     @DatabaseField
-    private String Description;
+    private int intFlagPush;
 
 
     public String Property_txtDetailId = "txtDetailId";
     public String Property_txtHeaderId = "txtHeaderId";
-    public String Property_intSubDetailActivityId = "intSubDetailActivityId";
-    public String Property_txtFileName = "txtFileName";
-    public String Property_blobFile = "blobFile";
     public String Property_intFlagChecklist = "intFlagChecklist";
     public String Property_dtChecklist = "dtChecklist";
-    public String Property_Description = "Description";
+    public String Property_intFileAttachmentId = "intFileAttachmentId";
+    public String Property_intSubDetailActivityId = "intSubDetailActivityId";
+    public String Property_intFlagPush = "intFlagPush";
     public String Property_ListOfDatatInfoProgramDetail = "ListOfDatatInfoProgramDetail";
 
     public String getTxtDetailId() {
@@ -56,30 +53,6 @@ public class tInfoProgramDetail implements Serializable {
         this.txtHeaderId = txtHeaderId;
     }
 
-    public int getIntSubDetailActivityId() {
-        return intSubDetailActivityId;
-    }
-
-    public void setIntSubDetailActivityId(int intSubDetailActivityId) {
-        this.intSubDetailActivityId = intSubDetailActivityId;
-    }
-
-    public String getTxtFileName() {
-        return txtFileName;
-    }
-
-    public void setTxtFileName(String txtFileName) {
-        this.txtFileName = txtFileName;
-    }
-
-    public byte[] getBlobFile() {
-        return blobFile;
-    }
-
-    public void setBlobFile(byte[] blobFile) {
-        this.blobFile = blobFile;
-    }
-
     public boolean isBoolFlagChecklist() {
         return boolFlagChecklist;
     }
@@ -96,11 +69,27 @@ public class tInfoProgramDetail implements Serializable {
         this.dtChecklist = dtChecklist;
     }
 
-    public String getDescription() {
-        return Description;
+    public int getIntFileAttachmentId() {
+        return intFileAttachmentId;
     }
 
-    public void setDescription(String description) {
-        Description = description;
+    public void setIntFileAttachmentId(int intFileAttachmentId) {
+        this.intFileAttachmentId = intFileAttachmentId;
+    }
+
+    public int getIntSubDetailActivityId() {
+        return intSubDetailActivityId;
+    }
+
+    public void setIntSubDetailActivityId(int intSubDetailActivityId) {
+        this.intSubDetailActivityId = intSubDetailActivityId;
+    }
+
+    public int getIntFlagPush() {
+        return intFlagPush;
+    }
+
+    public void setIntFlagPush(int intFlagPush) {
+        this.intFlagPush = intFlagPush;
     }
 }

@@ -213,6 +213,13 @@ public class clsHelperBL {
                     }
                 }
 
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatInfoProgramDetail")){
+                    for (tInfoProgramDetail data : dtJson.getListOfDatatInfoProgramDetail()){
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tInfoProgramDetailRepo(context).createOrUpdate(data);
+                    }
+                }
+
 
                 if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatMaintenanceHeader")){
                     for (tMaintenanceHeader data : dtJson.getListOfDatatMaintenanceHeader()){

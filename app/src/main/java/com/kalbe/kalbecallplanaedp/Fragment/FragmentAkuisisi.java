@@ -246,14 +246,31 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         viewPager.setAdapter(adapter);
     }
 
+//    private void allotEachTabWithEqualWidth() {
+//
+//        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
+//        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+//            View tab = slidingTabStrip.getChildAt(i);
+//            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tab.getLayoutParams();
+//            layoutParams.weight = 1;
+//            tab.setLayoutParams(layoutParams);
+//        }
+//
+//    }
+
     private void allotEachTabWithEqualWidth() {
 
         ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            View tab = slidingTabStrip.getChildAt(i);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tab.getLayoutParams();
-            layoutParams.weight = 1;
-            tab.setLayoutParams(layoutParams);
+        if (tabLayout.getTabCount()>1){
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                View tab = slidingTabStrip.getChildAt(i);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tab.getLayoutParams();
+                layoutParams.weight = 1;
+                tab.setLayoutParams(layoutParams);
+            }
+        }else {
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         }
 
     }

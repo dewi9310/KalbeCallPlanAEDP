@@ -20,6 +20,7 @@ public class clsInfoProgram {
     private boolean isChecked;
     private boolean isFromHistory;
     private String txtFileName;
+    private int intFileId;
 
     public String getTxtId() {
         return txtId;
@@ -108,5 +109,13 @@ public class clsInfoProgram {
 
     public void setTxtFileName(String txtFileName) {
         this.txtFileName = txtFileName;
+    }
+
+    public int getIntFileId() {
+        return intFileId;
+    }
+
+    public void setIntFileId(int intFileId) {
+        this.intFileId = intFileId;
     }
 }

@@ -10,6 +10,9 @@ public class Data{
 	@SerializedName("LtInfoDetail")
 	private List<LtInfoDetailItem> ltInfoDetail;
 
+	@SerializedName("LtInfoAttachment")
+	private List<LtInfoAttachmentItem> ltInfoAttachment;
+
 	@SerializedName("LtInfoHeader")
 	private List<LtInfoHeaderItem> ltInfoHeader;
 
@@ -19,6 +22,14 @@ public class Data{
 
 	public List<LtInfoDetailItem> getLtInfoDetail(){
 		return ltInfoDetail;
+	}
+
+	public void setLtInfoAttachment(List<LtInfoAttachmentItem> ltInfoAttachment){
+		this.ltInfoAttachment = ltInfoAttachment;
+	}
+
+	public List<LtInfoAttachmentItem> getLtInfoAttachment(){
+		return ltInfoAttachment;
 	}
 
 	public void setLtInfoHeader(List<LtInfoHeaderItem> ltInfoHeader){
@@ -34,6 +45,7 @@ public class Data{
 		return 
 			"Data{" + 
 			"ltInfoDetail = '" + ltInfoDetail + '\'' + 
+			",ltInfoAttachment = '" + ltInfoAttachment + '\'' + 
 			",ltInfoHeader = '" + ltInfoHeader + '\'' + 
 			"}";
 		}

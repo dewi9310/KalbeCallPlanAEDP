@@ -20,7 +20,7 @@
             app:tabIndicatorColor="@color/amber_500"
             app:tabIndicatorHeight="3dp"
             app:tabMode="scrollable"
-            app:tabMaxWidth="0dp"
+            app:tabMaxWidth="1000dp"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextAppearance="@style/TextAppearance.Subhead.Bold"
             app:tabTextColor="@color/grey_20" />
