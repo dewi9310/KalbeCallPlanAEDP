@@ -81,9 +81,10 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
     int IntSubSubActivityid;
     String txtSubSubActivity;
     Dialog dialogCustom;
-    private String DT_CALL_PLAN = "Realisasi id";
+    private String DT_REALISASI = "Realisasi id";
     String txtRealisasiId;
     boolean valid = false;
+    private String FRAG_VIEW = "Fragment view";
 
 
     @Nullable
@@ -99,7 +100,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         headerRepo = new tAkuisisiHeaderRepo(getContext());
         Bundle data = this.getArguments();
         if (data != null) {
-             txtRealisasiId = data.getString(DT_CALL_PLAN);
+             txtRealisasiId = data.getString(DT_REALISASI);
         }
 
         if (txtRealisasiId!=null && !txtRealisasiId.equals("")){
@@ -408,14 +409,13 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-            new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+            Bundle bundle = new Bundle();
+            bundle.putString(FRAG_VIEW, "Realisasi");
+            new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
             return true;
         }else {
             new Tools().intentFragment(HomeFragment.class, "Home", getContext());
             return true;
         }
-//        bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-
-
     }
 }

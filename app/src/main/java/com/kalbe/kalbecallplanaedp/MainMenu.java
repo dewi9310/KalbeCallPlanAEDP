@@ -84,6 +84,7 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragementInfoProgram;
 import com.kalbe.kalbecallplanaedp.Fragment.FragementMaintenance;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentAkuisisi;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentDownloadData;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentHeaderCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentHistory;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentNotification;
@@ -529,7 +530,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        FragmentListCallPlan fragmentCallPlan = new FragmentListCallPlan();
+//                        FragmentListCallPlan fragmentCallPlan = new FragmentListCallPlan();
+                        FragmentHeaderCallPlan fragmentCallPlan = new FragmentHeaderCallPlan();
                         FragmentTransaction fragmentTransactionCallPlan = getSupportFragmentManager().beginTransaction();
                         fragmentTransactionCallPlan.replace(R.id.frame, fragmentCallPlan);
                         fragmentTransactionCallPlan.commit();
@@ -592,19 +594,19 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         return true;
 
 
-                    case R.id.mnHistory:
-                        toolbar.setTitle("History");
-                        toolbar.setSubtitle(null);
-
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-                        FragmentHistory fragmentHistory = new FragmentHistory();
-                        FragmentTransaction fragmentTransactionHistory = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionHistory.replace(R.id.frame, fragmentHistory);
-                        fragmentTransactionHistory.commit();
-                        selectedId = 99;
-
-                        return true;
+//                    case R.id.mnHistory:
+//                        toolbar.setTitle("History");
+//                        toolbar.setSubtitle(null);
+//
+//                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//
+//                        FragmentHeaderCallPlan fragmentHistory = new FragmentHeaderCallPlan();
+//                        FragmentTransaction fragmentTransactionHistory = getSupportFragmentManager().beginTransaction();
+//                        fragmentTransactionHistory.replace(R.id.frame, fragmentHistory);
+//                        fragmentTransactionHistory.commit();
+//                        selectedId = 99;
+//
+//                        return true;
 
                     case R.id.mnCheckOut:
                         showCustomDialog();

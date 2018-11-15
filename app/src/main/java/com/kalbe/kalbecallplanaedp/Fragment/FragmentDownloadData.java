@@ -2381,14 +2381,15 @@ public class FragmentDownloadData extends Fragment{
                 .setContentTitle("Document Expired")
 //                .setContentText("Please check on notifications menu")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText("There are some documents will expire!"))
-                .setSmallIcon(R.mipmap.ic_notifikasi_v3_round)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent)
                 .setAutoCancel(true)
                 .setNumber(size)
                 .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(),
                         R.mipmap.ic_launcher))
-                .setColor(getResources().getColor(android.R.color.holo_red_dark));
+                .setColor(getContext().getResources().getColor(R.color.green_300));
+//                .setColor(getResources().getColor(android.R.color.holo_red_dark));
 //                .addAction(R.drawable.ic_launcher_foreground, "Call", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher_foreground, "More", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher_foreground, "And more", resultPendingIntent);
@@ -2435,12 +2436,13 @@ public class FragmentDownloadData extends Fragment{
                 .setContentTitle("Download Completed")
 //                .setContentText("Please check on notifications menu")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText("All file have been downloaded!"))
-                .setSmallIcon(R.drawable.places_ic_clear)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
 //                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                         R.mipmap.ic_launcher))
-                .setColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                .setColor(context.getResources().getColor(R.color.green_300));
+//                .setColor(context.getResources().getColor(android.R.color.holo_red_dark));
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 

@@ -39,6 +39,7 @@ import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.HomeFragment;
 import com.kalbe.kalbecallplanaedp.MainMenu;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
@@ -94,7 +95,9 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
     tProgramVisitSubActivity dtVisitPlan;
     tProgramVisitSubActivityRepo visitPlanRepo;
     CardView cvImgview;
-
+    private String DT_HISTORY = "dari history";
+    boolean valid = false;
+    private String FRAG_VIEW = "Fragment view";
 
     @Nullable
     @Override
@@ -130,6 +133,24 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 //                dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtId(dataHeader.getString(DT_CALL_PLAN));
                 if (dtVisitPlan!=null){
                     dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtPlanId(dtVisitPlan.getTxtProgramVisitSubActivityId());
+                    if (dataHeader.getString(DT_HISTORY)!=null){
+                        valid = true;
+                        btnCheckin.setVisibility(View.GONE);
+                        btnRefreshMap.setVisibility(View.GONE);
+                        imgCamera1.setEnabled(false);
+                        imgCamera2.setEnabled(false);
+                        if (dtRealisasiVisit.getBlobImg1()!=null){
+                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg1());
+                            PickImage.previewCapturedImage(imgCamera1, bitmap, 150, 150);
+                        }
+
+                        if (dtRealisasiVisit.getBlobImg2()!=null){
+                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg2());
+                            PickImage.previewCapturedImage(imgCamera2, bitmap, 150, 150);
+                        }
+
+                    }
+
 //                   dtVisitPlan = (tProgramVisitSubActivity) visitPlanRepo.findBytxtId(dtRealisasiVisit.getTxtProgramVisitSubActivityId());
                    if (dtVisitPlan.getIntActivityId()==1){
                        tvOutlet.setText("Doctor Name  : ");
@@ -622,7 +643,23 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 
     @Override
     public boolean onBackPressed() {
-        new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
-        return true;
+//        if (valid){
+//            new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+//            return true;
+//        }else {
+//
+//        }
+
+        Bundle bundle = new Bundle();
+        if (valid){
+            bundle.putString(FRAG_VIEW, "Realisasi");
+            new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
+            return true;
+        }else {
+            bundle.putString(FRAG_VIEW, "Plan");
+            new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
+            return true;
+        }
+
     }
 }

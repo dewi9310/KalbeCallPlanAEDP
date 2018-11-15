@@ -58,6 +58,8 @@ public class FragmentListCallPlan extends Fragment{
     tProgramVisitSubActivityRepo repoProgramVisitSubActivity;
     mActivityRepo repoActivity;
 
+    public FragmentListCallPlan(){
+    }
 
     @Nullable
     @Override
@@ -176,7 +178,7 @@ public class FragmentListCallPlan extends Fragment{
                 data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                 FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
                 fragmentCallPlan.setArguments(data);
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragmentCallPlan);
                 fragmentTransaction.commit();
                 return false;
@@ -189,7 +191,7 @@ public class FragmentListCallPlan extends Fragment{
                 toolbar.setTitle("Add Call Plan Unplan");
 
                 FragmentAddUnplan fragmentAddUnplan = new FragmentAddUnplan();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragmentAddUnplan);
                 fragmentTransaction.commit();
             }

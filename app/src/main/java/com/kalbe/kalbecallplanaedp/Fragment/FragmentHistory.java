@@ -82,7 +82,12 @@ public class FragmentHistory extends Fragment {
     mActivityRepo repoActivity;
     LinearLayout lnEmpty;
     ListView listView;
-    private String DT_CALL_PLAN = "Realisasi id";
+    private String DT_CALL_PLAN = "dtCallPlan";
+    private String DT_REALISASI = "Realisasi id";
+    private String DT_HISTORY = "dari history";
+
+    public FragmentHistory(){
+    }
 
     @Nullable
     @Override
@@ -172,14 +177,26 @@ public class FragmentHistory extends Fragment {
                         }
                         listDataHeader.add(itemAdapter);
                         List<clsListItemAdapter> listChildAdapter = new ArrayList<>();
+                        //data realisasi
+                        clsListItemAdapter itemAdapter2 = new clsListItemAdapter();
+                        itemAdapter2.setTxtId(data.getTxtProgramVisitSubActivityId());
+                        if (dataVisit.getIntActivityId()==new clsHardCode().VisitApotek||dataVisit.getIntActivityId()==new clsHardCode().VisitDokter){
+                            itemAdapter2.setTxtTittle("Realisasi Visit");
+                        }else {
+                            itemAdapter2.setTxtTittle("Realisasi" + activity.getTxtName());
+                        }
+                        itemAdapter2.setTxtDate("More");
+                        listChildAdapter.add(itemAdapter2);
+
+
                         List<tAkuisisiHeader> listAkuisisi = (List<tAkuisisiHeader>) new tAkuisisiHeaderRepo(getContext()).findByRealisasi(data.getTxtRealisasiVisitId());
                         if (listAkuisisi!=null){
                             if (listAkuisisi.size()>0){
                                 clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
                                 itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
-                                itemAdapter1.setTxtTittle("Akuisisi");
+                                itemAdapter1.setTxtTittle("Akuisisi (" + String.valueOf(listAkuisisi.size()) + ")");
 //                                itemAdapter1.setTxtSubTittle(child.getTxtNoDoc());
-                                itemAdapter1.setTxtDate(String.valueOf(listAkuisisi.size()));
+                                itemAdapter1.setTxtDate("More");
                                 listChildAdapter.add(itemAdapter1);
                             }
                         }
@@ -190,9 +207,9 @@ public class FragmentHistory extends Fragment {
                                 if (maintenanceList.size()>0){
                                     clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
                                     itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
-                                    itemAdapter1.setTxtTittle("Maintenance");
+                                    itemAdapter1.setTxtTittle("Maintenance (" + String.valueOf(maintenanceList.size()) + ")");
 //                                itemAdapter1.setTxtSubTittle(child.getTxtNoDoc());
-                                    itemAdapter1.setTxtDate(String.valueOf(maintenanceList.size()));
+                                    itemAdapter1.setTxtDate("More");
                                     listChildAdapter.add(itemAdapter1);
                                 }
                             }
@@ -206,10 +223,10 @@ public class FragmentHistory extends Fragment {
                             if (infoProgramList!=null){
                                 if (infoProgramList.size()>0){
                                     clsListItemAdapter itemAdapter1 = new clsListItemAdapter();
-                                    itemAdapter1.setTxtTittle("Info Program");
+                                    itemAdapter1.setTxtTittle("Info Program (" + String.valueOf(infoProgramList.size()) + ")");
                                     itemAdapter1.setTxtId(data.getTxtRealisasiVisitId());
 //                                itemAdapter1.setTxtSubTittle(child.getTxtNoDoc());
-                                    itemAdapter1.setTxtDate(String.valueOf(infoProgramList.size()));
+                                    itemAdapter1.setTxtDate("More");
                                     listChildAdapter.add(itemAdapter1);
                                 }
                             }
@@ -233,20 +250,20 @@ public class FragmentHistory extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Bundle data = new Bundle();
-                data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
-                if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Akuisisi")){
+                if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().contains("Akuisisi")){
+                    data.putString( DT_REALISASI , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                     new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), data);
-                }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Maintenance")){
+                }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().contains("Maintenance")){
+                    data.putString( DT_REALISASI , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                     new Tools().intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), data);
-                }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().equals("Info Program")){
+                }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().contains("Info Program")){
+                    data.putString( DT_REALISASI , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
                     new Tools().intentFragmentSetArgument(FragementInfoProgram.class, "Info Program", getContext(), data);
+                }else if (listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtTittle().contains("Realisasi")){
+                    data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
+                    data.putString(DT_HISTORY, "History");
+                    new Tools().intentFragmentSetArgument(FragmentCallPlan.class, "Call Plan", getContext(), data);
                 }
-
-//                FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
-//                fragmentCallPlan.setArguments(data);
-//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragmentCallPlan);
-//                fragmentTransaction.commit();
                 return false;
             }
         });
