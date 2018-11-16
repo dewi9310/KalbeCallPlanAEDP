@@ -57,9 +57,10 @@ public class FragementInfoProgram extends Fragment implements IOBackPressed{
     tInfoProgramHeader dtHeader;
     tInfoProgramDetailRepo detailRepo;
     LinearLayout lnEmpty;
-    private String DT_CALL_PLAN = "Realisasi id";
+    private String DT_REALISASI = "Realisasi id";
     String txtRealisasiId;
     boolean valid = false;
+    private String FRAG_VIEW = "Fragment view";
 
 
     @Nullable
@@ -73,7 +74,7 @@ public class FragementInfoProgram extends Fragment implements IOBackPressed{
 
         Bundle data = this.getArguments();
         if (data != null) {
-            txtRealisasiId = data.getString(DT_CALL_PLAN);
+            txtRealisasiId = data.getString(DT_REALISASI);
         }
         if (txtRealisasiId!=null && !txtRealisasiId.equals("")){
             valid = true;
@@ -190,7 +191,11 @@ public class FragementInfoProgram extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+//           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+//            return true;
+            Bundle bundle = new Bundle();
+            bundle.putString(FRAG_VIEW, "Realisasi");
+            new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
             return true;
         }else {
             new Tools().intentFragment(HomeFragment.class, "Home", getContext());

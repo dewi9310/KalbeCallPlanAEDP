@@ -72,9 +72,11 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
     String txtSubSubActivity;
     Dialog dialogCustom;
     String txtNoDoc;
-    private String DT_CALL_PLAN = "Realisasi id";
+    private String DT_REALISASI = "Realisasi id";
     String txtRealisasiId;
     boolean valid = false;
+    private String FRAG_VIEW = "Fragment view";
+
 
     @Nullable
     @Override
@@ -87,7 +89,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
 
         Bundle data = this.getArguments();
         if (data != null) {
-            txtRealisasiId = data.getString(DT_CALL_PLAN);
+            txtRealisasiId = data.getString(DT_REALISASI);
         }
         if (txtRealisasiId!=null && !txtRealisasiId.equals("")){
             valid = true;
@@ -365,8 +367,12 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
     @Override
     public boolean onBackPressed() {
         if (valid){
-           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+            Bundle bundle = new Bundle();
+            bundle.putString(FRAG_VIEW, "Realisasi");
+            new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
             return true;
+//           new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+//            return true;
         }else {
            new Tools().intentFragment(HomeFragment.class, "Home", getContext());
             return true;

@@ -78,6 +78,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
     tProgramVisit visitHeader;
     tProgramVisitRepo visitRepo;
     tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
+    private String FRAG_VIEW = "Fragment view";
 
     @Nullable
     @Override
@@ -547,7 +548,9 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
     }
     @Override
     public boolean onBackPressed() {
-        new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
+        Bundle bundle = new Bundle();
+        bundle.putString(FRAG_VIEW, "Plan");
+        new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
         return true;
     }
 }
