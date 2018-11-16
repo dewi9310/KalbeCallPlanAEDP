@@ -21,7 +21,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/ic_kalbe"
+        app:srcCompat="@mipmap/ic_notifikasi_v1_round"
         android:layout_above="@+id/iv_anim"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -40,15 +40,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <TextView
+            android:id="@+id/tvVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:textSize="15dp"
-            android:id="@+id/tvVersion" />
+            android:textSize="15dp" />
     </RelativeLayout>
 
 </RelativeLayout>

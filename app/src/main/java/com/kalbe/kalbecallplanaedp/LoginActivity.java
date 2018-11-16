@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -87,9 +88,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     private final String TAG = this.getClass().getSimpleName();
     //batas aman
 
+    private PackageInfo pInfo = null;
     private static final int REQUEST_READ_PHONE_STATE = 0;
     private String IS_FROM_PICK_ACCOUNT = "is from pick account";
     EditText etUsername, etPassword;
+    TextView tvVersionLogin;
     private AppCompatSpinner spnRoleLogin;
     String txtUsername, txtPassword, imeiNumber, deviceName, access_token, selectedRole;
     Button btnSubmit, btnExit, btnRefreshApp;
@@ -144,7 +147,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.green_300));
         }
-
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -174,7 +181,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         if (mAuthTokenType == null)
             mAuthTokenType = AUTHTOKEN_TYPE_FULL_ACCESS;
 
-
+        tvVersionLogin = (TextView) findViewById(R.id.tvVersionLogin);
+        tvVersionLogin.setText(pInfo.versionName);
         etUsername = (EditText) findViewById(R.id.editTextUsername);
         etPassword = (EditText) findViewById(R.id.editTextPass);
         spnRoleLogin = (AppCompatSpinner) findViewById(R.id.spnRoleLogin);
