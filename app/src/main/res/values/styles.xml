@@ -15,7 +15,10 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@color/title_background</item>
     </style>
-
+    <style name="Button.Primary" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     <style name="InputLabel" parent="TextAppearance.AppCompat.Caption">
         <item name="android:paddingBottom">@dimen/input_label_vertical_spacing</item>
         <item name="android:paddingLeft">@dimen/input_label_horizontal_spacing</item>

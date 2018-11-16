@@ -17,14 +17,18 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,7 +60,10 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
+import com.kalbe.kalbecallplanaedp.Utils.SpacingItemDecoration;
+import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.kalbecallplanaedp.adapter.CardAppAdapter;
+import com.kalbe.kalbecallplanaedp.adapter.RecyclerGridPickAccountAdapter;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
 
@@ -92,7 +99,7 @@ public class PickAccountActivity extends Activity {
     private AccountManager mAccountManager;
     private final String TAG = this.getClass().getSimpleName();
     //batas aman
-
+    private RecyclerGridPickAccountAdapter adapter;
     private static final int REQUEST_READ_PHONE_STATE = 0;
     EditText etUsername, etPassword;
     String txtUsername, txtPassword, imeiNumber, deviceName, access_token;
@@ -107,8 +114,10 @@ public class PickAccountActivity extends Activity {
     mUserLoginRepo loginRepo;
     clsTokenRepo tokenRepo;
     mMenuRepo menuRepo;
-    ListView listView;
+//    ListView listView;
+    RecyclerView lvRecycleview;
     View parent_view;
+    Button btnAddAcc;
     private Gson gson;
 
     @Override
@@ -145,7 +154,8 @@ public class PickAccountActivity extends Activity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorAccent));
         }
-        setContentView(R.layout.activity_pick_account);
+        setContentView(R.layout.activity_pick_account_v3);
+        btnAddAcc = (Button) findViewById(R.id.btnAddAccount);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -168,7 +178,11 @@ public class PickAccountActivity extends Activity {
         if (mAuthTokenType == null)
             mAuthTokenType = AUTHTOKEN_TYPE_FULL_ACCESS;
 
-        listView = (ListView) findViewById(R.id.lvPickAccount);
+//        listView = (ListView) findViewById(R.id.lvPickAccountV2);
+        lvRecycleview = (RecyclerView) findViewById(R.id.lv_pick_v3);
+        lvRecycleview.setLayoutManager(new GridLayoutManager(this, 2));
+        lvRecycleview.addItemDecoration(new SpacingItemDecoration(5, Tools.dpToPx(this, 1), true));
+        lvRecycleview.setHasFixedSize(true);
         parent_view = findViewById(android.R.id.content);
 
         String[] names = getIntent().getStringArrayExtra(ARG_ARRAY_ACCOUNT_NAME);
@@ -182,13 +196,34 @@ public class PickAccountActivity extends Activity {
                 for (int i=0; i<names.length; i++){
                     account.add(names[i]);
                     icon.add(R.drawable.profile);
-                }
+                }/*
                 account.add("Add New Account");
-                icon.add(R.drawable.add_pick_acount);
+                icon.add(R.drawable.add_pick_acount);*/
             }
         }
-
-        listView.setAdapter(new CardAppAdapter(this,  account, icon));
+        adapter = new RecyclerGridPickAccountAdapter(this, account,icon);
+        lvRecycleview.setAdapter(adapter);
+        adapter.setOnItemClickListener(new RecyclerGridPickAccountAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, String obj, int position) {
+                if (account.get(position).equals("Add New Account")){
+                    new AuthenticatorUtil().addNewAccount(PickAccountActivity.this, mAccountManager, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                } else {
+                    new AuthenticatorUtil().getExistingAccountAuthToken(PickAccountActivity.this, mAccountManager,availableAccounts[position], AUTHTOKEN_TYPE_FULL_ACCESS, parent_view);
+                }
+            }
+        });
+        adapter.setOnImageClickListener(new RecyclerGridPickAccountAdapter.OnImageClickListener() {
+            @Override
+            public void onItemClick(View view, String obj, int position) {
+                if (account.get(position).equals("Add New Account")){
+                    new AuthenticatorUtil().addNewAccount(PickAccountActivity.this, mAccountManager, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, true);
+                } else {
+                    new AuthenticatorUtil().getExistingAccountAuthToken(PickAccountActivity.this, mAccountManager,availableAccounts[position], AUTHTOKEN_TYPE_FULL_ACCESS, parent_view);
+                }
+            }
+        });
+        /*listView.setAdapter(new CardAppAdapter(this,  account, icon));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -199,8 +234,46 @@ public class PickAccountActivity extends Activity {
                 }
             }
         });
+        setListViewHeightBasedOnItems(listView);*/
+        btnAddAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AuthenticatorUtil().addNewAccount(PickAccountActivity.this, mAccountManager, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, true);
+            }
+        });
     }
+    public static boolean setListViewHeightBasedOnItems(ListView listView) {
 
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                item.measure(0, 0);
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() *
+                    (numberOfItems - 1);
+
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalItemsHeight + totalDividersHeight;
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
     private String parseDate(String dateParse){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -611,10 +684,11 @@ public class PickAccountActivity extends Activity {
     @Override
     protected void onResume() {
         Account[] tes = new AuthenticatorUtil().countingAccount(mAccountManager);
-        int countlistView = listView.getAdapter().getCount() -1;
-        if (tes.length<countlistView){
+//        int countlistView = listView.getAdapter().getCount() -1;
+//        int countlistView = lvRecycleview.getAdapter().getItemCount() -1;
+//        if (tes.length<countlistView){
 //            logout();
-        }
+//        }
         super.onResume();
     }
 }
