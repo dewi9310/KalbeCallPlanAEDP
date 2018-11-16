@@ -71,7 +71,7 @@ public class FragmentNotification extends Fragment {
         try {
             notificationList = (List<tNotification>) notificationRepo.findOutletId();
             if (notificationList!=null){
-                ShortcutBadger.removeCountOrThrow(getActivity());
+
                 if (notificationList.size()>0){
                     int index = 0;
                     for (tNotification data : notificationList){
@@ -109,6 +109,7 @@ public class FragmentNotification extends Fragment {
                         index++;
                     }
                 }
+                ShortcutBadger.removeCountOrThrow(getActivity().getApplicationContext());
             }
         } catch (SQLException e) {
             e.printStackTrace();
