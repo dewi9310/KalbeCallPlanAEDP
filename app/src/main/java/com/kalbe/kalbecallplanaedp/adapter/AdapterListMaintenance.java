@@ -56,6 +56,8 @@ public class AdapterListMaintenance extends BaseAdapter{
         holder.tv_outlet_name_info.setText(item.getTxtTittle());
         holder.tv_desc_infoprogram.setText(item.getTxtSubTittle());
         holder.image_letter.setText(item.getTxtImgName());
+        holder.tv_status_main.setText(item.getTxtStatus());
+        holder.tv_status_main.setTextColor(mContext.getResources().getColor(item.getInColorStatus()));
 
         displayImage(holder, item);
         return convertView;
@@ -63,7 +65,7 @@ public class AdapterListMaintenance extends BaseAdapter{
 
     class ViewHolder {
 
-        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram;
+        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram, tv_status_main;
         public ImageView image;
         public RelativeLayout lyt_image;
         LinearLayout lnDesc;
@@ -71,6 +73,7 @@ public class AdapterListMaintenance extends BaseAdapter{
         public ViewHolder(View view) {
             tv_desc_infoprogram = (TextView) view.findViewById(R.id.tv_desc_main);
             tv_outlet_name_info = (TextView) view.findViewById(R.id.tv_outlet_name_main);
+            tv_status_main = (TextView)view.findViewById(R.id.tv_status_main);
             image_letter = (TextView) view.findViewById(R.id.image_letter_main);
             image = (ImageView) view.findViewById(R.id.image_main);
             lyt_image = (RelativeLayout) view.findViewById(R.id.lyt_image_main);
@@ -86,7 +89,7 @@ public class AdapterListMaintenance extends BaseAdapter{
             holder.image_letter.setVisibility(View.GONE);
         } else {
             holder.image.setImageResource(R.drawable.shape_circle);
-            holder.image.setColorFilter(inbox.getIntColor());
+            holder.image.setColorFilter(mContext.getResources().getColor(inbox.getIntColor()));
             holder.image_letter.setVisibility(View.VISIBLE);
         }
     }

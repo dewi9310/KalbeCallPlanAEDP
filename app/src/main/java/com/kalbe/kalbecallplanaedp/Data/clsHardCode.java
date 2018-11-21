@@ -27,8 +27,9 @@ public class clsHardCode {
     public String txtPathApp = "data" + File.separator + "data" + File.separator + "com.kalbenutritionals.kalbecallplanaedp" + File.separator + "databases" + File.separator;
 
     //    public String txtFolderData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"KalbeCallPlanAEDP"+File.separator+"image_Person"+File.separator;
-    public String txtPathUserData = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"com.kalbenutritionals.kalbecallplanaedp"+File.separator+"user_data"+File.separator;
-    public String txtPathTempData = Environment.getExternalStorageDirectory() + File.separator + "Android" + File.separator + "data" + File.separator + "com.kalbenutritionals.kalbecallplanaedp" + File.separator + "tempdata" + File.separator;
+    public String pathApp = Environment.getExternalStorageDirectory()+ File.separator+"Android"+File.separator+"data"+File.separator+"com.kalbenutritionals.kalbecallplanaedp"+File.separator;
+    public String txtPathUserData = pathApp + "user_data"+File.separator;
+    public String txtPathTempData = pathApp + "tempdata" + File.separator;
 
     //    public String dbName = "KalbeCallPlanAEDP.db";
 //    public String dbName = "AEDP.db";

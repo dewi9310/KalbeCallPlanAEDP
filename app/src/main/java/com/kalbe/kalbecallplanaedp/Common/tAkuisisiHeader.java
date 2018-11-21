@@ -42,7 +42,7 @@ public class tAkuisisiHeader implements Serializable {
 
 
     public String Property_intSubSubActivityId = "intSubSubActivityId";
-    public String Property_intHeaderId = "intHeaderId";
+    public String Property_txtHeaderId = "txtHeaderId";
     public String Property_intFlagPush = "intFlagPush";
 
     public String Property_intSubSubActivityTypeId = "intSubSubActivityTypeId";

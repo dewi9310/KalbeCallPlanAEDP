@@ -55,22 +55,34 @@
                     <View
                         android:layout_width="@dimen/spacing_large"
                         android:layout_height="0dp" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:text=""
-                            android:id="@+id/tv_outlet_name_info"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                            android:textColor="@android:color/black"
-                            android:layout_weight="1"/>
-
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:id="@+id/tv_outlet_name_info"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                                android:textColor="@android:color/black"
+                                android:layout_weight="1"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/spacing_large"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:id="@+id/tv_status_info"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Tooltip"
+                                android:textColor="@color/grey_60" />
+                        </LinearLayout>
                         <android.support.v7.widget.AppCompatCheckBox
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -79,9 +91,7 @@
                             android:id="@+id/cb_done_info"
                             android:textColor="@color/grey_40"
                             android:gravity="center"/>
-
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <LinearLayout

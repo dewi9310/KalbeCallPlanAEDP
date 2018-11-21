@@ -9,9 +9,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
@@ -31,6 +33,8 @@ import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.adapter.AdapterListInfoProgram;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
@@ -67,6 +71,8 @@ public class FragmentSubInfoProgram extends Fragment {
     String strName;
     int index;
     boolean isFromHistory;
+    SwipeRefreshLayout swpInfo;
+
 
     public FragmentSubInfoProgram(tInfoProgramHeader header, int intSubSubActivity, int index, boolean isFromHistory){
         this.header = header;
@@ -81,9 +87,37 @@ public class FragmentSubInfoProgram extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_sub_infoprogram, container, false);
         listView = (ListView) v.findViewById(R.id.lv_infoprogram);
+        swpInfo = (SwipeRefreshLayout)v.findViewById(R.id.swpInfo);
 
         detailRepo = new tInfoProgramDetailRepo(getContext());
         headerRepo = new tInfoProgramHeaderRepo(getContext());
+
+
+        loadData();
+
+        swpInfo.setOnRefreshListener(refreshListener);
+        swpInfo.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light)
+
+        );
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                swpInfo.setEnabled(firstVisibleItem==0);
+            }
+        });
+        return v;
+    }
+
+    public void loadData(){
         if (index==0){
             itemAdapterList0.clear();
         }else if (index==1){
@@ -96,12 +130,12 @@ public class FragmentSubInfoProgram extends Fragment {
         if (header!=null){
             try {
                 if (header.getIntActivityId()==new clsHardCode().VisitDokter){
-                   dokter  = new mDokterRepo(getContext()).findBytxtId(header.getIntDokterId());
-                   if (dokter.getTxtLastName()!=null){
-                       strName = dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                   }else {
-                       strName = dokter.getTxtFirstName();
-                   }
+                    dokter  = new mDokterRepo(getContext()).findBytxtId(header.getIntDokterId());
+                    if (dokter.getTxtLastName()!=null){
+                        strName = dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                    }else {
+                        strName = dokter.getTxtFirstName();
+                    }
                 }else {
                     strName = new mApotekRepo(getContext()).findBytxtId(header.getIntApotekId()).getTxtName();
                 }
@@ -122,15 +156,27 @@ public class FragmentSubInfoProgram extends Fragment {
                             itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
                             itemAdapter.setChecked(data.isBoolFlagChecklist());
                             itemAdapter.setFromHistory(isFromHistory);
+
+                            if (data.getIntFlagPush()==new clsHardCode().Draft){
+                                itemAdapter.setTxtStatus("Draft");
+                                itemAdapter.setIntColorStatus(R.color.grey_60);
+                            }else if (data.getIntFlagPush()==new clsHardCode().Save){
+                                itemAdapter.setTxtStatus("Submit");
+                                itemAdapter.setIntColorStatus(R.color.red_200);
+                            }else if (data.getIntFlagPush()==new clsHardCode().Sync){
+                                itemAdapter.setTxtStatus("Sync");
+                                itemAdapter.setIntColorStatus(R.color.green_300);
+                            }
                             if ((attach.getDescription()!=null&& (attach.getTxtFileName()!=null))){
                                 if (!attach.getDescription().equals("")&&!attach.getTxtFileName().equals("")){
                                     validAll = true;
                                 }
-                            }else if (attach.getDescription()!=null){
+                            }
+                            if (attach.getDescription()!=null&&validAll==false){
                                 if (!attach.getDescription().equals("")){
                                     validDesc = true;
                                 }
-                            }else if (attach.getTxtFileName()!=null){
+                            }if (attach.getTxtFileName()!=null&&validAll==false){
                                 if (!attach.getTxtFileName().equals("")){
                                     validFile = true;
                                 }
@@ -213,7 +259,7 @@ public class FragmentSubInfoProgram extends Fragment {
             public void onItemClick(final View view, final clsInfoProgram obj, int position) {
 
                 if (view!=null){
-                     checkBox = (CheckBox) view;
+                    checkBox = (CheckBox) view;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -252,9 +298,17 @@ public class FragmentSubInfoProgram extends Fragment {
 
             }
         });
-
-        return v;
     }
+
+    private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            loadData();
+//            adapter.notifyDataSetChanged();
+            swpInfo.setRefreshing(false);
+        }
+    };
+
 
     public void saveData(){
         try {
@@ -274,6 +328,7 @@ public class FragmentSubInfoProgram extends Fragment {
             data.setIntFlagPush(new clsHardCode().Save);
 //            data.setDescription(data.getDescription());
             detailRepo.createOrUpdate(data);
+            loadData();
             ToastCustom.showToasty(getContext(),"Saved",1);
         } catch (SQLException e) {
             e.printStackTrace();

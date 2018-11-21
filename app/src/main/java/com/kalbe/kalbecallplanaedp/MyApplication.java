@@ -20,4 +20,9 @@ public class MyApplication extends Application {
 //        registerReceiver( new FragmentDownloadData().receiver, new IntentFilter(
 //                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
+
+//    @Override
+//    public void onTerminate() {
+//        super.onTerminate();
+//    }
 }

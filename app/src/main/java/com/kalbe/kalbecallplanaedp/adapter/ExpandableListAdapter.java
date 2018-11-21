@@ -146,7 +146,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             holder.image_letter.setVisibility(View.GONE);
         } else {
             holder.image.setImageResource(R.drawable.shape_circle);
-            holder.image.setColorFilter(inbox.getIntColor());
+            holder.image.setColorFilter(_context.getResources().getColor(inbox.getIntColor()));
             holder.image_letter.setVisibility(View.VISIBLE);
         }
     }

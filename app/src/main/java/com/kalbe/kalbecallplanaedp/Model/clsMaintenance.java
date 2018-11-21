@@ -11,6 +11,8 @@ public class clsMaintenance {
     private String txtSubTittle;
     private int intColor;
     private String txtImgName;
+    private String txtStatus;
+    private int inColorStatus;
 
     public String getTxtId() {
         return txtId;
@@ -58,5 +60,21 @@ public class clsMaintenance {
 
     public void setTxtImgName(String txtImgName) {
         this.txtImgName = txtImgName;
+    }
+
+    public String getTxtStatus() {
+        return txtStatus;
+    }
+
+    public void setTxtStatus(String txtStatus) {
+        this.txtStatus = txtStatus;
+    }
+
+    public int getInColorStatus() {
+        return inColorStatus;
+    }
+
+    public void setInColorStatus(int inColorStatus) {
+        this.inColorStatus = inColorStatus;
     }
 }

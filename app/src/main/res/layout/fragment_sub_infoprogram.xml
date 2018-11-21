@@ -5,14 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_10"
     android:layout_height="match_parent">
-
-    <ListView
-        android:layout_marginTop="@dimen/spacing_medium"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_infoprogram">
+        android:id="@+id/swpInfo">
+        <ListView
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lv_infoprogram">
 
-    </ListView>
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 
     <LinearLayout

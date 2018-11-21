@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,7 @@ public class FragmentSubAkuisisi extends Fragment {
 //    private tAkuisisiHeader dtHeader = new tAkuisisiHeader();
     tAkuisisiDetailRepo detailRepo;
     tAkuisisiHeaderRepo headerRepo;
-    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName, tvDesc_akuisisi, tv_image;
+    private TextView tvNoDoc, tvExpDate, tvOutlet, tvUserName, tvDesc_akuisisi, tv_image, tv_status_info, tv_status_Akusisi;
     ImageView image;
     LinearLayout ln_resgistrasi, ln_image, ln_emptyAkuisisi;
     FloatingActionButton fab;
@@ -83,6 +84,7 @@ public class FragmentSubAkuisisi extends Fragment {
     mDokter dokter;
     mApotek apotek;
     mApotekRepo apotekRepo;
+    SwipeRefreshLayout swpAkusisi;
 
     public FragmentSubAkuisisi(tAkuisisiHeader dtHeader, int intTypeSubSubId, FloatingActionButton fab){
         this.dtHeader = dtHeader;
@@ -98,6 +100,8 @@ public class FragmentSubAkuisisi extends Fragment {
             viewPager = (ViewPager) v.findViewById(R.id.view_pager_subakuisisi);
             tvNoDoc = (TextView) v.findViewById(R.id.title_subakuisisi);
             tvExpDate = (TextView) v.findViewById(R.id.tv_exp_date_sub);
+            tv_status_info = (TextView)v.findViewById(R.id.tv_status_info);
+            tv_status_Akusisi = (TextView)v.findViewById(R.id.tv_status_Akusisi);
             ln_image = (LinearLayout) v.findViewById(R.id.ln_image_sub_akuisisi);
             ln_resgistrasi = (LinearLayout) v.findViewById(R.id.ln_resgistrasi_sub_akuisisi);
             ln_emptyAkuisisi = (LinearLayout)v.findViewById(R.id.ln_emptyAkuisisi);
@@ -106,89 +110,22 @@ public class FragmentSubAkuisisi extends Fragment {
             tvDesc_akuisisi = (TextView) v.findViewById(R.id.tvDesc_akuisisi);
             tv_image = (TextView) v.findViewById(R.id.image_letter_akuisisi);
             image = (ImageView)v.findViewById(R.id.image_akuisisi);
+            swpAkusisi = (SwipeRefreshLayout)v.findViewById(R.id.swpAkusisi);
+            swpAkusisi.setOnRefreshListener(refreshListener);
+            swpAkusisi.setColorSchemeColors(
+//                    getResources().getColor(android.R.color.holo_blue_bright),
+//                    getResources().getColor(android.R.color.holo_green_light),
+//                    getResources().getColor(android.R.color.holo_orange_light),
+                    getResources().getColor(android.R.color.holo_red_light)
 
-
+            );
 
             headerRepo = new tAkuisisiHeaderRepo(getContext());
             detailRepo = new tAkuisisiDetailRepo(getContext());
             dokterRepo = new mDokterRepo(getContext());
             apotekRepo = new mApotekRepo(getContext());
 
-            try {
-                if (dtHeader==null){
-                    ln_emptyAkuisisi.setVisibility(View.VISIBLE);
-                    ln_resgistrasi.setVisibility(View.GONE);
-                    ln_image.setVisibility(View.GONE);
-                    tvDesc_akuisisi.setText("Please download or create data Akuisisi");
-                }else {
-                    dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
-                    if (intTypeSubSubId ==new clsHardCode().TypeFoto){
-                        if (dtDetail.size()>0){
-                            if (isDetailNotReady(dtDetail)){
-                                ln_emptyAkuisisi.setVisibility(View.VISIBLE);
-                                ln_resgistrasi.setVisibility(View.GONE);
-                                ln_image.setVisibility(View.GONE);
-                                tvDesc_akuisisi.setText("Please download File Akuisisi");
-                            }else {
-                                ln_resgistrasi.setVisibility(View.GONE);
-                                ln_emptyAkuisisi.setVisibility(View.GONE);
-                                ln_image.setVisibility(View.VISIBLE);
-                                tvNoDoc.setText(dtHeader.getTxtNoDoc());
-                                tvExpDate.setText(parseDate(dtHeader.getDtExpiredDate()));
-                            }
-                        }
-                    }else if (intTypeSubSubId==new clsHardCode().TypeText){
-                        ln_image.setVisibility(View.GONE);
-                        ln_emptyAkuisisi.setVisibility(View.GONE);
-                        ln_resgistrasi.setVisibility(View.VISIBLE);
-                        boolean isDokter = false;
-                        if (dtHeader.getIntApotekID()!=null){
-                            if (!dtHeader.getIntApotekID().equals("null")){
-                                isDokter = false;
-                            }else {
-                                isDokter = true;
-                            }
-                        }else if (dtHeader.getIntDokterId()!=null){
-                            if (!dtHeader.getIntDokterId().equals("null")){
-                               isDokter = true;
-                            }else {
-                                isDokter = false;
-                            }
-                        }
-
-                        if (isDokter){
-                            dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
-                            if (dokter.getTxtLastName()!=null){
-                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
-                            }else {
-                                tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
-                            }
-
-                        }else {
-                            apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
-                            tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
-//                            tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
-                        }
-                        tvUserName.setText(dtHeader.getTxtUserName());
-                        image.setColorFilter(R.color.red_400);
-                        image.setImageResource(R.drawable.shape_circle);
-                        tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
-                    }
-                }
-
-//                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            adapterImageSlider = new AdapterImageSlider(getActivity(), dtDetail);
-            adapterImageSlider.setItems(dtDetail);
-            viewPager.setAdapter(adapterImageSlider);
-
-            // displaying selected image first
-            viewPager.setCurrentItem(0);
-            addBottomDots(layout_dots, adapterImageSlider.getCount(), 0);
-
+            loadData();
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int pos, float positionOffset, int positionOffsetPixels) {
@@ -218,6 +155,98 @@ public class FragmentSubAkuisisi extends Fragment {
         return v;
     }
 
+    private void loadData(){
+        try {
+            if (dtHeader==null){
+                ln_emptyAkuisisi.setVisibility(View.VISIBLE);
+                ln_resgistrasi.setVisibility(View.GONE);
+                ln_image.setVisibility(View.GONE);
+                tvDesc_akuisisi.setText("Please download or create data Akuisisi");
+            }else {
+                dtDetail = (List<tAkuisisiDetail>) detailRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                if (intTypeSubSubId ==new clsHardCode().TypeFoto){
+                    if (dtDetail.size()>0){
+                        if (isDetailNotReady(dtDetail)){
+                            ln_emptyAkuisisi.setVisibility(View.VISIBLE);
+                            ln_resgistrasi.setVisibility(View.GONE);
+                            ln_image.setVisibility(View.GONE);
+                            tvDesc_akuisisi.setText("Please download File Akuisisi");
+                        }else {
+                            ln_resgistrasi.setVisibility(View.GONE);
+                            ln_emptyAkuisisi.setVisibility(View.GONE);
+                            ln_image.setVisibility(View.VISIBLE);
+                            tvNoDoc.setText(dtHeader.getTxtNoDoc());
+                            tvExpDate.setText(parseDate(dtHeader.getDtExpiredDate()));
+                        }
+                        if (dtHeader.getIntFlagPush()==new clsHardCode().Save){
+                            tv_status_info.setText("Submit");
+                            tv_status_info.setTextColor(getContext().getResources().getColor(R.color.red_200));
+                        }else if (dtHeader.getIntFlagPush()==new clsHardCode().Sync){
+                            tv_status_info.setText("Sync");
+                            tv_status_info.setTextColor(getContext().getResources().getColor(R.color.green_300));
+                        }
+
+                    }
+                }else if (intTypeSubSubId==new clsHardCode().TypeText){
+                    ln_image.setVisibility(View.GONE);
+                    ln_emptyAkuisisi.setVisibility(View.GONE);
+                    ln_resgistrasi.setVisibility(View.VISIBLE);
+                    boolean isDokter = false;
+                    if (dtHeader.getIntApotekID()!=null){
+                        if (!dtHeader.getIntApotekID().equals("null")){
+                            isDokter = false;
+                        }else {
+                            isDokter = true;
+                        }
+                    }else if (dtHeader.getIntDokterId()!=null){
+                        if (!dtHeader.getIntDokterId().equals("null")){
+                            isDokter = true;
+                        }else {
+                            isDokter = false;
+                        }
+                    }
+
+                    if (isDokter){
+                        dokter = (mDokter) dokterRepo.findBytxtId(dtHeader.getIntDokterId());
+                        if (dokter.getTxtLastName()!=null){
+                            tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName() + " " + dokter.getTxtLastName());
+                        }else {
+                            tvOutlet.setText("Doctor : "+ dokter.getTxtFirstName());
+                        }
+
+                    }else {
+                        apotek = (mApotek) apotekRepo.findBytxtId(dtHeader.getIntApotekID());
+                        tvOutlet.setText("Pharmacy : "+apotek.getTxtName());
+//                            tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
+                    }
+                    tvUserName.setText(dtHeader.getTxtUserName());
+                    image.setColorFilter(getContext().getResources().getColor(R.color.red_400));
+                    if (dtHeader.getIntFlagPush()==new clsHardCode().Save){
+                        tv_status_Akusisi.setText("Submit");
+                        tv_status_Akusisi.setTextColor(getContext().getResources().getColor(R.color.red_200));
+                    }else if (dtHeader.getIntFlagPush()==new clsHardCode().Sync){
+                        tv_status_Akusisi.setText("Sync");
+                        tv_status_Akusisi.setTextColor(getContext().getResources().getColor(R.color.green_300));
+                    }
+                    image.setImageResource(R.drawable.shape_circle);
+                    tv_image.setText((dtHeader.getTxtUserName().substring(0,1)).toUpperCase());
+                }
+            }
+
+//                dtHeader = (tAkuisisiHeader) headerRepo.findBySubSubId(intSubSubId, new clsHardCode().Save);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        adapterImageSlider = new AdapterImageSlider(getActivity(), dtDetail);
+        adapterImageSlider.setItems(dtDetail);
+        viewPager.setAdapter(adapterImageSlider);
+
+        // displaying selected image first
+        viewPager.setCurrentItem(0);
+        addBottomDots(layout_dots, adapterImageSlider.getCount(), 0);
+
+    }
     private void addBottomDots(LinearLayout layout_dots, int size, int current) {
         ImageView[] dots = new ImageView[size];
 
@@ -335,4 +364,20 @@ public class FragmentSubAkuisisi extends Fragment {
             return "";
         }
     }
+
+    private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+//            int iterator = customViewPager.getCurrentItem();
+//            customViewPager.setAdapter(adapter);
+//            customViewPager.setCurrentItem(iterator);
+            try {
+                dtHeader = (tAkuisisiHeader) headerRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            loadData();
+            swpAkusisi.setRefreshing(false);
+        }
+    };
 }

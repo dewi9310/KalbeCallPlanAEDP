@@ -268,7 +268,7 @@ public class clsDataJson {
             for (tAkuisisiHeader data : this.getListDataOftAkuisisiHeader()){
                 JSONObject item = new JSONObject();
                 item.put(dataAkuisisiHeader.Property_intSubSubActivityId, String.valueOf(data.getIntSubSubActivityId()));
-                item.put(dataAkuisisiHeader.Property_intHeaderId, String.valueOf(data.getTxtHeaderId()));
+                item.put(dataAkuisisiHeader.Property_txtHeaderId, String.valueOf(data.getTxtHeaderId()));
                 item.put(dataAkuisisiHeader.Property_intSubSubActivityTypeId, String.valueOf(data.getIntSubSubActivityTypeId()));
                 item.put(dataAkuisisiHeader.Property_txtNoDoc, String.valueOf(data.getTxtNoDoc()));
                 item.put(dataAkuisisiHeader.Property_dtExpiredDate, String.valueOf(data.getDtExpiredDate()));

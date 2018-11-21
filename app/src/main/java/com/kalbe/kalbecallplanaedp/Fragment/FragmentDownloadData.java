@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -115,6 +116,7 @@ import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
+import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.kalbe.mobiledevknlibs.library.badgeall.viewbadger.ShortcutBadgeException;
 import com.kalbe.mobiledevknlibs.library.badgeall.viewbadger.ShortcutBadger;
@@ -198,6 +200,8 @@ public class FragmentDownloadData extends Fragment{
     List<Long> listId = new ArrayList<>();
      CoordinatorLayout cl;
      private String i_View ="Fragment";
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
 
     @Nullable
@@ -336,6 +340,7 @@ public class FragmentDownloadData extends Fragment{
             e.printStackTrace();
         }
 
+        final boolean isDataReady = new clsMainBL().isDataReady(getContext());
         ln_download_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -491,36 +496,40 @@ public class FragmentDownloadData extends Fragment{
         ln_download_realisasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemList.clear();
-                try {
-                    dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if (dataListProgramVisitSubActivity!=null){
-                    if (dataListProgramVisitSubActivity.size()>0){
-                        int index = 0;
-                        for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
-                            index++;
-                            mActivity activity = null;
-                            try {
-                                activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            if (data.getIntActivityId()==new clsHardCode().VisitDokter){
-                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
-                            }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
-                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
-                            }else {
-                                itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
-                            }
-                        }
-                    }else {
-                        itemList.add(" - ");
+                if (isDataReady){
+                    itemList.clear();
+                    try {
+                        dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
+                    if (dataListProgramVisitSubActivity!=null){
+                        if (dataListProgramVisitSubActivity.size()>0){
+                            int index = 0;
+                            for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
+                                index++;
+                                mActivity activity = null;
+                                try {
+                                    activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                    itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
+                                }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                    itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
+                                }else {
+                                    itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
+                                }
+                            }
+                        }else {
+                            itemList.add(" - ");
+                        }
+                    }
+                    onButtonOnClick(ln_download_realisasi, tv_download_realisasi, "tRealisasiVisitPlan");
+                }else {
+                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
                 }
-                onButtonOnClick(ln_download_realisasi, tv_download_realisasi, "tRealisasiVisitPlan");
             }
         });
 
@@ -528,115 +537,132 @@ public class FragmentDownloadData extends Fragment{
         ln_download_akuisisi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemList.clear();
-                try {
-                    dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if (dataListAkuisisi!=null){
-                    if (dataListAkuisisi.size()>0){
-                        int index = 0;
-                        for (tAkuisisiHeader data : dataListAkuisisi){
-                            index++;
-                            String name = null;
-                            try {
-                                if (data.getIntDokterId()!=null){
-                                    if (!data.getIntDokterId().equals("null")){
-                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                if (isDataReady){
+                    itemList.clear();
+                    try {
+                        dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    if (dataListAkuisisi!=null){
+                        if (dataListAkuisisi.size()>0){
+                            int index = 0;
+                            for (tAkuisisiHeader data : dataListAkuisisi){
+                                index++;
+                                String name = null;
+                                try {
+                                    if (data.getIntDokterId()!=null){
+                                        if (!data.getIntDokterId().equals("null")){
+                                            name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                                        }else if (data.getIntApotekID()!=null){
+                                            if (!data.getIntApotekID().equals("null")){
+                                                name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                            }
+                                        }
                                     }else if (data.getIntApotekID()!=null){
                                         if (!data.getIntApotekID().equals("null")){
                                             name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
                                         }
                                     }
-                                }else if (data.getIntApotekID()!=null){
-                                    if (!data.getIntApotekID().equals("null")){
-                                        name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
-                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
+                                itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
                             }
-                            itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
+                        }else {
+                            itemList.add(" - ");
                         }
-                    }else {
-                        itemList.add(" - ");
                     }
+                    onButtonOnClick(ln_download_akuisisi, tv_download_akuisisi, "tAkuisisiHeader");
+                }else {
+                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
                 }
-                onButtonOnClick(ln_download_akuisisi, tv_download_akuisisi, "tAkuisisiHeader");
             }
         });
 
         ln_download_maintenance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemList.clear();
-                try {
-                    dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if (dataListMaintenance!=null){
-                    if (dataListMaintenance.size()>0){
-                        int index = 0;
-                        for (tMaintenanceHeader data : dataListMaintenance){
-                            index++;
-                            String name = null;
-                            try {
-                                if (data.getIntActivityId()==new clsHardCode().VisitDokter){
-                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
-                                }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
-                                    name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            itemList.add(String.valueOf(index) + " - Maintenance - " + name);
-                        }
-                    }else {
-                        itemList.add(" - ");
+                if (isDataReady){
+                    itemList.clear();
+                    try {
+                        dataListMaintenance = (List<tMaintenanceHeader>) dtRepoMaintenanceHeader.findAll();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
+                    if (dataListMaintenance!=null){
+                        if (dataListMaintenance.size()>0){
+                            int index = 0;
+                            for (tMaintenanceHeader data : dataListMaintenance){
+                                index++;
+                                String name = null;
+                                try {
+                                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName();
+                                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                        name = apotekRepo.findBytxtId(data.getIntApotekID()).getTxtName();
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                itemList.add(String.valueOf(index) + " - Maintenance - " + name);
+                            }
+                        }else {
+                            itemList.add(" - ");
+                        }
+                    }
+                    onButtonOnClick(ln_download_maintenance, tv_download_maintenance, "tMaintenanceHeader");
+                }else {
+                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
                 }
-                onButtonOnClick(ln_download_maintenance, tv_download_maintenance, "tMaintenanceHeader");
             }
         });
 
         ln_download_infoprogram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemList.clear();
-                try {
-                    dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                if (dataLIstInfoProgram!=null){
-                    if (dataLIstInfoProgram.size()>0){
-                        int index = 0;
-                        for (tInfoProgramHeader data : dataLIstInfoProgram){
-                            index++;
-                            String name = null;
-                            try {
-                                if (data.getIntActivityId()==new clsHardCode().VisitDokter){
-                                    name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
-                                }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
-                                    name = apotekRepo.findBytxtId(data.getIntApotekId()).getTxtName();
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            itemList.add(String.valueOf(index) + " - Info Program - " + name);
-                        }
-                    }else {
-                        itemList.add(" - ");
+                if (isDataReady){
+                    itemList.clear();
+                    try {
+                        dataLIstInfoProgram = (List<tInfoProgramHeader>) dtRepoInfoProgHeader.findAll();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
+                    if (dataLIstInfoProgram!=null){
+                        if (dataLIstInfoProgram.size()>0){
+                            int index = 0;
+                            for (tInfoProgramHeader data : dataLIstInfoProgram){
+                                index++;
+                                String name = null;
+                                try {
+                                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                        name = "Dokter " + dokterRepo.findBytxtId(data.getIntDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(data.getIntDokterId()).getTxtLastName();
+                                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                        name = apotekRepo.findBytxtId(data.getIntApotekId()).getTxtName();
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                itemList.add(String.valueOf(index) + " - Info Program - " + name);
+                            }
+                        }else {
+                            itemList.add(" - ");
+                        }
+                    }
+                    onButtonOnClick(ln_download_infoprogram, tv_download_infoprogram, "tInfoProgramHeader");
+                }else {
+                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
                 }
-                onButtonOnClick(ln_download_infoprogram, tv_download_infoprogram, "tInfoProgramHeader");
             }
         });
 
-        getContext().registerReceiver(receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//        getContext().registerReceiver(receiver, new IntentFilter(
+//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        preferences = getContext().getSharedPreferences("Ahgase", Context.MODE_PRIVATE);
+//        if (!preferences.contains("initialized")){
+//
+//        }
+        editor = preferences.edit();
         return v;
     }
 
@@ -725,6 +751,8 @@ public class FragmentDownloadData extends Fragment{
             downloadArea();
         }else{
             if (isDataReady){
+                editor.clear();
+                editor.commit();
                 if (txtDownlaod.equals("tRealisasiVisitPlan")){
                     downloadtCallPlan();
                 }else if (txtDownlaod.equals("tAkuisisiHeader")){
@@ -790,6 +818,9 @@ public class FragmentDownloadData extends Fragment{
                         if (txtStatus == true){
 
                             listId.clear();
+                            editor.clear();
+                            editor.commit();
+                            int testing = preferences.getAll().size();
                             downloadApotek(true);
                             downloadDokter(true);
                             if (model.getData().getDataMappingArea().getLtMappingArea()!=null){
@@ -1133,8 +1164,7 @@ public class FragmentDownloadData extends Fragment{
 
 
                             if (ltVMDownload.size()>0){
-                                for (VMDownloadFile f :
-                                        ltVMDownload) {
+                                for (VMDownloadFile f : ltVMDownload) {
                                     downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
                                 }
                             }
@@ -1511,11 +1541,11 @@ public class FragmentDownloadData extends Fragment{
                                 }
                                 if (!isFromDownloadAll){
                                     dataAdapter.notifyDataSetChanged();
+                                    checkMenu();
                                 }
                                 tv_count_apotek.setText(String.valueOf(dataListApotek.size()));
                             }
                             Log.d("Data info", "Success Download");
-                           checkMenu();
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
 //                            Toast.makeText(getApplicationContext(), txtMessage, Toast.LENGTH_SHORT).show();
@@ -1592,9 +1622,10 @@ public class FragmentDownloadData extends Fragment{
                                 }
                                 if (!isFromDownloadAll){
                                     dataAdapter.notifyDataSetChanged();
+                                    checkMenu();
                                 }
                                 tv_count_dokter.setText(String.valueOf(model.getData().size()));
-                                checkMenu();
+
                             }
                             Log.d("Data info", "Success Download");
 
@@ -2242,8 +2273,8 @@ public class FragmentDownloadData extends Fragment{
         if (isDataReady){
             ToastCustom.showToasty(getContext(),"Success Download",1);
             Intent myIntent = new Intent(getContext(), MainMenu.class);
-            getActivity().finish();
             startActivity(myIntent);
+            getActivity().finish();
         }
     }
 
@@ -2259,10 +2290,18 @@ public class FragmentDownloadData extends Fragment{
         request.setDescription(txtId);
         request.setVisibleInDownloadsUi(true);
 //        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-        request.setDestinationInExternalPublicDir(new clsHardCode().txtPathTempData, "/Download/"  + file.substring(1, file.length()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Download/"  + file.substring(1, file.length()));
+//        Uri uri = UriData.getOutputMediaUri(getContext(), new clsHardCode().txtFolderDownload, file.substring(1, file.length()));
+//        request.setDestinationUri(Uri.parse(new clsHardCode().txtFolderDownload + file.substring(1, file.length())));
+//        request.setDestinationUri(uri);
+//        request.setDestinationInExternalFilesDir(getContext(), new clsHardCode().txtFolderDownload, file.substring(1, file.length()));
 
         long enqueue = dm.enqueue(request);
+
+        editor.putLong(txtId, enqueue);
+        editor.commit();
         listId.add(enqueue);
+
     }
 
     public BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -2286,6 +2325,9 @@ public class FragmentDownloadData extends Fragment{
                             String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                             String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
                             String txtId = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+                            preferences = context.getSharedPreferences("Ahgase", Context.MODE_PRIVATE);
+                            editor = preferences.edit();
+                            long id = preferences.getLong(txtId, -1);
                             try {
                                 byte[] file = PickFile.getByteArrayFileToSave(Uri.parse(uriString), context);
                                 if (title.contains("Info Program")){
@@ -2305,19 +2347,26 @@ public class FragmentDownloadData extends Fragment{
                                     data.setBlobImg2(file);
                                     new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
                                 }
+                                if (id==downloadId){
+//                                  editor = preferences.edit();
+                                    editor.remove(txtId);
+                                    editor.commit();
+                                }
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
 
-
-                            if (listId!=null){
-                                listId.remove(downloadId);
-                                if (listId.isEmpty()){
-                                    createNotificationDonwloadComplete(context);
-                                }
+                            if (preferences.getAll().size()==0){
+                                createNotificationDonwloadComplete(context);
                             }
+//                            if (listId!=null){
+//                                listId.remove(downloadId);
+//                                if (listId.isEmpty()){
+//                                    createNotificationDonwloadComplete(context);
+//                                }
+//                            }
 
                         }
                     }
@@ -2423,7 +2472,7 @@ public class FragmentDownloadData extends Fragment{
 
     }
 
-    private void createNotificationDonwloadComplete(Context context){
+    public void createNotificationDonwloadComplete(Context context){
         String CHANNEL_ID = "kalbenutritionals_channel";
         CharSequence name = "kalbenutritionals_channel";
         String Description = "kalbenutritionals channel";

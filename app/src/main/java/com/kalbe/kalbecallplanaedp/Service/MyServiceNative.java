@@ -57,7 +57,7 @@ public class MyServiceNative extends Service {
     private Gson gson;
     private void _startService(){
         long intInterval = 0;
-        intInterval = UPDATE_INTERVAL;
+        intInterval = UPDATE_INTERVAL_TESTING;
         if (timer!=null){
             timer.cancel();
         }

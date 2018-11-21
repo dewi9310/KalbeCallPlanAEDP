@@ -26,12 +26,12 @@
             app:tabTextColor="@color/grey_20" />
 
     </android.support.design.widget.AppBarLayout>
-
     <com.kalbe.kalbecallplanaedp.Utils.CustomViewPager
         android:id="@+id/view_pager_maintenance"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_maintenance"

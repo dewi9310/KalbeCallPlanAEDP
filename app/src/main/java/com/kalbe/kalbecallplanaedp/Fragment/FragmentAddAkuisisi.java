@@ -329,7 +329,8 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         args.putInt(CustomDatePicker.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH));
         args.putLong(CustomDatePicker.DATE_MIN, c.getTimeInMillis());
         //set hint for date
-        CustomDatePicker.showHint(etDtExpired, args, CustomDatePicker.format.standard1);
+        etDtExpired.setHint("Select Date");
+//        CustomDatePicker.showHint(etDtExpired, args, CustomDatePicker.format.standard1);
         etDtExpired.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

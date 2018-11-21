@@ -33,6 +33,7 @@ import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
+import com.kalbe.kalbecallplanaedp.Common.mSubSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
@@ -55,6 +56,7 @@ import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mSubSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
@@ -318,7 +320,7 @@ public void setListData(){
                             }else {
                                 isDokter = true;
                             }
-                        }
+                        } 
                         if (isDokter){
                             dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
                             dokter = dokterRepo.findBytxtId(data.getIntDokterId());
@@ -332,11 +334,12 @@ public void setListData(){
                         }
                         listAkuisisiDetail = (List<tAkuisisiDetail>) akuisisiDetailRepo.findByHeaderId(data.getTxtHeaderId());
                         if (listAkuisisiDetail!=null){
-                            swpItem.setTxtDate(String.valueOf(listAkuisisiDetail.size()));
+                            mSubSubActivity subDetailActivity = (mSubSubActivity) new mSubSubActivityRepo(getContext()).findById(data.getIntSubSubActivityId());
+                            swpItem.setTxtDate(subDetailActivity.getTxtName() + " (" +String.valueOf(listAkuisisiDetail.size())+ ")");
                         }
                         swpItem.setTxtTittle(dtActivity.getTxtName());
                         swpItem.setTxtSubTittle(name);
-                        swpItem.setIntColor(R.color.blue_600);
+                        swpItem.setIntColor(R.color.lime_600);
                         swpItem.setBoolSection(false);
                         swpItem.setTxtId(data.getTxtHeaderId());
                         swipeListAkuisisi.add(swpItem);
@@ -367,7 +370,9 @@ public void setListData(){
                         }
                         listMainDetail = (List<tMaintenanceDetail>) maintenanceDetailRepo.findByHeaderPushId(data.getTxtHeaderId());
                         if (listMainDetail!=null){
-                            swpItem.setTxtDate(String.valueOf(listMainDetail.size()));
+                            mSubSubActivity subDetailActivity = (mSubSubActivity) new mSubSubActivityRepo(getContext()).findById(listMainDetail.get(0).getIntSubDetailActivityId());
+//                            swpItem.setTxtDate(String.valueOf(listMainDetail.size()));
+                            swpItem.setTxtDate(subDetailActivity.getTxtName() + " (" +String.valueOf(listMainDetail.size())+ ")");
                         }
                         swpItem.setTxtTittle(dtActivity.getTxtName());
                         swpItem.setTxtSubTittle(name);
@@ -400,7 +405,9 @@ public void setListData(){
                         }
                         listInfoDetail = (List<tInfoProgramDetail>) infoProgramDetailRepo.findByHeaderPushId(data.getTxtHeaderId());
                         if (listInfoDetail!=null){
-                            swpItem.setTxtDate(String.valueOf(listInfoDetail.size()));
+                            mSubSubActivity subDetailActivity = (mSubSubActivity) new mSubSubActivityRepo(getContext()).findById(listInfoDetail.get(0).getIntSubDetailActivityId());
+                            swpItem.setTxtDate(subDetailActivity.getTxtName() + " (" +String.valueOf(listInfoDetail.size())+ ")");
+//                            swpItem.setTxtDate(String.valueOf(listInfoDetail.size()));
                         }
                         swpItem.setTxtTittle(dtActivity.getTxtName());
                         swpItem.setTxtSubTittle(name);

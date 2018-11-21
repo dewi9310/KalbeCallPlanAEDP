@@ -103,6 +103,8 @@ public class AdapterListInfoProgram extends BaseAdapter {
         holder.tv_desc_infoprogram.setText(item.getTxtSubTittle());
         holder.tv_file_attach_info.setText(item.getTxtDesc());
         holder.image_letter.setText(item.getTxtImgName());
+        holder.tv_status_info.setText(item.getTxtStatus());
+        holder.tv_status_info.setTextColor(mContext.getResources().getColor(item.getIntColorStatus()));
         holder.tv_file_attach_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,7 +128,7 @@ public class AdapterListInfoProgram extends BaseAdapter {
 
     class ViewHolder {
 
-        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram, tv_file_attach_info;
+        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram, tv_file_attach_info, tv_status_info;
         public ImageView image;
         public RelativeLayout lyt_image;
         public CheckBox cb_done_info;
@@ -136,6 +138,7 @@ public class AdapterListInfoProgram extends BaseAdapter {
             tv_file_attach_info = (TextView) view.findViewById(R.id.tv_file_attach_info);
             tv_desc_infoprogram = (TextView) view.findViewById(R.id.tv_desc_infoprogram);
             tv_outlet_name_info = (TextView) view.findViewById(R.id.tv_outlet_name_info);
+            tv_status_info = (TextView)view.findViewById(R.id.tv_status_info);
             image_letter = (TextView) view.findViewById(R.id.image_letter_info);
             image = (ImageView) view.findViewById(R.id.image_info);
             lyt_image = (RelativeLayout) view.findViewById(R.id.lyt_image_info);
@@ -153,7 +156,7 @@ public class AdapterListInfoProgram extends BaseAdapter {
             holder.image_letter.setVisibility(View.GONE);
         } else {
             holder.image.setImageResource(R.drawable.shape_circle);
-            holder.image.setColorFilter(inbox.getIntColor());
+            holder.image.setColorFilter(mContext.getResources().getColor(inbox.getIntColor()));
             holder.image_letter.setVisibility(View.VISIBLE);
         }
     }

@@ -139,7 +139,7 @@ public class tAkuisisiHeaderRepo implements crud {
         QueryBuilder<tAkuisisiHeader, Integer> queryBuilder = null;
         try {
             queryBuilder = helper.getAkuisisiHeaderDao().queryBuilder();
-            queryBuilder.where().eq(item.Property_intHeaderId, intHeaderId);
+            queryBuilder.where().eq(item.Property_txtHeaderId, intHeaderId);
             item = queryBuilder.queryForFirst();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -9,9 +9,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -63,6 +65,7 @@ public class FragmentSubMaintenance extends Fragment {
     String strName;
     int index;
     LinearLayout lnEmpty;
+    SwipeRefreshLayout swpInfo;
 
     public FragmentSubMaintenance(List<String> listHeaderId, tMaintenanceHeader header, int intSubSubActivity, int index){
         this.header = header;
@@ -78,9 +81,37 @@ public class FragmentSubMaintenance extends Fragment {
         v = inflater.inflate(R.layout.fragment_sub_infoprogram, container, false);
         listView = (ListView) v.findViewById(R.id.lv_infoprogram);
         lnEmpty = (LinearLayout)v.findViewById(R.id.ln_emptyMain);
+        swpInfo = (SwipeRefreshLayout)v.findViewById(R.id.swpInfo);
 
         detailRepo = new tMaintenanceDetailRepo(getContext());
         headerRepo = new tMaintenanceHeaderRepo(getContext());
+
+        loadData();
+
+        swpInfo.setOnRefreshListener(refreshListener);
+        swpInfo.setColorSchemeColors(
+                getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light)
+
+        );
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                swpInfo.setEnabled(firstVisibleItem==0);
+            }
+        });
+
+        return v;
+    }
+
+    private void loadData(){
         if (index==0){
             itemAdapterList0.clear();
         }else if (index==1){
@@ -91,12 +122,12 @@ public class FragmentSubMaintenance extends Fragment {
         if (header!=null){
             try {
                 if (header.getIntActivityId()==new clsHardCode().VisitDokter){
-                   dokter  = new mDokterRepo(getContext()).findBytxtId(header.getIntDokterId());
-                   if (dokter.getTxtLastName()!=null){
-                       strName = dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
-                   }else {
-                       strName = dokter.getTxtFirstName();
-                   }
+                    dokter  = new mDokterRepo(getContext()).findBytxtId(header.getIntDokterId());
+                    if (dokter.getTxtLastName()!=null){
+                        strName = dokter.getTxtFirstName() + " " + dokter.getTxtLastName();
+                    }else {
+                        strName = dokter.getTxtFirstName();
+                    }
                 }else {
                     strName = new mApotekRepo(getContext()).findBytxtId(header.getIntApotekID()).getTxtName();
                 }
@@ -108,12 +139,20 @@ public class FragmentSubMaintenance extends Fragment {
                             clsMaintenance itemAdapter = new clsMaintenance();
                             itemAdapter.setTxtId(data.getTxtDetailId());
                             itemAdapter.setTxtTittle(strName); //nama dokter substring(0,1)
-                            itemAdapter.setIntColor(R.color.green_300);
-                            itemAdapter.setTxtImgName((strName.substring(0,1)).toUpperCase());
+                            itemAdapter.setTxtImgName((data.getTxtNoDoc().substring(0,1)).toUpperCase());
                             itemAdapter.setTxtSubTittle(data.getTxtNoDoc());
+                            if (data.getIntFlagPush()==new clsHardCode().Save){
+                                itemAdapter.setTxtStatus("Submit");
+                                itemAdapter.setInColorStatus(R.color.red_200);
+                            }else if (data.getIntFlagPush()==new clsHardCode().Sync){
+                                itemAdapter.setTxtStatus("Sync");
+                                itemAdapter.setInColorStatus(R.color.green_300);
+                            }
                             if (index==0){
+                                itemAdapter.setIntColor(R.color.amber_700);
                                 itemAdapterList0.add(itemAdapter);
                             }else if (index==1){
+                                itemAdapter.setIntColor(R.color.lime_600);
                                 itemAdapterList1.add(itemAdapter);
                             }
                         }
@@ -133,7 +172,15 @@ public class FragmentSubMaintenance extends Fragment {
         listView.setAdapter(adapter);
         listView.setDivider(null);
         listView.setEmptyView(lnEmpty);
-
-        return v;
     }
+    private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            loadData();
+//            adapter.notifyDataSetChanged();
+            swpInfo.setRefreshing(false);
+        }
+    };
+
+
 }

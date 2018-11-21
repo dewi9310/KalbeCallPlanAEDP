@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,8 +97,11 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_akuisisi);
         fab = (FloatingActionButton) v.findViewById(R.id.fab_akuisisi);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
+
+
         subSubActivityRepo = new mSubSubActivityRepo(getContext());
         headerRepo = new tAkuisisiHeaderRepo(getContext());
+
         Bundle data = this.getArguments();
         if (data != null) {
              txtRealisasiId = data.getString(DT_REALISASI);
@@ -152,22 +156,23 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         }
         if (!valid){
             final int iterator = customViewPager.getCurrentItem();
-            if (iterator==0){
-                try {
-                    if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
-                    }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                        dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+//            if (iterator==0){
+//
+//            }
+            try {
+                if (dataPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndDokterId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtDokterId(), new clsHardCode().Save);
+                }else if (dataPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                    dtHeader = (tAkuisisiHeader) new tAkuisisiHeaderRepo(getContext()).findBySubSubIdAndApotekId(_mSubSubActivity.get(0).getIntSubSubActivityid(), dtCheckinActive.getTxtApotekId(), new clsHardCode().Save);
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-                if (dtHeader!=null){
-                    fab.setVisibility(View.GONE);
-                }else {
-                    fab.setVisibility(View.VISIBLE);
-                }
+            if (dtHeader!=null){
+                fab.setVisibility(View.GONE);
+            }else {
+                fab.setVisibility(View.VISIBLE);
             }
         }
 
@@ -225,10 +230,27 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
             }
         });
 
+
+//        customViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+//            }
+//        });
         return v;
     }
+    ViewPagerAdapter adapter;
     private void setupViewPager(ViewPager viewPager, FloatingActionButton fab){
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         tAkuisisiHeader dtHeader = null;
         for (int i =0; i < _mSubSubActivity.size(); i++){
             try {
@@ -246,6 +268,12 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         }
         viewPager.setAdapter(adapter);
     }
+
+//    private void enableDisableSwipeRefresh(boolean enable) {
+//        if (swpAkusisi != null) {
+//            swpAkusisi.setEnabled(enable);
+//        }
+//    }
 
 //    private void allotEachTabWithEqualWidth() {
 //

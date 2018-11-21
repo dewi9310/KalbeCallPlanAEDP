@@ -1147,7 +1147,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     public void checkout(){
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
 
-        builder.setTitle("Exit");
+        builder.setTitle("Checkout");
         builder.setMessage("Are you sure to check out?");
 
         builder.setPositiveButton("CHECK OUT", new DialogInterface.OnClickListener() {

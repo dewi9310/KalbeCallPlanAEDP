@@ -146,7 +146,12 @@
                 <action android:name=".Service.MyServiceNative" />
             </intent-filter>
         </service>
-
+        <receiver android:name=".Receiver.ReceiverDownloadManager"  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <!--<action android:name="android.intent.action.INPUT_METHOD_CHANGED" />-->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

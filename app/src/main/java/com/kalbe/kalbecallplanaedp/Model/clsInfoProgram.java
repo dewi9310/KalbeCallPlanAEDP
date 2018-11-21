@@ -21,6 +21,8 @@ public class clsInfoProgram {
     private boolean isFromHistory;
     private String txtFileName;
     private int intFileId;
+    private String txtStatus;
+    private int intColorStatus;
 
     public String getTxtId() {
         return txtId;
@@ -117,5 +119,21 @@ public class clsInfoProgram {
 
     public void setIntFileId(int intFileId) {
         this.intFileId = intFileId;
+    }
+
+    public String getTxtStatus() {
+        return txtStatus;
+    }
+
+    public void setTxtStatus(String txtStatus) {
+        this.txtStatus = txtStatus;
+    }
+
+    public int getIntColorStatus() {
+        return intColorStatus;
+    }
+
+    public void setIntColorStatus(int intColorStatus) {
+        this.intColorStatus = intColorStatus;
     }
 }
