@@ -89,6 +89,7 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragmentHistory;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentNotification;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentSetting;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
@@ -331,6 +332,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             phtProfile = output.toByteArray();
         }
 
+        ivProfile.setEnabled(false);
         try {
             repoUserImageProfile = new clsPhotoProfilRepo(getApplicationContext());
             dataImageProfile = (List<clsPhotoProfile>) repoUserImageProfile.findAll();
@@ -593,20 +595,19 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                         return true;
 
+                    case R.id.mnSetting:
+                        toolbar.setTitle("Setting");
+                        toolbar.setSubtitle(null);
 
-//                    case R.id.mnHistory:
-//                        toolbar.setTitle("History");
-//                        toolbar.setSubtitle(null);
-//
-//                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//
-//                        FragmentHeaderCallPlan fragmentHistory = new FragmentHeaderCallPlan();
-//                        FragmentTransaction fragmentTransactionHistory = getSupportFragmentManager().beginTransaction();
-//                        fragmentTransactionHistory.replace(R.id.frame, fragmentHistory);
-//                        fragmentTransactionHistory.commit();
-//                        selectedId = 99;
-//
-//                        return true;
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                        FragmentSetting fragmentSetting = new FragmentSetting();
+                        FragmentTransaction fragmentTransactionSetting = getSupportFragmentManager().beginTransaction();
+                        fragmentTransactionSetting.replace(R.id.frame, fragmentSetting);
+                        fragmentTransactionSetting.commit();
+                        selectedId = 99;
+
+                        return true;
 
                     case R.id.mnCheckOut:
                         showCustomDialog();
@@ -717,7 +718,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                     e.printStackTrace();
                 }
             }
-        }else if (requestCode == 100 || requestCode == 130) {
+        }else if (requestCode == 100 || requestCode == 130 || requestCode==150) {
             for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
@@ -883,7 +884,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result= Utility.checkPermission(getApplicationContext());
+                boolean result= new Utility().checkPermission(getApplicationContext());
                 if (items[item].equals("Ambil Foto")) {
                     if(result)
                         captureImageProfile();
@@ -1109,10 +1110,10 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         }
     }
 
-    public static class Utility {
-        public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    public class Utility {
+        public final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-        public static boolean checkPermission(final Context context)
+        public boolean checkPermission(final Context context)
         {
             int currentAPIVersion = Build.VERSION.SDK_INT;
             if(currentAPIVersion>= Build.VERSION_CODES.M)

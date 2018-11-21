@@ -320,7 +320,7 @@ public void setListData(){
                             }else {
                                 isDokter = true;
                             }
-                        } 
+                        }
                         if (isDokter){
                             dtActivity =  (mActivity) repoActivity.findById(new clsHardCode().VisitDokter);
                             dokter = dokterRepo.findBytxtId(data.getIntDokterId());
