@@ -1,5 +1,6 @@
 package com.kalbe.kalbecallplanaedp.Common;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -37,6 +38,10 @@ public class mUserLogin implements Serializable {
     private String dtLogOut;
     @DatabaseField
     private String dtLogIn;
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    private byte[] BlobImg;
+    @DatabaseField
+    private String txtFileName;
 
 
     public String Property_IntUserID = "IntUserID";
@@ -154,5 +159,21 @@ public class mUserLogin implements Serializable {
 
     public void setTxtGuID(String txtGuID) {
         this.txtGuID = txtGuID;
+    }
+
+    public byte[] getBlobImg() {
+        return BlobImg;
+    }
+
+    public void setBlobImg(byte[] blobImg) {
+        BlobImg = blobImg;
+    }
+
+    public String getTxtFileName() {
+        return txtFileName;
+    }
+
+    public void setTxtFileName(String txtFileName) {
+        this.txtFileName = txtFileName;
     }
 }

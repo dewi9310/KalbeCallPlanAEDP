@@ -840,6 +840,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             stopService(new Intent(getApplicationContext(), MyServiceNative.class));
                             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.cancelAll();
+                            deleteMediaStorage();
                             clearData();
 //                            loginRepo = new mUserLoginRepo(getApplicationContext());
 //                            mUserLogin data = new mUserLogin();
@@ -874,6 +875,38 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 }
             }
         });
+    }
+
+    public static void deleteMediaStorage (){
+        File mediaStorageDir = new File(new clsHardCode().txtFolderData + File.separator);
+        if (mediaStorageDir.exists()){
+            if (mediaStorageDir.isDirectory()){
+                for (File currentFile : mediaStorageDir.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            mediaStorageDir.delete();
+        }
+
+        File akuisisi = new File(new clsHardCode().txtFolderAkuisisi + File.separator);
+        if (akuisisi.exists()){
+            if (akuisisi.isDirectory()){
+                for (File currentFile : akuisisi.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            akuisisi.delete();
+        }
+
+        File checkin = new File(new clsHardCode().txtFolderCheckIn + File.separator);
+        if (checkin.exists()){
+            if (checkin.isDirectory()){
+                for (File currentFile : checkin.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            checkin.delete();
+        }
     }
 
     private void selectImageProfile() {

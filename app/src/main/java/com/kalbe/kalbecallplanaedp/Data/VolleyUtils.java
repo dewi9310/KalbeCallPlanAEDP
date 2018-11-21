@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
@@ -303,7 +304,7 @@ public class VolleyUtils {
     }
     public void makeJsonObjectRequestPushDataBackground(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final VolleyResponseListener listener) {
 //        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
-
+        RequestQueue queue = null;
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -377,6 +378,80 @@ public class VolleyUtils {
         };
         multipartRequest.setRetryPolicy(new
                 DefaultRetryPolicy(50000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        multipartRequest.setShouldCache(false);
+        if (queue == null) {
+         queue = Volley.newRequestQueue(ctx.getApplicationContext());   
+        }
+        queue.add(multipartRequest);
+    }
+
+    public void changeProfile(final Context ctx, String strLinkAPI, final mUserLogin mRequestBody, final VolleyResponseListener listener) {
+//        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
+
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Boolean status = false;
+                String errorMessage = null;
+                listener.onResponse(response.toString(), status, errorMessage);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                NetworkResponse networkResponse = error.networkResponse;
+//                int a = networkResponse.statusCode;
+                if (networkResponse==null){
+                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
+                }else {
+                    listener.onError(error.getMessage());
+                    try {
+                        String responseBody = new String( error.networkResponse.data, "utf-8" );
+                        JSONObject jsonObject = new JSONObject( responseBody );
+                    } catch ( JSONException e ) {
+                        //Handle a malformed json response
+                        String b = "hasd";
+                    } catch (UnsupportedEncodingException e){
+                        String c = "hasd";
+                    }
+                }
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                dataToken = new clsHelperBL().getDataToken(ctx);
+                access_token = dataToken.get(0).getTxtUserToken();
+//                access_token = "BRIVeCejVsSyXviEg56KyrqRl3ZjhrK7qanAeIEsJGJYWQhjhTVk-DHV7Mlsbdsx3ddSPB-zxBmRpoIynoA7tU2rU5qnmgT6-4aGjdF5XS__rVPcZDdqyTRIFSbW9CkAMX476bCdUZwnzr_5uCocTPgpPupl-ppyJ2GRm2n3rzNDDlgxYlS4raRDBUSwl_Bdicy9OfDr2Idci-5Kfnx5yYUOGUxGh6msTpP9fFpc4WkJR2CdLWNsZgcZRYhZBjNhx9TOwgki1LXFdVzbpEy1u_7FyQ3bJuKCo6k3rwg-i21IOF0BjXJYVhluFLpAkZQW81NyJfRYMlAeUAFMQcc_PS8zbmfuMIm-EJi_qj2Y_mJogttj-8sn7Vd-qLLJKnHU";
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + access_token);
+
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("txtParam", mRequestBody.toString());
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access category real path
+                // for now just get bitmap data category ImageView
+                if (mRequestBody.getBlobImg()!=null){
+                    params.put(String.valueOf(mRequestBody.getIntUserID()), new DataPart(String.valueOf(mRequestBody.getIntUserID()) + ".jpg", mRequestBody.getBlobImg(), "image/jpeg"));
+                }
+
+                return params;
+            }
+        };
+        multipartRequest.setRetryPolicy(new
+                DefaultRetryPolicy(500000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 

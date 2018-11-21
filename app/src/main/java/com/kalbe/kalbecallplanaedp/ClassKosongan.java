@@ -1,17 +1,23 @@
 package com.kalbe.kalbecallplanaedp;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -25,6 +31,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +53,15 @@ public class ClassKosongan extends Fragment {
     View v;
     File fileFolder = null;
     String pathFolder = new clsHardCode().txtFolderAkuisisi;
+
+    ProgressBar pb;
+    Dialog dialog;
+    int downloadedSize = 0;
+    int totalSize = 0;
+    TextView cur_val;
+    String dwnload_file_path =
+            "http://coderzheaven.com/sample_folder/sample_file.png";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +69,14 @@ public class ClassKosongan extends Fragment {
 
         Button decrypt = (Button)v.findViewById(R.id.decryprt);
         final Button encrypt = (Button)v.findViewById(R.id.encrypt);
+
+//        showProgress(dwnload_file_path);
+//
+//        new Thread(new Runnable() {
+//            public void run() {
+//                downloadFile();
+//            }
+//        }).start();
         decrypt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +94,105 @@ public class ClassKosongan extends Fragment {
 
         return v;
     }
+
+//    void downloadFile(){
+//
+//        try {
+//            URL url = new URL(dwnload_file_path);
+//            HttpURLConnection urlConnection = (HttpURLConnection)
+//                    url.openConnection();
+//
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.setDoOutput(true);
+//
+//            //connect
+//            urlConnection.connect();
+//
+//            //set the path where we want to save the file
+//            File SDCardRoot = Environment.getExternalStorageDirectory();
+//            //create a new file, to save the downloaded file
+//            File file = new File(SDCardRoot,"downloaded_file.png");
+//
+//            FileOutputStream fileOutput = new FileOutputStream(file);
+//
+//            //Stream used for reading the data from the internet
+//            InputStream inputStream = urlConnection.getInputStream();
+//
+//            //this is the total size of the file which we are downloading
+//            totalSize = urlConnection.getContentLength();
+//
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    pb.setMax(totalSize);
+//                }
+//            });
+//
+//            //create a buffer...
+//            byte[] buffer = new byte[1024];
+//            int bufferLength = 0;
+//
+//            while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+//                fileOutput.write(buffer, 0, bufferLength);
+//                downloadedSize += bufferLength;
+//                // update the progressbar //
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        pb.setProgress(downloadedSize);
+//                        float per = ((float)downloadedSize/totalSize) *
+//                                100;
+//                        cur_val.setText("Downloaded " + downloadedSize +
+//
+//                                "KB / " + totalSize + "KB (" + (int)per + "%)" );
+//                    }
+//                });
+//            }
+//            //close the output stream when complete //
+//            fileOutput.close();
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    // pb.dismiss(); // if you want close it..
+//                }
+//            });
+//
+//        } catch (final MalformedURLException e) {
+//            showError("Error : MalformedURLException " + e);
+//            e.printStackTrace();
+//        } catch (final IOException e) {
+//            showError("Error : IOException " + e);
+//            e.printStackTrace();
+//        }
+//        catch (final Exception e) {
+//            showError("Error : Please check your internet connection " +
+//                    e);
+//        }
+//    }
+//
+//    void showError(final String err){
+//        runOnUiThread(new Runnable() {
+//            public void run() {
+//                Toast.makeText(DownloadFileDemo1.this, err,
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
+//
+//    void showProgress(String file_path){
+//        dialog = new Dialog(DownloadFileDemo1.this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.myprogressdialog);
+//        dialog.setTitle("Download Progress");
+//
+//        TextView text = (TextView) dialog.findViewById(R.id.tv1);
+//        text.setText("Downloading file from ... " + file_path);
+//        cur_val = (TextView) dialog.findViewById(R.id.cur_pg_tv);
+//        cur_val.setText("Starting download...");
+//        dialog.show();
+//
+//        pb = (ProgressBar)dialog.findViewById(R.id.progress_bar);
+//        pb.setProgress(0);
+//        pb.setProgressDrawable(
+//                getResources().getDrawable(R.drawable.green_progress));
+//    }
 
 
     private void encrypteFile(){

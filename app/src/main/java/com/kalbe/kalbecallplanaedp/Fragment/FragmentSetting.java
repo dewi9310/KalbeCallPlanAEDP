@@ -1,5 +1,7 @@
 package com.kalbe.kalbecallplanaedp.Fragment;
 
+import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,18 +21,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
+import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
+import com.kalbe.kalbecallplanaedp.Common.clsToken;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
+import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.ImageViewerActivity;
+import com.kalbe.kalbecallplanaedp.LoginActivity;
 import com.kalbe.kalbecallplanaedp.MainMenu;
 import com.kalbe.kalbecallplanaedp.R;
 
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
+import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
 import com.kalbe.mobiledevknlibs.PermissionChecker.PermissionChecker;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.mikhaellopez.circularimageview.CircularImageView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,6 +62,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_USER_PASS;
 
 
 /**
@@ -61,13 +83,21 @@ public class FragmentSetting extends Fragment{
     private static ByteArrayOutputStream output = new ByteArrayOutputStream();
     final int PIC_CROP_PROFILE = 130;
     private Uri uriImage,  selectedImage;
+    List<clsToken> dataToken;
+    clsTokenRepo tokenRepo;
+    private Gson gson;
+    mUserLoginRepo loginRepo;
+    ProgressDialog pDialog;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_setting, container, false);
         ivProfile = (CircularImageView) v.findViewById(R.id.image_setting);
         fab = (FloatingActionButton)v.findViewById(R.id.fab_add_img_setting);
-
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +105,14 @@ public class FragmentSetting extends Fragment{
             }
         });
 
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getContext(), ImageViewerActivity.class);
+//                intent1.putExtra(ZOOM_IMAGE, obj.getTxtDetailId());
+                startActivity(intent1);
+            }
+        });
         return v;
     }
 
@@ -236,17 +274,28 @@ public class FragmentSetting extends Fragment{
         if (requestCode == CAMERA_REQUEST_PROFILE) {
             if (resultCode == -1) {
                 try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, "tmp_act");
-//                    String uri = uriImage.getPath().toString();
-
-//                    bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
-//                    bitmap = BitmapFactory.decodeFile(uri, bitmapOptions);
-
-                    performCropProfile();
+//                    Bitmap bitmap;
+//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//                    Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, "tmp_act");
+////                    String uri = uriImage.getPath().toString();
+//
+////                    bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
+////                    bitmap = BitmapFactory.decodeFile(uri, bitmapOptions);
+//
+//                    performCropProfile();
 
 //                    previewCaptureImage2(bitmap);
+//                    Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
+                    //untuk mendapatkan bitmap bisa menggunakan decode stream
+                    Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uriImage);
+                    //get byte array
+                    byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
+                    Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uriImage));
+                    PickImage.previewCapturedImage(ivProfile, bitmap1, 200, 200);
+                    mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
+                    dtLogin.setBlobImg(save);
+                    dtLogin.setTxtFileName("tmp_act");
+                    changeProfile(dtLogin);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -290,5 +339,95 @@ public class FragmentSetting extends Fragment{
                 }
             }
         }
+    }
+
+    private void changeProfile(mUserLogin dtLogin) {
+        pDialog.setMessage("Please wait....");
+        pDialog.setCancelable(false);
+        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+        pDialog.show();
+        String strLinkAPI = new clsHardCode().linkChangeProfil;
+        JSONObject resJson = new JSONObject();
+        JSONObject jData = new JSONObject();
+
+//        try {
+//            jData.put("username",txtUsername );
+//            jData.put("intRoleId", intRoleId);
+//            jData.put("password", txtPassword);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+        try {
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", dtLogin);
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+
+        new VolleyUtils().changeProfile(getContext(), strLinkAPI, dtLogin, new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                ToastCustom.showToasty(getContext(),message,4);
+                pDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
+                        String txtMethode_name = model.getResult().getMethodName();
+
+                        String accessToken = "dummy_access_token";
+
+                        if (txtStatus == true){
+                            loginRepo = new mUserLoginRepo(getContext());
+                            mUserLogin data = new mUserLogin();
+                            data.setTxtGuID(model.getData().getTxtGuiID());
+                            data.setIntUserID(model.getData().getIntUserID());
+                            data.setTxtUserName(model.getData().getTxtUserName());
+                            data.setTxtNick(model.getData().getTxtNick());
+                            data.setTxtEmpID(model.getData().getTxtEmpID());
+                            data.setTxtEmail(model.getData().getTxtEmail());
+                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
+                            data.setIntLOBID(model.getData().getIntLOBID());
+                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
+                            loginRepo.createOrUpdate(data);
+
+                            Intent intent = new Intent(getContext(), MainMenu.class);
+                            getActivity().finish();
+                            startActivity(intent);
+
+                        } else {
+                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            pDialog.dismiss();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                    pDialog.dismiss();
+                }
+            }
+        });
     }
 }
