@@ -14,10 +14,12 @@ import android.view.WindowManager;
 
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Utils.TouchImageView;
@@ -35,6 +37,8 @@ public class ImageViewerActivity extends AppCompatActivity {
     private TouchImageView imageView;
     private String ZOOM_IMAGE = "zoom image";
     private String ZOOM_IMAGE_INFO ="zoom image info program";
+    private String ZOOM_PROFILE = "photo profil";
+    mUserLogin dtLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,15 @@ public class ImageViewerActivity extends AppCompatActivity {
                 Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(arrayImage);
                 if (bitmap!=null)
                 imageView.setImageBitmap(bitmap);
+            }else if (bundle.getString(ZOOM_PROFILE)!=null){
+                try {
+                    dtLogin = (mUserLogin) new mUserLoginRepo(getApplicationContext()).findByTxtId(bundle.getString(ZOOM_PROFILE));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+                if (bitmap!=null)
+                    imageView.setImageBitmap(bitmap);
             }
 
         }

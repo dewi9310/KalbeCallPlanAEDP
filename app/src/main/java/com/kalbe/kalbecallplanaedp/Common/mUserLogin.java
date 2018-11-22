@@ -55,6 +55,7 @@ public class mUserLogin implements Serializable {
     public String Property_IntLOBID = "IntLOBID";
     public String Property_TxtCompanyCode = "TxtCompanyCode";
     public String Property_ListDatamUserLogin = "ListDatamUserLogin";
+    public String Property_txtGuID = "txtGuID";
 
 
     public int getIntUserID() {

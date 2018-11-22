@@ -70,7 +70,8 @@ public class HomeFragment extends Fragment {
         mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
         if (dtLogin.getBlobImg()!=null){
             Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
-            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
+            ivProfile.setImageBitmap(bitmap);
+//            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
         }
         tRealisasiVisitPlan dataCheckinActive = (tRealisasiVisitPlan) repoRealisasi.getDataCheckinActive();
         List<tRealisasiVisitPlan> listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.getAllRealisasi();

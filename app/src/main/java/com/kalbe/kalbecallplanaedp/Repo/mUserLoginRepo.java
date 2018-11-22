@@ -117,4 +117,17 @@ public class mUserLoginRepo implements crud {
         }
         return valid;
     }
+
+    public mUserLogin findByTxtId(String txtId) throws SQLException {
+        mUserLogin item = new mUserLogin();
+        QueryBuilder<mUserLogin, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.getmUserLoginsDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_txtGuID, txtId);
+            item = queryBuilder.queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
 }
