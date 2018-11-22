@@ -1,6 +1,7 @@
 package com.kalbe.kalbecallplanaedp;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,11 +25,13 @@ import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
+import com.kalbe.kalbecallplanaedp.Fragment.FragmentHeaderCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentHistory;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
+import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.IOException;
@@ -44,6 +47,8 @@ public class HomeFragment extends Fragment {
     private LinearLayout ln_plan_home, ln_realisasi_home, ln_unplan_home;
     TextView tv_plan_home, tv_unplan_home, tvRealisasi_home, tv_userName, tv_email;
     tRealisasiVisitPlanRepo repoRealisasi;
+    CircularImageView ivProfile;
+    private String FRAG_VIEW = "Fragment view";
 
     @Nullable
     @Override
@@ -56,12 +61,17 @@ public class HomeFragment extends Fragment {
 //        tv_unplan_home = (TextView)v.findViewById(R.id.tv_unplan_home);
         tv_userName = (TextView)v.findViewById(R.id.tv_user_name_home);
         tv_email = (TextView)v.findViewById(R.id.tv_email_home);
+        ivProfile = (CircularImageView)v.findViewById(R.id.image_profil_home);
 
         tvRealisasi_home = (TextView)v.findViewById(R.id.tv_Realisasi_home);
 
         repoRealisasi = new tRealisasiVisitPlanRepo(getContext());
 
         mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
+        if (dtLogin.getBlobImg()!=null){
+            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
+        }
         tRealisasiVisitPlan dataCheckinActive = (tRealisasiVisitPlan) repoRealisasi.getDataCheckinActive();
         List<tRealisasiVisitPlan> listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.getAllRealisasi();
         List<tRealisasiVisitPlan> listPlan = (List<tRealisasiVisitPlan>) repoRealisasi.getAllPlan();
@@ -84,24 +94,23 @@ public class HomeFragment extends Fragment {
         ln_plan_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
+                Bundle bundle = new Bundle();
+                bundle.putString(FRAG_VIEW, "Plan");
+                new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
             }
         });
 
         ln_realisasi_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Tools().intentFragment(FragmentHistory.class, "History", getContext());
+                Bundle bundle = new Bundle();
+                bundle.putString(FRAG_VIEW, "Realisasi");
+                new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
+//                new Tools().intentFragment(FragmentHistory.class, "History", getContext());
 //                Toast.makeText(getContext(), "ini realisasi", Toast.LENGTH_SHORT).show();
             }
         });
 
-//        ln_unplan_home.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getContext(), "ini Unplan", Toast.LENGTH_SHORT).show();
-//            }
-//        });
         tv_userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

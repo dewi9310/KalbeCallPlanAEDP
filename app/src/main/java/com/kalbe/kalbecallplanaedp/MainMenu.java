@@ -104,6 +104,7 @@ import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
 import com.kalbe.kalbecallplanaedp.Utils.CircularTextView;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
+import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 
@@ -361,6 +362,9 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         }
         tvUsername.setText(new clsActivity().greetings() + dataLogin.get(0).getTxtUserName().toString());
         tvEmail.setText(dataLogin.get(0).getTxtEmail().toString());
+        Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dataLogin.get(0).getBlobImg());
+        Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
+        ivProfile.setImageBitmap(bitmap1);
 
         String linkAPI = new mConfigRepo(getApplicationContext()).APIToken;
         try {

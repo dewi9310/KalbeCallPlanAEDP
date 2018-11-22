@@ -89,6 +89,7 @@ public class FragmentSetting extends Fragment{
     private Gson gson;
     mUserLoginRepo loginRepo;
     ProgressDialog pDialog;
+    mUserLogin dtLogin;
 
 
     @Nullable
@@ -105,6 +106,12 @@ public class FragmentSetting extends Fragment{
                 selectImageProfile();
             }
         });
+
+        dtLogin = new clsMainBL().getUserLogin(getContext());
+        if (dtLogin.getBlobImg()!=null){
+        Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+        PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
+        }
 
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,9 +298,6 @@ public class FragmentSetting extends Fragment{
                     Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uriImage);
                     //get byte array
                     byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
-                    Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uriImage));
-                    PickImage.previewCapturedImage(ivProfile, bitmap1, 200, 200);
-                    mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
                     dtLogin.setBlobImg(save);
                     dtLogin.setTxtFileName("tmp_act");
                     changeProfile(dtLogin);
@@ -342,7 +346,7 @@ public class FragmentSetting extends Fragment{
         }
     }
 
-    private void changeProfile(mUserLogin dtLogin) {
+    private void changeProfile(final mUserLogin dataLogin) {
          pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Please wait....");
         pDialog.setCancelable(false);
@@ -369,11 +373,11 @@ public class FragmentSetting extends Fragment{
             tokenRepo = new clsTokenRepo(getContext());
             dataToken = (List<clsToken>) tokenRepo.findAll();
             VMUploadFoto dataUp = new VMUploadFoto();
-            dataUp.setIntRoleId(dtLogin.getIntRoleID());
-            dataUp.setIntUserId(dtLogin.getIntUserID());
+            dataUp.setIntRoleId(dataLogin.getIntRoleID());
+            dataUp.setIntUserId(dataLogin.getIntUserID());
             JSONObject userData = new JSONObject();
-            userData.put("intUserId",dtLogin.getIntUserID());
-            userData.put("intRoleId",dtLogin.getIntRoleID());
+            userData.put("intUserId",dataLogin.getIntUserID());
+            userData.put("intRoleId",dataLogin.getIntRoleID());
             resJson.put("data", userData);
             resJson.put("device_info", new clsHardCode().pDeviceInfo());
             resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
@@ -384,7 +388,7 @@ public class FragmentSetting extends Fragment{
         }
         final String mRequestBody = resJson.toString();
 
-        new VolleyUtils().changeProfile(getContext(), strLinkAPI, mRequestBody, dtLogin, new VolleyResponseListener() {
+        new VolleyUtils().changeProfile(getContext(), strLinkAPI, mRequestBody, dataLogin, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 ToastCustom.showToasty(getContext(),message,4);
@@ -406,21 +410,26 @@ public class FragmentSetting extends Fragment{
 
                         if (txtStatus == true){
                             loginRepo = new mUserLoginRepo(getContext());
-                            mUserLogin data = new mUserLogin();
-                            data.setTxtGuID(model.getData().getTxtGuiID());
-                            data.setIntUserID(model.getData().getIntUserID());
-                            data.setTxtUserName(model.getData().getTxtUserName());
-                            data.setTxtNick(model.getData().getTxtNick());
-                            data.setTxtEmpID(model.getData().getTxtEmpID());
-                            data.setTxtEmail(model.getData().getTxtEmail());
-                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
-                            data.setIntLOBID(model.getData().getIntLOBID());
-                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
+                            mUserLogin data = dataLogin;
+//                            data.setTxtGuID(model.getData().getTxtGuiID());
+//                            data.setIntUserID(model.getData().getIntUserID());
+//                            data.setTxtUserName(model.getData().getTxtUserName());
+//                            data.setTxtNick(model.getData().getTxtNick());
+//                            data.setTxtEmpID(model.getData().getTxtEmpID());
+//                            data.setTxtEmail(model.getData().getTxtEmail());
+//                            data.setIntDepartmentID(model.getData().getIntDepartmentID());
+//                            data.setIntLOBID(model.getData().getIntLOBID());
+//                            data.setTxtCompanyCode(model.getData().getTxtCompanyCode());
                             loginRepo.createOrUpdate(data);
+                            dtLogin = new clsMainBL().getUserLogin(getContext());
+                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+                            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
 
-                            Intent intent = new Intent(getContext(), MainMenu.class);
-                            getActivity().finish();
-                            startActivity(intent);
+//                            Intent intent = new Intent(getContext(), MainMenu.class);
+//                            getActivity().finish();
+//                            startActivity(intent);
+                            pDialog.dismiss();
+                            ToastCustom.showToasty(getContext(),"Success Change photo profile",1);
 
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);

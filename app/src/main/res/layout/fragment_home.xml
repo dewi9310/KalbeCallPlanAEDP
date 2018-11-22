@@ -42,7 +42,7 @@
                 android:padding="@dimen/spacing_mlarge">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/image"
+                    android:id="@+id/image_profil_home"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:src="@drawable/profil"
