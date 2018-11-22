@@ -92,6 +92,12 @@ public class clsHardCode {
     public int int_maintenance_apotek = 5;
     public int int_infoprogram_apotek = 6;
 
+    //untuk download file
+    public String AKUISISI = "akuisisi";
+    public String INFO_PROGRAM = "info program";
+    public String REALISASI_SATU = "realisasi pertama";
+    public String REALISASI_DUA = "realisasi kedua";
+
     public String copydb(Context context) throws IOException {
         String CURRENT_DATABASE_PATH = "data/data/" + context.getPackageName() + "/databases/"+ new clsHardCode().dbName;
 

@@ -127,6 +127,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.leolin.shortcutbadger.ShortcutBadgeException;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
@@ -838,6 +840,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                         if (txtStatus == true){
 
                             stopService(new Intent(getApplicationContext(), MyServiceNative.class));
+                            ShortcutBadger.removeCountOrThrow(getApplicationContext());
                             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.cancelAll();
                             deleteMediaStorage();
@@ -870,6 +873,8 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             ToastCustom.showToasty(MainMenu.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ShortcutBadgeException e) {
                         e.printStackTrace();
                     }
                 }

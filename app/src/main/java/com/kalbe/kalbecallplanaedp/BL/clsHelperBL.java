@@ -511,7 +511,7 @@ public class clsHelperBL {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
-                String msg = null;
+                String msg = "";
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {
@@ -660,7 +660,7 @@ public class clsHelperBL {
             public void onErrorResponse(VolleyError error) {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
-                String msg = null;
+                String msg = "";
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
@@ -839,7 +839,7 @@ public class clsHelperBL {
                 String strLinkAPI = new clsHardCode().linkToken;
                 final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
-                String msg = null;
+                String msg = "";
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {
@@ -975,7 +975,7 @@ public class clsHelperBL {
             @Override
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse networkResponse = error.networkResponse;
-                String msg = null;
+                String msg = "";
                 if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
                     // HTTP Status Code: 401 Unauthorized
                     try {

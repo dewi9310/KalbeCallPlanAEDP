@@ -9,6 +9,7 @@ public class VMDownloadFile {
     private String groupDownload;
     private String txtId;
     private int index;
+    private byte[] blobFile;
 
     public  VMDownloadFile(){
 
@@ -43,5 +44,13 @@ public class VMDownloadFile {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public byte[] getBlobFile() {
+        return blobFile;
+    }
+
+    public void setBlobFile(byte[] blobFile) {
+        this.blobFile = blobFile;
     }
 }

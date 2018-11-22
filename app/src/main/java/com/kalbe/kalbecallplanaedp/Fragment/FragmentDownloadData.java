@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -43,6 +47,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -113,6 +118,7 @@ import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtMappingArea.Downloa
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtProgramVisit.DownloadtProgramVisit;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
+import com.kalbe.kalbecallplanaedp.Utils.LongThread;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
@@ -143,17 +149,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
-import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
-import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_USER_PASS;
 
 /**
  * Created by Dewi Oktaviani on 9/26/2018.
  */
 
-public class FragmentDownloadData extends Fragment{
+public class FragmentDownloadData extends Fragment implements Handler.Callback{
     View v;
 
     ArrayAdapter<String> dataAdapter;
@@ -198,10 +204,16 @@ public class FragmentDownloadData extends Fragment{
     tInfoProgramDetailRepo dtRepoInfoProgDetail;
     mFileAttachmentRepo dtFileRepo;
     List<Long> listId = new ArrayList<>();
+    List<VMDownloadFile> vmList = new ArrayList<>();
      CoordinatorLayout cl;
      private String i_View ="Fragment";
     SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    SharedPreferences.Editor editor;;
+    int curCount = 0;
+    float totalCount;
+    ThreadPoolExecutor executor;
+    ProgressDialog progress;
+    boolean isFromDownloadAll = false;
 
 
     @Nullable
@@ -344,7 +356,8 @@ public class FragmentDownloadData extends Fragment{
         ln_download_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadAllData();
+                downloadDokter(true);
+//                downloadAllData();
             }
         });
 
@@ -663,6 +676,16 @@ public class FragmentDownloadData extends Fragment{
 //
 //        }
         editor = preferences.edit();
+
+        int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+        executor = new ThreadPoolExecutor(
+                NUMBER_OF_CORES * 2,
+                NUMBER_OF_CORES * 2,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>()
+        );
         return v;
     }
 
@@ -814,15 +837,12 @@ public class FragmentDownloadData extends Fragment{
                         boolean txtStatus = model.getResult().isStatus();
                         String txtMessage = model.getResult().getMessage();
                         String txtMethode_name = model.getResult().getMethodName();
-                        List<VMDownloadFile> ltVMDownload = new ArrayList<>();
                         if (txtStatus == true){
 
                             listId.clear();
-                            editor.clear();
-                            editor.commit();
-                            int testing = preferences.getAll().size();
-                            downloadApotek(true);
-                            downloadDokter(true);
+                            vmList.clear();
+//                            downloadApotek(true);
+//                            downloadDokter(true);
                             if (model.getData().getDataMappingArea().getLtMappingArea()!=null){
                                 if (model.getData().getDataMappingArea().getLtMappingArea().size()>0){
                                     dtRepoArea = new mUserMappingAreaRepo(getContext());
@@ -957,13 +977,15 @@ public class FragmentDownloadData extends Fragment{
 //                                        }else {
 //                                            data.setBlobImg1(null);
 //                                        }
-                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link().length()>0){
-                                            VMDownloadFile file = new VMDownloadFile();
-                                            file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link());
-                                            file.setGroupDownload("Realisasi Pertama");
-                                            file.setIndex(i+1);
-                                            file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
-                                            ltVMDownload.add(file);
+                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link()!=null){
+                                            if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link().length()>0){
+                                                VMDownloadFile file = new VMDownloadFile();
+                                                file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link());
+                                                file.setGroupDownload(new clsHardCode().REALISASI_SATU);
+                                                file.setIndex(i+1);
+                                                file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                                vmList.add(file);
+                                            }
 //                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
 
@@ -973,13 +995,15 @@ public class FragmentDownloadData extends Fragment{
 //                                        }else {
 //                                            data.setBlobImg2(null);
 //                                        }
-                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link()!=null &&model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link().length()>0){
-                                            VMDownloadFile file = new VMDownloadFile();
-                                            file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
-                                            file.setGroupDownload("Realisasi Kedua");
-                                            file.setIndex(i+1);
-                                            file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
-                                            ltVMDownload.add(file);
+                                        if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link()!=null){
+                                            if (model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link().length()>0){
+                                                VMDownloadFile file = new VMDownloadFile();
+                                                file.setLink(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link());
+                                                file.setGroupDownload(new clsHardCode().REALISASI_DUA);
+                                                file.setIndex(i+1);
+                                                file.setTxtId(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                                vmList.add(file);
+                                            }
 //                                            downloadFile(model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getDatatProgramVisitDetail().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
                                         }
                                         dtRepoRealisasi.createOrUpdate(data);
@@ -1030,13 +1054,15 @@ public class FragmentDownloadData extends Fragment{
 //                                            data.setTxtImg(null);
 //                                        }
 
-                                        if (model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink()!=null &&model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink().length()>0){
-                                            VMDownloadFile file = new VMDownloadFile();
-                                            file.setLink(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink());
-                                            file.setGroupDownload("Akuisisi");
-                                            file.setIndex(i+1);
-                                            file.setTxtId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
-                                            ltVMDownload.add(file);
+                                        if (model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink()!=null){
+                                            if (model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink().length()>0){
+                                                VMDownloadFile file = new VMDownloadFile();
+                                                file.setLink(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink());
+                                                file.setGroupDownload(new clsHardCode().AKUISISI);
+                                                file.setIndex(i+1);
+                                                file.setTxtId(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
+                                                vmList.add(file);
+                                            }
 //                                            downloadFile(model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getDataAkuisisiData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
                                         }
                                         dtRepoAkuisisiDetail.createOrUpdate(data);
@@ -1144,30 +1170,33 @@ public class FragmentDownloadData extends Fragment{
                                         mFileAttachment data = new mFileAttachment();
                                         data.setIntFileAttachmentId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
 //                                        data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).get());
-//                                        data.setBlobFile(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
+//                                        byte[] file = getLogoImage(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt());
+//                                        if (file!=null){
+//                                            data.setBlobFile(file);
+//                                        }
                                         data.setTxtFileName(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtfilename());
                                         data.setDescription(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtDescription());
                                         dtFileRepo.createOrUpdate(data);
-                                        if (model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt().length()>0){
-                                            VMDownloadFile file = new VMDownloadFile();
-                                            file.setLink(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt());
-                                            file.setGroupDownload("Info Program");
-                                            file.setIndex(i+1);
-                                            file.setTxtId(String.valueOf(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId()));
-                                            ltVMDownload.add(file);
+                                        if (model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()!=null){
+                                            if (model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt().length()>0){
+                                                VMDownloadFile file = new VMDownloadFile();
+                                                file.setLink(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt());
+                                                file.setGroupDownload(new clsHardCode().INFO_PROGRAM);
+                                                file.setTxtId(String.valueOf(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId()));
+                                                vmList.add(file);
+                                            }
 //                                            downloadFile(model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtFileLinkEncrypt(),"Info Program", model.getData().getDataInfoProgram().getLtInfoDetail().get(i).getTxtInfoProgramDetailId(), i+1);
                                         }
-                                        dtFileRepo.createOrUpdate(data);
                                     }
                                 }
                             }
 
 
-                            if (ltVMDownload.size()>0){
-                                for (VMDownloadFile f : ltVMDownload) {
-                                    downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
-                                }
-                            }
+//                            if (ltVMDownload.size()>0){
+//                                for (VMDownloadFile f : ltVMDownload) {
+//                                    downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
+//                                }
+//                            }
                             List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
                             if (notificationList!=null){
                                 if (notificationList.size()>0){
@@ -1176,7 +1205,8 @@ public class FragmentDownloadData extends Fragment{
                             }
 
                             Log.d("Data info", "Success Download");
-                            checkMenu();
+                            isFromDownloadAll = true;
+                            downlaodFileNew(vmList, getActivity().getApplicationContext());
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
                         }
@@ -1457,11 +1487,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtDesc(model.getData().getLtSubActivityDetailData().get(i).getTxtDescription());
                                         data.setIntType(model.getData().getLtSubActivityDetailData().get(i).getIntFlag());
                                         dtRepoSubSubActivity.createOrUpdate(data);
-
-//                                        mSubActivity _mSubActivity = (mSubActivity) dtRepoSubActivity.findById(data.getIntSubActivityid());
-//                                        mActivity _mActivity = (mActivity) dtActivityrepo.findById(_mSubActivity.getIntActivityid());
-//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + ". " + _mActivity.getTxtName() + " - " + _mSubActivity.getTxtName() + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
-//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
                                     }
                                 }
                                 dataListSubSubActivity = (List<mSubSubActivity>) dtRepoSubSubActivity.findAll();
@@ -1495,12 +1520,11 @@ public class FragmentDownloadData extends Fragment{
     }
 
     private void downloadApotek(final boolean isFromDownloadAll) {
-        String strLinkAPI = new clsHardCode().linkApotek;
+        final String strLinkAPI = new clsHardCode().linkApotek;
         new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 ToastCustom.showToasty(getContext(),message,4);
-//                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1526,7 +1550,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtKecName(model.getData().get(i).getKecName());
 
                                         apotekRepo.createOrUpdate(data);
-//                                        itemList.add(model.getData().get(i).getCode() + " - " + model.getData().get(i).getName());
                                     }
                                 }
                                 dataListApotek = (List<mApotek>) apotekRepo.findAll();
@@ -1539,16 +1562,21 @@ public class FragmentDownloadData extends Fragment{
                                         itemList.add(" - ");
                                     }
                                 }
+                                boolean isDataReady = new clsMainBL().isDataReady(getContext());
                                 if (!isFromDownloadAll){
                                     dataAdapter.notifyDataSetChanged();
                                     checkMenu();
+                                }else {
+                                    downloadAllData();
                                 }
+//                                else if (!isDataReady||!checkMenu()){
+//                                    checkMenu();
+//                                }
                                 tv_count_apotek.setText(String.valueOf(dataListApotek.size()));
                             }
                             Log.d("Data info", "Success Download");
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
-//                            Toast.makeText(getApplicationContext(), txtMessage, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1593,11 +1621,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtType(model.getData().get(i).getType());
 
                                         dokterRepo.createOrUpdate(data);
-//                                        if (model.getData().get(i).getLastname()!=null){
-//                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname() + " " + model.getData().get(i).getLastname());
-//                                        }else {
-//                                            itemList.add(model.getData().get(i).getId() + " - " + model.getData().get(i).getFirstname());
-//                                        }
                                     }
                                 }
 
@@ -1620,10 +1643,16 @@ public class FragmentDownloadData extends Fragment{
                                         itemList.add(" - ");
                                     }
                                 }
+                                boolean isDataReady = new clsMainBL().isDataReady(getContext());
                                 if (!isFromDownloadAll){
                                     dataAdapter.notifyDataSetChanged();
                                     checkMenu();
+                                } else {
+                                    downloadApotek(true);
                                 }
+//                                else if (!isDataReady||!checkMenu()){
+//                                    checkMenu();
+//                                }
                                 tv_count_dokter.setText(String.valueOf(model.getData().size()));
 
                             }
@@ -1676,6 +1705,7 @@ public class FragmentDownloadData extends Fragment{
                         if (txtStatus == true){
                             itemList.clear();
                             listId.clear();
+                            vmList.clear();
                             if (model.getData().getTProgramVisit()!=null){
                                 if (model.getData().getTProgramVisit().size()>0){
                                     dtRepoProgramVisit = new tProgramVisitRepo(getContext());
@@ -1690,7 +1720,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntType(model.getData().getTProgramVisit().get(i).getIntType());
                                         data.setTxtNotes(model.getData().getTProgramVisit().get(i).getTxtNotes());
                                         dtRepoProgramVisit.createOrUpdate(data);
-//                                        itemList.add(String.valueOf(model.getData().getLtSubActivityDetailData().get(i).getIntSubDetailActivityId()) + " - " + model.getData().getLtSubActivityDetailData().get(i).getTxtTitle());
                                     }
                                 }
                             }
@@ -1743,13 +1772,13 @@ public class FragmentDownloadData extends Fragment{
                                         data.setTxtImgName1(model.getData().getRealisasiData().get(i).getTxtImage1Name());
                                         data.setTxtImgName2(model.getData().getRealisasiData().get(i).getTxtImage2Name());
 
-                                        if (model.getData().getRealisasiData().get(i).getTxtImage1Link()!=null &&model.getData().getRealisasiData().get(i).getTxtImage1Link().length()>0){
-                                            downloadFile(model.getData().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
-                                        }
-
-                                        if (model.getData().getRealisasiData().get(i).getTxtImage2Link()!=null &&model.getData().getRealisasiData().get(i).getTxtImage2Link().length()>0){
-                                            downloadFile(model.getData().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
-                                        }
+//                                        if (model.getData().getRealisasiData().get(i).getTxtImage1Link()!=null &&model.getData().getRealisasiData().get(i).getTxtImage1Link().length()>0){
+//                                            downloadFile(model.getData().getRealisasiData().get(i).getTxtImage1Link(),"Realisasi Pertama", model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
+//                                        }
+//
+//                                        if (model.getData().getRealisasiData().get(i).getTxtImage2Link()!=null &&model.getData().getRealisasiData().get(i).getTxtImage2Link().length()>0){
+//                                            downloadFile(model.getData().getRealisasiData().get(i).getTxtImage2Link(),"Realisasi Kedua", model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId(), i+1);
+//                                        }
 //                                        byte[] file1 = getLogoImage(model.getData().getRealisasiData().get(i).getTxtImage1Link());
 //                                        if (file1!=null){
 //                                            data.setBlobImg1(file1);
@@ -1758,28 +1787,45 @@ public class FragmentDownloadData extends Fragment{
 //                                        if (file2!=null){
 //                                            data.setBlobImg2(file2);
 //                                        }
+                                        VMDownloadFile vmData = new VMDownloadFile();
+                                        vmData.setGroupDownload(new clsHardCode().REALISASI_DUA);
+                                        vmData.setLink(model.getData().getRealisasiData().get(i).getTxtImage2Link());
+                                        vmData.setTxtId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                        vmList.add(vmData);
+
+                                        VMDownloadFile vmData1 = new VMDownloadFile();
+                                        vmData1.setGroupDownload(new clsHardCode().REALISASI_SATU);
+                                        vmData1.setLink(model.getData().getRealisasiData().get(i).getTxtImage1Link());
+                                        vmData1.setTxtId(model.getData().getRealisasiData().get(i).getTxtRealisasiVisitId());
+                                        vmList.add(vmData1);
                                         dtRepoRealisasi.createOrUpdate(data);
                                     }
                                 }
                                 dataListProgramVisitSubActivity = (List<tProgramVisitSubActivity>) dtRepoProgramVisitSubActivity.findAll();
 //                                dataListRealisasi = (List<tRealisasiVisitPlan>) dtRepoRealisasi.findAll();
                                 int index = 0;
-                                for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
-                                    index++;
-                                    mActivity activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
-                                    if (data.getIntActivityId()==new clsHardCode().VisitDokter){
-                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
-                                    }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
-                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
-                                    }else {
-                                        itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
-                                    }
+                                if (dataListProgramVisitSubActivity.size()>0){
+                                    for (tProgramVisitSubActivity data : dataListProgramVisitSubActivity){
+                                        index++;
+                                        mActivity activity = (mActivity) dtActivityrepo.findById(data.getIntActivityId());
+                                        if (data.getIntActivityId()==new clsHardCode().VisitDokter){
+                                            itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtDokterName());
+                                        }else if (data.getIntActivityId()==new clsHardCode().VisitApotek){
+                                            itemList.add(String.valueOf(index)+ " - " + activity.getTxtName() + ", " + data.getTxtApotekName());
+                                        }else {
+                                            itemList.add(String.valueOf(index)+ " - " + activity.getTxtName());
+                                        }
 
+                                    }
+                                }else {
+                                    itemList.add(" - ");
                                 }
                                 tv_count_realisasi.setText(String.valueOf(dataListProgramVisitSubActivity.size()));
                                 dataAdapter.notifyDataSetChanged();
                             }
                             Log.d("Data info", "Success Download");
+                            isFromDownloadAll = false;
+                            downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
@@ -1828,6 +1874,7 @@ public class FragmentDownloadData extends Fragment{
                         if (txtStatus == true){
                             itemList.clear();
                             listId.clear();
+                            vmList.clear();
                             if (model.getData().getAkuisisiHeader()!=null){
                                 if (model.getData().getAkuisisiHeader().size()>0){
                                     dtRepoAkuisisiHeader = new tAkuisisiHeaderRepo(getContext());
@@ -1848,23 +1895,6 @@ public class FragmentDownloadData extends Fragment{
                                         data.setIntFlagShow(new clsHardCode().Save);
                                         data.setTxtUserName(model.getData().getAkuisisiHeader().get(i).getTxtUserName());
                                         dtRepoAkuisisiHeader.createOrUpdate(data);
-                                        String name ="";
-//                                        if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()!=null){
-//                                            if (model.getData().getAkuisisiHeader().get(i).getTxtDokterId()=="null"){
-//                                                name = "Dokter " + dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtFirstName() + " " +dokterRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtDokterId()).getTxtLastName();
-//                                            }else {
-//                                                if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
-//                                                    if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
-//                                                        name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
-//                                                    }
-//                                                }
-//                                            }
-//                                        }else if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()!=null){
-//                                            if (model.getData().getAkuisisiHeader().get(i).getTxtApotekId()=="null"){
-//                                                name = apotekRepo.findBytxtId(model.getData().getAkuisisiHeader().get(i).getTxtApotekId()).getTxtName();
-//                                            }
-//                                        }
-//                                        itemList.add(String.valueOf(index) + " - Akuisisi - " + name);
                                     }
 
                                     dataListAkuisisi = (List<tAkuisisiHeader>) dtRepoAkuisisiHeader.findAll();
@@ -1913,8 +1943,18 @@ public class FragmentDownloadData extends Fragment{
 //                                                data.setTxtImg(getLogoImage(model.getData().getAkuisisiDetail().get(i).getTxtImagePath()));
 //                                            }
                                             if (model.getData().getAkuisisiDetail().get(i).getTxtLink()!=null &&model.getData().getAkuisisiDetail().get(i).getTxtLink().length()>0){
-                                                downloadFile(model.getData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
+                                                VMDownloadFile vmData = new VMDownloadFile();
+                                                vmData.setGroupDownload(new clsHardCode().AKUISISI);
+                                                vmData.setLink(model.getData().getAkuisisiDetail().get(i).getTxtLink());
+                                                vmData.setTxtId(model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId());
+                                                vmList.add(vmData);
+//                                                downloadFile(model.getData().getAkuisisiDetail().get(i).getTxtLink(),"Akuisisi", model.getData().getAkuisisiDetail().get(i).getTxtAkuisisiDetailId(), i+1);
+
                                             }
+//                                            byte[] file = getLogoImage((model.getData().getAkuisisiDetail().get(i).getTxtLink()));
+//                                            if (file!=null){
+//                                                data.setTxtImg(file);
+//                                            }
                                             dtRepoAkuisisiDetail.createOrUpdate(data);
                                         }
                                     }
@@ -1939,10 +1979,10 @@ public class FragmentDownloadData extends Fragment{
 //                                        createNotification(model.getNotificationData().size());
                                     }
                                 }
-
                             }
                             Log.d("Data info", "Success Download");
-
+                            isFromDownloadAll = false;
+                            downlaodFileNew(vmList, getActivity().getApplicationContext());
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
                         }
@@ -2101,6 +2141,7 @@ public class FragmentDownloadData extends Fragment{
                         if (txtStatus == true){
                             itemList.clear();
                             listId.clear();
+                            vmList.clear();
                             if (model.getData().getLtInfoHeader()!=null){
                                 if (model.getData().getLtInfoHeader().size()>0){
                                     dtRepoInfoProgHeader = new tInfoProgramHeaderRepo(getContext());
@@ -2172,24 +2213,39 @@ public class FragmentDownloadData extends Fragment{
                                 if (model.getData().getLtInfoAttachment()!=null){
                                     if (model.getData().getLtInfoAttachment().size()>0){
                                         dtFileRepo = new mFileAttachmentRepo(getContext());
+//                                        int intCountFile = model.getData().getLtInfoAttachment().size();
                                         for (int i = 0; i < model.getData().getLtInfoAttachment().size(); i++){
                                             mFileAttachment data = new mFileAttachment();
                                             data.setIntFileAttachmentId(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId());
 //                                        data.setIntSubDetailActivityId(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).get());
-//                                        data.setBlobFile(model.getData().getDataInfoProgram().getLtInfoAttachment().get(i).getIntFileAttachmentId());
                                             data.setTxtFileName(model.getData().getLtInfoAttachment().get(i).getTxtfilename());
                                             data.setDescription(model.getData().getLtInfoAttachment().get(i).getTxtDescription());
                                             dtFileRepo.createOrUpdate(data);
                                             if (model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()!=null &&model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt().length()>0){
-                                            downloadFile(model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt(),"Info Program", String.valueOf(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId()), i+1);
+//                                            downloadFile(model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt(),"Info Program", String.valueOf(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId()), i+1);
+//                                               byte[] file = getLogoImage((model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt()));
+//                                               if (file!=null){
+//                                                   data.setBlobFile(file);
+//                                               }
+                                                VMDownloadFile vmData = new VMDownloadFile();
+                                                vmData.setGroupDownload(new clsHardCode().INFO_PROGRAM);
+                                                vmData.setLink(model.getData().getLtInfoAttachment().get(i).getTxtFileLinkEncrypt());
+                                                vmData.setTxtId(String.valueOf(model.getData().getLtInfoAttachment().get(i).getIntFileAttachmentId()));
+                                                vmList.add(vmData);
                                             }
+//                                            intCountFile =-1;
                                             dtFileRepo.createOrUpdate(data);
                                         }
+//                                        if (intCountFile==0){
+//                                            ToastCustom.showToasty(getContext(),"selesai",4);
+//                                        }
                                     }
                                 }
 
                             }
                             Log.d("Data info", "Success Download");
+                            isFromDownloadAll = false;
+                            downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
                             ToastCustom.showToasty(getContext(),txtMessage,4);
@@ -2232,29 +2288,29 @@ public class FragmentDownloadData extends Fragment{
             boolean image = contentType.startsWith("image/");
             boolean text = contentType.startsWith("application/");
 
-            if (image||text) {
-                InputStream is = ucon.getInputStream();
-                BufferedInputStream bis = new BufferedInputStream(is);
-
-                ByteArrayBuffer baf = new ByteArrayBuffer(4096);
-                int current;
-                while ((current = bis.read()) != -1) {
-                    baf.append((byte) current);
-                }
-
-                return baf.toByteArray();
-//            } else if (text){
-//                byte[] data = null;
+//            if (image||text) {
 //                InputStream is = ucon.getInputStream();
-////                int length = is.available();
-//                int length = 50*1024;
-//                data = new byte[length];
-//                int bytesRead;
-//                ByteArrayOutputStream output = new ByteArrayOutputStream();
-//                while ((bytesRead = is.read(data)) != -1) {
-//                    output.write(data, 0, bytesRead);
+//                BufferedInputStream bis = new BufferedInputStream(is);
+//                int length =  ucon.getContentLength();
+//                ByteArrayBuffer baf = new ByteArrayBuffer(length);
+//                int current;
+//                while ((current = bis.read()) != -1) {
+//                    baf.append((byte) current);
 //                }
-//                return output.toByteArray();
+//
+//                return baf.toByteArray();
+//            } else
+                if (image||text){
+                byte[] data = null;
+                InputStream is = ucon.getInputStream();
+                int length =  ucon.getContentLength();
+                data = new byte[length];
+                int bytesRead;
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                while ((bytesRead = is.read(data)) != -1) {
+                    output.write(data, 0, bytesRead);
+                }
+                return output.toByteArray();
             }
             else {
                 return null;
@@ -2268,14 +2324,34 @@ public class FragmentDownloadData extends Fragment{
         return null;
     }
 
-    private void checkMenu(){
+    private void downlaodFileNew(List<VMDownloadFile> listVm, Context context){
+        progress=new ProgressDialog(getContext());
+        progress.setMessage("Downloading file....");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        progress.setCanceledOnTouchOutside(false);
+        progress.setMax(100);
+        progress.setProgress(0);
+        progress.show();
+        int index = 0;
+        curCount = 0;
+        totalCount = listVm.size();
+            for (VMDownloadFile data : listVm){
+                executor.execute(new LongThread(context, index, data, new Handler(this)));
+               index++;
+            }
+    }
+    private boolean checkMenu(){
         boolean isDataReady = new clsMainBL().isDataReady(getContext());
         if (isDataReady){
             ToastCustom.showToasty(getContext(),"Success Download",1);
             Intent myIntent = new Intent(getContext(), MainMenu.class);
             startActivity(myIntent);
             getActivity().finish();
+            return true;
         }
+        return false;
     }
 
 
@@ -2520,5 +2596,28 @@ public class FragmentDownloadData extends Fragment{
             }
         }
 
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        curCount++;
+        float per = (curCount / totalCount) * 100;
+        progress.setIndeterminate(false);
+        progress.setMax(100);
+        progress.setProgress((int) per);
+//        Toast.makeText(getContext(), "hahaha", Toast.LENGTH_SHORT).show();
+        if (curCount == (int)totalCount){
+            progress.dismiss();
+            if (isFromDownloadAll){
+                checkMenu();
+            }
+        }
+
+
+//        if (per < 100)
+//            tvStatus.setText("Downloaded [" + curCount + "/" + (int)totalCount + "]");
+//        else
+//            tvStatus.setText("All images downloaded.");
+        return true;
     }
 }
