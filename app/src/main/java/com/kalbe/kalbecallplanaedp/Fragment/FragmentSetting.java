@@ -26,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.VMUploadFoto;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
@@ -342,6 +343,7 @@ public class FragmentSetting extends Fragment{
     }
 
     private void changeProfile(mUserLogin dtLogin) {
+         pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Please wait....");
         pDialog.setCancelable(false);
         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -366,7 +368,13 @@ public class FragmentSetting extends Fragment{
         try {
             tokenRepo = new clsTokenRepo(getContext());
             dataToken = (List<clsToken>) tokenRepo.findAll();
-            resJson.put("data", dtLogin);
+            VMUploadFoto dataUp = new VMUploadFoto();
+            dataUp.setIntRoleId(dtLogin.getIntRoleID());
+            dataUp.setIntUserId(dtLogin.getIntUserID());
+            JSONObject userData = new JSONObject();
+            userData.put("intUserId",dtLogin.getIntUserID());
+            userData.put("intRoleId",dtLogin.getIntRoleID());
+            resJson.put("data", userData);
             resJson.put("device_info", new clsHardCode().pDeviceInfo());
             resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
         } catch (JSONException e) {
@@ -376,7 +384,7 @@ public class FragmentSetting extends Fragment{
         }
         final String mRequestBody = resJson.toString();
 
-        new VolleyUtils().changeProfile(getContext(), strLinkAPI, dtLogin, new VolleyResponseListener() {
+        new VolleyUtils().changeProfile(getContext(), strLinkAPI, mRequestBody, dtLogin, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 ToastCustom.showToasty(getContext(),message,4);

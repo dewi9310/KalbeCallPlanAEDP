@@ -15,7 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
+import com.kalbe.kalbecallplanaedp.Common.VMUploadFoto;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
@@ -387,7 +389,7 @@ public class VolleyUtils {
         queue.add(multipartRequest);
     }
 
-    public void changeProfile(final Context ctx, String strLinkAPI, final mUserLogin mRequestBody, final VolleyResponseListener listener) {
+    public void changeProfile(final Context ctx, String strLinkAPI, final String mRequestBody, final mUserLogin dtLogin, final VolleyResponseListener listener) {
 //        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
@@ -434,7 +436,8 @@ public class VolleyUtils {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("txtParam", mRequestBody.toString());
+
+                params.put("txtParam", mRequestBody);
                 return params;
             }
 
@@ -443,8 +446,8 @@ public class VolleyUtils {
                 Map<String, DataPart> params = new HashMap<>();
                 // file name could found file base or direct access category real path
                 // for now just get bitmap data category ImageView
-                if (mRequestBody.getBlobImg()!=null){
-                    params.put(String.valueOf(mRequestBody.getIntUserID()), new DataPart(String.valueOf(mRequestBody.getIntUserID()) + ".jpg", mRequestBody.getBlobImg(), "image/jpeg"));
+                if (dtLogin.getBlobImg()!=null){
+                    params.put(String.valueOf(dtLogin.getIntUserID()), new DataPart(String.valueOf(dtLogin.getIntUserID()) + ".jpg", dtLogin.getBlobImg(), "image/jpeg"));
                 }
 
                 return params;
