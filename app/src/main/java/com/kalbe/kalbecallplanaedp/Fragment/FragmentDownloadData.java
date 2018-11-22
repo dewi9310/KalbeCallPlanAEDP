@@ -2325,22 +2325,24 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     }
 
     private void downlaodFileNew(List<VMDownloadFile> listVm, Context context){
-        progress=new ProgressDialog(getContext());
-        progress.setMessage("Downloading file....");
-        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setIndeterminate(true);
-        progress.setCancelable(false);
-        progress.setCanceledOnTouchOutside(false);
-        progress.setMax(100);
-        progress.setProgress(0);
-        progress.show();
-        int index = 0;
         curCount = 0;
         totalCount = listVm.size();
+        if (listVm.size()>0){
+            progress=new ProgressDialog(getContext());
+            progress.setMessage("Downloading file....");
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setIndeterminate(true);
+            progress.setCancelable(false);
+            progress.setCanceledOnTouchOutside(false);
+            progress.setMax(100);
+            progress.setProgress(0);
+            progress.show();
+            int index = 0;
             for (VMDownloadFile data : listVm){
                 executor.execute(new LongThread(context, index, data, new Handler(this)));
-               index++;
+                index++;
             }
+        }
     }
     private boolean checkMenu(){
         boolean isDataReady = new clsMainBL().isDataReady(getContext());

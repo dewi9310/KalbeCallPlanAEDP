@@ -186,6 +186,11 @@ public class FragmentSubAkuisisi extends Fragment {
                             tv_status_info.setTextColor(getContext().getResources().getColor(R.color.green_300));
                         }
 
+                    }else {
+                        ln_emptyAkuisisi.setVisibility(View.VISIBLE);
+                        ln_resgistrasi.setVisibility(View.GONE);
+                        ln_image.setVisibility(View.GONE);
+                        tvDesc_akuisisi.setText("Please download File Akuisisi");
                     }
                 }else if (intTypeSubSubId==new clsHardCode().TypeText){
                     ln_image.setVisibility(View.GONE);
