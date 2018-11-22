@@ -162,7 +162,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     private static byte[] phtProfile;
     final int PIC_CROP_PROFILE = 5;
     private static ByteArrayOutputStream output = new ByteArrayOutputStream();
-
+    MenuItem checkNavItem = null;
     private TextView tvUsername, tvEmail;
     CircleImageView ivProfile;
     private Uri uriImage, selectedImage;
@@ -437,25 +437,36 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 menuItem.setChecked(true);
-
+                checkNavItem = menuItem;
                 drawerLayout.closeDrawers();
 
+                return true;
+            }
+        });
+
+//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
                 Fragment fragment = null;
-                switch (menuItem.getItemId()) {
-                    case R.id.mnLogout:
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainMenu.this);
+                if(checkNavItem!= null){
+                    switch (checkNavItem.getItemId()) {
+                        case R.id.mnLogout:
+                            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainMenu.this);
 
-                        builder.setTitle("Confirm");
-                        builder.setMessage("Logout Application?");
+                            builder.setTitle("Confirm");
+                            builder.setMessage("Logout Application?");
 
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    pushData();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        pushData();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
 //                                final ProgressDialog dialog2 = new ProgressDialog(MainMenu.this, ProgressDialog.STYLE_SPINNER);
 //                                dialog2.setIndeterminate(true);
 //                                dialog2.setMessage("Logging out...");
@@ -474,193 +485,181 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 //                                                dialog2.dismiss();
 //                                            }
 //                                        }, 3000);
-                            }
-                        });
+                                }
+                            });
 
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
 
-                        android.app.AlertDialog alert = builder.create();
-                        alert.show();
-                        return true;
+                            android.app.AlertDialog alert = builder.create();
+                            alert.show();
+                            break;
+                        case R.id.home:
+                            toolbar.setTitle("Home");
 
-                    case R.id.home:
-                        toolbar.setTitle("Home");
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            // fragment yang dituju
+                            HomeFragment homFragment = new HomeFragment();
+                            FragmentTransaction fragmentTransactionHome = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionHome.replace(R.id.frame, homFragment);
+                            fragmentTransactionHome.commit();
+                            selectedId = 99;
+                            break;
+                        case R.id.mnpushData:
+                            toolbar.setTitle("Push Data");
+                            toolbar.setSubtitle(null);
 
-                        // fragment yang dituju
-                        HomeFragment homFragment = new HomeFragment();
-                        FragmentTransaction fragmentTransactionHome = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionHome.replace(R.id.frame, homFragment);
-                        fragmentTransactionHome.commit();
-                        selectedId = 99;
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        return true;
-                    case R.id.mnpushData:
-                        toolbar.setTitle("Push Data");
-                        toolbar.setSubtitle(null);
+                            FragmentPushData fragmentPushData = new FragmentPushData();
+                            FragmentTransaction fragmentTransactionPushData = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionPushData.replace(R.id.frame, fragmentPushData);
+                            fragmentTransactionPushData.commit();
+                            selectedId = 99;
+                            break;
+                        case R.id.mnDownloadData:
+                            toolbar.setTitle("Download Data");
+                            toolbar.setSubtitle(null);
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        FragmentPushData fragmentPushData = new FragmentPushData();
-                        FragmentTransaction fragmentTransactionPushData = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionPushData.replace(R.id.frame, fragmentPushData);
-                        fragmentTransactionPushData.commit();
-                        selectedId = 99;
+                            FragmentDownloadData fragmentDownloadData = new FragmentDownloadData();
+                            FragmentTransaction fragmentTransactionDownloadData = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionDownloadData.replace(R.id.frame, fragmentDownloadData);
+                            fragmentTransactionDownloadData.commit();
+                            selectedId = 99;
+                            break;
+                        case R.id.mnCallPlan:
+                            toolbar.setTitle("Call Plan");
+                            toolbar.setSubtitle(null);
 
-                        return true;
-                    case R.id.mnDownloadData:
-                        toolbar.setTitle("Download Data");
-                        toolbar.setSubtitle(null);
-
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-                        FragmentDownloadData fragmentDownloadData = new FragmentDownloadData();
-                        FragmentTransaction fragmentTransactionDownloadData = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionDownloadData.replace(R.id.frame, fragmentDownloadData);
-                        fragmentTransactionDownloadData.commit();
-                        selectedId = 99;
-
-                        return true;
-                    case R.id.mnCallPlan:
-                        toolbar.setTitle("Call Plan");
-                        toolbar.setSubtitle(null);
-
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 //                        FragmentListCallPlan fragmentCallPlan = new FragmentListCallPlan();
-                        FragmentHeaderCallPlan fragmentCallPlan = new FragmentHeaderCallPlan();
-                        FragmentTransaction fragmentTransactionCallPlan = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionCallPlan.replace(R.id.frame, fragmentCallPlan);
-                        fragmentTransactionCallPlan.commit();
-                        selectedId = 99;
+                            FragmentHeaderCallPlan fragmentCallPlan = new FragmentHeaderCallPlan();
+                            FragmentTransaction fragmentTransactionCallPlan = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionCallPlan.replace(R.id.frame, fragmentCallPlan);
+                            fragmentTransactionCallPlan.commit();
+                            selectedId = 99;
+                            break;
+                        case R.id.mnAkusisi:
+                            toolbar.setTitle("Akusisi");
+                            toolbar.setSubtitle(null);
 
-                        return true;
-                    case R.id.mnAkusisi:
-                        toolbar.setTitle("Akusisi");
-                        toolbar.setSubtitle(null);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            FragmentAkuisisi fragmentAkuisisi = new FragmentAkuisisi();
+                            FragmentTransaction fragmentTransactionAkuisisi = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionAkuisisi.replace(R.id.frame, fragmentAkuisisi);
+                            fragmentTransactionAkuisisi.commit();
+                            selectedId = 99;
+                            break;
+                        case R.id.mnMaintenance:
+                            toolbar.setTitle("Maintenance");
+                            toolbar.setSubtitle(null);
 
-                        FragmentAkuisisi fragmentAkuisisi = new FragmentAkuisisi();
-                        FragmentTransaction fragmentTransactionAkuisisi = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionAkuisisi.replace(R.id.frame, fragmentAkuisisi);
-                        fragmentTransactionAkuisisi.commit();
-                        selectedId = 99;
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        return true;
-                    case R.id.mnMaintenance:
-                        toolbar.setTitle("Maintenance");
-                        toolbar.setSubtitle(null);
+                            FragementMaintenance fragmentMaintenance = new FragementMaintenance();
+                            FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
+                            fragmentTransactionMaintenance.commit();
+                            selectedId = 99;
+                            break;
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        case R.id.mnInfoProgram:
+                            toolbar.setTitle("Info Program");
+                            toolbar.setSubtitle(null);
 
-                        FragementMaintenance fragmentMaintenance = new FragementMaintenance();
-                        FragmentTransaction fragmentTransactionMaintenance = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionMaintenance.replace(R.id.frame, fragmentMaintenance);
-                        fragmentTransactionMaintenance.commit();
-                        selectedId = 99;
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        return true;
+                            FragementInfoProgram fragementInfoProgram = new FragementInfoProgram();
+                            FragmentTransaction fragmentTransactionInfoProgram = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionInfoProgram.replace(R.id.frame, fragementInfoProgram);
+                            fragmentTransactionInfoProgram.commit();
+                            selectedId = 99;
 
-                    case R.id.mnInfoProgram:
-                        toolbar.setTitle("Info Program");
-                        toolbar.setSubtitle(null);
+                            break;
+                        case R.id.mnNotification:
+                            toolbar.setTitle("Notification");
+                            toolbar.setSubtitle(null);
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        FragementInfoProgram fragementInfoProgram = new FragementInfoProgram();
-                        FragmentTransaction fragmentTransactionInfoProgram = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionInfoProgram.replace(R.id.frame, fragementInfoProgram);
-                        fragmentTransactionInfoProgram.commit();
-                        selectedId = 99;
+                            FragmentNotification fragmentNotification = new FragmentNotification();
+                            FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
+                            fragmentTransactionNotification.commit();
+                            selectedId = 99;
 
-                        return true;
+                            break;
+                        case R.id.mnSetting:
+                            toolbar.setTitle("Setting");
+                            toolbar.setSubtitle(null);
 
-                    case R.id.mnNotification:
-                        toolbar.setTitle("Notification");
-                        toolbar.setSubtitle(null);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            FragmentSetting fragmentSetting = new FragmentSetting();
+                            FragmentTransaction fragmentTransactionSetting = getSupportFragmentManager().beginTransaction();
+                            fragmentTransactionSetting.replace(R.id.frame, fragmentSetting);
+                            fragmentTransactionSetting.commit();
+                            selectedId = 99;
+                            break;
 
-                        FragmentNotification fragmentNotification = new FragmentNotification();
-                        FragmentTransaction fragmentTransactionNotification = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionNotification.replace(R.id.frame, fragmentNotification);
-                        fragmentTransactionNotification.commit();
-                        selectedId = 99;
-
-                        return true;
-
-                    case R.id.mnSetting:
-                        toolbar.setTitle("Setting");
-                        toolbar.setSubtitle(null);
-
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-                        FragmentSetting fragmentSetting = new FragmentSetting();
-                        FragmentTransaction fragmentTransactionSetting = getSupportFragmentManager().beginTransaction();
-                        fragmentTransactionSetting.replace(R.id.frame, fragmentSetting);
-                        fragmentTransactionSetting.commit();
-                        selectedId = 99;
-
-                        return true;
-
-                    case R.id.mnCheckOut:
-                        showCustomDialog();
+                        case R.id.mnCheckOut:
+                            showCustomDialog();
 //                        selectedId = 99;
-
-                        return true;
-                    default:
-                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-                        try {
-                            Class<?> fragmentClass = Class.forName(linkMenu[menuItem.getItemId()]);
+break;
+                        default:
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
                             try {
-                                toolbar.setTitle(menuItem.getTitle().toString());
-                                toolbar.setSubtitle(null);
+                                Class<?> fragmentClass = Class.forName(linkMenu[checkNavItem.getItemId()]);
+                                try {
+                                    toolbar.setTitle(checkNavItem.getTitle().toString());
+                                    toolbar.setSubtitle(null);
 
-                                fragment = (Fragment) fragmentClass.newInstance();
-                                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.frame, fragment);
-                                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                                fragmentTransaction.commit();
-                                selectedId = menuItem.getItemId();
-                                isSubMenu = false;
+                                    fragment = (Fragment) fragmentClass.newInstance();
+                                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                    fragmentTransaction.replace(R.id.frame, fragment);
+                                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                                    fragmentTransaction.commit();
+                                    selectedId = checkNavItem.getItemId();
+                                    isSubMenu = false;
 
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
+                                } catch (InstantiationException e) {
+                                    e.printStackTrace();
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        return true;
+                    }
                 }
-            }
-        });
 
-//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
             }
+
         };
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+
     }
 
     // put image from camera
