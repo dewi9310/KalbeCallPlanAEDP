@@ -26,6 +26,7 @@ public class clsDataJson {
     private List<tMaintenanceDetail> ListOfDatatMaintenanceDetail;
     private List<tInfoProgramHeader> ListOfDatatInfoProogramHeader;
     private List<tInfoProgramDetail> ListOfDatatInfoProgramDetail;
+    private List<tLogError> ListOfDatatLogError;
     private String txtUserId;
     private String txtSessionLogiId;
     private String intRoleId;
@@ -138,6 +139,14 @@ public class clsDataJson {
 
     public void setTxtSessionLogiId(String txtSessionLogiId) {
         this.txtSessionLogiId = txtSessionLogiId;
+    }
+
+    public List<tLogError> getListOfDatatLogError() {
+        return ListOfDatatLogError;
+    }
+
+    public void setListOfDatatLogError(List<tLogError> listOfDatatLogError) {
+        ListOfDatatLogError = listOfDatatLogError;
     }
 
     public String getIntRoleId() {
@@ -369,6 +378,22 @@ public class clsDataJson {
                 itemLIstQuery.add(item);
             }
             resJson.put(dataInfoDeatil.Property_ListOfDatatInfoProgramDetail, new JSONArray(itemLIstQuery));
+        }
+
+        if (this.getListOfDatatLogError()!=null){
+            tLogError dataError = new tLogError();
+            itemLIstQuery = new ArrayList<>();
+            for (tLogError data : this.getListOfDatatLogError()){
+                JSONObject item = new JSONObject();
+                item.put(dataError.Property_txtGuiId, String.valueOf(data.getTxtGuiId()));
+                item.put(dataError.Property_txtUserId, String.valueOf(data.getTxtUserId()));
+                item.put(dataError.Property_txtDeviceName, String.valueOf(data.getTxtDeviceName()));
+                item.put(dataError.Property_txtOs, String.valueOf(data.getTxtOs()));
+                item.put(dataError.Property_txtFileName, String.valueOf(data.getTxtFileName()));
+                item.put(dataError.Property_blobImg, String.valueOf(data.getBlobImg()));
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataError.Property_ListOfDatatLogError, new JSONArray(itemLIstQuery));
         }
 
         resJson.put(Property_txtUserId, getTxtUserId());

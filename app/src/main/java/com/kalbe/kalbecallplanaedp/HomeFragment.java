@@ -107,8 +107,6 @@ public class HomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString(FRAG_VIEW, "Realisasi");
                 new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
-//                new Tools().intentFragment(FragmentHistory.class, "History", getContext());
-//                Toast.makeText(getContext(), "ini realisasi", Toast.LENGTH_SHORT).show();
             }
         });
 

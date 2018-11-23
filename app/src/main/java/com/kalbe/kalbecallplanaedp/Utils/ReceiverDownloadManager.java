@@ -51,17 +51,17 @@ public class ReceiverDownloadManager {
         this.longList = longList;
     }
 
-    private void deleteMediaStorageDirtemp (){
-        File mediaStorageDir = new File(new clsHardCode().txtFolderDownload + File.separator);
-        if (mediaStorageDir.exists()){
-            if (mediaStorageDir.isDirectory()){
-                for (File currentFile : mediaStorageDir.listFiles()){
-                    currentFile.delete();
-                }
-            }
-            mediaStorageDir.delete();
-        }
-    }
+//    private void deleteMediaStorageDirtemp (){
+//        File mediaStorageDir = new File(new clsHardCode().txtFolderDownload + File.separator);
+//        if (mediaStorageDir.exists()){
+//            if (mediaStorageDir.isDirectory()){
+//                for (File currentFile : mediaStorageDir.listFiles()){
+//                    currentFile.delete();
+//                }
+//            }
+//            mediaStorageDir.delete();
+//        }
+//    }
 
 
 }

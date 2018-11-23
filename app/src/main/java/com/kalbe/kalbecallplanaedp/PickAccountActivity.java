@@ -157,7 +157,7 @@ public class PickAccountActivity extends Activity {
         setContentView(R.layout.activity_pick_account_v3);
         btnAddAcc = (Button) findViewById(R.id.btnAddAccount);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
+        int a = 5/0;
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);

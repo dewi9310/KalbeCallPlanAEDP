@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kalbe.mobiledevknlibs.DeviceInformation.DeviceInformation;
 import com.kalbe.mobiledevknlibs.DeviceInformation.ModelDevice;
@@ -41,15 +42,18 @@ import java.util.Set;
 
 public class LocalReportSenderAcra implements ReportSender{
 
-    private static List<ModelError> modelErrors;
     private final Map<ReportField, String> mMapping = new HashMap<ReportField, String>();
     private FileWriter crashReport;
     static Date date = new Date();
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     static SimpleDateFormat dateFormats = new SimpleDateFormat("yyyy-MM-dd");
-    static String fileName = "log_"+dateFormat.format(date)+".txt";
-    public LocalReportSenderAcra(Context ctx, String path) {
+    ModelReport report;
+    String fileName;
+
+    public LocalReportSenderAcra(String path, ModelReport report) {
         // the destination
+        this.report = report;
+        fileName = "log_" + dateFormat.format(date)+".txt";
         File logFile = new File(path, fileName);
         crashReport = null;
         try {
@@ -83,39 +87,63 @@ public class LocalReportSenderAcra implements ReportSender{
     @Override
     public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
         final Map<String, String> finalReport = remap(errorContent);
-
+        BufferedWriter buf = new BufferedWriter(crashReport);
         try {
-            BufferedWriter buf = new BufferedWriter(crashReport);
+
 
             Set<Map.Entry<String, String>> set = finalReport.entrySet();
             Iterator<Map.Entry<String, String>> i = set.iterator();
             buf.append("").append("\n");
 
-            ModelDevice modelDevice = DeviceInformation.getDeviceInformation();
-            if (modelDevice != null){
-                buf.append("\n").append("Device name :"+ modelDevice.getDevice() );
-                buf.append("\n").append("Model name :"+ modelDevice.getModel() );
-                buf.append("\n").append("OS Version :"+ modelDevice.getOsVersion() );
-                buf.append("\n").append("Product :"+ modelDevice.getProduct() );
-                buf.append("\n").append("SDK Version :"+ modelDevice.getVersionSDK() );
+//            ModelDevice modelDevice = DeviceInformation.getDeviceInformation();
+//            if (modelDevice != null){
+//                buf.append("\n").append("Device name :"+ modelDevice.getDevice() );
+//                buf.append("\n").append("Model name :"+ modelDevice.getModel() );
+//                buf.append("\n").append("OS Version :"+ modelDevice.getOsVersion() );
+//                buf.append("\n").append("Product :"+ modelDevice.getProduct() );
+//                buf.append("\n").append("SDK Version :"+ modelDevice.getVersionSDK() );
+//            }
+
+            if (report != null){
+                buf.append("\n").append("User id :"+ report.getIntUserID() );
+                buf.append("\n").append("User name :"+ report.getTxtUserName() );
+                buf.append("\n").append("Role id :"+ report.getIntRoleID() );
+                buf.append("\n").append("Role name :"+ report.getTxtRoleName() );
+                buf.append("\n").append("Device name :"+ report.getDevice() );
+                buf.append("\n").append("Model name :"+ report.getModel() );
+                buf.append("\n").append("OS Version :"+ report.getOsVersion() );
+                buf.append("\n").append("Product :"+ report.getProduct() );
+                buf.append("\n").append("SDK Version :"+ report.getVersionSDK() );
             }
             while (i.hasNext()) {
                 Map.Entry<String, String> me = (Map.Entry<String, String>) i.next();
-                buf.append("[" + me.getKey() + "] = " + "'"+me.getValue()+"'").append("\n");
+//                buf.append("[" + me.getKey() + "] = " + "'"+me.getValue()+"'").append("\n");
+                buf.append("[" + me.getKey() + "]=" + me.getValue());
             }
 
             buf.append("\n").append("----------------*****----------------");
             buf.append("\n").append("\n");
             buf.flush();
             buf.close();
+            crashReport.close();
         } catch (IOException e) {
+//            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+//            try {
+//                buf.close();
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
             Log.e("TAG", "IO ERROR", e);
         }
     }
-    public static ModelError getModelError(Context context ){
-        ModelError modelError = new ModelError();
-        modelError.set_dtDate(dateFormats.format(date));
-        modelError.set_txtFileName(fileName);
-        return modelError;
+    public ModelError getModelError( ){
+        if (fileName!=null){
+            ModelError modelError = new ModelError();
+            modelError.set_dtDate(dateFormats.format(date));
+            modelError.set_txtFileName(fileName);
+            return modelError;
+        }else {
+            return null;
+        }
     }
 }

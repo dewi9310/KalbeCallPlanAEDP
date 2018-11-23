@@ -3,6 +3,7 @@ package com.kalbe.kalbecallplanaedp.BL;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.util.TypedValue;
 
 
@@ -46,6 +47,7 @@ import com.kalbe.mobiledevknlibs.library.swipemenu.bean.SwipeMenuItem;
 import com.kalbe.mobiledevknlibs.library.swipemenu.interfaces.SwipeMenuCreator;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -297,5 +299,27 @@ public class clsMainBL {
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpecy, ivParameterSpec);
         cipherText = cipher.doFinal(cipherText);
         return cipherText;
+    }
+
+    public void createFolderApp(){
+        clsHardCode clsdthc = new clsHardCode();
+        File appDir=new File(clsdthc.txtPathApp);
+
+        if(!appDir.exists() && !appDir.isDirectory())
+        {
+            // create empty directory
+            if (appDir.mkdirs())
+            {
+                Log.i("CreateDir","App dir created");
+            }
+            else
+            {
+                Log.w("CreateDir","Unable to create app dir!");
+            }
+        }
+        else
+        {
+            Log.i("CreateDir","App dir already exists");
+        }
     }
 }

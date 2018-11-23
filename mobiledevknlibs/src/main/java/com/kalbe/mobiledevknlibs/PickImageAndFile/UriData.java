@@ -50,6 +50,14 @@ public class UriData {
         }
     }
 
+    public static Uri getOutputMediaUriFolder(Context context, String folderName) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
+            return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputFolder(folderName));
+        } else {
+            return Uri.fromFile(getOutputFolder(folderName));
+        }
+    }
+
     public static Uri getOutputMediaImageUriCons(Context context, String folderName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputMediaImageCons(folderName));
@@ -126,5 +134,19 @@ public class UriData {
         File mediaFile;
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + fileName);
         return mediaFile;
+    }
+
+    public static File getOutputFolder(String folderName) {
+        // External sdcard location
+
+        File mediaStorageDir = new File(folderName + File.separator);
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(IMAGE_DIRECTORY_NAME, "Failed create " + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+        return mediaStorageDir;
     }
 }

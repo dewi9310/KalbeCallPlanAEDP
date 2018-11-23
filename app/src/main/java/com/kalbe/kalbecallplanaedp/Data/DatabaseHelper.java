@@ -28,6 +28,7 @@ import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tLogError;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tNotification;
@@ -48,7 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // name of the database file for your application -- change to something appropriate for your app
     private static final String DATABASE_NAME = _path.dbName;
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     // the DAO object we use to access the SimpleData table
     protected Dao<mConfigData, Integer> mConfigDao;
@@ -101,6 +102,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     protected Dao<tInfoProgramDetail, Integer> tInfoProgramDetailDao;
     protected Dao<mFileAttachment, Integer> mFileAttachmentDao;
     protected Dao<tNotification, Integer> tNotificationDao;
+    protected Dao<tLogError, Integer> tLogErrorDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -135,6 +137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, tInfoProgramDetail.class);
             TableUtils.createTableIfNotExists(connectionSource, tNotification.class);
             TableUtils.createTableIfNotExists(connectionSource, mFileAttachment.class);
+            TableUtils.createTableIfNotExists(connectionSource, tLogError.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -176,6 +179,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, tInfoProgramDetail.class, true);
             TableUtils.dropTable(connectionSource, tNotification.class, true);
             TableUtils.dropTable(connectionSource, mFileAttachment.class, true);
+//            TableUtils.dropTable(connectionSource, tLogError.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {
@@ -209,6 +213,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.clearTable(connectionSource, tInfoProgramDetail.class);
             TableUtils.clearTable(connectionSource, tNotification.class);
             TableUtils.clearTable(connectionSource, mFileAttachment.class);
+//            TableUtils.clearTable(connectionSource, tLogError.class);
 
 //            onCreate(db, connectionSource);
         } catch (SQLException e) {
@@ -399,6 +404,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mFileAttachmentDao;
     }
 
+    public Dao<tLogError, Integer> gettLogErrorDao() throws SQLException {
+        if (tLogErrorDao == null) {
+            tLogErrorDao = getDao(tLogError.class);
+        }
+        return tLogErrorDao;
+    }
+
+
     @Override
     public void close() {
         mConfigDao = null;
@@ -427,5 +440,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         tInfoProgramDetailDao = null;
         tNotificationDao = null;
         mFileAttachmentDao = null;
+        tLogErrorDao = null;
     }
 }

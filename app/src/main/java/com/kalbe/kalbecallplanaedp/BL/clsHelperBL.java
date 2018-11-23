@@ -32,6 +32,7 @@ import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tLogError;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
@@ -122,6 +123,7 @@ public class clsHelperBL {
             List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
             List<tInfoProgramDetail> ListOftInfoProgramDetail = _tInfoProgramDetailRepo.getPushAllData(ListOftInfoProgramHeader);
             List<tProgramVisitSubActivity> ListOftProgramSubActivity = _tProgramVisitSubActivityRepo.getAllPushData();
+//            List<tLogError>
 
             FileUpload = new HashMap<>();
             if (ListOftAkuisisiHeaderData!=null){
@@ -173,6 +175,8 @@ public class clsHelperBL {
                     }
                 }
             }
+
+//            if ()
         }else {
             dtPush = null;
         }

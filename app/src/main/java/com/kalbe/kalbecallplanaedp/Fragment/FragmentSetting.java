@@ -100,6 +100,7 @@ public class FragmentSetting extends Fragment{
     ProgressDialog pDialog;
     mUserLogin dtLogin;
     MainMenu mm;
+    private String ZOOM_PROFILE = "photo profil";
 
     @Nullable
     @Override
@@ -126,7 +127,7 @@ public class FragmentSetting extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(getContext(), ImageViewerActivity.class);
-//                intent1.putExtra(ZOOM_IMAGE, obj.getTxtDetailId());
+                intent1.putExtra(ZOOM_PROFILE, dtLogin.getTxtGuID());
                 startActivity(intent1);
             }
         });
