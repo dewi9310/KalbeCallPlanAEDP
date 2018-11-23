@@ -165,7 +165,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     private static ByteArrayOutputStream output = new ByteArrayOutputStream();
     MenuItem checkNavItem = null;
     private TextView tvUsername, tvEmail;
-    CircleImageView ivProfile;
+    public CircleImageView ivProfile;
     private Uri uriImage, selectedImage;
 
     protected GoogleApiClient mGoogleApiClient;
