@@ -203,6 +203,52 @@ public class PickImage {
 
         return imgPhoto;
     }
+    public static byte[] getByteImageToSaveRotate2(Context context, Uri uri) {
+        byte[] imgPhoto = null;
+        try {
+            Bitmap bitmap = PickImage.decodeStreamReturnBitmap(context, uri);
+            ExifInterface exif = null;
+            String path = uri.toString();
+            if (path.startsWith("file://")) {
+                exif = new ExifInterface(path);
+            }
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (path.startsWith("content://")) {
+                    InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                    exif = new ExifInterface(inputStream);
+                }
+            }
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            Bitmap rotatedBitmap = rotateBitmap(bitmap, orientation);
+
+            ByteArrayOutputStream output = null;
+
+            try {
+                output = new ByteArrayOutputStream();
+                rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+            } catch (Exception var15) {
+                var15.printStackTrace();
+            } finally {
+                try {
+                    if(output != null) {
+                        output.close();
+                    }
+                } catch (IOException var14) {
+                    var14.printStackTrace();
+                }
+
+            }
+
+            imgPhoto = output.toByteArray();
+        } catch (NullPointerException var17) {
+            var17.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imgPhoto;
+    }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
         Matrix matrix = new Matrix();

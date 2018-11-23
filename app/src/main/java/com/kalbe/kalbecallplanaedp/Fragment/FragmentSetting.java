@@ -1,10 +1,12 @@
 package com.kalbe.kalbecallplanaedp.Fragment;
 
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -49,18 +51,25 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
@@ -90,7 +99,7 @@ public class FragmentSetting extends Fragment{
     mUserLoginRepo loginRepo;
     ProgressDialog pDialog;
     mUserLogin dtLogin;
-
+    MainMenu mm;
 
     @Nullable
     @Override
@@ -106,7 +115,7 @@ public class FragmentSetting extends Fragment{
                 selectImageProfile();
             }
         });
-
+        mm = (MainMenu)getActivity();
         dtLogin = new clsMainBL().getUserLogin(getContext());
         if (dtLogin.getBlobImg()!=null){
         Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
@@ -220,7 +229,7 @@ public class FragmentSetting extends Fragment{
     private void galleryIntentProfile() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto , SELECT_FILE_PROFILE);//one can be replaced with any action code
+        getActivity().startActivityForResult(pickPhoto , SELECT_FILE_PROFILE);//one can be replaced with any action code
     }
 
     private void performCropProfile(){
@@ -335,17 +344,66 @@ public class FragmentSetting extends Fragment{
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     selectedImage = data.getData();
-                    String uri = selectedImage.getPath().toString();
+//                    Uri uri = selectedImage;
 //                    bitmap = BitmapFactory.decodeFile(uri, bitmapOptions);
+//                    String a = getRealPathFromURI(uri);
+//                    Uri myUri = Uri.parse(a);
+//                    URL url=getClass().getResource(a);
 
-                    performCropGalleryProfile();
+                    Bitmap bp =  MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                    byte[] save = PickImage.getByteImageToSaveRotate2(getContext(), selectedImage);
+//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                    bp.compress(Bitmap.CompressFormat.PNG, 0, bos);
+//                    byte[] bArray = bos.toByteArray();
+
+
+//                    byte[] save = PickImage.getByteImageToSaveRotate(getContext(), myUri);
+//                    InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+//                    byte[] bitmapdata = getByteArrayImage(a);
+
+                    dtLogin.setBlobImg(save);
+                    dtLogin.setTxtFileName("tmp_act");
+                    changeProfile(dtLogin);
+//                    performCropGalleryProfile();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+    private byte[] getByteArrayImage(String url){
+        try {
+            URL imageUrl = new URL(url);
+            URLConnection ucon = imageUrl.openConnection();
 
+            InputStream is = ucon.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+
+            ByteArrayBuffer baf = new ByteArrayBuffer(500);
+            int current = 0;
+            while ((current = bis.read()) != -1) {
+                baf.append((byte) current);
+            }
+
+            return baf.toByteArray();
+        } catch (Exception e) {
+            Log.d("ImageManager", "Error: " + e.toString());
+        }
+        return null;
+    }
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
     private void changeProfile(final mUserLogin dataLogin) {
          pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Please wait....");
@@ -424,6 +482,7 @@ public class FragmentSetting extends Fragment{
                             dtLogin = new clsMainBL().getUserLogin(getContext());
                             Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
                             PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
+                            PickImage.previewCapturedImage(mm.ivProfile, bitmap, 200, 200);
 
 //                            Intent intent = new Intent(getContext(), MainMenu.class);
 //                            getActivity().finish();
