@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -147,10 +148,14 @@ public class FragmentPushData extends Fragment{
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         btn_push_error.setLayoutParams(params);
-        btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_HORIZONTAL);
+        btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
         btn_push_error.setPadding(10, 10, 10, 10);
-        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white));
+//        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white)); 
         btn_push_error.setTextColor(getContext().getResources().getColor(R.color.red_A400));
+        GradientDrawable shape =  new GradientDrawable();
+        shape.setCornerRadius(20);
+        shape.setColor(getContext().getResources().getColor(R.color.white));
+        btn_push_error.setBackground(shape);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         pDialog = new ProgressDialog(getContext(),ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
