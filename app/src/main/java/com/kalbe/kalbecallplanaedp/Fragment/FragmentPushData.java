@@ -150,7 +150,7 @@ public class FragmentPushData extends Fragment{
         btn_push_error.setLayoutParams(params);
         btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
         btn_push_error.setPadding(10, 10, 10, 10);
-//        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white)); 
+//        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white));
         btn_push_error.setTextColor(getContext().getResources().getColor(R.color.red_A400));
         GradientDrawable shape =  new GradientDrawable();
         shape.setCornerRadius(20);
@@ -173,6 +173,15 @@ public class FragmentPushData extends Fragment{
         apotekRepo = new mApotekRepo(getContext());
         dokterRepo = new mDokterRepo(getContext());
 
+        tLogErrorRepo _tLogErrorRepo = new tLogErrorRepo(getContext());
+        List<tLogError> ListOfDataError = _tLogErrorRepo.getAllPushData();
+        if (ListOfDataError!=null){
+            if (ListOfDataError.size()>0){
+                btn_push_error.setVisibility(View.VISIBLE);
+            }else {
+                btn_push_error.setVisibility(View.GONE);
+            }
+        }
         if(this.getArguments()!=null){
             myValue = this.getArguments().getString("message");
             getContext().stopService(new Intent(getContext(), MyServiceNative.class));
