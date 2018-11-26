@@ -444,6 +444,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 menuItem.setChecked(true);
                 checkNavItem = menuItem;
+                pDialog.show();
                 drawerLayout.closeDrawers();
 
                 return true;
@@ -457,6 +458,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 Fragment fragment = null;
+                pDialog.dismiss();
                 if(checkNavItem!= null){
                     switch (checkNavItem.getItemId()) {
                         case R.id.mnLogout:
