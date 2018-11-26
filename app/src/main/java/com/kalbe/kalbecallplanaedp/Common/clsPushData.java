@@ -12,10 +12,10 @@ public class clsPushData {
     private HashMap<String, byte[]> FileUpload;
     private List<String> FileName;
     private boolean isDataNull;
+    private clsDataError dataError;
     public clsDataJson getDataJson() {
         return dataJson;
     }
-
     public void setDataJson(clsDataJson dataJson) {
         this.dataJson = dataJson;
     }
@@ -42,5 +42,13 @@ public class clsPushData {
 
     public void setDataNull(boolean dataNull) {
         isDataNull = dataNull;
+    }
+
+    public clsDataError getDataError() {
+        return dataError;
+    }
+
+    public void setDataError(clsDataError dataError) {
+        this.dataError = dataError;
     }
 }

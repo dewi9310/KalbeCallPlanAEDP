@@ -95,6 +95,7 @@ public class HomeFragment extends Fragment {
         ln_plan_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int a = 5/0;
                 Bundle bundle = new Bundle();
                 bundle.putString(FRAG_VIEW, "Plan");
                 new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);

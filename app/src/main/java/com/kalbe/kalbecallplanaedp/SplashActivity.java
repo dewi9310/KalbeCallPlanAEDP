@@ -92,7 +92,6 @@ public class SplashActivity extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.green_300));
         }
-
         setContentView(R.layout.activity_splash);
         mAccountManager = AccountManager.get(this);
         DatabaseManager.init(getApplicationContext());
@@ -103,7 +102,7 @@ public class SplashActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
+//        int a = 5/0;
         version = (TextView) findViewById(R.id.tv_version);
         version.setText(pInfo.versionName.toString());
         version.setGravity(Gravity.CENTER | Gravity.BOTTOM);

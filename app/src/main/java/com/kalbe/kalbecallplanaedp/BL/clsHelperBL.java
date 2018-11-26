@@ -22,6 +22,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kalbe.kalbecallplanaedp.Common.clsDataError;
 import com.kalbe.kalbecallplanaedp.Common.clsDataJson;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
@@ -49,6 +50,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tLogErrorRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
@@ -181,6 +183,53 @@ public class clsHelperBL {
             dtPush = null;
         }
         dtclsPushData.setDataJson(dtPush);
+        dtclsPushData.setFileName(FileName);
+        dtclsPushData.setFileUpload(FileUpload);
+        return dtclsPushData;
+    }
+
+    public clsPushData pushDataError(String versionName, Context context){
+        clsPushData dtclsPushData = new clsPushData();
+        clsDataError dtPush = new clsDataError();
+        mUserLoginRepo loginRepo = new mUserLoginRepo(context);
+        HashMap<String, byte[]> FileUpload = null;
+        List<String> FileName = new ArrayList<>();
+        if (loginRepo.getContactCount(context)>0){
+            mUserLogin dataLogin = new clsMainBL().getUserLogin(context);
+            dtPush.setTxtVersionApp(versionName);
+            dtPush.setTxtUserId(String.valueOf(dataLogin.getIntUserID()));
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Calendar calendar = Calendar.getInstance();
+                mCounterDataRepo _mCounterDataRepo = new mCounterDataRepo(context);
+                mCounterData _mCounterData = new mCounterData();
+                _mCounterData.setIntId(enumCounterData.MonitorScedule.getIdCounterData());
+                _mCounterData.setTxtDescription("value menunjukan waktu terakhir menjalankan services");
+                _mCounterData.setTxtName("Monitor Service");
+                _mCounterData.setTxtValue(dateFormat.format(calendar.getTime()));
+                _mCounterDataRepo.createOrUpdate(_mCounterData);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            tLogErrorRepo _tLogErrorRepo = new tLogErrorRepo(context);
+            List<tLogError> ListOfDataError = _tLogErrorRepo.getAllPushData();
+
+            FileUpload = new HashMap<>();
+            if (ListOfDataError!=null){
+                dtPush.setListOfDatatLogError(ListOfDataError);
+                for (tLogError data : ListOfDataError){
+                    if (data.getBlobImg()!=null){
+                        FileName.add(data.getTxtGuiId());
+                        FileUpload.put(data.getTxtGuiId(), data.getBlobImg());
+                    }
+                }
+            }
+
+        }else {
+            dtPush = null;
+        }
+        dtclsPushData.setDataError(dtPush);
         dtclsPushData.setFileName(FileName);
         dtclsPushData.setFileUpload(FileUpload);
         return dtclsPushData;
