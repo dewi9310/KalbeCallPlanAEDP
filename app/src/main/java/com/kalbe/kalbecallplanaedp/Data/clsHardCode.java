@@ -58,6 +58,7 @@ public class clsHardCode {
     public String linkInfoProgram = new mConfigRepo(context).API + "downloadtInfoProgram";
 //    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
     public String linkPushData = new mConfigRepo(context).API +"PushAllData";
+    public String linkPushDataError = new mConfigRepo(context).API +"PushLogError";
 
     /*Link klik apotek*/
     public String linkApotek = new mConfigRepo(context).APIKLB +"mae/apotek";

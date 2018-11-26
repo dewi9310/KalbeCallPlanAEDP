@@ -123,7 +123,7 @@ public class clsDataError {
             resJson.put(dataError.Property_ListOfDatatLogError, new JSONArray(itemLIstQuery));
         }
 
-        resJson.put(Property_txtUserId, getTxtUserId()); 
+        resJson.put(Property_txtUserId, getTxtUserId());
         resJson.put(Property_intRoleId, getIntRoleId());
         resJson.put(Property_txtSessionLogiId, getTxtSessionLogiId());
         resJson.put(Property_intResult, getIntResult());

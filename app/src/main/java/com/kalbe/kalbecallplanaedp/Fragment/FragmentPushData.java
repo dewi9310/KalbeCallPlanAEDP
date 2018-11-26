@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiHeader;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
+import com.kalbe.kalbecallplanaedp.Common.tLogError;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
@@ -61,11 +63,13 @@ import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tLogErrorRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.PushLogError.PushLogError;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
@@ -122,8 +126,8 @@ public class FragmentPushData extends Fragment{
     mDokterRepo dokterRepo;
     mApotekRepo apotekRepo;
 
-    private TableLayout tablePushData;
     FloatingActionButton button_push_data;
+    Button btn_push_error;
     private Gson gson;
     ProgressDialog pDialog;
     String myValue;
@@ -136,6 +140,17 @@ public class FragmentPushData extends Fragment{
         v = inflater.inflate(R.layout.fragment_push_data, container, false);
         mExpandableListView = (ExpandableListView) v.findViewById(R.id.exp_lv_call_plan);
         button_push_data = (FloatingActionButton)v.findViewById(R.id.button_push_data);
+//        btn_push_error = (Button) v.findViewById(R.id.btn_push_error);
+        btn_push_error = new Button(getContext());
+        btn_push_error.setText("Push data error");
+        btn_push_error.setId(1993);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        btn_push_error.setLayoutParams(params);
+        btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_HORIZONTAL);
+        btn_push_error.setPadding(10, 10, 10, 10);
+        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white));
+        btn_push_error.setTextColor(getContext().getResources().getColor(R.color.red_A400));
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         pDialog = new ProgressDialog(getContext(),ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
@@ -173,6 +188,17 @@ public class FragmentPushData extends Fragment{
                 }
             }
         });
+
+        btn_push_error.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    pushDataError();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         return v;
     }
 
@@ -180,7 +206,7 @@ public class FragmentPushData extends Fragment{
 //        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
 //        pDialog.setTitleText("Pushing Data");
 //        pDialog.setTitle("Pushing Your data");
-        pDialog.setMessage("Pushing Your data");
+        pDialog.setMessage("Push your data....");
         pDialog.setCancelable(false);
         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -440,6 +466,7 @@ public void setListData(){
     mExpandableListAdapter = new com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
     mExpandableListView.setAdapter(mExpandableListAdapter);
     mExpandableListView.setEmptyView(v.findViewById(R.id.ln_empty));
+    mExpandableListView.addFooterView(btn_push_error);
 }
 
     private void logout() {
@@ -507,5 +534,82 @@ public void setListData(){
         helper.clearDataAfterLogout();
         getActivity().finish();
         startActivity(intent);
+    }
+
+    private void pushDataError() throws JSONException {
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText("Pushing Data");
+//        pDialog.setTitle("Pushing Your data");
+        pDialog.setMessage("Push your data....");
+        pDialog.setCancelable(false);
+        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+        pDialog.show();
+        String versionName = "";
+        try {
+            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        final clsPushData dtJson = new clsHelperBL().pushDataError(versionName, getContext());
+        if (dtJson == null){
+        }else {
+            String linkPushData = new clsHardCode().linkPushDataError;
+            new VolleyUtils().makeJsonObjectRequestPushError(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+                    ToastCustom.showToasty(getContext(),message,4);
+//                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    pDialog.dismiss();
+                }
+
+                @Override
+                public void onResponse(String response, Boolean status, String strErrorMsg) {
+                    if (response!=null){
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            PushLogError model = gson.fromJson(jsonObject.toString(), PushLogError.class);
+                            boolean isStatus = model.getResult().isStatus();
+                            String txtMessage = model.getResult().getMessage();
+                            String txtMethod = model.getResult().getMethodName();
+                            if (isStatus==true){
+                                if (dtJson.getDataError().getListOfDatatLogError()!=null){
+                                    if (dtJson.getDataError().getListOfDatatLogError().size()>0){
+                                        for (int i = 0; i < dtJson.getDataError().getListOfDatatLogError().size(); i++){
+                                            new tLogErrorRepo(getContext()).delete(dtJson.getDataError().getListOfDatatLogError().get(i));
+                                        }
+                                    }
+                                }
+                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
+
+                                if (myValue!=null){
+                                    if (myValue.equals("notMainMenu")){
+                                        //logout
+                                        logout();
+                                    }
+                                }
+                            }else {
+                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+                            }
+
+                            pDialog.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                        pDialog.dismiss();
+                    }
+                }
+            });
+        }
     }
 }

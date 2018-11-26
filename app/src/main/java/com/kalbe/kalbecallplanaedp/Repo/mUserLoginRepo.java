@@ -93,7 +93,9 @@ public class mUserLoginRepo implements crud {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        count = data.size();
+        if (data!=null){
+            count = data.size();
+        }
         return count;
     }
 
