@@ -601,7 +601,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             }
                         }else {
                             roleName.add("-");
-                            HMRole.put("-", 0); 
+                            HMRole.put("-", 0);
                             spinnerArrayAdapter.notifyDataSetChanged();
                             spnRoleLogin.setEnabled(false);
                             etUsername.requestFocus();
