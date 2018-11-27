@@ -146,14 +146,14 @@ public class KalbeAuthenticator2 extends AbstractAccountAuthenticator {
     @Override
     public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account) throws NetworkErrorException {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true);
+        bundle.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
         Handler handler = new Handler(Looper.getMainLooper());
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(mContext, "Unable to delete account", Toast.LENGTH_LONG).show();
-//            }
-//        });
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext, "Unable to delete account", Toast.LENGTH_LONG).show();
+            }
+        });
         return bundle;
     }
 

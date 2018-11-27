@@ -107,6 +107,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     mMenuRepo menuRepo;
     boolean isFromPickAccount = false;
     private Gson gson;
+    ArrayAdapter<String> spinnerArrayAdapter;
 
     @Override
     public void onBackPressed() {
@@ -229,7 +230,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Initializing an ArrayAdapter with initial text like select one
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+         spinnerArrayAdapter = new ArrayAdapter<String>(
                 this,android.R.layout.simple_spinner_dropdown_item, roleName){
             @Override
             public boolean isEnabled(int position){
@@ -588,13 +589,20 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                         HMRole.put(txtRoleName, intRoleId);
                                         index++;
                                     }
+                                    spinnerArrayAdapter.notifyDataSetChanged();
                                     spnRoleLogin.setEnabled(true);
                                 }
                                 else {
+                                    roleName.add("-");
+                                    HMRole.put("-", 0);
+                                    spinnerArrayAdapter.notifyDataSetChanged();
                                     spnRoleLogin.setEnabled(false);
                                 }
                             }
                         }else {
+                            roleName.add("-");
+                            HMRole.put("-", 0); 
+                            spinnerArrayAdapter.notifyDataSetChanged();
                             spnRoleLogin.setEnabled(false);
                             etUsername.requestFocus();
                             ToastCustom.showToasty(LoginActivity.this,txtMessage,4);
