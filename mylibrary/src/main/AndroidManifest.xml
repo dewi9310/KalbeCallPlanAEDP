@@ -27,7 +27,7 @@
         android:enabled="true"
         android:label="RestartServiceWhenStopped">
         <intent-filter>
-        <action android:name="com.oktaviani.dewi.myapplication.RestartSensor" />
+        <action android:name="com.oktaviani.dewi.mylibrary.RestartSensor" />
         </intent-filter>
         </receiver>
         <activity android:name=".AuthenticatorActivity" android:configChanges="orientation|screenSize"/>

@@ -1,6 +1,7 @@
 package com.kalbe.kalbecallplanaedp;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -102,6 +103,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
 import com.kalbe.kalbecallplanaedp.Service.MyServiceNative;
+import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
 import com.kalbe.kalbecallplanaedp.Utils.CircularTextView;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
@@ -180,6 +182,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     private Gson gson;
     List<clsToken> dataToken;
     clsTokenRepo tokenRepo;
+    private AccountManager mAccountManager;
 
     @Override
     public void onBackPressed() {
@@ -271,6 +274,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         pDialog = new ProgressDialog(MainMenu.this, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
+        mAccountManager = AccountManager.get(getBaseContext());
         if (getIntent().getStringExtra(i_View)!=null){
             if (getIntent().getStringExtra(i_View).equals("FragmentNotification")){
                 toolbar.setTitle("Notification");
@@ -1321,14 +1325,29 @@ break;
 
     @Override
     protected void onResume() {
+        Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
+        if (accounts.length>0){
+            boolean isExist = false;
+            for (int i=0; i<accounts.length; i++){
+                if (accounts[i].name.equals(dataLogin.get(0).getTxtUserName().toUpperCase().toString())){
+                    isExist = true;
+                    break;
+                }
+            }
+//            if (!isExist){
+////                logout();
+//                Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+//                myIntent.putExtra(i_View, "FragmentPushData");
+//                finish();
+//                startActivity(myIntent);
+//            }
+        } else {
+//            logout();
+//            Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+//            myIntent.putExtra(i_View, "FragmentPushData");
+//            finish();
+//            startActivity(myIntent);
+        }
         super.onResume();
-//        boolean isDataReady = new clsMainBL().isDataReady(getApplicationContext());
-//        if (!isDataReady){
-//            Menu header = navigationView.getMenu();
-//            header.removeItem(R.id.mnCallPlan);
-//        }
-//        List<Long> listId = null;
-//        registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
-//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 }

@@ -288,7 +288,11 @@ public class SplashActivity extends AppCompatActivity {
 
                 } else if (_clsStatusMenuStart.get_intStatus() == enumStatusMenuStart.UserActiveLogin) {
                     if (new AuthenticatorUtil().countingAccount(mAccountManager).length==0){
+//                        myIntent = new Intent(getApplicationContext(), MainMenu.class);
+//                        finish();
+//                        startActivity(myIntent);
                         myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                        myIntent.putExtra(i_View, "FragmentPushData");
                         finish();
                         startActivity(myIntent);
 //                            logout();

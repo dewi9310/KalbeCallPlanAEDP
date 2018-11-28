@@ -21,6 +21,7 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
     List<String> mAppList;
     private OnItemClickListener mOnNameClickListener;
     private OnImageClickListener mOnImageClickListener;
+    private OnImageTrashClickListener mOnImageTrashClickListener;
     private List<Integer> drawable;
 
     public RecyclerGridPickAccountAdapter(Context context, List<String> mAppList, List<Integer> drawable) {
@@ -43,6 +44,14 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
 
     public void setOnImageClickListener(final OnImageClickListener mOnImageClickListener) {
         this.mOnImageClickListener = mOnImageClickListener;
+    }
+
+    public interface OnImageTrashClickListener{
+        void onItemClick(View view, final String obj, int position);
+    }
+
+    public void setOnImageTrashClickListener(final OnImageTrashClickListener mOnImageTrashClickListener) {
+        this.mOnImageTrashClickListener = mOnImageTrashClickListener;
     }
 
     @Override
@@ -80,6 +89,15 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
                     }
                 }
             });
+
+            viewHolder.iv_trash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnImageTrashClickListener != null){
+                        mOnImageTrashClickListener.onItemClick(v, item, position);
+                    }
+                }
+            });
         }
     }
 
@@ -90,12 +108,13 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView iv_icon;
+        ImageView iv_icon, iv_trash;
         TextView tv_name;
 
         public ViewHolder(View view) {
             super(view);
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
+            iv_trash = (ImageView) view.findViewById(R.id.iv_trash);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
 
 //            iv_icon.setVisibility(View.GONE);

@@ -119,6 +119,7 @@ public class PickAccountActivity extends Activity {
     View parent_view;
     Button btnAddAcc;
     private Gson gson;
+    final List<String> account = new ArrayList<>();
 
     @Override
     public void onBackPressed() {
@@ -187,7 +188,7 @@ public class PickAccountActivity extends Activity {
 
         String[] names = getIntent().getStringArrayExtra(ARG_ARRAY_ACCOUNT_NAME);
         Parcelable[] parceAccount = getIntent().getParcelableArrayExtra(ARG_ARRAY_ACCOUNT_AVAILABLE);
-        final List<String> account = new ArrayList<>();
+        account.clear();
         List<Integer> icon = new ArrayList<>();
         if (parceAccount!=null){
             availableAccounts = Arrays.copyOf(parceAccount, parceAccount.length, Account[].class);
@@ -221,6 +222,13 @@ public class PickAccountActivity extends Activity {
                 } else {
                     new AuthenticatorUtil().getExistingAccountAuthToken(PickAccountActivity.this, mAccountManager,availableAccounts[position], AUTHTOKEN_TYPE_FULL_ACCESS, parent_view);
                 }
+            }
+        });
+
+        adapter.setOnImageTrashClickListener(new RecyclerGridPickAccountAdapter.OnImageTrashClickListener() {
+            @Override
+            public void onItemClick(View view, String obj, int position) {
+                new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         });
         /*listView.setAdapter(new CardAppAdapter(this,  account, icon));
@@ -683,12 +691,20 @@ public class PickAccountActivity extends Activity {
 
     @Override
     protected void onResume() {
-        Account[] tes = new AuthenticatorUtil().countingAccount(mAccountManager);
-//        int countlistView = listView.getAdapter().getCount() -1;
+        Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
 //        int countlistView = lvRecycleview.getAdapter().getItemCount() -1;
-//        if (tes.length<countlistView){
-//            logout();
-//        }
+//        int countlistView = lvRecycleview.getAdapter().getItemCount() -1;
+        if (accounts.length<(account.size()-1)){
+            for (int i=0; i<account.size(); i++){
+                for (int j=0; j<accounts.length; j++){
+                    if (accounts[j].name.equals(account.get(i))){
+                        account.remove(i);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        }
         super.onResume();
     }
 }

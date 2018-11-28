@@ -52,6 +52,7 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -423,7 +424,12 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
                 dtTemp.setBlobImg1(save);
                 dtTemp.setTxtImgName1(fileName);
-                Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                Bitmap bitmap1 = null;
+                try {
+                    bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 PickImage.previewCapturedImage(imgCamera1, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);
@@ -437,7 +443,12 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
                 //get byte array
                 byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
-                Bitmap bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                Bitmap bitmap1 = null;
+                try {
+                    bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 dtTemp.setBlobImg2(save);
                 dtTemp.setTxtImgName2(fileName);
                 PickImage.previewCapturedImage(imgCamera2, bitmap1, 150, 150);
@@ -660,6 +671,5 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);
             return true;
         }
-
     }
 }

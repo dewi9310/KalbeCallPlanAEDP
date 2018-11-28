@@ -134,4 +134,9 @@ public class FragmentNotification extends Fragment {
         }
         return dateFormat.format(date);
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 }

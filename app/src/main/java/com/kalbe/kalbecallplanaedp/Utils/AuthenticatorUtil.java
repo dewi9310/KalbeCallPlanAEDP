@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -18,6 +19,7 @@ import com.j256.ormlite.stmt.query.In;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.LoginActivity;
 import com.kalbe.kalbecallplanaedp.PickAccountActivity;
+import com.kalbe.kalbecallplanaedp.adapter.RecyclerGridPickAccountAdapter;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
 
 import java.io.IOException;
@@ -123,20 +125,35 @@ public class AuthenticatorUtil{
             mAccountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
-                    try {
-                        Bundle bundle = future.getResult();
-                        String authtoken = "dummy_access_token";
-                        mAccountManager.addAccountExplicitly(account, accountPassword, null);
-                        mAccountManager.setAuthToken(account, authtokenType, authtoken);
-                    } catch (OperationCanceledException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (AuthenticatorException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        Bundle bundle = future.getResult();
+//                        String authtoken = "dummy_access_token";
+//                        mAccountManager.addAccountExplicitly(account, accountPassword, null);
+//                        mAccountManager.setAuthToken(account, authtokenType, authtoken);
+//                    } catch (OperationCanceledException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (AuthenticatorException e) {
+//                        e.printStackTrace();
+//                    }
                 }
             }, null);
+        }
+    }
+
+    public void RemoveAccount(final AccountManager mAccountManager, final Account account, Activity activity, final RecyclerGridPickAccountAdapter adapter, final List<String> listAccount, final int position, final String authtokenType){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            mAccountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    listAccount.remove(position);
+                    adapter.notifyDataSetChanged();
+//                    recyclerView.setAdapter(adapter);
+                }
+            }, null);
+        }else {
+            mAccountManager.removeAccountExplicitly(account);
         }
     }
 

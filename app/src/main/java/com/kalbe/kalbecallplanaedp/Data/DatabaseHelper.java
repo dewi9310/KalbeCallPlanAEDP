@@ -225,7 +225,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public Dao<mConfigData, Integer> getmConfigDao() throws SQLException {
         if (mConfigDao == null) {
             mConfigDao = getDao(mConfigData.class);
-            mConfigDao.setObjectCache(false);
+//            mConfigDao.setObjectCache(false);
         }
         return mConfigDao;
     }

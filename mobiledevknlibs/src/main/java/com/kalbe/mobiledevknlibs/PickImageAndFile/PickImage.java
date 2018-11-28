@@ -30,16 +30,16 @@ public class PickImage {
     //contextnya di isi (namaClass.this) kalo dari activity
     public static void CaptureImage(Context context, String folderName, String fileName, final int REQUEST_CODE) {
         boolean result = PermissionChecker.Utility.checkPermission(context);
-        if (result){
+        if (result) {
             Uri uriImage = UriData.getOutputMediaImageUri(context, folderName, fileName);
             Intent intentCamera1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intentCamera1.putExtra(MediaStore.EXTRA_OUTPUT, uriImage);
-            ((Activity)context).startActivityForResult(intentCamera1, REQUEST_CODE);
+            ((Activity) context).startActivityForResult(intentCamera1, REQUEST_CODE);
         }
     }
 
 
-    private static Bitmap resizeImageForBlob(Bitmap photo){
+    private static Bitmap resizeImageForBlob(Bitmap photo) {
         int width = photo.getWidth();
         int height = photo.getHeight();
 
@@ -48,17 +48,15 @@ public class PickImage {
 
         Bitmap bitmap;
 
-        if(height > width){
+        if (height > width) {
             float ratio = (float) height / maxHeight;
             height = maxHeight;
-            width = (int)(width / ratio);
-        }
-        else if(height < width){
+            width = (int) (width / ratio);
+        } else if (height < width) {
             float ratio = (float) width / maxWidth;
             width = maxWidth;
-            height = (int)(height / ratio);
-        }
-        else{
+            height = (int) (height / ratio);
+        } else {
             width = maxWidth;
             height = maxHeight;
         }
@@ -82,7 +80,7 @@ public class PickImage {
 
     }
 
-    public static byte[] getByteImageToSave(Context context, Uri uri){
+    public static byte[] getByteImageToSave(Context context, Uri uri) {
         byte[] imgPhoto = null;
         try {
             Bitmap bitmap = decodeStreamReturnBitmap(context, uri);
@@ -104,7 +102,8 @@ public class PickImage {
             imgPhoto = output.toByteArray();
         } catch (NullPointerException e) {
             e.printStackTrace();
-        }return imgPhoto ;
+        }
+        return imgPhoto;
     }
 
 
@@ -112,7 +111,7 @@ public class PickImage {
         Bitmap mybitmap;
         if (image != null) {
             Bitmap photo = BitmapFactory.decodeByteArray(image, 0, image.length);
-            mybitmap  = resizeImageForBlob(photo);
+            mybitmap = resizeImageForBlob(photo);
             return mybitmap;
         } else {
             return null;
@@ -121,11 +120,20 @@ public class PickImage {
 
     public static Bitmap decodeStreamReturnBitmap(Context context, Uri uri) {
         Bitmap photo = null;
+        InputStream ims = null;
         try {
-            InputStream ims =  context.getContentResolver().openInputStream(uri);
+            ims = context.getContentResolver().openInputStream(uri);
             photo = BitmapFactory.decodeStream(ims);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ims.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         Bitmap bitmap = resizeImageForBlob(photo);
         return bitmap;
@@ -142,7 +150,7 @@ public class PickImage {
     }
 
     //untuk create file image temporary berdasarkan path folder tertentu (nama file tidak perlu di ikutkan)
-    public static File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder){
+    public static File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -159,6 +167,7 @@ public class PickImage {
 
     public static byte[] getByteImageToSaveRotate(Context context, Uri uri) {
         byte[] imgPhoto = null;
+        InputStream inputStream = null;
         try {
             Bitmap bitmap = PickImage.decodeStreamReturnBitmap(context, uri);
             ExifInterface exif = null;
@@ -168,7 +177,7 @@ public class PickImage {
             }
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 if (path.startsWith("content://")) {
-                    InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                    inputStream = context.getContentResolver().openInputStream(uri);
                     exif = new ExifInterface(inputStream);
                 }
             }
@@ -184,8 +193,9 @@ public class PickImage {
             } catch (Exception var15) {
                 var15.printStackTrace();
             } finally {
-                try {
-                    if(output != null) {
+                inputStream.close();
+                try { 
+                    if (output != null) {
                         output.close();
                     }
                 } catch (IOException var14) {
@@ -203,6 +213,7 @@ public class PickImage {
 
         return imgPhoto;
     }
+
     public static byte[] getByteImageToSaveRotate2(Context context, Uri uri) {
         byte[] imgPhoto = null;
         try {
@@ -231,7 +242,7 @@ public class PickImage {
                 var15.printStackTrace();
             } finally {
                 try {
-                    if(output != null) {
+                    if (output != null) {
                         output.close();
                     }
                 } catch (IOException var14) {
@@ -293,7 +304,7 @@ public class PickImage {
         }
     }
 
-    public static int Orientation (Context context, Uri uri){
+    public static int Orientation(Context context, Uri uri) throws IOException {
         ExifInterface exif = null;
         String path = uri.toString();
         if (path.startsWith("file://")) {
@@ -313,6 +324,8 @@ public class PickImage {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    inputStream.close();
                 }
 
             }
