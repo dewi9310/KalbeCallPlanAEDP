@@ -69,6 +69,13 @@ public class MyApplicationAEDP extends Application {
         mContext = getApplicationContext();
         ACRA.init(this);
         mUserLogin dtUserLogin = new clsMainBL().getUserLogin(mContext);
+        List<tLogError> dataErrorsss = null;
+        try {
+             dataErrorsss = (List<tLogError>) new tLogErrorRepo(mContext).findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<tLogError> hahaha = dataErrorsss;
         List<tLogError> dataError = new tLogErrorRepo(mContext).getAllPushData();
         tLogError logError = new tLogError();
         if (dataError!=null){
@@ -94,6 +101,11 @@ public class MyApplicationAEDP extends Application {
         }else {
             logError.setTxtGuiId(GenerateGuid());
         }
+//        try {
+//            new tLogErrorRepo(mContext).createOrUpdate(logError);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 //        ModelReport data = new ModelReport();
 //        if (dtUserLogin!=null){
 //            data.setIntUserID(dtUserLogin.getIntUserID());

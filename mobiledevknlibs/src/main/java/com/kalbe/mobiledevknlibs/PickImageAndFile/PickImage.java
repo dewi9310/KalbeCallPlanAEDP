@@ -194,7 +194,7 @@ public class PickImage {
                 var15.printStackTrace();
             } finally {
                 inputStream.close();
-                try { 
+                try {
                     if (output != null) {
                         output.close();
                     }

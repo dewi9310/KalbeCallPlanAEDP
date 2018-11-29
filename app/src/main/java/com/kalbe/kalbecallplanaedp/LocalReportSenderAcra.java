@@ -88,12 +88,62 @@ public class LocalReportSenderAcra implements ReportSender {
         }
         return finalReport;
     }
+//    @Override
+//    public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
+//        final Map<String, String> finalReport = remap(errorContent);
+//
+//        try {
+////            mUserLogin dtUserLogin = new clsMainBL().getUserLogin(context);
+//            BufferedWriter buf = new BufferedWriter(crashReport);
+//
+//            Set<Map.Entry<String, String>> set = finalReport.entrySet();
+//            Iterator<Map.Entry<String, String>> i = set.iterator();
+//            buf.append("").append("\n");
+//
+//            while (i.hasNext()) {
+//                Map.Entry<String, String> me = (Map.Entry<String, String>) i.next();
+//                buf.append("[" + me.getKey() + "] = " + "'"+me.getValue()+"'").append("\n");
+//            }
+//
+
+//            if (dtLogin!=null){
+//                buf.append("\n").append("User id :"+ dtLogin.getIntUserID() );
+//                buf.append("\n").append("User name :"+ dtLogin.getTxtUserName() );
+//                buf.append("\n").append("Role id :"+ dtLogin.getIntRoleID() );
+//                buf.append("\n").append("Role name :"+ dtLogin.getTxtRoleName() );
+//            }
+//            buf.append("\n").append("----------------*****----------------");
+//            buf.append("\n").append("\n");
+//            buf.flush();
+//            buf.close();
+//
+//            if (dtLogin!=null){
+//                logError.setTxtUserId(String.valueOf(dtLogin.getIntUserID()));
+//            }
+//            Uri uriPath = UriData.getOutputMediaUriFolder(mContext, path);
+//            byte[] file = PickFile.getByteArrayFileToSave(uriPath, mContext);
+//            logError.setTxtDeviceName(android.os.Build.DEVICE);
+//            logError.setTxtOs(System.getProperty("os.version"));
+//            logError.setTxtFileName(fileName);
+//            logError.setDtDateLog(dateFormats.format(new Date()));
+//            logError.setBlobImg(file);
+//            logError.setIntFlagPush(new clsHardCode().Save);
+//            new tLogErrorRepo(mContext).createOrUpdate(logError);
+//        } catch (IOException e) {
+//            Log.e("TAG", "IO ERROR", e);
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @Override
     public void send(Context context, CrashReportData errorContent) throws ReportSenderException {
+
+
         final Map<String, String> finalReport = remap(errorContent);
 
         try {
-//            mUserLogin dtUserLogin = new clsMainBL().getUserLogin(context);
             BufferedWriter buf = new BufferedWriter(crashReport);
 
             Set<Map.Entry<String, String>> set = finalReport.entrySet();
@@ -104,22 +154,24 @@ public class LocalReportSenderAcra implements ReportSender {
                 Map.Entry<String, String> me = (Map.Entry<String, String>) i.next();
                 buf.append("[" + me.getKey() + "] = " + "'"+me.getValue()+"'").append("\n");
             }
-
             if (android.os.Build.DEVICE != null){
-                buf.append("\n").append(android.os.Build.DEVICE);
+                buf.append("\n").append("[Device_Name] = ").append(android.os.Build.DEVICE);
+                logError.setTxtDeviceName(android.os.Build.DEVICE);
             }
             if (android.os.Build.MODEL != null){
-                buf.append("\n").append(android.os.Build.MODEL);
+                buf.append("\n").append("[Model_Name] = ").append(android.os.Build.MODEL);
             }
             if(android.os.Build.PRODUCT != null){
-                buf.append("\n").append(android.os.Build.PRODUCT);
+                buf.append("\n").append("[Product_Name] = ").append(android.os.Build.PRODUCT);
             }
             if (android.os.Build.VERSION.SDK!=null){
-                buf.append("\n").append(android.os.Build.VERSION.SDK);
+                buf.append("\n").append("[SDK] = ").append(android.os.Build.VERSION.SDK);
             }
             if (System.getProperty("os.version") != null){
-                buf.append("\n").append(System.getProperty("os.version"));
-            }
+                logError.setTxtOs(System.getProperty("os.version"));
+                buf.append("\n").append("[OS] = ").append(System.getProperty("os.version"));
+            } 
+
             if (dtLogin!=null){
                 buf.append("\n").append("User id :"+ dtLogin.getIntUserID() );
                 buf.append("\n").append("User name :"+ dtLogin.getTxtUserName() );
@@ -136,8 +188,6 @@ public class LocalReportSenderAcra implements ReportSender {
             }
             Uri uriPath = UriData.getOutputMediaUriFolder(mContext, path);
             byte[] file = PickFile.getByteArrayFileToSave(uriPath, mContext);
-            logError.setTxtDeviceName(android.os.Build.DEVICE);
-            logError.setTxtOs(System.getProperty("os.version"));
             logError.setTxtFileName(fileName);
             logError.setDtDateLog(dateFormats.format(new Date()));
             logError.setBlobImg(file);
@@ -145,8 +195,7 @@ public class LocalReportSenderAcra implements ReportSender {
             new tLogErrorRepo(mContext).createOrUpdate(logError);
         } catch (IOException e) {
             Log.e("TAG", "IO ERROR", e);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

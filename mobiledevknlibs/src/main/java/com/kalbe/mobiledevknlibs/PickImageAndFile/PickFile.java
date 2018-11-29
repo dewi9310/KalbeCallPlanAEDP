@@ -51,6 +51,7 @@ public class PickFile {
                 output.write(data, 0, bytesRead);
             }
             byteFile = output.toByteArray();
+            is.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -152,6 +152,16 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
+
+
+        <receiver
+            android:name="com.oktaviani.dewi.mylibrary.authenticator.RestartServiceReceiver"
+            android:enabled="true"
+            android:label="RestartServiceWhenStopped">
+            <intent-filter>
+                <action android:name="com.kalbe.kalbecallplanaedp.RestartSensor" />
+            </intent-filter>
+        </receiver>
         <!--<receiver android:name=".Receiver.ReceiverDownloadManager"  android:exported="true">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>-->
