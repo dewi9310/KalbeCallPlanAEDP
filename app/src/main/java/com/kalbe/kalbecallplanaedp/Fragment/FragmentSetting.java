@@ -4,18 +4,21 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -145,7 +148,7 @@ public class FragmentSetting extends Fragment{
             public void onClick(DialogInterface dialog, int item) {
                 boolean result= PermissionChecker.Utility.checkPermission(getContext());
                 if (items[item].equals("Ambil Foto")) {
-                    uriImage = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
+                    uriImage = getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
                     PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderData, "tmp_act",CAMERA_REQUEST_PROFILE );
 //                    if(result)
 //                        captureImageProfile();
@@ -262,7 +265,26 @@ public class FragmentSetting extends Fragment{
             toast.show();
         }
     }
+    public Uri getOutputMediaImageUri(Context context, String folderName, String fileName) {
+        return Uri.fromFile(getOutputMediaFile());
+    }
+    private File getOutputMediaFile() {
+        // External sdcard location
 
+        File mediaStorageDir = new File(new clsHardCode().txtFolderData + File.separator);
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(IMAGE_DIRECTORY_NAME, "Failed create " + IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "tmp_act" + ".png");
+        return mediaFile;
+    }
     private void performCropGalleryProfile(){
         try {
             //call the standard crop action intent (the user device may not support it)
@@ -383,7 +405,7 @@ public class FragmentSetting extends Fragment{
         return result;
     }
     private void changeProfile(final mUserLogin dataLogin) {
-         pDialog = new ProgressDialog(getContext());
+        pDialog = new ProgressDialog(getContext());
         pDialog.setMessage("Please wait....");
         pDialog.setCancelable(false);
         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
