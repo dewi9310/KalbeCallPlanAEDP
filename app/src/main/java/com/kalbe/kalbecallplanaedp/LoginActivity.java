@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSpinner;
@@ -59,7 +60,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -448,6 +453,12 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                 data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
                             }
                             data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
+                            byte[] file = getByte(model.getData().getTxtLinkFotoProfile());
+                            if (file!=null){
+                                data.setBlobImg(file);
+                            }else {
+                                data.setBlobImg(null);
+                            }
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");
@@ -481,7 +492,43 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
     }
+    private byte[] getByte(String url) {
+        if (url!=null){
+            if (url.length()>0){
+                try {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
 
+                    URL imageUrl = new URL(url);
+                    URLConnection ucon = imageUrl.openConnection();
+                    String contentType = ucon.getHeaderField("Content-Type");
+                    boolean image = contentType.startsWith("image/");
+                    boolean text = contentType.startsWith("application/");
+                    if (image||text){
+                        byte[] data = null;
+                        InputStream is = ucon.getInputStream();
+                        int length =  ucon.getContentLength();
+                        data = new byte[length];
+                        int bytesRead;
+                        ByteArrayOutputStream output = new ByteArrayOutputStream();
+                        while ((bytesRead = is.read(data)) != -1) {
+                            output.write(data, 0, bytesRead);
+                        }
+                        return output.toByteArray();
+                    }
+                    else {
+                        return null;
+                    }
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.d("ImageManager", "Error: " + e.toString());
+                }
+            }
+        }
+        return null;
+    }
     private String parseDate(String dateParse){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");

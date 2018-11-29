@@ -45,6 +45,9 @@ public class Data{
 	@SerializedName("TxtEmpID")
 	private String txtEmpID;
 
+	@SerializedName("txtLinkFotoProfile")
+	private String txtLinkFotoProfile;
+
 	@SerializedName("mUserRole")
 	private MUserRole mUserRole;
 
@@ -167,6 +170,14 @@ public class Data{
 		return txtEmpID;
 	}
 
+	public void setTxtLinkFotoProfile(String txtLinkFotoProfile){
+		this.txtLinkFotoProfile = txtLinkFotoProfile;
+	}
+
+	public String getTxtLinkFotoProfile(){
+		return txtLinkFotoProfile;
+	}
+
 	public void setMUserRole(MUserRole mUserRole){
 		this.mUserRole = mUserRole;
 	}
@@ -232,6 +243,7 @@ public class Data{
 			",bitUseActiveDirectory = '" + bitUseActiveDirectory + '\'' + 
 			",intUserID = '" + intUserID + '\'' + 
 			",txtEmpID = '" + txtEmpID + '\'' + 
+			",txtLinkFotoProfile = '" + txtLinkFotoProfile + '\'' + 
 			",mUserRole = '" + mUserRole + '\'' + 
 			",bitActive = '" + bitActive + '\'' + 
 			",txtPassword = '" + txtPassword + '\'' + 

@@ -170,7 +170,7 @@ public class LocalReportSenderAcra implements ReportSender {
             if (System.getProperty("os.version") != null){
                 logError.setTxtOs(System.getProperty("os.version"));
                 buf.append("\n").append("[OS] = ").append(System.getProperty("os.version"));
-            } 
+            }
 
             if (dtLogin!=null){
                 buf.append("\n").append("User id :"+ dtLogin.getIntUserID() );
