@@ -146,7 +146,7 @@ public class FragmentSetting extends Fragment{
                 boolean result= PermissionChecker.Utility.checkPermission(getContext());
                 if (items[item].equals("Ambil Foto")) {
                     uriImage = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
-                    PickImage.CaptureImage(getContext(), new clsHardCode().txtFolderData, "tmp_act",CAMERA_REQUEST_PROFILE );
+                    PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderData, "tmp_act",CAMERA_REQUEST_PROFILE );
 //                    if(result)
 //                        captureImageProfile();
                 } else if (items[item].equals("Pilih dari Galeri")) {
@@ -203,7 +203,9 @@ public class FragmentSetting extends Fragment{
             Bitmap photo_view = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
             phtProfile = output.toByteArray();
             ivProfile.setImageBitmap(photo_view);
-
+            dtLogin.setBlobImg(phtProfile);
+            dtLogin.setTxtFileName("tmp_act");
+            changeProfile(dtLogin);
 //            saveImageProfile();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -245,12 +247,13 @@ public class FragmentSetting extends Fragment{
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
             //indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
+            cropIntent.putExtra("outputX", 200);
+            cropIntent.putExtra("outputY", 200);
+            cropIntent.putExtra("scale", true);
             //retrieve data on return
             cropIntent.putExtra("return-data", true);
             //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, PIC_CROP_PROFILE);
+            getActivity().startActivityForResult(cropIntent, PIC_CROP_PROFILE);
         }
         catch(ActivityNotFoundException anfe){
             //display an error message
@@ -272,12 +275,13 @@ public class FragmentSetting extends Fragment{
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
             //indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
+            cropIntent.putExtra("outputX", 200);
+            cropIntent.putExtra("outputY", 200);
+            cropIntent.putExtra("scale", true);
             //retrieve data on return
             cropIntent.putExtra("return-data", true);
             //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, PIC_CROP_PROFILE);
+            getActivity().startActivityForResult(cropIntent, PIC_CROP_PROFILE);
         }
         catch(ActivityNotFoundException anfe){
             //display an error message
@@ -292,25 +296,14 @@ public class FragmentSetting extends Fragment{
         if (requestCode == CAMERA_REQUEST_PROFILE) {
             if (resultCode == -1) {
                 try {
-//                    Bitmap bitmap;
-//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//                    Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, "tmp_act");
-////                    String uri = uriImage.getPath().toString();
-//
-////                    bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
-////                    bitmap = BitmapFactory.decodeFile(uri, bitmapOptions);
-//
-//                    performCropProfile();
-
-//                    previewCaptureImage2(bitmap);
-//                    Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
                     //untuk mendapatkan bitmap bisa menggunakan decode stream
-                    Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uriImage);
+                   /* Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uriImage);
                     //get byte array
                     byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
                     dtLogin.setBlobImg(save);
-                    dtLogin.setTxtFileName("tmp_act");
-                    changeProfile(dtLogin);
+                    dtLogin.setTxtFileName("tmp_act");*/
+                    performCropProfile();
+//                    changeProfile(dtLogin);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -345,27 +338,11 @@ public class FragmentSetting extends Fragment{
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     selectedImage = data.getData();
-//                    Uri uri = selectedImage;
-//                    bitmap = BitmapFactory.decodeFile(uri, bitmapOptions);
-//                    String a = getRealPathFromURI(uri);
-//                    Uri myUri = Uri.parse(a);
-//                    URL url=getClass().getResource(a);
-
-                    Bitmap bp =  MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                     byte[] save = PickImage.getByteImageToSaveRotate2(getContext(), selectedImage);
-//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                    bp.compress(Bitmap.CompressFormat.PNG, 0, bos);
-//                    byte[] bArray = bos.toByteArray();
-
-
-//                    byte[] save = PickImage.getByteImageToSaveRotate(getContext(), myUri);
-//                    InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
-//                    byte[] bitmapdata = getByteArrayImage(a);
-
                     dtLogin.setBlobImg(save);
                     dtLogin.setTxtFileName("tmp_act");
-                    changeProfile(dtLogin);
-//                    performCropGalleryProfile();
+//                    changeProfile(dtLogin);
+                    performCropGalleryProfile();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
