@@ -133,7 +133,7 @@ public class MyApplicationAEDP extends Application {
 //        if (System.getProperty("os.version") != null){
 //            data.setOsVersion(System.getProperty("os.version"));
 //        }
-
+        UriData.getOutputFolder(new clsHardCode().txtFolderTemp);
         String txtPath = new clsHardCode().txtFolderTemp;
 //        Uri uriPath = UriData.getOutputMediaUriFolder(getApplicationContext(), txtPath);
 //        ACRA.getErrorReporter().handleSilentException(new RuntimeException("whatever I want"));
