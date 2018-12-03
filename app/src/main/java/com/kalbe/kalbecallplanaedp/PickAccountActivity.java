@@ -516,6 +516,12 @@ public class PickAccountActivity extends Activity {
                                 data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
                             }
                             data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
+                            byte[] file = new LoginActivity().getByte(model.getData().getTxtLinkFotoProfile());
+                            if (file!=null){
+                                data.setBlobImg(file);
+                            }else {
+                                data.setBlobImg(null);
+                            }
                             loginRepo.createOrUpdate(data);
 
                             Log.d("Data info", "Login Success");

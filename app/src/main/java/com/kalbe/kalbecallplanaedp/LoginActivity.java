@@ -492,7 +492,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
     }
-    private byte[] getByte(String url) {
+    public byte[] getByte(String url) {
         if (url!=null){
             if (url.length()>0){
                 try {

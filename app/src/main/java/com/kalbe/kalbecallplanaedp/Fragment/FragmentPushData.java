@@ -142,20 +142,20 @@ public class FragmentPushData extends Fragment{
         mExpandableListView = (ExpandableListView) v.findViewById(R.id.exp_lv_call_plan);
         button_push_data = (FloatingActionButton)v.findViewById(R.id.button_push_data);
 //        btn_push_error = (Button) v.findViewById(R.id.btn_push_error);
-        btn_push_error = new Button(getContext());
-        btn_push_error.setText("Push data error");
-        btn_push_error.setId(1993);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        btn_push_error.setLayoutParams(params);
-        btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
-        btn_push_error.setPadding(10, 10, 10, 10);
-//        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white));
-        btn_push_error.setTextColor(getContext().getResources().getColor(R.color.red_A400));
-        GradientDrawable shape =  new GradientDrawable();
-        shape.setCornerRadius(20);
-        shape.setColor(getContext().getResources().getColor(R.color.white));
-        btn_push_error.setBackground(shape);
+//        btn_push_error = new Button(getContext());
+//        btn_push_error.setText("Push data error");
+//        btn_push_error.setId(1993);
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT);
+//        btn_push_error.setLayoutParams(params);
+//        btn_push_error.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
+//        btn_push_error.setPadding(10, 10, 10, 10);
+////        btn_push_error.setBackgroundColor(getContext().getResources().getColor(R.color.white));
+//        btn_push_error.setTextColor(getContext().getResources().getColor(R.color.red_A400));
+//        GradientDrawable shape =  new GradientDrawable();
+//        shape.setCornerRadius(20);
+//        shape.setColor(getContext().getResources().getColor(R.color.white));
+//        btn_push_error.setBackground(shape);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         pDialog = new ProgressDialog(getContext(),ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
@@ -173,15 +173,15 @@ public class FragmentPushData extends Fragment{
         apotekRepo = new mApotekRepo(getContext());
         dokterRepo = new mDokterRepo(getContext());
 
-        tLogErrorRepo _tLogErrorRepo = new tLogErrorRepo(getContext());
-        List<tLogError> ListOfDataError = _tLogErrorRepo.getAllPushData();
-        if (ListOfDataError!=null){
-            if (ListOfDataError.size()>0){
-                btn_push_error.setVisibility(View.VISIBLE);
-            }else {
-                btn_push_error.setVisibility(View.GONE);
-            }
-        }
+//        tLogErrorRepo _tLogErrorRepo = new tLogErrorRepo(getContext());
+//        List<tLogError> ListOfDataError = _tLogErrorRepo.getAllPushData();
+//        if (ListOfDataError!=null){
+//            if (ListOfDataError.size()>0){
+//                btn_push_error.setVisibility(View.VISIBLE);
+//            }else {
+//                btn_push_error.setVisibility(View.GONE);
+//            }
+//        }
         if(this.getArguments()!=null){
             myValue = this.getArguments().getString("message");
             getContext().stopService(new Intent(getContext(), MyServiceNative.class));
@@ -203,16 +203,16 @@ public class FragmentPushData extends Fragment{
             }
         });
 
-        btn_push_error.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    pushDataError();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        btn_push_error.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    pushDataError();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         return v;
     }
 
@@ -240,7 +240,7 @@ public class FragmentPushData extends Fragment{
         if (dtJson == null){
         }else {
             String linkPushData = new clsHardCode().linkPushData;
-            new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
+            new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
                     ToastCustom.showToasty(getContext(),message,4);
@@ -550,80 +550,82 @@ public void setListData(){
         startActivity(intent);
     }
 
-    private void pushDataError() throws JSONException {
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Pushing Data");
-//        pDialog.setTitle("Pushing Your data");
-        pDialog.setMessage("Push your data....");
-        pDialog.setCancelable(false);
-        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-
-            }
-        });
-        pDialog.show();
-        String versionName = "";
-        try {
-            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
-        final clsPushData dtJson = new clsHelperBL().pushDataError(versionName, getContext());
-        if (dtJson == null){
-        }else {
-            String linkPushData = new clsHardCode().linkPushDataError;
-            new VolleyUtils().makeJsonObjectRequestPushError(getContext(), linkPushData, dtJson, new VolleyResponseListener() {
-                @Override
-                public void onError(String message) {
-                    ToastCustom.showToasty(getContext(),message,4);
-//                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                    pDialog.dismiss();
-                }
-
-                @Override
-                public void onResponse(String response, Boolean status, String strErrorMsg) {
-                    if (response!=null){
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(response);
-                            PushLogError model = gson.fromJson(jsonObject.toString(), PushLogError.class);
-                            boolean isStatus = model.getResult().isStatus();
-                            String txtMessage = model.getResult().getMessage();
-                            String txtMethod = model.getResult().getMethodName();
-                            if (isStatus==true){
-                                if (dtJson.getDataError().getListOfDatatLogError()!=null){
-                                    if (dtJson.getDataError().getListOfDatatLogError().size()>0){
-                                        for (int i = 0; i < dtJson.getDataError().getListOfDatatLogError().size(); i++){
-                                            new tLogErrorRepo(getContext()).delete(dtJson.getDataError().getListOfDatatLogError().get(i));
-                                        }
-                                    }
-                                }
-                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
-
-                                if (myValue!=null){
-                                    if (myValue.equals("notMainMenu")){
-                                        //logout
-                                        logout();
-                                    }
-                                }
-                            }else {
-                                ToastCustom.showToasty(getContext(),txtMessage, 4);
-                            }
-
-                            pDialog.dismiss();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    }else {
-                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
-                        pDialog.dismiss();
-                    }
-                }
-            });
-        }
-    }
+//    private void pushDataError() throws JSONException {
+////        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+////        pDialog.setTitleText("Pushing Data");
+////        pDialog.setTitle("Pushing Your data");
+//        pDialog.setMessage("Push your data....");
+//        pDialog.setCancelable(false);
+//        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//
+//            }
+//        });
+//        pDialog.show();
+//        String versionName = "";
+//        try {
+//            versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+//        } catch (PackageManager.NameNotFoundException e2) {
+//            // TODO Auto-generated catch block
+//            e2.printStackTrace();
+//        }
+//        final clsPushData dtJson = new clsHelperBL().pushDataError(versionName, getContext());
+//        if (dtJson == null){
+//        }else {
+//            String linkPushData = new clsHardCode().linkPushDataError;
+//            new VolleyUtils().makeJsonObjectRequestPushError(getContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
+//                @Override
+//                public void onError(String message) {
+//                    ToastCustom.showToasty(getContext(),message,4);
+////                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+//                    pDialog.dismiss();
+//                }
+//
+//                @Override
+//                public void onResponse(String response, Boolean status, String strErrorMsg) {
+//                    if (response!=null){
+//                        JSONObject jsonObject = null;
+//                        try {
+//                            jsonObject = new JSONObject(response);
+//                            PushLogError model = gson.fromJson(jsonObject.toString(), PushLogError.class);
+//                            boolean isStatus = model.getResult().isStatus();
+//                            String txtMessage = model.getResult().getMessage();
+//                            String txtMethod = model.getResult().getMethodName();
+//                            if (isStatus==true){
+//                                if (dtJson.getDataError().getListOfDatatLogError()!=null){
+//                                    if (dtJson.getDataError().getListOfDatatLogError().size()>0){
+//                                        for (int i = 0; i < dtJson.getDataError().getListOfDatatLogError().size(); i++){
+//                                            new tLogErrorRepo(getContext()).delete(dtJson.getDataError().getListOfDatatLogError().get(i));
+//                                        }
+//                                    }
+//                                }
+//                                btn_push_error.setVisibility(View.GONE);
+//                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
+//
+//                                if (myValue!=null){
+//                                    if (myValue.equals("notMainMenu")){
+//                                        //logout
+//                                        logout();
+//                                    }
+//                                }
+//                            }else {
+//                                btn_push_error.setVisibility(View.VISIBLE);
+//                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+//                            }
+//
+//                            pDialog.dismiss();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        } catch (SQLException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }else {
+//                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+//                        pDialog.dismiss();
+//                    }
+//                }
+//            });
+//        }
+//    }
 }

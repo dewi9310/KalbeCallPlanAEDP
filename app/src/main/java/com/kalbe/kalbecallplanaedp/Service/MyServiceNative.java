@@ -51,8 +51,8 @@ public class MyServiceNative extends Service {
 //        super.onCreate();
     }
 
-    private static long UPDATE_INTERVAL = 1*360*1000;  //default
-    private static long UPDATE_INTERVAL_TESTING = 3000;  //default
+    private static long UPDATE_INTERVAL = 6*60*1000;  //default
+    private static long UPDATE_INTERVAL_TESTING = 1*30*1000;//3000;  //default
     private static Timer timer = new Timer();
     private Gson gson;
     private void _startService(){

@@ -23,11 +23,13 @@ import android.widget.Toast;
 
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentHeaderCallPlan;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentHistory;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentListCallPlan;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
@@ -35,6 +37,7 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -49,6 +52,7 @@ public class HomeFragment extends Fragment {
     tRealisasiVisitPlanRepo repoRealisasi;
     CircularImageView ivProfile;
     private String FRAG_VIEW = "Fragment view";
+    tProgramVisitSubActivity dtPlan;
 
     @Nullable
     @Override
@@ -85,17 +89,28 @@ public class HomeFragment extends Fragment {
         }
 
         if (dataCheckinActive!=null){
+            try {
+                dtPlan = (tProgramVisitSubActivity) new tProgramVisitSubActivityRepo(getContext()).findBytxtId(dataCheckinActive.getTxtProgramVisitSubActivityId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             tv_userName.setText(dtLogin.getTxtUserName().toUpperCase() + " - Active");
+            if (dtPlan.getIntActivityId()==new clsHardCode().VisitDokter){
+                tv_email.setText(dataCheckinActive.getTxtDokterName());
+            }else if (dtPlan.getIntActivityId()==new clsHardCode().VisitApotek){
+                tv_email.setText(dataCheckinActive.getTxtApotekName());
+            }
         }else {
             tv_userName.setText(dtLogin.getTxtUserName().toUpperCase() + " - Inactive");
         }
 
-        tv_email.setText(dtLogin.getTxtEmail());
+//        tv_email.setText(dtLogin.getTxtEmail());
+
 
         ln_plan_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int a = 5/0;
+//                int a = 5/0;
                 Bundle bundle = new Bundle();
                 bundle.putString(FRAG_VIEW, "Plan");
                 new Tools().intentFragmentSetArgument(FragmentHeaderCallPlan.class, "Call Plan", getContext(), bundle);

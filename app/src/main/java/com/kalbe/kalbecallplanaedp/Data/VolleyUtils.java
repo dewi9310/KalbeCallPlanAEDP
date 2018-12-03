@@ -222,7 +222,7 @@ public class VolleyUtils {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         queue.add(req);
     }
-    public void makeJsonObjectRequestPushData(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final VolleyResponseListener listener) {
+    public void makeJsonObjectRequestPushData(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final ProgressDialog pDialog, final VolleyResponseListener listener) {
 //        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
@@ -240,6 +240,7 @@ public class VolleyUtils {
 //                int a = networkResponse.statusCode;
                 if (networkResponse==null){
                     ToastCustom.showToasty(ctx,"Please check your connection...",4);
+                    pDialog.dismiss();
                 }else {
                     listener.onError(error.getMessage());
                     try {
@@ -251,6 +252,7 @@ public class VolleyUtils {
                     } catch (UnsupportedEncodingException e){
                         String c = "hasd";
                     }
+                    pDialog.dismiss();
                 }
 
             }
@@ -297,7 +299,7 @@ public class VolleyUtils {
             }
         };
         multipartRequest.setRetryPolicy(new
-                DefaultRetryPolicy(500000,
+                DefaultRetryPolicy(120000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
@@ -378,18 +380,24 @@ public class VolleyUtils {
                 return params;
             }
         };
+        //testing
         multipartRequest.setRetryPolicy(new
-                DefaultRetryPolicy(50000,
+                DefaultRetryPolicy(20000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        multipartRequest.setShouldCache(false);
+        //default
+//        multipartRequest.setRetryPolicy(new
+//                DefaultRetryPolicy(50000,
+//                0,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        multipartRequest.setShouldCache(false);
         if (queue == null) {
-         queue = Volley.newRequestQueue(ctx.getApplicationContext());   
+         queue = Volley.newRequestQueue(ctx.getApplicationContext());
         }
         queue.add(multipartRequest);
     }
 
-    public void changeProfile(final Context ctx, String strLinkAPI, final String mRequestBody, final mUserLogin dtLogin, final VolleyResponseListener listener) {
+    public void changeProfile(final Context ctx, String strLinkAPI, final String mRequestBody, final ProgressDialog progressDialog, final mUserLogin dtLogin, final VolleyResponseListener listener) {
 //        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
@@ -407,6 +415,7 @@ public class VolleyUtils {
 //                int a = networkResponse.statusCode;
                 if (networkResponse==null){
                     ToastCustom.showToasty(ctx,"Please check your connection...",4);
+                    progressDialog.dismiss();
                 }else {
                     listener.onError(error.getMessage());
                     try {
@@ -418,6 +427,7 @@ public class VolleyUtils {
                     } catch (UnsupportedEncodingException e){
                         String c = "hasd";
                     }
+                    progressDialog.dismiss();
                 }
 
             }
@@ -462,7 +472,7 @@ public class VolleyUtils {
         queue.add(multipartRequest);
     }
 
-    public void makeJsonObjectRequestPushError(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final VolleyResponseListener listener) {
+    public void makeJsonObjectRequestPushError(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final ProgressDialog pDialog, final VolleyResponseListener listener) {
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
@@ -479,6 +489,7 @@ public class VolleyUtils {
 //                int a = networkResponse.statusCode;
                 if (networkResponse==null){
                     ToastCustom.showToasty(ctx,"Please check your connection...",4);
+                    pDialog.dismiss();
                 }else {
                     listener.onError(error.getMessage());
                     try {
@@ -490,6 +501,7 @@ public class VolleyUtils {
                     } catch (UnsupportedEncodingException e){
                         String c = "hasd";
                     }
+                    pDialog.dismiss();
                 }
 
             }

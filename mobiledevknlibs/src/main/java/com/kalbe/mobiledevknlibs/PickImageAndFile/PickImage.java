@@ -150,7 +150,22 @@ public class PickImage {
     }
 
     //untuk create file image temporary berdasarkan path folder tertentu (nama file tidak perlu di ikutkan)
-    public static File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder) {
+    public static File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder, String fileName) {
+        File folder = new File(pathFolder);
+        folder.mkdirs();
+        File file = null;
+        try {
+            file = File.createTempFile(fileName, ".png", new File(pathFolder));
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(imageArray);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public static File decodeByteArraytoImageFileTemp(byte[] imageArray, String pathFolder) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -165,6 +180,19 @@ public class PickImage {
         return file;
     }
 
+    public Bitmap rotateBitmap (Bitmap bitmap, String path){
+        ExifInterface exif = null;
+        Bitmap rotatedBitmap = null;
+        try {
+            exif = new ExifInterface(path);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+           rotatedBitmap = rotateBitmap(bitmap, orientation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+       return rotatedBitmap;
+    }
     public static byte[] getByteImageToSaveRotate(Context context, Uri uri) {
         byte[] imgPhoto = null;
         InputStream inputStream = null;
@@ -175,11 +203,12 @@ public class PickImage {
             if (path.startsWith("file://")) {
                 exif = new ExifInterface(path);
             }
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                if (path.startsWith("content://")) {
-                    inputStream = context.getContentResolver().openInputStream(uri);
-                    exif = new ExifInterface(inputStream);
-                }
+//            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//
+//            }
+            if (path.startsWith("content://")) {
+                inputStream = context.getContentResolver().openInputStream(uri);
+                exif = new ExifInterface(inputStream);
             }
 
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
@@ -189,7 +218,7 @@ public class PickImage {
 
             try {
                 output = new ByteArrayOutputStream();
-                rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+                rotatedBitmap.compress(Bitmap.CompressFormat.PNG, 0, output);
             } catch (Exception var15) {
                 var15.printStackTrace();
             } finally {

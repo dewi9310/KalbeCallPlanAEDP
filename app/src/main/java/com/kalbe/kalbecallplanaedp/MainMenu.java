@@ -776,7 +776,7 @@ break;
         if (dtJson == null){
         }else {
             String linkPushData = new clsHardCode().linkPushData;
-            new VolleyUtils().makeJsonObjectRequestPushData(getApplicationContext(), linkPushData, dtJson, new VolleyResponseListener() {
+            new VolleyUtils().makeJsonObjectRequestPushData(getApplicationContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
                     ToastCustom.showToasty(getApplicationContext(),message,4);

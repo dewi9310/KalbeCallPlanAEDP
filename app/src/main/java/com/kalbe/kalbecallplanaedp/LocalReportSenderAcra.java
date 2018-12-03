@@ -43,9 +43,7 @@ public class LocalReportSenderAcra implements ReportSender {
     private final Map<ReportField, String> mMapping = new HashMap<ReportField, String>();
     private FileWriter crashReport;
     Date date = new Date();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     static SimpleDateFormat dateFormats = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//    String fileName = "log_"+dateFormat.format(date)+".txt";
     String fileName;
     String path;
     mUserLogin dtLogin;

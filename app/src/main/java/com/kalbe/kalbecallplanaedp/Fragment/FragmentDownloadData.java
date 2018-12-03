@@ -1251,7 +1251,6 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                         boolean txtStatus = model.getResult().isStatus();
                         String txtMessage = model.getResult().getMessage();
                         String txtMethode_name = model.getResult().getMethodName();
-                        parseDated("");
                         if (txtStatus == true){
                             itemList.clear();
                             if (model.getData().getLtMappingArea()!=null){
@@ -2277,19 +2276,6 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             return null;
         }
     }
-
-    private String parseDated(String dateParse){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-        Date date = null;
-        try {
-                date = sdf.parse(dateParse);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return dateFormat.format(date);
-    }
-
 
     private byte[] getLogoImage(String url) {
         try {

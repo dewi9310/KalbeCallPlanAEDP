@@ -101,65 +101,11 @@ public class MyApplicationAEDP extends Application {
         }else {
             logError.setTxtGuiId(GenerateGuid());
         }
-//        try {
-//            new tLogErrorRepo(mContext).createOrUpdate(logError);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        ModelReport data = new ModelReport();
-//        if (dtUserLogin!=null){
-//            data.setIntUserID(dtUserLogin.getIntUserID());
-//            data.setTxtUserName(dtUserLogin.getTxtUserName());
-//            data.setIntRoleID(dtUserLogin.getIntRoleID());
-//            data.setTxtRoleName(dtUserLogin.getTxtRoleName());
-//        }else {
-//            data.setIntUserID(0);
-//            data.setTxtUserName(null);
-//            data.setIntRoleID(0);
-//            data.setTxtRoleName(null);
-//        }
-//        if (android.os.Build.DEVICE != null){
-//            data.setDevice(android.os.Build.DEVICE);
-//        }
-//        if (android.os.Build.MODEL != null){
-//            data.setModel(android.os.Build.MODEL);
-//        }
-//        if(android.os.Build.PRODUCT != null){
-//            data.setProduct(android.os.Build.PRODUCT);
-//        }
-//        if (android.os.Build.VERSION.SDK!=null){
-//            data.setVersionSDK(android.os.Build.VERSION.SDK);
-//        }
-//        if (System.getProperty("os.version") != null){
-//            data.setOsVersion(System.getProperty("os.version"));
-//        }
         UriData.getOutputFolder(new clsHardCode().txtFolderTemp);
         String txtPath = new clsHardCode().txtFolderTemp;
-//        Uri uriPath = UriData.getOutputMediaUriFolder(getApplicationContext(), txtPath);
 //        ACRA.getErrorReporter().handleSilentException(new RuntimeException("whatever I want"));
         ACRA.getErrorReporter().setReportSender(new LocalReportSenderAcra(mContext,txtPath, dtUserLogin, logError, fileName));
 //        ACRA.getErrorReporter().checkReportsOnApplicationStart();
-//        ModelError modelErrors = LocalReportSenderAcra.getModelError();
-//        if (modelErrors!=null){
-//            tLogError logError = new tLogError();
-//            logError.setTxtGuiId(new clsActivity().GenerateGuid());
-//            if (dtUserLogin!=null){
-//                logError.setTxtUserId(String.valueOf(dtUserLogin.getIntUserID()));
-//            }
-//            logError.setTxtDeviceName(android.os.Build.DEVICE);
-//            logError.setTxtOs(System.getProperty("os.version"));
-//            logError.setTxtFileName(modelErrors.get_txtFileName());
-//            logError.setDtDateLog(modelErrors.get_dtDate());
-//            logError.setBlobImg(null);
-//            logError.setIntFlagPush(new clsHardCode().Save);
-//
-//            try {
-////                new tLogErrorRepo(mContext).createOrUpdate(logError);
-//                new clsHardCode().copydb(mContext);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
         super.onCreate();
     }
 
