@@ -606,13 +606,10 @@ public class clsHelperBL {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(context);
                                     tokenRepo.createOrUpdate(data);
-                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
-//                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+//                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
                                         ToastCustom.showToasty(context,"Please press the button again",3);
-//                                        Toast.makeText(context, "Please press the button again", Toast.LENGTH_SHORT).show();
-//                                        login();
                                     }
 
                                 } catch (JSONException e) {
@@ -641,7 +638,6 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     ToastCustom.showToasty(context,msg,4);
                     finalDialog1.dismiss();
                 }

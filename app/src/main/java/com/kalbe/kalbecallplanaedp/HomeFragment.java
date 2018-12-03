@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     View v;
     private Toolbar toolbar;
     private LinearLayout ln_plan_home, ln_realisasi_home, ln_unplan_home;
-    TextView tv_plan_home, tv_unplan_home, tvRealisasi_home, tv_userName, tv_email;
+    TextView tv_plan_home, tv_unplan_home, tvRealisasi_home, tv_userName, tv_email, tv_outlet, tv_emp_id, tv_name, tv_role;
     tRealisasiVisitPlanRepo repoRealisasi;
     CircularImageView ivProfile;
     private String FRAG_VIEW = "Fragment view";
@@ -65,6 +65,10 @@ public class HomeFragment extends Fragment {
 //        tv_unplan_home = (TextView)v.findViewById(R.id.tv_unplan_home);
         tv_userName = (TextView)v.findViewById(R.id.tv_user_name_home);
         tv_email = (TextView)v.findViewById(R.id.tv_email_home);
+        tv_outlet = (TextView)v.findViewById(R.id.tv_outlet_home);
+        tv_role = (TextView)v.findViewById(R.id.tv_role);
+        tv_name = (TextView)v.findViewById(R.id.tv_full_name);
+        tv_emp_id = (TextView)v.findViewById(R.id.tv_emp_id);
         ivProfile = (CircularImageView)v.findViewById(R.id.image_profil_home);
 
         tvRealisasi_home = (TextView)v.findViewById(R.id.tv_Realisasi_home);
@@ -94,17 +98,21 @@ public class HomeFragment extends Fragment {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            tv_userName.setText(dtLogin.getTxtUserName().toUpperCase() + " - Active");
+            tv_userName.setText(dtLogin.getTxtUserName().toUpperCase());
             if (dtPlan.getIntActivityId()==new clsHardCode().VisitDokter){
-                tv_email.setText(dataCheckinActive.getTxtDokterName());
+                tv_outlet.setText(dataCheckinActive.getTxtDokterName());
             }else if (dtPlan.getIntActivityId()==new clsHardCode().VisitApotek){
-                tv_email.setText(dataCheckinActive.getTxtApotekName());
+                tv_outlet.setText(dataCheckinActive.getTxtApotekName());
             }
         }else {
-            tv_userName.setText(dtLogin.getTxtUserName().toUpperCase() + " - Inactive");
+            tv_userName.setText(dtLogin.getTxtUserName().toUpperCase());
+            tv_outlet.setText("Inactive");
         }
 
-//        tv_email.setText(dtLogin.getTxtEmail());
+        tv_email.setText(dtLogin.getTxtEmail());
+        tv_emp_id.setText(dtLogin.getTxtEmpID());
+        tv_role.setText(dtLogin.getTxtRoleName());
+        tv_name.setText(dtLogin.getTxtNick());
 
 
         ln_plan_home.setOnClickListener(new View.OnClickListener() {

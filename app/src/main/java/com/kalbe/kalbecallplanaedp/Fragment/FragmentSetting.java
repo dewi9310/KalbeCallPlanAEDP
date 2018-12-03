@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.ChangePasswordActivity;
 import com.kalbe.kalbecallplanaedp.Common.VMUploadFoto;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
@@ -109,7 +110,7 @@ public class FragmentSetting extends Fragment{
     mUserLogin dtLogin;
     MainMenu mm;
     private String ZOOM_PROFILE = "photo profil";
-    LinearLayout ln_error;
+    LinearLayout ln_error, ln_change_ps;
 
     @Nullable
     @Override
@@ -118,6 +119,7 @@ public class FragmentSetting extends Fragment{
         ivProfile = (CircularImageView) v.findViewById(R.id.image_setting);
         fab = (FloatingActionButton)v.findViewById(R.id.fab_add_img_setting);
         ln_error = (LinearLayout)v.findViewById(R.id.ln_push_error);
+        ln_change_ps = (LinearLayout)v.findViewById(R.id.ln_change_ps);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +151,13 @@ public class FragmentSetting extends Fragment{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        ln_change_ps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+                startActivity(intent);
             }
         });
         return v;

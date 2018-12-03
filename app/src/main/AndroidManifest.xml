@@ -44,22 +44,24 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--<uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />-->
+    <!-- <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" /> -->
 
-    <!--&lt;!&ndash; Samsung &ndash;&gt;-->
-    <!--<uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>-->
-    <!--<uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>-->
 
-    <!--&lt;!&ndash; HTC &ndash;&gt;-->
-    <!--<uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>-->
-    <!--<uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT"/>-->
+    <!-- &lt;!&ndash; Samsung &ndash;&gt; -->
+    <!-- <uses-permission android:name="com.sec.android.provider.badge.permission.READ"/> -->
+    <!-- <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/> -->
+
+
+    <!-- &lt;!&ndash; HTC &ndash;&gt; -->
+    <!-- <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/> -->
+    <!-- <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT"/> -->
     <uses-permission android:name="com.sec.android.provider.badge.BadgeProvider" />
     <!-- Sony -->
-    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
-    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE"/>
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+    <uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" />
 
     <!-- Solid -->
-    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE"/>
+    <uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" />
 
     <!-- Huawei -->
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
@@ -76,7 +78,7 @@
     <uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
     <!-- for sony badge -->
-    <!--<uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />-->
+    <!-- <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" /> -->
     <!-- for apex badge -->
     <uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -146,13 +148,13 @@
                 <action android:name=".Service.MyServiceNative" />
             </intent-filter>
         </service>
+
         <activity
             android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
-
 
         <receiver
             android:name="com.oktaviani.dewi.mylibrary.authenticator.RestartServiceReceiver"
@@ -162,12 +164,17 @@
                 <action android:name="com.kalbe.kalbecallplanaedp.RestartSensor" />
             </intent-filter>
         </receiver>
-        <!--<receiver android:name=".Receiver.ReceiverDownloadManager"  android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.INPUT_METHOD_CHANGED" />&ndash;&gt;-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- <receiver android:name=".Receiver.ReceiverDownloadManager"  android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/> -->
+        <!-- &lt;!&ndash;<action android:name="android.intent.action.INPUT_METHOD_CHANGED" />&ndash;&gt; -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <activity android:name=".ChangePasswordActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainMenu" />
+        </activity>
     </application>
 
 </manifest>

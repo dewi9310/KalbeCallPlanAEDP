@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
@@ -41,12 +42,10 @@ public class ImageViewerActivity extends AppCompatActivity {
     mUserLogin dtLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_viewer);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.green_300));
-        }
         imageView = (TouchImageView) findViewById(R.id.img_viewer);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
