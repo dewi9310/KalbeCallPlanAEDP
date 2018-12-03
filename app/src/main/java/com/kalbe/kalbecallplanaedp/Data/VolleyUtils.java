@@ -8,10 +8,15 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -21,6 +26,7 @@ import com.kalbe.kalbecallplanaedp.Common.VMUploadFoto;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
+import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
@@ -223,7 +229,8 @@ public class VolleyUtils {
         queue.add(req);
     }
     public void makeJsonObjectRequestPushData(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final ProgressDialog pDialog, final VolleyResponseListener listener) {
-//        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
+        final String[] body = new String[1];
+        final String[] message = new String[1];
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
@@ -235,25 +242,106 @@ public class VolleyUtils {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                String strLinkAPI = new clsHardCode().linkToken;
+                final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
-//                int a = networkResponse.statusCode;
-                if (networkResponse==null){
-                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
-                    pDialog.dismiss();
-                }else {
-                    listener.onError(error.getMessage());
+                String msg = "";
+                if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                    // HTTP Status Code: 401 Unauthorized
                     try {
-                        String responseBody = new String( error.networkResponse.data, "utf-8" );
-                        JSONObject jsonObject = new JSONObject( responseBody );
-                    } catch ( JSONException e ) {
-                        //Handle a malformed json response
-                        String b = "hasd";
-                    } catch (UnsupportedEncodingException e){
-                        String c = "hasd";
+                        // body for value error response
+                        body[0] = new String(error.networkResponse.data,"UTF-8");
+                        JSONObject jsonObject = new JSONObject(body[0]);
+                        message[0] = jsonObject.getString("Message");
+                        //Toast.makeText(context, "Error 401, " + message[0], Toast.LENGTH_SHORT).show();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+                    new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            ToastCustom.showToasty(ctx,message,4);
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(String response, Boolean status, String strErrorMsg) {
+                            if (response != null) {
+                                try {
+                                    String accessToken = "";
+                                    String newRefreshToken = "";
+                                    String refreshToken = "";
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    accessToken = jsonObject.getString("access_token");
+                                    refreshToken = jsonObject.getString("refresh_token");
+                                    String dtIssued = jsonObject.getString(".issued");
+
+                                    clsToken data = new clsToken();
+                                    data.setIntId("1");
+                                    data.setDtIssuedToken(dtIssued);
+                                    data.setTxtUserToken(accessToken);
+                                    data.setTxtRefreshToken(refreshToken);
+
+                                    clsTokenRepo tokenRepo = new clsTokenRepo(ctx);
+                                    tokenRepo.createOrUpdate(data);
+                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+                                    newRefreshToken = refreshToken;
+                                    if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
+                                        Toast.makeText(ctx, "Please press the button again", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+
+                    pDialog.dismiss();
+
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
+                } else {
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    ToastCustom.showToasty(ctx,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }
+//                error.printStackTrace();
+//                NetworkResponse networkResponse = error.networkResponse;
+////                int a = networkResponse.statusCode;
+//                if (networkResponse==null){
+//                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
+//                    pDialog.dismiss();
+//                }else {
+//                    listener.onError(error.getMessage());
+//                    try {
+//                        String responseBody = new String( error.networkResponse.data, "utf-8" );
+//                        JSONObject jsonObject = new JSONObject( responseBody );
+//                    } catch ( JSONException e ) {
+//                        //Handle a malformed json response
+//                        String b = "hasd";
+//                    } catch (UnsupportedEncodingException e){
+//                        String c = "hasd";
+//                    }
+//                    pDialog.dismiss();
+//                }
 
             }
         }) {
@@ -371,7 +459,6 @@ public class VolleyUtils {
                         for (int i = 0; i< mRequestBody.getFileName().size(); i++){
                             String fileName = mRequestBody.getFileName().get(i).toString();
                             params.put(fileName, new DataPart(fileName + ".jpg", mRequestBody.getFileUpload().get(fileName),"image/jpeg"));
-//                            params.put("image1", new DataPart("file_image1.jpg", mRequestBody.getFileUpload().get("FUAbsen-1"), "image/jpeg"));
                         }
 
                     }
@@ -399,6 +486,8 @@ public class VolleyUtils {
 
     public void changeProfile(final Context ctx, String strLinkAPI, final String mRequestBody, final ProgressDialog progressDialog, final mUserLogin dtLogin, final VolleyResponseListener listener) {
 //        strLinkAPI =  strLinkAPI+"?txtParam=\"test\"";
+        final String[] body = new String[1];
+        final String[] message = new String[1];
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
@@ -410,25 +499,126 @@ public class VolleyUtils {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                String strLinkAPI = new clsHardCode().linkToken;
+                final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
-//                int a = networkResponse.statusCode;
-                if (networkResponse==null){
-                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
-                    progressDialog.dismiss();
-                }else {
-                    listener.onError(error.getMessage());
+                String msg = "";
+                if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                    // HTTP Status Code: 401 Unauthorized
                     try {
-                        String responseBody = new String( error.networkResponse.data, "utf-8" );
-                        JSONObject jsonObject = new JSONObject( responseBody );
-                    } catch ( JSONException e ) {
-                        //Handle a malformed json response
-                        String b = "hasd";
-                    } catch (UnsupportedEncodingException e){
-                        String c = "hasd";
+                        // body for value error response
+                        body[0] = new String(error.networkResponse.data,"UTF-8");
+                        JSONObject jsonObject = new JSONObject(body[0]);
+                        message[0] = jsonObject.getString("Message");
+                        //Toast.makeText(context, "Error 401, " + message[0], Toast.LENGTH_SHORT).show();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+                    new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            ToastCustom.showToasty(ctx,message,4);
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(String response, Boolean status, String strErrorMsg) {
+                            if (response != null) {
+                                try {
+                                    String accessToken = "";
+                                    String newRefreshToken = "";
+                                    String refreshToken = "";
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    accessToken = jsonObject.getString("access_token");
+                                    refreshToken = jsonObject.getString("refresh_token");
+                                    String dtIssued = jsonObject.getString(".issued");
+
+                                    clsToken data = new clsToken();
+                                    data.setIntId("1");
+                                    data.setDtIssuedToken(dtIssued);
+                                    data.setTxtUserToken(accessToken);
+                                    data.setTxtRefreshToken(refreshToken);
+
+                                    clsTokenRepo tokenRepo = new clsTokenRepo(ctx);
+                                    tokenRepo.createOrUpdate(data);
+                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+                                    newRefreshToken = refreshToken;
+                                    if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
+                                        Toast.makeText(ctx, "Please press the button again", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+
+                    progressDialog.dismiss();
+
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
+                } else {
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    ToastCustom.showToasty(ctx,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
+//                error.printStackTrace();
+//                NetworkResponse networkResponse = error.networkResponse;
+//                String msg = "";
+////                int a = networkResponse.statusCode;
+//                if (networkResponse==null){
+//                    if (error instanceof NetworkError) {
+//                        msg = "Cannot connect to Internet...Please check your connection!";
+//                    } else if (error instanceof ServerError) {
+//                        msg = "The server could not be found. Please try again after some time!!";
+//                    } else if (error instanceof AuthFailureError) {
+//                        msg = "Cannot connect to Internet...Please check your connection!";
+//                    } else if (error instanceof ParseError) {
+//                        msg = "Parsing error! Please try again after some time!!";
+//                    } else if (error instanceof NoConnectionError) {
+//                        msg = "Cannot connect to Internet...Please check your connection!";
+//                    } else if (error instanceof TimeoutError) {
+//                        msg = "Connection TimeOut! Please check your internet connection.";
+//                    } else {
+//                        msg = "Error 500, Server Error";
+//                    }
+//
+//                    if (msg!=null||!msg.equals("")){
+//                        ToastCustom.showToasty(ctx,msg,4);
+//                        progressDialog.dismiss();
+//                    }
+////                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
+//                }else {
+//                    listener.onError(error.getMessage());
+//                    try {
+//                        String responseBody = new String( error.networkResponse.data, "utf-8" );
+//                        JSONObject jsonObject = new JSONObject( responseBody );
+//                    } catch ( JSONException e ) {
+//                        //Handle a malformed json response
+//                        String b = "hasd";
+//                    } catch (UnsupportedEncodingException e){
+//                        String c = "hasd";
+//                    }
+//                    progressDialog.dismiss();
+//                }
 
             }
         }) {
@@ -464,7 +654,7 @@ public class VolleyUtils {
             }
         };
         multipartRequest.setRetryPolicy(new
-                DefaultRetryPolicy(500000,
+                DefaultRetryPolicy(60000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
@@ -473,6 +663,8 @@ public class VolleyUtils {
     }
 
     public void makeJsonObjectRequestPushError(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final ProgressDialog pDialog, final VolleyResponseListener listener) {
+        final String[] body = new String[1];
+        final String[] message = new String[1];
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
@@ -484,25 +676,107 @@ public class VolleyUtils {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                String strLinkAPI = new clsHardCode().linkToken;
+                final String refresh_token = dataToken.get(0).txtRefreshToken;
                 NetworkResponse networkResponse = error.networkResponse;
-//                int a = networkResponse.statusCode;
-                if (networkResponse==null){
-                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
-                    pDialog.dismiss();
-                }else {
-                    listener.onError(error.getMessage());
+                String msg = "";
+                if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                    // HTTP Status Code: 401 Unauthorized
                     try {
-                        String responseBody = new String( error.networkResponse.data, "utf-8" );
-                        JSONObject jsonObject = new JSONObject( responseBody );
-                    } catch ( JSONException e ) {
-                        //Handle a malformed json response
-                        String b = "hasd";
-                    } catch (UnsupportedEncodingException e){
-                        String c = "hasd";
+                        // body for value error response
+                        body[0] = new String(error.networkResponse.data,"UTF-8");
+                        JSONObject jsonObject = new JSONObject(body[0]);
+                        message[0] = jsonObject.getString("Message");
+                        //Toast.makeText(context, "Error 401, " + message[0], Toast.LENGTH_SHORT).show();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+
+                    new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            ToastCustom.showToasty(ctx,message,4);
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(String response, Boolean status, String strErrorMsg) {
+                            if (response != null) {
+                                try {
+                                    String accessToken = "";
+                                    String newRefreshToken = "";
+                                    String refreshToken = "";
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    accessToken = jsonObject.getString("access_token");
+                                    refreshToken = jsonObject.getString("refresh_token");
+                                    String dtIssued = jsonObject.getString(".issued");
+
+                                    clsToken data = new clsToken();
+                                    data.setIntId("1");
+                                    data.setDtIssuedToken(dtIssued);
+                                    data.setTxtUserToken(accessToken);
+                                    data.setTxtRefreshToken(refreshToken);
+
+                                    clsTokenRepo tokenRepo = new clsTokenRepo(ctx);
+                                    tokenRepo.createOrUpdate(data);
+                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+                                    newRefreshToken = refreshToken;
+                                    if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
+                                        Toast.makeText(ctx, "Please press the button again", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+
+                    pDialog.dismiss();
+
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
+                } else {
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    ToastCustom.showToasty(ctx,msg,4);
+//                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }
+
+//                error.printStackTrace();
+//                NetworkResponse networkResponse = error.networkResponse;
+////                int a = networkResponse.statusCode;
+//                if (networkResponse==null){
+//                    ToastCustom.showToasty(ctx,"Please check your connection...",4);
+//                    pDialog.dismiss();
+//                }else {
+//                    listener.onError(error.getMessage());
+//                    try {
+//                        String responseBody = new String( error.networkResponse.data, "utf-8" );
+//                        JSONObject jsonObject = new JSONObject( responseBody );
+//                    } catch ( JSONException e ) {
+//                        //Handle a malformed json response
+//                        String b = "hasd";
+//                    } catch (UnsupportedEncodingException e){
+//                        String c = "hasd";
+//                    }
+//                    pDialog.dismiss();
+//                }
 
             }
         }) {
@@ -548,7 +822,7 @@ public class VolleyUtils {
             }
         };
         multipartRequest.setRetryPolicy(new
-                DefaultRetryPolicy(500000,
+                DefaultRetryPolicy(60000,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 

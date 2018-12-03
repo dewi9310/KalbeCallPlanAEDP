@@ -698,19 +698,24 @@ public class PickAccountActivity extends Activity {
     @Override
     protected void onResume() {
         Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
-//        int countlistView = lvRecycleview.getAdapter().getItemCount() -1;
-//        int countlistView = lvRecycleview.getAdapter().getItemCount() -1;
-        if (accounts.length<(account.size()-1)){
-            for (int i=0; i<account.size(); i++){
-                for (int j=0; j<accounts.length; j++){
-                    if (accounts[j].name.equals(account.get(i))){
-                        account.remove(i);
-                        adapter.notifyDataSetChanged();
-                        break;
+        if (accounts.length>0){
+            if (accounts.length<(account.size())){
+                for (int i=0; i<account.size(); i++){
+                    for (int j=0; j<accounts.length; j++){
+                        if (accounts[j].name.equals(account.get(i))){
+                            account.remove(i);
+                            adapter.notifyDataSetChanged();
+                            break;
+                        }
                     }
                 }
             }
+        }else {
+            Intent intent = new Intent(PickAccountActivity.this, SplashActivity.class);
+            finish();
+            startActivity(intent);
         }
+
         super.onResume();
     }
 }

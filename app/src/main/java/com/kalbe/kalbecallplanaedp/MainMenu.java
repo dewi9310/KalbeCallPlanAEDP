@@ -183,6 +183,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
     List<clsToken> dataToken;
     clsTokenRepo tokenRepo;
     private AccountManager mAccountManager;
+    boolean isOnCreate = false;
 
     @Override
     public void onBackPressed() {
@@ -275,6 +276,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         mAccountManager = AccountManager.get(getBaseContext());
+        isOnCreate = true;
         if (getIntent().getStringExtra(i_View)!=null){
             if (getIntent().getStringExtra(i_View).equals("FragmentNotification")){
                 toolbar.setTitle("Notification");
@@ -1326,28 +1328,30 @@ break;
     @Override
     protected void onResume() {
         Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
-        if (accounts.length>0){
-            boolean isExist = false;
-            for (int i=0; i<accounts.length; i++){
-                if (accounts[i].name.equals(dataLogin.get(0).getTxtUserName().toUpperCase().toString())){
-                    isExist = true;
-                    break;
+        if (!isOnCreate){
+            if (accounts.length>0){
+                boolean isExist = false;
+                for (int i=0; i<accounts.length; i++){
+                    if (accounts[i].name.equals(dataLogin.get(0).getTxtUserName().toUpperCase().toString())){
+                        isExist = true;
+                        break;
+                    }
                 }
+            if (!isExist){
+                Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                myIntent.putExtra(i_View, "FragmentPushData");
+                finish();
+                startActivity(myIntent);
             }
-//            if (!isExist){
-////                logout();
-//                Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
-//                myIntent.putExtra(i_View, "FragmentPushData");
-//                finish();
-//                startActivity(myIntent);
-//            }
-        } else {
-//            logout();
-//            Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
-//            myIntent.putExtra(i_View, "FragmentPushData");
-//            finish();
-//            startActivity(myIntent);
+            } else {
+            Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+            myIntent.putExtra(i_View, "FragmentPushData");
+            finish();
+            startActivity(myIntent);
+            }
         }
+        isOnCreate = false;
+
         super.onResume();
     }
 }

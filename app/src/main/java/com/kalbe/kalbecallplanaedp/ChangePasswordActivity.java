@@ -49,6 +49,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private Gson gson;
     mUserLogin dtLogin;
     private AccountManager mAccountManager;
+    boolean isOnCreate = false;
+    private String i_View ="Fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +139,30 @@ public class ChangePasswordActivity extends AppCompatActivity {
         btn_change_pw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (et_current_pw.getText().length()==0){
-                    ToastCustom.showToasty(ChangePasswordActivity.this,"Please fill current password",4);
-                }else if (et_new_pw.getText().length()<6){
-                    ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
-                }else if (!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-                    ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
-                }else if (et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())&&et_current_pw.getText().length()>0){
-                    ChangePassword();
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Your new password can't be the same as old password",4);
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Your old password was entered incorrectly. Please enter it again",4);
+                boolean isExist = false;
+                Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
+                if (accounts!=null)
+                if (accounts.length>0){
+                    for (int i=0; i<accounts.length; i++){
+                        if (accounts[i].name.equals(dtLogin.getTxtUserName().toUpperCase().toString())){
+                            isExist = true;
+                        }
+                    }
+                }
+
+                if (isExist){
+                    if (et_current_pw.getText().length()==0){
+                        ToastCustom.showToasty(ChangePasswordActivity.this,"Please fill current password",4);
+                    }else if (et_new_pw.getText().length()<6){
+                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
+                    }else if (!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
+                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
+                    }else if (et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())&&et_current_pw.getText().length()>0){
+                        ChangePassword();
+                    }
+                }else {
+                    onBackPressed();
+                    ToastCustom.showToasty(ChangePasswordActivity.this,"Your Account Manager has been deleted",4);
                 }
             }
         });
@@ -162,7 +178,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
             jData.put("intRoleId", dtLogin.getIntRoleID());
             jData.put("oldPassword", et_current_pw.getText().toString());
             jData.put("newPassword", et_new_pw.getText().toString());
-//            jData.put("txtConfirmpassword", et_confirm_pw.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -128,7 +128,7 @@ public class FragmentPushData extends Fragment{
     mApotekRepo apotekRepo;
 
     FloatingActionButton button_push_data;
-    Button btn_push_error;
+//    Button btn_push_error;
     private Gson gson;
     ProgressDialog pDialog;
     String myValue;
@@ -480,7 +480,7 @@ public void setListData(){
     mExpandableListAdapter = new com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
     mExpandableListView.setAdapter(mExpandableListAdapter);
     mExpandableListView.setEmptyView(v.findViewById(R.id.ln_empty));
-    mExpandableListView.addFooterView(btn_push_error);
+//    mExpandableListView.addFooterView(btn_push_error);
 }
 
     private void logout() {
