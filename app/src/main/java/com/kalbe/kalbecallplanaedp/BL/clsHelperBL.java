@@ -583,7 +583,7 @@ public class clsHelperBL {
                         @Override
                         public void onError(String message) {
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                            ToastCustom.showToasty(context,message,4);
+                            new ToastCustom().showToasty(context,message,4);
                         }
 
                         @Override
@@ -609,7 +609,7 @@ public class clsHelperBL {
 //                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
-                                        ToastCustom.showToasty(context,"Please press the button again",3);
+                                        new ToastCustom().showToasty(context,"Please press the button again",3);
                                     }
 
                                 } catch (JSONException e) {
@@ -638,7 +638,7 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(context,msg,4);
+                    new ToastCustom().showToasty(context,msg,4);
                     finalDialog1.dismiss();
                 }
             }
@@ -751,7 +751,7 @@ public class clsHelperBL {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(context);
                                     tokenRepo.createOrUpdate(data);
-                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
+//                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
 //                                    Toast.makeText(context, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
@@ -784,7 +784,7 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(context,msg,4);
+                    new ToastCustom().showToasty(context,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                     popup(context, accountManager);
@@ -906,7 +906,7 @@ public class clsHelperBL {
                     new VolleyUtils().requestTokenWithRefresh((Activity)context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
-                            ToastCustom.showToasty(context,message,4);
+                            new ToastCustom().showToasty(context,message,4);
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
 
@@ -962,7 +962,7 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(context,msg,4);
+                    new ToastCustom().showToasty(context,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }
@@ -1056,7 +1056,7 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(context,msg,4);
+                    new ToastCustom().showToasty(context,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     finalDialog1.dismiss();
                 }

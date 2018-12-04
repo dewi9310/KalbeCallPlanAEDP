@@ -118,7 +118,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
         dtHeaderRepo = new tAkuisisiHeaderRepo(getContext());
         dtUserLogin = new clsMainBL().getUserLogin(getContext());
         lv_akuisisi.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        lv_akuisisi.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 3), true));
+        lv_akuisisi.addItemDecoration(new SpacingItemDecoration(2, new Tools().dpToPx(getActivity(), 3), true));
         lv_akuisisi.setHasFixedSize(true);
         final tRealisasiVisitPlan dataCheckinActive = absenRepo.getDataCheckinActive();
         try {
@@ -204,7 +204,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ToastCustom.showToasty(getActivity(),"Please select Sub Akuisisi",4);
+                new ToastCustom().showToasty(getActivity(),"Please select Sub Akuisisi",4);
                 // put code here
             }
         });
@@ -217,7 +217,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 
                     case R.id.action_add:
                         if (MapTab.get(spnAddSubAkuisisi.getSelectedItem())==0){
-                            ToastCustom.showToasty(getContext(), "Please select type of akuisisi", 4);
+                            new ToastCustom().showToasty(getContext(), "Please select type of akuisisi", 4);
                         }else {
                             if (dtHeader==null){
                                 tAkuisisiHeader dt = new tAkuisisiHeader();
@@ -247,7 +247,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                             }
                             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                             fileName = "temp_akuisisi" + timeStamp;
-                            PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderAkuisisi, fileName,CAMERA_CAPTURE_IMAGE1_REQUEST_CODE);
+                           new PickImage().CaptureImage(getActivity(), new clsHardCode().txtFolderAkuisisi, fileName,CAMERA_CAPTURE_IMAGE1_REQUEST_CODE);
                         }
                         return true;
 
@@ -261,13 +261,13 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 
                             public void onClick(DialogInterface dialog, int which) {
                                 if (lv_akuisisi.getChildCount()==0){
-                                    ToastCustom.showToasty(getContext(), "Please take at least one picture", 4);
+                                    new ToastCustom().showToasty(getContext(), "Please take at least one picture", 4);
                                 }else if (etDtExpired.getText().toString().equals("")){
-                                    ToastCustom.showToasty(getContext(), "Please select the date", 4);
+                                    new ToastCustom().showToasty(getContext(), "Please select the date", 4);
                                 }else if (etNoDoc.getText().toString().equals("")){
-                                    ToastCustom.showToasty(getContext(), "Please fill number of document", 4);
+                                    new ToastCustom().showToasty(getContext(), "Please fill number of document", 4);
                                 }else if (MapTab.get(spnAddSubAkuisisi.getSelectedItem())==0){
-                                    ToastCustom.showToasty(getContext(), "Please select type of akuisisi", 4);
+                                    new ToastCustom().showToasty(getContext(), "Please select type of akuisisi", 4);
                                 }else {
                                     tAkuisisiHeader dt = new tAkuisisiHeader();
                                     dt.setTxtHeaderId(dtHeader.getTxtHeaderId());
@@ -293,7 +293,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    ToastCustom.showToasty(getContext(), "Saved", 1);
+                                    new ToastCustom().showToasty(getContext(), "Saved", 1);
                                     Bundle bundle = new Bundle();
                                     bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
                                     new Tools().intentFragmentSetArgument(FragmentAkuisisi.class, "Akuisisi", getContext(), bundle);
@@ -501,9 +501,9 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
 //        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==CAMERA_CAPTURE_IMAGE1_REQUEST_CODE){
             if (resultCode==-1){
-                Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, fileName);
+                Uri uri = new UriData().getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, fileName);
                 //get byte array
-                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
+                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
 //                PickImage.decodeByteArraytoImageFile(save, new clsHardCode().txtPathTempData);
                 try {
                     if (dataPlan.getIntActivityId()==1){

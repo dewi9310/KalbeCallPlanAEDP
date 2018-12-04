@@ -75,43 +75,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
 
-
-//        et_current_pw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (et_new_pw.getText().length()<6&&et_new_pw.getText().length()>0){
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Passwords must be at least 6 characters long",4);
-//                }else if (!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Passwords do not match",4);
-//                }
-//            }
-//        });
-//
-//        et_new_pw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//               if (et_new_pw.getText().length()>6&&!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Passwords do not match",4);
-//                }
-//            }
-//        });
-//
-//        et_confirm_pw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (et_new_pw.getText().length()<6&&et_new_pw.getText().length()>0){
-//                    ToastCustom.showToasty(ChangePasswordActivity.this,"Passwords must be at least 6 characters long",4);
-//                }
-//            }
-//        });
         et_current_pw.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                     if (et_new_pw.getText().length()<6&&et_new_pw.getText().length()>0){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
                     }else if (!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
                     }
             }
         });
@@ -121,7 +92,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                     if (et_new_pw.getText().length()>6&&!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
                     }
             }
         });
@@ -131,7 +102,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                     if (et_new_pw.getText().length()<6&&et_new_pw.getText().length()>0){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
                     }
             }
         });
@@ -152,17 +123,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
                 if (isExist){
                     if (et_current_pw.getText().length()==0){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"Please fill current password",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"Please fill current password",4);
                     }else if (et_new_pw.getText().length()<6){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords must be at least 6 characters long",4);
                     }else if (!et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())){
-                        ToastCustom.showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
+                        new ToastCustom().showToasty(ChangePasswordActivity.this,"New passwords do not match",4);
                     }else if (et_new_pw.getText().toString().equals(et_confirm_pw.getText().toString())&&et_current_pw.getText().length()>0){
                         ChangePassword();
                     }
                 }else {
                     onBackPressed();
-                    ToastCustom.showToasty(ChangePasswordActivity.this,"Your Account Manager has been deleted",4);
+                    new ToastCustom().showToasty(ChangePasswordActivity.this,"Your Account Manager has been deleted",4);
                 }
             }
         });
@@ -219,10 +190,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 }
                             }
                             onBackPressed();
-                            ToastCustom.showToasty(ChangePasswordActivity.this,"Success Change Password",1);
+                            new ToastCustom().showToasty(ChangePasswordActivity.this,"Success Change Password",1);
 
                         } else {
-                            ToastCustom.showToasty(ChangePasswordActivity.this,txtMessage,4);
+                            new ToastCustom().showToasty(ChangePasswordActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

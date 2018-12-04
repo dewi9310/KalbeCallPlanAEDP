@@ -90,6 +90,20 @@ public class tProgramVisitSubActivityRepo implements crud{
         return items;
     }
 
+    public List<tProgramVisitSubActivity> findAllNew() throws SQLException {
+        List<tProgramVisitSubActivity> list = new ArrayList<>();
+        tProgramVisitSubActivity item = new tProgramVisitSubActivity();
+        QueryBuilder<tProgramVisitSubActivity, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettProgramVisitSubActivityDao().queryBuilder();
+            queryBuilder.orderBy(item.Property_dtStart, true);
+            list = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public tProgramVisitSubActivity findBytxtId(String txtId) throws SQLException {
         tProgramVisitSubActivity item = new tProgramVisitSubActivity();
         QueryBuilder<tProgramVisitSubActivity, Integer> queryBuilder = null;

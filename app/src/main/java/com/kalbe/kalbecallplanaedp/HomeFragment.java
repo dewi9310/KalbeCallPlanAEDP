@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
 
         mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
         if (dtLogin.getBlobImg()!=null){
-            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
             ivProfile.setImageBitmap(bitmap);
 //            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
         }

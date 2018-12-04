@@ -378,7 +378,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
         tvUsername.setText(new clsActivity().greetings() + dataLogin.get(0).getTxtUserName().toString());
         tvEmail.setText(dataLogin.get(0).getTxtEmail().toString());
         if (dataLogin.get(0).getBlobImg()!=null){
-            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dataLogin.get(0).getBlobImg());
+            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dataLogin.get(0).getBlobImg());
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
             ivProfile.setImageBitmap(bitmap1);
         }
@@ -781,7 +781,7 @@ break;
             new VolleyUtils().makeJsonObjectRequestPushData(getApplicationContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    ToastCustom.showToasty(getApplicationContext(),message,4);
+                    new ToastCustom().showToasty(getApplicationContext(),message,4);
 //                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }
@@ -805,7 +805,7 @@ break;
                                 logout();
 //                                ToastCustom.showToasty(getApplicationContext(),"Success Push Data",1);
                             }else {
-                                ToastCustom.showToasty(getApplicationContext(),txtMessage, 4);
+                                new ToastCustom().showToasty(getApplicationContext(),txtMessage, 4);
                             }
 
                             pDialog.dismiss();
@@ -813,7 +813,7 @@ break;
                             e.printStackTrace();
                         }
                     }else {
-                        ToastCustom.showToasty(getApplicationContext(),strErrorMsg,4);
+                        new ToastCustom().showToasty(getApplicationContext(),strErrorMsg,4);
                         pDialog.dismiss();
                     }
                 }
@@ -892,7 +892,7 @@ break;
 //                            startActivity(intent);
 
                         } else {
-                            ToastCustom.showToasty(MainMenu.this,txtMessage,4);
+                            new ToastCustom().showToasty(MainMenu.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1302,9 +1302,9 @@ break;
             public void onClick(View v) {
                 numberRealisasi = et_int_number_realisasi.getText().toString().trim();
                 if (numberRealisasi.equals("")) {
-                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realization...",4);
+                    new ToastCustom().showToasty(getApplicationContext(),"Please fill number realization...",4);
                 } else if (numberRealisasi==null){
-                    ToastCustom.showToasty(getApplicationContext(),"Please fill number realization...",4);
+                    new ToastCustom().showToasty(getApplicationContext(),"Please fill number realization...",4);
                 }else {
                    checkout();
                 }

@@ -69,13 +69,6 @@ public class MyApplicationAEDP extends Application {
         mContext = getApplicationContext();
         ACRA.init(this);
         mUserLogin dtUserLogin = new clsMainBL().getUserLogin(mContext);
-        List<tLogError> dataErrorsss = null;
-        try {
-             dataErrorsss = (List<tLogError>) new tLogErrorRepo(mContext).findAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        List<tLogError> hahaha = dataErrorsss;
         List<tLogError> dataError = new tLogErrorRepo(mContext).getAllPushData();
         tLogError logError = new tLogError();
         if (dataError!=null){
@@ -101,7 +94,7 @@ public class MyApplicationAEDP extends Application {
         }else {
             logError.setTxtGuiId(GenerateGuid());
         }
-        UriData.getOutputFolder(new clsHardCode().txtFolderTemp);
+        new UriData().getOutputFolder(new clsHardCode().txtFolderTemp);
         String txtPath = new clsHardCode().txtFolderTemp;
 //        ACRA.getErrorReporter().handleSilentException(new RuntimeException("whatever I want"));
         ACRA.getErrorReporter().setReportSender(new LocalReportSenderAcra(mContext,txtPath, dtUserLogin, logError, fileName));

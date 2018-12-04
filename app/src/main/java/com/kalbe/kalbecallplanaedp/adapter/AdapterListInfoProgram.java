@@ -151,7 +151,7 @@ public class AdapterListInfoProgram extends BaseAdapter {
 
     private void displayImage(ViewHolder holder, clsInfoProgram inbox) {
         if (inbox.getIntImgView() != null) {
-            Tools.displayImageRound(mContext, holder.image, inbox.getIntImgView());
+            new Tools().displayImageRound(mContext, holder.image, inbox.getIntImgView());
             holder.image.setColorFilter(null);
             holder.image_letter.setVisibility(View.GONE);
         } else {

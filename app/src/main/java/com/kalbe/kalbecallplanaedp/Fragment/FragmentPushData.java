@@ -87,8 +87,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 /**
  * Created by Dewi Oktaviani on 9/26/2018.
  */
@@ -243,7 +241,7 @@ public class FragmentPushData extends Fragment{
             new VolleyUtils().makeJsonObjectRequestPushData(getContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    ToastCustom.showToasty(getContext(),message,4);
+                    new ToastCustom().showToasty(getContext(),message,4);
 //                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }
@@ -265,7 +263,7 @@ public class FragmentPushData extends Fragment{
                                     }
                                 }
                                 setListData();
-                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
+                                new ToastCustom().showToasty(getContext(),"Success Push Data",1);
 
                                 if (myValue!=null){
                                     if (myValue.equals("notMainMenu")){
@@ -274,7 +272,7 @@ public class FragmentPushData extends Fragment{
                                     }
                                 }
                             }else {
-                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+                                new ToastCustom().showToasty(getContext(),txtMessage, 4);
                             }
 
                             pDialog.dismiss();
@@ -282,7 +280,7 @@ public class FragmentPushData extends Fragment{
                             e.printStackTrace();
                         }
                     }else {
-                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                        new ToastCustom().showToasty(getContext(),strErrorMsg,4);
                         pDialog.dismiss();
                     }
                 }
@@ -507,7 +505,7 @@ public void setListData(){
         new clsHelperBL().volleyLogin(getContext(), strLinkAPI, mRequestBody, "Logout....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(getContext(),message,4);
+                new ToastCustom().showToasty(getContext(),message,4);
             }
 
             @Override
@@ -531,7 +529,7 @@ public void setListData(){
                             Log.d("Data info", "logout Success");
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -207,8 +207,6 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     List<VMDownloadFile> vmList = new ArrayList<>();
      CoordinatorLayout cl;
      private String i_View ="Fragment";
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;;
     int curCount = 0;
     float totalCount;
     ThreadPoolExecutor executor;
@@ -541,7 +539,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                     }
                     onButtonOnClick(ln_download_realisasi, tv_download_realisasi, "tRealisasiVisitPlan");
                 }else {
-                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
+                    new ToastCustom().showToasty(getContext(),"Please download all data master",4);
                 }
             }
         });
@@ -588,7 +586,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                     }
                     onButtonOnClick(ln_download_akuisisi, tv_download_akuisisi, "tAkuisisiHeader");
                 }else {
-                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
+                    new ToastCustom().showToasty(getContext(),"Please download all data master",4);
                 }
             }
         });
@@ -626,7 +624,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                     }
                     onButtonOnClick(ln_download_maintenance, tv_download_maintenance, "tMaintenanceHeader");
                 }else {
-                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
+                    new ToastCustom().showToasty(getContext(),"Please download all data master",4);
                 }
             }
         });
@@ -664,18 +662,10 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                     }
                     onButtonOnClick(ln_download_infoprogram, tv_download_infoprogram, "tInfoProgramHeader");
                 }else {
-                    ToastCustom.showToasty(getContext(),"Please download all data master",4);
+                    new ToastCustom().showToasty(getContext(),"Please download all data master",4);
                 }
             }
         });
-
-//        getContext().registerReceiver(receiver, new IntentFilter(
-//                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        preferences = getContext().getSharedPreferences("Ahgase", Context.MODE_PRIVATE);
-//        if (!preferences.contains("initialized")){
-//
-//        }
-        editor = preferences.edit();
 
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
@@ -751,7 +741,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             if (dataListActivity.size()>0){
                 downloadSubActivity();
             }else {
-                ToastCustom.showToasty(getContext(),"Please download data activity",4);
+                new ToastCustom().showToasty(getContext(),"Please download data activity",4);
             }
 
         } else if (txtDownlaod.equals("mSubSubActivity")){
@@ -763,7 +753,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             if (dataListSubActivity.size()>0){
                 downloadSubSubActivity();
             }else {
-                ToastCustom.showToasty(getContext(),"Please download data sub activity",4);
+                new ToastCustom().showToasty(getContext(),"Please download data sub activity",4);
             }
 
         } else if (txtDownlaod.equals("mApotek")){
@@ -774,8 +764,6 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             downloadArea();
         }else{
             if (isDataReady){
-                editor.clear();
-                editor.commit();
                 if (txtDownlaod.equals("tRealisasiVisitPlan")){
                     downloadtCallPlan();
                 }else if (txtDownlaod.equals("tAkuisisiHeader")){
@@ -786,7 +774,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                     downloadtInfoProgram();
                 }
             }else {
-                ToastCustom.showToasty(getContext(),"Please download all data master",4);
+                new ToastCustom().showToasty(getContext(),"Please download all data master",4);
             }
         }
 
@@ -823,7 +811,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(getContext(),message,4);
+                new ToastCustom().showToasty(getContext(),message,4);
 //                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
 
@@ -1208,7 +1196,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             isFromDownloadAll = true;
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1282,7 +1270,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
                             checkMenu();
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1355,7 +1343,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
                             checkMenu();
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1431,7 +1419,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
                             checkMenu();
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1507,7 +1495,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
                             checkMenu();
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1524,7 +1512,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(getContext(),message,4);
+                new ToastCustom().showToasty(getContext(),message,4);
             }
 
             @Override
@@ -1576,7 +1564,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             }
                             Log.d("Data info", "Success Download");
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1593,7 +1581,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(getContext(),message,4);
+                new ToastCustom().showToasty(getContext(),message,4);
             }
 
             @Override
@@ -1659,7 +1647,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1828,7 +1816,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1984,7 +1972,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             isFromDownloadAll = false;
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -2096,7 +2084,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -2248,7 +2236,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -2347,7 +2335,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     private boolean checkMenu(){
         boolean isDataReady = new clsMainBL().isDataReady(getContext());
         if (isDataReady){
-            ToastCustom.showToasty(getContext(),"Success Download",1);
+            new ToastCustom().showToasty(getContext(),"Success Download",1);
             Intent myIntent = new Intent(getContext(), MainMenu.class);
             startActivity(myIntent);
             getActivity().finish();
@@ -2367,92 +2355,81 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         request.setTitle("Downloading " + groupDownload + String.valueOf(index));
         request.setDescription(txtId);
         request.setVisibleInDownloadsUi(true);
-//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Download/"  + file.substring(1, file.length()));
-//        Uri uri = UriData.getOutputMediaUri(getContext(), new clsHardCode().txtFolderDownload, file.substring(1, file.length()));
-//        request.setDestinationUri(Uri.parse(new clsHardCode().txtFolderDownload + file.substring(1, file.length())));
-//        request.setDestinationUri(uri);
-//        request.setDestinationInExternalFilesDir(getContext(), new clsHardCode().txtFolderDownload, file.substring(1, file.length()));
 
         long enqueue = dm.enqueue(request);
-
-        editor.putLong(txtId, enqueue);
-        editor.commit();
         listId.add(enqueue);
 
     }
 
-    public BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                long downloadId = intent.getLongExtra(
-                        DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                DownloadManager dm = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
-                DownloadManager.Query query = new DownloadManager.Query();
-                query.setFilterById(downloadId);
-                if (downloadId!=-1){
-                    Cursor c = dm.query(query);
-                    if (c.moveToFirst()) {
-                        int columnIndex = c
-                                .getColumnIndex(DownloadManager.COLUMN_STATUS);
-                        if (DownloadManager.STATUS_SUCCESSFUL == c
-                                .getInt(columnIndex)) {
-
-                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                            String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-                            String txtId = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
-                            preferences = context.getSharedPreferences("Ahgase", Context.MODE_PRIVATE);
-                            editor = preferences.edit();
-                            long id = preferences.getLong(txtId, -1);
-                            try {
-                                byte[] file = PickFile.getByteArrayFileToSave(Uri.parse(uriString), context);
-                                if (title.contains("Info Program")){
-                                    mFileAttachment data = (mFileAttachment) new mFileAttachmentRepo(context).findById(Integer.parseInt(txtId));
-                                    data.setBlobFile(file);
-                                    new mFileAttachmentRepo(context).createOrUpdate(data);
-                                }else if (title.contains("Akuisisi")){
-                                    tAkuisisiDetail data = new tAkuisisiDetailRepo(context).findByDetailId(txtId);
-                                    data.setTxtImg(file);
-                                    new tAkuisisiDetailRepo(context).createOrUpdate(data);
-                                }else if (title.contains("Realisasi Pertama")){
-                                    tRealisasiVisitPlan data = new tRealisasiVisitPlanRepo(context).findBytxtId(txtId);
-                                    data.setBlobImg1(file);
-                                    new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
-                                }else if (title.contains("Realisasi Kedua")){
-                                    tRealisasiVisitPlan data = new tRealisasiVisitPlanRepo(context).findBytxtId(txtId);
-                                    data.setBlobImg2(file);
-                                    new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
-                                }
-                                if (id==downloadId){
-//                                  editor = preferences.edit();
-                                    editor.remove(txtId);
-                                    editor.commit();
-                                }
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-
-                            if (preferences.getAll().size()==0){
-                                createNotificationDonwloadComplete(context);
-                            }
-//                            if (listId!=null){
-//                                listId.remove(downloadId);
-//                                if (listId.isEmpty()){
-//                                    createNotificationDonwloadComplete(context);
+//    public BroadcastReceiver receiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+//                long downloadId = intent.getLongExtra(
+//                        DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+//                DownloadManager dm = (DownloadManager) context.getSystemService(DOWNLOAD_SERVICE);
+//                DownloadManager.Query query = new DownloadManager.Query();
+//                query.setFilterById(downloadId);
+//                if (downloadId!=-1){
+//                    Cursor c = dm.query(query);
+//                    if (c.moveToFirst()) {
+//                        int columnIndex = c
+//                                .getColumnIndex(DownloadManager.COLUMN_STATUS);
+//                        if (DownloadManager.STATUS_SUCCESSFUL == c
+//                                .getInt(columnIndex)) {
+//
+//                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+//                            String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+//                            String txtId = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+//                            try {
+//                                byte[] file = PickFile.getByteArrayFileToSave(Uri.parse(uriString), context);
+//                                if (title.contains("Info Program")){
+//                                    mFileAttachment data = (mFileAttachment) new mFileAttachmentRepo(context).findById(Integer.parseInt(txtId));
+//                                    data.setBlobFile(file);
+//                                    new mFileAttachmentRepo(context).createOrUpdate(data);
+//                                }else if (title.contains("Akuisisi")){
+//                                    tAkuisisiDetail data = new tAkuisisiDetailRepo(context).findByDetailId(txtId);
+//                                    data.setTxtImg(file);
+//                                    new tAkuisisiDetailRepo(context).createOrUpdate(data);
+//                                }else if (title.contains("Realisasi Pertama")){
+//                                    tRealisasiVisitPlan data = new tRealisasiVisitPlanRepo(context).findBytxtId(txtId);
+//                                    data.setBlobImg1(file);
+//                                    new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
+//                                }else if (title.contains("Realisasi Kedua")){
+//                                    tRealisasiVisitPlan data = new tRealisasiVisitPlanRepo(context).findBytxtId(txtId);
+//                                    data.setBlobImg2(file);
+//                                    new tRealisasiVisitPlanRepo(context).createOrUpdate(data);
 //                                }
+//                                if (id==downloadId){
+////                                  editor = preferences.edit();
+//                                    editor.remove(txtId);
+//                                    editor.commit();
+//                                }
+//                            } catch (FileNotFoundException e) {
+//                                e.printStackTrace();
+//                            } catch (SQLException e) {
+//                                e.printStackTrace();
 //                            }
-
-                        }
-                    }
-                }
-
-            }
-        }
-    };
+//
+//                            if (preferences.getAll().size()==0){
+//                                createNotificationDonwloadComplete(context);
+//                            }
+////                            if (listId!=null){
+////                                listId.remove(downloadId);
+////                                if (listId.isEmpty()){
+////                                    createNotificationDonwloadComplete(context);
+////                                }
+////                            }
+//
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
+//    };
 
 
     private void createNotification(int size){

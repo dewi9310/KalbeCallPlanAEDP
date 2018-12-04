@@ -138,6 +138,7 @@ public class FragmentSubAkuisisi extends Fragment {
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
+                    enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
                 }
             });
 
@@ -153,6 +154,12 @@ public class FragmentSubAkuisisi extends Fragment {
                 }
             });
         return v;
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (swpAkusisi != null) {
+            swpAkusisi.setEnabled(enable);
+        }
     }
 
     private void loadData(){
@@ -320,7 +327,7 @@ public class FragmentSubAkuisisi extends Fragment {
 
             ImageView image = (ImageView) v.findViewById(R.id.image);
             MaterialRippleLayout lyt_parent = (MaterialRippleLayout) v.findViewById(R.id.lyt_parent);
-            Tools.displayImageOriginal(act, image, dt.getTxtImg());
+            new Tools().displayImageOriginal(act, image, dt.getTxtImg());
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -376,12 +383,14 @@ public class FragmentSubAkuisisi extends Fragment {
 //            int iterator = customViewPager.getCurrentItem();
 //            customViewPager.setAdapter(adapter);
 //            customViewPager.setCurrentItem(iterator);
-            try {
-                dtHeader = (tAkuisisiHeader) headerRepo.findByHeaderId(dtHeader.getTxtHeaderId());
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (dtHeader!=null){
+                try {
+                    dtHeader = (tAkuisisiHeader) headerRepo.findByHeaderId(dtHeader.getTxtHeaderId());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                loadData();
             }
-            loadData();
             swpAkusisi.setRefreshing(false);
         }
     };

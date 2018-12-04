@@ -263,7 +263,7 @@ public class VolleyUtils {
                     new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
-                            ToastCustom.showToasty(ctx,message,4);
+                            new ToastCustom().showToasty(ctx,message,4);
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
 
@@ -319,7 +319,7 @@ public class VolleyUtils {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(ctx,msg,4);
+                    new ToastCustom().showToasty(ctx,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }
@@ -520,7 +520,7 @@ public class VolleyUtils {
                     new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
-                            ToastCustom.showToasty(ctx,message,4);
+                            new ToastCustom().showToasty(ctx,message,4);
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
 
@@ -576,7 +576,7 @@ public class VolleyUtils {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(ctx,msg,4);
+                    new ToastCustom().showToasty(ctx,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
@@ -697,7 +697,7 @@ public class VolleyUtils {
                     new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
-                            ToastCustom.showToasty(ctx,message,4);
+                            new ToastCustom().showToasty(ctx,message,4);
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
 
@@ -753,7 +753,7 @@ public class VolleyUtils {
                 }
 
                 if (msg!=null||!msg.equals("")){
-                    ToastCustom.showToasty(ctx,msg,4);
+                    new ToastCustom().showToasty(ctx,msg,4);
 //                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                     pDialog.dismiss();
                 }

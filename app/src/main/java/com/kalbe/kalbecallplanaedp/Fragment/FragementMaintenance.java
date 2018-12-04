@@ -320,7 +320,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
             public void onClick(View v) {
                 txtNoDoc = et_userName.getText().toString().trim();
                 if (txtNoDoc.equals("")) {
-                    ToastCustom.showToasty(getContext(),"Please fill number document...",4);
+                    new ToastCustom().showToasty(getContext(),"Please fill number document...",4);
                 } else {
                     saveData();
                 }
@@ -379,7 +379,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
                     detail.setIntFlagPush(new clsHardCode().Save);
                     detailRepo.createOrUpdate(detail);
 
-                    ToastCustom.showToasty(getContext(), "Saved", 1);
+                    new ToastCustom().showToasty(getContext(), "Saved", 1);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

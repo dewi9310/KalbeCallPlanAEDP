@@ -365,7 +365,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
             public void onClick(View v) {
                 txtUserName = et_userName.getText().toString().trim();
                 if (txtUserName.equals("")) {
-                    ToastCustom.showToasty(getContext(),"Please fill username which you want to use...",4);
+                    new ToastCustom().showToasty(getContext(),"Please fill username which you want to use...",4);
                 } else {
                     saveData();
                 }
@@ -411,7 +411,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
                     dt.setIntFlagShow(new clsHardCode().Save);
                     dt.setIntSubSubActivityTypeId(new clsHardCode().TypeText);
                     headerRepo.createOrUpdate(dt);
-                    ToastCustom.showToasty(getContext(), "Saved", 1);
+                    new ToastCustom().showToasty(getContext(), "Saved", 1);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

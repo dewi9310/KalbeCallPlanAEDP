@@ -141,7 +141,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private void displayImage(ViewHolder holder, clsListItemAdapter inbox) {
         if (inbox.getIntImgView() != null) {
-            Tools.displayImageRound(_context, holder.image, inbox.getIntImgView());
+            new Tools().displayImageRound(_context, holder.image, inbox.getIntImgView());
             holder.image.setColorFilter(null);
             holder.image_letter.setVisibility(View.GONE);
         } else {

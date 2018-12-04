@@ -141,13 +141,13 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                         imgCamera1.setEnabled(false);
                         imgCamera2.setEnabled(false);
                         if (dtRealisasiVisit.getBlobImg1()!=null){
-                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg1());
-                            PickImage.previewCapturedImage(imgCamera1, bitmap, 150, 150);
+                            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg1());
+                            new PickImage().previewCapturedImage(imgCamera1, bitmap, 150, 150);
                         }
 
                         if (dtRealisasiVisit.getBlobImg2()!=null){
-                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg2());
-                            PickImage.previewCapturedImage(imgCamera2, bitmap, 150, 150);
+                            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg2());
+                            new PickImage().previewCapturedImage(imgCamera2, bitmap, 150, 150);
                         }
 
                     }
@@ -221,7 +221,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             public void onClick(View v) {
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                 fileName = "temp_absen" + timeStamp;
-                PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE1_REQUEST_CODE);
+                new PickImage().CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE1_REQUEST_CODE);
             }
         });
         imgCamera2.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +229,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             public void onClick(View v) {
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
                 fileName = "temp_absen" + timeStamp;
-                PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE2_REQUEST_CODE);
+                new PickImage().CaptureImage(getActivity(), new clsHardCode().txtFolderCheckIn, fileName,CAMERA_CAPTURE_IMAGE2_REQUEST_CODE);
             }
         });
 
@@ -273,14 +273,14 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
         boolean valid = false;
         if (dtTemp==null){
             valid = false;
-            ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
+            new ToastCustom().showToasty(getContext(),"Please take at least 1 photo",4);
         }else if (dtTemp.getBlobImg1()==null && dtTemp.getBlobImg2()==null){
-            ToastCustom.showToasty(getContext(),"Please take at least 1 photo",4);
+            new ToastCustom().showToasty(getContext(),"Please take at least 1 photo",4);
         }else if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")&&tvAcc.getText().toString().equals("")){
             valid = false;
-            ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
+            new ToastCustom().showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
         }else if (tvLatUser.getText()==null && tvLongUser.getText()==null&&tvAcc.getText()==null){
-            ToastCustom.showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
+            new ToastCustom().showToasty(getContext(),"Failed checkin: Location not found, please check your GPS",4);
         } else {
             try {
                 DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -316,7 +316,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            ToastCustom.showToasty(getContext(),"Submit",1);
+            new ToastCustom().showToasty(getContext(),"Submit",1);
 //            Tools.intentFragment(HomeFragment.class, "Home", getContext());
             Intent myIntent = new Intent(getContext(), MainMenu.class);
             getActivity().finish();
@@ -328,9 +328,9 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 
     private void saveData(){
         if (tvLatUser.getText().toString().equals("")&&tvLongUser.getText().toString().equals("")){
-            ToastCustom.showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
+            new ToastCustom().showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
         }else if (tvLatUser.getText()==null && tvLongUser.getText()==null){
-            ToastCustom.showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
+            new ToastCustom().showToasty(getContext(),"Failed realization: Location not found, please check your GPS",4);
         } else {
             try {
                 mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
@@ -370,7 +370,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            ToastCustom.showToasty(getContext(),"Submit",1);
+            new ToastCustom().showToasty(getContext(),"Submit",1);
             Intent myIntent = new Intent(getContext(), MainMenu.class);
             getActivity().finish();
             startActivity(myIntent);
@@ -417,20 +417,20 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 //        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==CAMERA_CAPTURE_IMAGE1_REQUEST_CODE){
             if (resultCode==-1){
-                Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
+                Uri uri = new UriData().getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
                 //untuk mendapatkan bitmap bisa menggunakan decode stream
-                Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
+                Bitmap bitmap = new PickImage().decodeStreamReturnBitmap(getContext(), uri);
                 //get byte array
-                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
+                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
                 dtTemp.setBlobImg1(save);
                 dtTemp.setTxtImgName1(fileName);
                 Bitmap bitmap1 = null;
                 try {
-                    bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                    bitmap1 = new PickImage().rotateBitmap(bitmap, new PickImage().Orientation(getContext(), uri));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                PickImage.previewCapturedImage(imgCamera1, bitmap1, 150, 150);
+                new PickImage().previewCapturedImage(imgCamera1, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);
             } else {
@@ -438,20 +438,20 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             }
         }else if (requestCode== CAMERA_CAPTURE_IMAGE2_REQUEST_CODE){
             if (resultCode==-1){
-                Uri uri = UriData.getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
+                Uri uri = new UriData().getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderCheckIn, fileName);
                 //untuk mendapatkan bitmap bisa menggunakan decode stream
-                Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uri);
+                Bitmap bitmap = new PickImage().decodeStreamReturnBitmap(getContext(), uri);
                 //get byte array
-                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uri);
+                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
                 Bitmap bitmap1 = null;
                 try {
-                    bitmap1 = PickImage.rotateBitmap(bitmap, PickImage.Orientation(getContext(), uri));
+                    bitmap1 = new PickImage().rotateBitmap(bitmap, new PickImage().Orientation(getContext(), uri));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 dtTemp.setBlobImg2(save);
                 dtTemp.setTxtImgName2(fileName);
-                PickImage.previewCapturedImage(imgCamera2, bitmap1, 150, 150);
+                new PickImage().previewCapturedImage(imgCamera2, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                 new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);
             } else {
@@ -475,19 +475,19 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
                 mLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                ToastCustom.showToasty(getContext(),"Please turn on GPS or check your internet connection",4);
+                new ToastCustom().showToasty(getContext(),"Please turn on GPS or check your internet connection",4);
 //                new clsMainActivity().showCustomToast(getContext(), "Please turn on GPS or check your internet connection", false);
             } else {
                 if (isNetworkEnabled) {
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ToastCustom.showToasty(getContext(),"Please check application permissions",4);
+                        new ToastCustom().showToasty(getContext(),"Please check application permissions",4);
 //                        _clsMainActivity.showCustomToast(getContext(), "Please check application permissions", false);
                     } else {
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
                         mLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     }
                 } else {
-                    ToastCustom.showToasty(getContext(),"Please check your connection",4);
+                    new ToastCustom().showToasty(getContext(),"Please check your connection",4);
 //                    _clsMainActivity.showCustomToast(getContext(), "Please check your connection", false);
                 }
 
@@ -495,7 +495,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
                     mLastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 } else if(!isGPSEnabled){
-                    ToastCustom.showToasty(getContext(),"Please check your connection",4);
+                    new ToastCustom().showToasty(getContext(),"Please check your connection",4);
 //                    _clsMainActivity.showCustomToast(getContext(), "Please check your connection", false);
                 }
             }
@@ -509,7 +509,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 }
             }
             if (mockStatus){
-                ToastCustom.showToastyCustom(getContext(), Html.fromHtml("<b>" + "Fake GPS detected ! " + "</b> "+ "<br/>" + "<br/>" +"Please Turn Off Fake Location, And Restart Your Phone"), getResources().getDrawable(R.mipmap.ic_error_outline), getResources().getColor(R.color.red_600), 10, false, true);
+                new ToastCustom().showToastyCustom(getContext(), Html.fromHtml("<b>" + "Fake GPS detected ! " + "</b> "+ "<br/>" + "<br/>" +"Please Turn Off Fake Location, And Restart Your Phone"), getResources().getDrawable(R.mipmap.ic_error_outline), getResources().getColor(R.color.red_600), 10, false, true);
 //                ToastCustom.showToasty(getContext(),"Fake GPS detected ! " + "\n" + "Please Turn Off Fake Location, And Restart Your Phone",2);
                 Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
                 // Vibrate for 500 milliseconds

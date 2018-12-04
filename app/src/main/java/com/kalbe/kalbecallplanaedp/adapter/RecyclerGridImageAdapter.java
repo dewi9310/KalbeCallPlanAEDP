@@ -57,7 +57,7 @@ public class RecyclerGridImageAdapter extends RecyclerView.Adapter<RecyclerView.
         if (holder instanceof ViewHolder){
             ViewHolder viewHolder = (ViewHolder)holder;
             final clsListImageAdapter item = mAppList.get(position);
-            Tools.displayImageOriginal(mContext, viewHolder.image_akuisisi, item.getBlobImg());
+            new Tools().displayImageOriginal(mContext, viewHolder.image_akuisisi, item.getBlobImg());
             viewHolder.image_akuisisi.setColorFilter(null);
 
             viewHolder.image_trash.setOnClickListener(new View.OnClickListener() {

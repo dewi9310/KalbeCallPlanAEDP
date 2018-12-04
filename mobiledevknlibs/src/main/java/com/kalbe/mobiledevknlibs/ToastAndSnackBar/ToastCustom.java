@@ -20,12 +20,12 @@ import com.kalbe.mobiledevknlibs.library.toasty.Toasty;
  */
 
 public class ToastCustom{
-    public static void showToastDefault(Context ctx, String str) {
+    public void showToastDefault(Context ctx, String str) {
         Toast toast = Toast.makeText(ctx, str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 25, 400);
         toast.show();
     }
-    public static void showToastSPGMobile(Context ctx, String str, boolean status) {
+    public void showToastSPGMobile(Context ctx, String str, boolean status) {
         LayoutInflater mInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View promptView = mInflater.inflate(R.layout.custom_toast, null);
@@ -52,7 +52,7 @@ public class ToastCustom{
         toast.show();
     }
     //1 for success, 2 for error, 3 for info, 4 for warning, 5 for normal
-    public static void showToasty(Context ctx, String str, int type) {
+    public void showToasty(Context ctx, String str, int type) {
         switch (type){
             case 1:
                 Toasty.success(ctx, str, Toast.LENGTH_SHORT, true).show();
@@ -71,7 +71,7 @@ public class ToastCustom{
                 break;
         }
     }
-    public static void showToastyCustom(Context ctx, CharSequence str, Drawable yourIconDrawable, int tintColor, int duration, boolean withIcon, boolean shouldTint) {
+    public void showToastyCustom(Context ctx, CharSequence str, Drawable yourIconDrawable, int tintColor, int duration, boolean withIcon, boolean shouldTint) {
         Toasty.custom(ctx, str, yourIconDrawable, tintColor, duration, withIcon, shouldTint).show();
     }
 }

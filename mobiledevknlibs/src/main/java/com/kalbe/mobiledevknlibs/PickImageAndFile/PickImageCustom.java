@@ -49,7 +49,7 @@ public class PickImageCustom {
     private static void CaptureImageCustomUri(Context context, String folderName, final int REQUEST_CODE) {
         boolean result = PermissionChecker.Utility.checkPermission(context);
         if (result){
-            Uri uriImage = UriData.getOutputMediaImageUriCons(context, folderName);
+            Uri uriImage = new UriData().getOutputMediaImageUriCons(context, folderName);
             Intent intentCamera1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intentCamera1.putExtra(MediaStore.EXTRA_OUTPUT, uriImage);
             ((Activity)context).startActivityForResult(intentCamera1, REQUEST_CODE);

@@ -101,7 +101,7 @@ public class AdapterListInbox extends RecyclerView.Adapter<AdapterListInbox.View
 
     private void displayImage(ViewHolder holder, clsListItemAdapter inbox) {
         if (inbox.getIntImgView() != null) {
-            Tools.displayImageRound(ctx, holder.image, inbox.getIntImgView());
+            new Tools().displayImageRound(ctx, holder.image, inbox.getIntImgView());
             holder.image.setColorFilter(null);
             holder.image_letter.setVisibility(View.GONE);
         } else {

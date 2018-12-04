@@ -140,7 +140,7 @@ public class ExpandableListAdapterNotif extends BaseExpandableListAdapter {
 
     private void displayImage(ViewHolder holder, clsItemGroupNotifAdapter groupNotifAdapter) {
         if (groupNotifAdapter.getIntImgView() != null) {
-            Tools.displayImageRound(_context, holder.image, groupNotifAdapter.getIntImgView());
+            new Tools().displayImageRound(_context, holder.image, groupNotifAdapter.getIntImgView());
             holder.image.setColorFilter(null);
             holder.image_letter.setVisibility(View.GONE);
         } else {

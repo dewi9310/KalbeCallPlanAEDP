@@ -62,7 +62,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
         } catch (Exception ex) {
             valid = false;
 //            new clsMainActivity().showCustomToast(getContext(), "Your location not found", false);
-            ToastCustom.showToasty(context.getApplicationContext(),"Your location is not detected",4);
+            new ToastCustom().showToasty(context.getApplicationContext(),"Your location is not detected",4);
         }
 
                 /*if (valid) {
@@ -177,7 +177,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
             longitude = getLocation(context).getLongitude();
         } catch (Exception ex) {
             valid = false;
-            ToastCustom.showToastSPGMobile(context, "Your location not found", false);
+            new ToastCustom().showToastSPGMobile(context, "Your location not found", false);
         }
 
         //Check longlat outlet location
@@ -187,7 +187,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
                 longitudeOutlet = Double.parseDouble(String.valueOf(paramLongitude));
             } catch (Exception ex) {
                 valid = false;
-                ToastCustom.showToastSPGMobile(context, "Outlet location not found", false);
+                new ToastCustom().showToastSPGMobile(context, "Outlet location not found", false);
             }
         }
 
@@ -282,7 +282,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
 //                new clsMainActivity().showCustomToast(getContext(), "no network provider is enabled", false);
-                ToastCustom.showToasty(activity.getApplicationContext(),"no network provider is enabled",4);
+                new ToastCustom().showToasty(activity.getApplicationContext(),"no network provider is enabled",4);
             } else {
                 canGetLocation = true;
                 Location location = null;
@@ -324,7 +324,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
                                 double longitude = location.getLongitude();
                             }else{
 //                                new clsMainActivity().showCustomToast(context,"Your GPS off", false);
-                                ToastCustom.showToasty(activity.getApplicationContext(),"Your GPS off",4);
+                                new ToastCustom().showToasty(activity.getApplicationContext(),"Your GPS off",4);
                             }
                         }
                     }
@@ -343,7 +343,7 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
         }
         if (mockStatus){
 //            new clsMainActivity().showCustomToast(getActivity().getApplicationContext(), "Fake GPS detected, !", false);
-            ToastCustom.showToasty(activity.getApplicationContext(),"Fake GPS detected !",4);
+            new ToastCustom().showToasty(activity.getApplicationContext(),"Fake GPS detected !",4);
             Toast.makeText(activity.getApplicationContext(),"Please Turn Off Fake Location, And Restart Your Phone",Toast.LENGTH_LONG);
             Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds

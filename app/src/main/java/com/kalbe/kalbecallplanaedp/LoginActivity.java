@@ -220,7 +220,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                         getRole();
                     } else {
                         etUsername.requestFocusFromTouch();
-                        ToastCustom.showToasty(LoginActivity.this,"Please input username",4);
+                        new ToastCustom().showToasty(LoginActivity.this,"Please input username",4);
                     }
                     return true;
                 }
@@ -277,7 +277,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ToastCustom.showToasty(LoginActivity.this,"Please select role",4);
+                new ToastCustom().showToasty(LoginActivity.this,"Please select role",4);
                 // put code here
             }
         });
@@ -329,13 +329,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             public void onClick(View view) {
 
                 if (etUsername.getText().toString().equals("")){
-                    ToastCustom.showToasty(LoginActivity.this,"Please fill Username",4);
+                    new ToastCustom().showToasty(LoginActivity.this,"Please fill Username",4);
                 }else if (etPassword.getText().toString().equals("")){
-                    ToastCustom.showToasty(LoginActivity.this,"Please fill Password",4);
+                    new ToastCustom().showToasty(LoginActivity.this,"Please fill Password",4);
                 } else if (roleName.size()==1){
                     getRole();
                 } else if (HMRole.get(spnRoleLogin.getSelectedItem())==0){
-                    ToastCustom.showToasty(LoginActivity.this,"Please select role",4);
+                    new ToastCustom().showToasty(LoginActivity.this,"Please select role",4);
                 }
                 else {
                     popupSubmit();
@@ -481,7 +481,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             startActivity(intent);
 
                         } else {
-                            ToastCustom.showToasty(LoginActivity.this,txtMessage,4);
+                            new ToastCustom().showToasty(LoginActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -652,7 +652,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             spinnerArrayAdapter.notifyDataSetChanged();
                             spnRoleLogin.setEnabled(false);
                             etUsername.requestFocus();
-                            ToastCustom.showToasty(LoginActivity.this,txtMessage,4);
+                            new ToastCustom().showToasty(LoginActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

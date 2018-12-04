@@ -295,7 +295,6 @@ public class SplashActivity extends AppCompatActivity {
                         myIntent.putExtra(i_View, "FragmentPushData");
                         finish();
                         startActivity(myIntent);
-//                            logout();
                     } else {
                         myIntent = new Intent(getApplicationContext(), MainMenu.class);
                         finish();
@@ -308,7 +307,6 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(myIntent);
                 }
             } else {
-//                new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                 try {
                     tokenRepo = new clsTokenRepo(getApplicationContext());
                     dataToken = (List<clsToken>) tokenRepo.findAll();
@@ -676,7 +674,7 @@ public class SplashActivity extends AppCompatActivity {
         new clsHelperBL().volleyLogin(SplashActivity.this, strLinkAPI, mRequestBody, "Please Wait.....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(SplashActivity.this,message,4);
+                new ToastCustom().showToasty(SplashActivity.this,message,4);
             }
 
             @Override
@@ -709,7 +707,7 @@ public class SplashActivity extends AppCompatActivity {
                             helper.clearDataAfterLogout();
                             checkVersion(SplashActivity.this, mAccountManager);
 //                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
-                            ToastCustom.showToasty(SplashActivity.this,txtMessage,4);
+                            new ToastCustom().showToasty(SplashActivity.this,txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -718,12 +716,4 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
-
-
-//    private void clearData() {
-//        Intent intent = new Intent(Sp, SplashActivity.class);
-//
-//        getActivity().finish();
-//        startActivity(intent);
-//    }
 }

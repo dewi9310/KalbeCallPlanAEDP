@@ -131,8 +131,8 @@ public class FragmentSetting extends Fragment{
         mm = (MainMenu)getActivity();
         dtLogin = new clsMainBL().getUserLogin(getContext());
         if (dtLogin.getBlobImg()!=null){
-        Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
-        PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
+        Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+        new PickImage().previewCapturedImage(ivProfile, bitmap, 200, 200);
         }
         pDialog = new ProgressDialog(getContext());
         ivProfile.setOnClickListener(new View.OnClickListener() {
@@ -175,7 +175,7 @@ public class FragmentSetting extends Fragment{
                 boolean result= PermissionChecker.Utility.checkPermission(getContext());
                 if (items[item].equals("Ambil Foto")) {
                     uriImage = getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
-                    PickImage.CaptureImage(getActivity(), new clsHardCode().txtFolderData, "tmp_act",CAMERA_REQUEST_PROFILE );
+                    new PickImage().CaptureImage(getActivity(), new clsHardCode().txtFolderData, "tmp_act",CAMERA_REQUEST_PROFILE );
                 } else if (items[item].equals("Pilih dari Galeri")) {
                     if(result)
                         galleryIntentProfile();
@@ -471,7 +471,7 @@ public class FragmentSetting extends Fragment{
         new VolleyUtils().changeProfile(getContext(), strLinkAPI, mRequestBody, pDialog,  dataLogin, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
-                ToastCustom.showToasty(getContext(),message,4);
+                new ToastCustom().showToasty(getContext(),message,4);
                 pDialog.dismiss();
             }
 
@@ -493,14 +493,14 @@ public class FragmentSetting extends Fragment{
                             mUserLogin data = dataLogin;
                             loginRepo.createOrUpdate(data);
                             dtLogin = new clsMainBL().getUserLogin(getContext());
-                            Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
-                            PickImage.previewCapturedImage(ivProfile, bitmap, 200, 200);
-                            PickImage.previewCapturedImage(mm.ivProfile, bitmap, 200, 200);
+                            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+                            new PickImage().previewCapturedImage(ivProfile, bitmap, 200, 200);
+                            new PickImage().previewCapturedImage(mm.ivProfile, bitmap, 200, 200);
                             pDialog.dismiss();
-                            ToastCustom.showToasty(getContext(),"Success Change photo profile",1);
+                            new ToastCustom().showToasty(getContext(),"Success Change photo profile",1);
 
                         } else {
-                            ToastCustom.showToasty(getContext(),txtMessage,4);
+                            new ToastCustom().showToasty(getContext(),txtMessage,4);
                             pDialog.dismiss();
                         }
                     } catch (JSONException e) {
@@ -509,7 +509,7 @@ public class FragmentSetting extends Fragment{
                         e.printStackTrace();
                     }
                 }else {
-                    ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                    new ToastCustom().showToasty(getContext(),strErrorMsg,4);
                     pDialog.dismiss();
                 }
             }
@@ -517,9 +517,6 @@ public class FragmentSetting extends Fragment{
     }
 
     private void pushDataError() throws JSONException {
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Pushing Data");
-//        pDialog.setTitle("Pushing Your data");
         pDialog.setMessage("Push your data....");
         pDialog.setCancelable(false);
         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -543,8 +540,7 @@ public class FragmentSetting extends Fragment{
             new VolleyUtils().makeJsonObjectRequestPushError(getContext(), linkPushData, dtJson, pDialog, new VolleyResponseListener() {
                 @Override
                 public void onError(String message) {
-                    ToastCustom.showToasty(getContext(),message,4);
-//                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    new ToastCustom().showToasty(getContext(),message,4);
                     pDialog.dismiss();
                 }
 
@@ -567,7 +563,7 @@ public class FragmentSetting extends Fragment{
                                     }
                                 }
 //                                btn_push_error.setVisibility(View.GONE);
-                                ToastCustom.showToasty(getContext(),"Success Push Data",1);
+                                new ToastCustom().showToasty(getContext(),"Success Push Data",1);
 
 //                                if (myValue!=null){
 //                                    if (myValue.equals("notMainMenu")){
@@ -576,8 +572,7 @@ public class FragmentSetting extends Fragment{
 //                                    }
 //                                }
                             }else {
-//                                btn_push_error.setVisibility(View.VISIBLE);
-                                ToastCustom.showToasty(getContext(),txtMessage, 4);
+                                new ToastCustom().showToasty(getContext(),txtMessage, 4);
                             }
 
                             pDialog.dismiss();
@@ -587,7 +582,7 @@ public class FragmentSetting extends Fragment{
                             e.printStackTrace();
                         }
                     }else {
-                        ToastCustom.showToasty(getContext(),strErrorMsg,4);
+                        new ToastCustom().showToasty(getContext(),strErrorMsg,4);
                         pDialog.dismiss();
                     }
                 }

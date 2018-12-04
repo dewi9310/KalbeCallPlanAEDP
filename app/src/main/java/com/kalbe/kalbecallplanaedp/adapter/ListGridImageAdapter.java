@@ -60,7 +60,7 @@ public class ListGridImageAdapter extends BaseAdapter {
         }
 
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        Tools.displayImageOriginal(mContext, holder.image_akuisisi, item.getBlobImg());
+        new Tools().displayImageOriginal(mContext, holder.image_akuisisi, item.getBlobImg());
         holder.image_akuisisi.setColorFilter(null);
 
         holder.image_trash.setOnClickListener(new View.OnClickListener() {

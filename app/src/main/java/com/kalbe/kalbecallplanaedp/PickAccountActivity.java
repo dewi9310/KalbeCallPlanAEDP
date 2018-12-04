@@ -182,7 +182,7 @@ public class PickAccountActivity extends Activity {
 //        listView = (ListView) findViewById(R.id.lvPickAccountV2);
         lvRecycleview = (RecyclerView) findViewById(R.id.lv_pick_v3);
         lvRecycleview.setLayoutManager(new GridLayoutManager(this, 2));
-        lvRecycleview.addItemDecoration(new SpacingItemDecoration(5, Tools.dpToPx(this, 1), true));
+        lvRecycleview.addItemDecoration(new SpacingItemDecoration(5, new Tools().dpToPx(this, 1), true));
         lvRecycleview.setHasFixedSize(true);
         parent_view = findViewById(android.R.id.content);
 
@@ -396,7 +396,7 @@ public class PickAccountActivity extends Activity {
                                                 popupSubmit(data_token, HMRole.get(single_choice_selected), activity, mAccountManager);
 //                                                alertD.dismiss();
                                             }else {
-                                                ToastCustom.showToasty(activity,"Please select role",4);
+                                                new ToastCustom().showToasty(activity,"Please select role",4);
                                             }
                                         }
                                     });
@@ -405,7 +405,7 @@ public class PickAccountActivity extends Activity {
                                 }
                             }
                         }else {
-                            ToastCustom.showToasty(activity.getApplicationContext(),txtMessage,4);
+                            new ToastCustom().showToasty(activity.getApplicationContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -544,7 +544,7 @@ public class PickAccountActivity extends Activity {
                             activity.startActivity(intent);
 
                         } else {
-                            ToastCustom.showToasty(activity.getApplicationContext(),txtMessage,4);
+                            new ToastCustom().showToasty(activity.getApplicationContext(),txtMessage,4);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

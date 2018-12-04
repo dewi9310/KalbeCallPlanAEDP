@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -97,8 +102,10 @@ dependencies {
     // range seek bar
 
     'com.android.support:multidex:1.0.1'
-    implementation project(path: ':mobiledevknlibs')
+//    implementation project(path: ':mobiledevknlibs')
     implementation 'io.github.yavski:fab-speed-dial:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.2'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation(name:'mobiledevknlibs-release', ext:'aar')
+    compile 'com.github.barteksc:android-pdf-viewer:2.5.1'
 }

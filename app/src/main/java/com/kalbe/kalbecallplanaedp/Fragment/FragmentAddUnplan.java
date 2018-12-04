@@ -192,7 +192,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ToastCustom.showToasty(getActivity(),"Please select Area",4);
+                new ToastCustom().showToasty(getActivity(),"Please select Area",4);
                 // put code here
             }
         });
@@ -252,7 +252,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ToastCustom.showToasty(getActivity(),"Please select Activity",4);
+                new ToastCustom().showToasty(getActivity(),"Please select Activity",4);
                 // put code here
             }
         });
@@ -312,7 +312,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ToastCustom.showToasty(getActivity(),"Please select Activity",4);
+                new ToastCustom().showToasty(getActivity(),"Please select Activity",4);
                 // put code here
             }
         });
@@ -537,13 +537,13 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 data.setIntFlagPush(new clsHardCode().Save);
                 realisasiVisitPlanRepo.createOrUpdate(data);
 
-                ToastCustom.showToasty(getContext(),"Save",1);
+                new ToastCustom().showToasty(getContext(),"Save",1);
                 new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }else {
-            ToastCustom.showToasty(getContext(), msg, 4);
+            new ToastCustom().showToasty(getContext(), msg, 4);
         }
     }
     @Override

@@ -23,9 +23,9 @@ import java.util.Locale;
  */
 
 public class UriData {
-    private static final String IMAGE_DIRECTORY_NAME = "Image";
+    private final String IMAGE_DIRECTORY_NAME = "Image";
     //get lication file to save using file path
-    public static Uri getOutputMediaUrifromFile(Context context, File file) {
+    public Uri getOutputMediaUrifromFile(Context context, File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+".provider", file);
         } else {
@@ -34,7 +34,7 @@ public class UriData {
     }
 
     //get location file to save tmp using string path
-    public static Uri getOutputMediaImageUri(Context context, String folderName, String fileName) {
+    public Uri getOutputMediaImageUri(Context context, String folderName, String fileName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputMediaImage(folderName, fileName));
         } else {
@@ -42,7 +42,7 @@ public class UriData {
         }
     }
 
-    public static Uri getOutputMediaUri(Context context, String folderName, String fileName) {
+    public Uri getOutputMediaUri(Context context, String folderName, String fileName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputMedia(folderName, fileName));
         } else {
@@ -50,7 +50,7 @@ public class UriData {
         }
     }
 
-    public static Uri getOutputMediaUriFolder(Context context, String folderName) {
+    public Uri getOutputMediaUriFolder(Context context, String folderName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputFolder(folderName));
         } else {
@@ -58,7 +58,7 @@ public class UriData {
         }
     }
 
-    public static Uri getOutputMediaImageUriCons(Context context, String folderName) {
+    public Uri getOutputMediaImageUriCons(Context context, String folderName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //use this if Lollipop_Mr1 (API 22) or above
             return FileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName()+ ".provider", getOutputMediaImageCons(folderName));
         } else {
@@ -66,7 +66,7 @@ public class UriData {
         }
     }
     //create path file
-    public static Uri getOutputMediaFileUri(String folderName, String fileName) {
+    public Uri getOutputMediaFileUri(String folderName, String fileName) {
         // External sdcard location
 
         File mediaStorageDir = new File(folderName + File.separator);
@@ -86,7 +86,7 @@ public class UriData {
     }
 
     //create path file
-    public static File getOutputMediaImage(String folderName, String fileName) {
+    public File getOutputMediaImage(String folderName, String fileName) {
         // External sdcard location
 
         File mediaStorageDir = new File(folderName + File.separator);
@@ -103,7 +103,7 @@ public class UriData {
     }
 
     //create path file
-    public static File getOutputMediaImageCons(String folderName) {
+    public File getOutputMediaImageCons(String folderName) {
         // External sdcard location
 
         File mediaStorageDir = new File(folderName + File.separator);
@@ -120,7 +120,7 @@ public class UriData {
     }
 
     //create path file
-    public static File getOutputMedia(String folderName, String fileName) {
+    public File getOutputMedia(String folderName, String fileName) {
         // External sdcard location
 
         File mediaStorageDir = new File(folderName + File.separator);
@@ -136,7 +136,7 @@ public class UriData {
         return mediaFile;
     }
 
-    public static File getOutputFolder(String folderName) {
+    public File getOutputFolder(String folderName) {
         // External sdcard location
 
         File mediaStorageDir = new File(folderName + File.separator);

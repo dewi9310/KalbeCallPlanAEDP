@@ -36,17 +36,17 @@ public class CopyFile {
                     dst.transferFrom(src, 0, src.size());
                     src.close();
                     dst.close();
-                    ToastCustom.showToasty(context, "Successfull...", 1);
+                    new ToastCustom().showToasty(context, "Successfull...", 1);
                 } else {
-                    ToastCustom.showToasty(context, "File not found...", 2);
+                    new ToastCustom().showToasty(context, "File not found...", 2);
                 }
             } else {
-                ToastCustom.showToasty(context, "Permission not granted...", 4);
+                new ToastCustom().showToasty(context, "Permission not granted...", 4);
             }
         }
         catch (Exception e) {
 //            Log.w("Settings Backup", e);
-            ToastCustom.showToasty(context, e.getMessage().toString(), 2);
+            new ToastCustom().showToasty(context, e.getMessage().toString(), 2);
         }
     }
 

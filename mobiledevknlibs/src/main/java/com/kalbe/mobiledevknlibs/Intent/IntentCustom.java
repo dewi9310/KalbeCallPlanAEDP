@@ -86,7 +86,7 @@ public class IntentCustom {
                 if (backToFront) {
                     IntentCustom.intentBackToFront(context);
                 }
-                ToastCustom.showToasty(context, "You haven't app for open this file", 3);
+                new ToastCustom().showToasty(context, "You haven't app for open this file", 3);
             }
         }
     }

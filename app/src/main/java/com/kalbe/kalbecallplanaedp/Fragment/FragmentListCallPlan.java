@@ -90,7 +90,7 @@ public class FragmentListCallPlan extends Fragment{
         swipeListUnplan.clear();
 
         try {
-            listVisitDetail = (List<tProgramVisitSubActivity>) repoProgramVisitSubActivity.findAll();
+            listVisitDetail = (List<tProgramVisitSubActivity>) repoProgramVisitSubActivity.findAllNew();
 //            listRealisasi = (List<tRealisasiVisitPlan>) repoRealisasi.findAll();
             if (listVisitDetail!=null){
                 if (listVisitDetail.size()>0){

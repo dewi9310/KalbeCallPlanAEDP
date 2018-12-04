@@ -235,7 +235,7 @@ public class FragmentSubInfoProgram extends Fragment {
                 try {
                     mFileAttachment attach = (mFileAttachment) new mFileAttachmentRepo(getContext()).findById(obj.getIntFileId());
                     if (attach.getBlobFile()==null){
-                        ToastCustom.showToasty(getContext(),"Please download file info program...",4);
+                        new ToastCustom().showToasty(getContext(),"Please download file info program...",4);
                     }else {
                         if (fileExtension.equals(".jpg")){
                             Intent intent = new Intent(getContext(), ImageViewerActivity.class);
@@ -329,7 +329,7 @@ public class FragmentSubInfoProgram extends Fragment {
 //            data.setDescription(data.getDescription());
             detailRepo.createOrUpdate(data);
             loadData();
-            ToastCustom.showToasty(getContext(),"Saved",1);
+            new ToastCustom().showToasty(getContext(),"Saved",1);
         } catch (SQLException e) {
             e.printStackTrace();
         }

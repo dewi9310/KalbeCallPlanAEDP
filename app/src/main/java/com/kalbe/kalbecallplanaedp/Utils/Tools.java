@@ -45,7 +45,7 @@ import java.util.Date;
 
 public class Tools {
 
-    public static void setSystemBarColor(Activity act) {
+    public void setSystemBarColor(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -54,7 +54,7 @@ public class Tools {
         }
     }
 
-    public static void setSystemBarColor(Activity act, @ColorRes int color) {
+    public void setSystemBarColor(Activity act, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -63,7 +63,7 @@ public class Tools {
         }
     }
 
-    public static void setSystemBarColorDialog(Context act, Dialog dialog, @ColorRes int color) {
+    public void setSystemBarColorDialog(Context act, Dialog dialog, @ColorRes int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = dialog.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -72,7 +72,7 @@ public class Tools {
         }
     }
 
-    public static void setSystemBarLight(Activity act) {
+    public void setSystemBarLight(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View view = act.findViewById(android.R.id.content);
             int flags = view.getSystemUiVisibility();
@@ -81,7 +81,7 @@ public class Tools {
         }
     }
 
-    public static void setSystemBarLightDialog(Dialog dialog) {
+    public void setSystemBarLightDialog(Dialog dialog) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View view = dialog.findViewById(android.R.id.content);
             int flags = view.getSystemUiVisibility();
@@ -90,7 +90,7 @@ public class Tools {
         }
     }
 
-    public static void clearSystemBarLight(Activity act) {
+    public void clearSystemBarLight(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = act.getWindow();
             window.setStatusBarColor(ContextCompat.getColor(act, R.color.colorPrimaryDark));
@@ -100,7 +100,7 @@ public class Tools {
     /**
      * Making notification bar transparent
      */
-    public static void setSystemBarTransparent(Activity act) {
+    public void setSystemBarTransparent(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -108,7 +108,7 @@ public class Tools {
         }
     }
 
-    public static void displayImageOriginal(Context ctx, ImageView img, @DrawableRes int drawable) {
+    public void displayImageOriginal(Context ctx, ImageView img, @DrawableRes int drawable) {
         try {
             Glide.with(ctx).load(drawable)
                     .crossFade()
@@ -118,7 +118,7 @@ public class Tools {
         }
     }
 
-    public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
+    public void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
         try {
             Glide.with(ctx).load(drawable).asBitmap().centerCrop().into(new BitmapImageViewTarget(img) {
                 @Override
@@ -132,7 +132,7 @@ public class Tools {
         }
     }
 
-    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
+    public void displayImageOriginal(Context ctx, ImageView img, String url) {
         try {
             Glide.with(ctx).load(url)
                     .crossFade()
@@ -142,7 +142,7 @@ public class Tools {
         }
     }
 
-    public static void displayImageOriginal(Context ctx, ImageView img, byte[] blobImage) {
+    public void displayImageOriginal(Context ctx, ImageView img, byte[] blobImage) {
         try {
             Glide.with(ctx).load(blobImage)
                     .crossFade()
@@ -152,22 +152,22 @@ public class Tools {
         }
     }
 
-    public static String getFormattedDateSimple(Long dateTime) {
+    public String getFormattedDateSimple(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return newFormat.format(new Date(dateTime));
     }
 
-    public static String getFormattedDateEvent(Long dateTime) {
+    public String getFormattedDateEvent(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("EEE, MMM dd yyyy");
         return newFormat.format(new Date(dateTime));
     }
 
-    public static String getFormattedTimeEvent(Long time) {
+    public String getFormattedTimeEvent(Long time) {
         SimpleDateFormat newFormat = new SimpleDateFormat("h:mm a");
         return newFormat.format(new Date(time));
     }
 
-    public static String getEmailFromName(String name) {
+    public String getEmailFromName(String name) {
         if (name != null && !name.equals("")) {
             String email = name.replaceAll(" ", ".").toLowerCase().concat("@mail.com");
             return email;
@@ -175,12 +175,12 @@ public class Tools {
         return name;
     }
 
-    public static int dpToPx(Context c, int dp) {
+    public int dpToPx(Context c, int dp) {
         Resources r = c.getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    public static GoogleMap configActivityMaps(GoogleMap googleMap) {
+    public GoogleMap configActivityMaps(GoogleMap googleMap) {
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         // Enable / Disable zooming controls
@@ -199,14 +199,14 @@ public class Tools {
         return googleMap;
     }
 
-    public static void copyToClipboard(Context context, String data) {
+    public void copyToClipboard(Context context, String data) {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("clipboard", data);
         clipboard.setPrimaryClip(clip);
         Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
     }
 
-    public static void nestedScrollTo(final NestedScrollView nested, final View targetView) {
+    public void nestedScrollTo(final NestedScrollView nested, final View targetView) {
         nested.post(new Runnable() {
             @Override
             public void run() {
@@ -215,17 +215,17 @@ public class Tools {
         });
     }
 
-    public static int dip2px(Context context, float dpValue) {
+    public int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int px2dip(Context context, float pxValue) {
+    public int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static boolean toggleArrow(View view) {
+    public boolean toggleArrow(View view) {
         if (view.getRotation() == 0) {
             view.animate().setDuration(200).rotation(180);
             return true;
@@ -235,11 +235,11 @@ public class Tools {
         }
     }
 
-    public static boolean toggleArrow(boolean show, View view) {
+    public boolean toggleArrow(boolean show, View view) {
         return toggleArrow(show, view, true);
     }
 
-    public static boolean toggleArrow(boolean show, View view, boolean delay) {
+    public boolean toggleArrow(boolean show, View view, boolean delay) {
         if (show) {
             view.animate().setDuration(delay ? 200 : 0).rotation(180);
             return true;
@@ -249,13 +249,13 @@ public class Tools {
         }
     }
 
-    public static void changeNavigateionIconColor(Toolbar toolbar, @ColorInt int color) {
+    public void changeNavigateionIconColor(Toolbar toolbar, @ColorInt int color) {
         Drawable drawable = toolbar.getNavigationIcon();
         drawable.mutate();
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
-    public static void changeMenuIconColor(Menu menu, @ColorInt int color) {
+    public void changeMenuIconColor(Menu menu, @ColorInt int color) {
         for (int i = 0; i < menu.size(); i++) {
             Drawable drawable = menu.getItem(i).getIcon();
             if (drawable == null) continue;
@@ -264,7 +264,7 @@ public class Tools {
         }
     }
 
-    public static void changeOverflowMenuIconColor(Toolbar toolbar, @ColorInt int color) {
+    public void changeOverflowMenuIconColor(Toolbar toolbar, @ColorInt int color) {
         try {
             Drawable drawable = toolbar.getOverflowIcon();
             drawable.mutate();
@@ -273,15 +273,15 @@ public class Tools {
         }
     }
 
-    public static int getScreenWidth() {
+    public int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    public static int getScreenHeight() {
+    public int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
-    public static String toCamelCase(String input) {
+    public String toCamelCase(String input) {
         input = input.toLowerCase();
         StringBuilder titleCase = new StringBuilder();
         boolean nextTitleCase = true;
@@ -300,7 +300,7 @@ public class Tools {
         return titleCase.toString();
     }
 
-    public static String insertPeriodically(String text, String insert, int period) {
+    public String insertPeriodically(String text, String insert, int period) {
         StringBuilder builder = new StringBuilder(text.length() + insert.length() * (text.length() / period) + 1);
         int index = 0;
         String prefix = "";
@@ -314,7 +314,7 @@ public class Tools {
     }
 
 
-    public static void rateAction(Activity activity) {
+    public void rateAction(Activity activity) {
         Uri uri = Uri.parse("market://details?id=" + activity.getPackageName());
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
         try {

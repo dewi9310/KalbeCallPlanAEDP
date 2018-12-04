@@ -28,10 +28,10 @@ import java.io.InputStream;
 public class PickImage {
 
     //contextnya di isi (namaClass.this) kalo dari activity
-    public static void CaptureImage(Context context, String folderName, String fileName, final int REQUEST_CODE) {
+    public void CaptureImage(Context context, String folderName, String fileName, final int REQUEST_CODE) {
         boolean result = PermissionChecker.Utility.checkPermission(context);
         if (result) {
-            Uri uriImage = UriData.getOutputMediaImageUri(context, folderName, fileName);
+            Uri uriImage = new UriData().getOutputMediaImageUri(context, folderName, fileName);
             Intent intentCamera1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intentCamera1.putExtra(MediaStore.EXTRA_OUTPUT, uriImage);
             ((Activity) context).startActivityForResult(intentCamera1, REQUEST_CODE);
@@ -39,7 +39,7 @@ public class PickImage {
     }
 
 
-    private static Bitmap resizeImageForBlob(Bitmap photo) {
+    private Bitmap resizeImageForBlob(Bitmap photo) {
         int width = photo.getWidth();
         int height = photo.getHeight();
 
@@ -67,20 +67,20 @@ public class PickImage {
     }
 
 
-    public static void previewCapturedImage(ImageView imageView, Bitmap bitmap, int width, int height) {
+    public void previewCapturedImage(ImageView imageView, Bitmap bitmap, int width, int height) {
         Bitmap mybitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
         imageView.setImageBitmap(mybitmap);
 
     }
 
-    public static void previewCapturedImageUri(ImageView imageView, Context context, Uri uri, int width, int height) {
+    public void previewCapturedImageUri(ImageView imageView, Context context, Uri uri, int width, int height) {
         Bitmap bitmap = decodeStreamReturnBitmap(context, uri);
         Bitmap mybitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
         imageView.setImageBitmap(mybitmap);
 
     }
 
-    public static byte[] getByteImageToSave(Context context, Uri uri) {
+    public byte[] getByteImageToSave(Context context, Uri uri) {
         byte[] imgPhoto = null;
         try {
             Bitmap bitmap = decodeStreamReturnBitmap(context, uri);
@@ -107,7 +107,7 @@ public class PickImage {
     }
 
 
-    public static Bitmap decodeByteArrayReturnBitmap(byte[] image) {
+    public Bitmap decodeByteArrayReturnBitmap(byte[] image) {
         Bitmap mybitmap;
         if (image != null) {
             Bitmap photo = BitmapFactory.decodeByteArray(image, 0, image.length);
@@ -118,7 +118,7 @@ public class PickImage {
         }
     }
 
-    public static Bitmap decodeStreamReturnBitmap(Context context, Uri uri) {
+    public Bitmap decodeStreamReturnBitmap(Context context, Uri uri) {
         Bitmap photo = null;
         InputStream ims = null;
         try {
@@ -141,7 +141,7 @@ public class PickImage {
 
     //uri harus di definisikan dulu
     // (uri tidak akan terbaca jika uri merupakan intentReturntData.getData().getPath().toString())
-    public static Bitmap decodeFileReturnBitmap(Context context, Uri uri) {
+    public Bitmap decodeFileReturnBitmap(Context context, Uri uri) {
         Bitmap photo = null;
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         photo = BitmapFactory.decodeFile(uri.getPath().toString(), bitmapOptions);
@@ -150,7 +150,7 @@ public class PickImage {
     }
 
     //untuk create file image temporary berdasarkan path folder tertentu (nama file tidak perlu di ikutkan)
-    public static File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder, String fileName) {
+    public File decodeByteArraytoImageFile(byte[] imageArray, String pathFolder, String fileName) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -165,7 +165,7 @@ public class PickImage {
         return file;
     }
 
-    public static File decodeByteArraytoImageFileTemp(byte[] imageArray, String pathFolder) {
+    public File decodeByteArraytoImageFileTemp(byte[] imageArray, String pathFolder) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -193,11 +193,11 @@ public class PickImage {
 
        return rotatedBitmap;
     }
-    public static byte[] getByteImageToSaveRotate(Context context, Uri uri) {
+    public byte[] getByteImageToSaveRotate(Context context, Uri uri) {
         byte[] imgPhoto = null;
         InputStream inputStream = null;
         try {
-            Bitmap bitmap = PickImage.decodeStreamReturnBitmap(context, uri);
+            Bitmap bitmap = decodeStreamReturnBitmap(context, uri);
             ExifInterface exif = null;
             String path = uri.toString();
             if (path.startsWith("file://")) {
@@ -243,10 +243,10 @@ public class PickImage {
         return imgPhoto;
     }
 
-    public static byte[] getByteImageToSaveRotate2(Context context, Uri uri) {
+    public byte[] getByteImageToSaveRotate2(Context context, Uri uri) {
         byte[] imgPhoto = null;
         try {
-            Bitmap bitmap = PickImage.decodeStreamReturnBitmap(context, uri);
+            Bitmap bitmap = decodeStreamReturnBitmap(context, uri);
             ExifInterface exif = null;
             String path = uri.toString();
             if (path.startsWith("file://")) {
@@ -290,7 +290,7 @@ public class PickImage {
         return imgPhoto;
     }
 
-    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+    public Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
         Matrix matrix = new Matrix();
         switch (orientation) {
             case ExifInterface.ORIENTATION_NORMAL:
@@ -333,7 +333,7 @@ public class PickImage {
         }
     }
 
-    public static int Orientation(Context context, Uri uri) throws IOException {
+    public int Orientation(Context context, Uri uri) throws IOException {
         ExifInterface exif = null;
         String path = uri.toString();
         if (path.startsWith("file://")) {

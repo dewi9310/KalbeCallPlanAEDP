@@ -57,7 +57,7 @@ public class ImageViewerActivity extends AppCompatActivity {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(data.getTxtImg());
+                Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(data.getTxtImg());
                 if (bitmap!=null)
                 imageView.setImageBitmap(bitmap);
             }else if (bundle.getInt(ZOOM_IMAGE_INFO)!=0){
@@ -71,7 +71,7 @@ public class ImageViewerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 byte[] arrayImage = new clsMainBL().arrayDecryptFile(attach.getBlobFile());
-                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(arrayImage);
+                Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(arrayImage);
                 if (bitmap!=null)
                 imageView.setImageBitmap(bitmap);
             }else if (bundle.getString(ZOOM_PROFILE)!=null){
@@ -80,7 +80,7 @@ public class ImageViewerActivity extends AppCompatActivity {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                Bitmap bitmap = PickImage.decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
+                Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtLogin.getBlobImg());
                 if (bitmap!=null)
                     imageView.setImageBitmap(bitmap);
             }
