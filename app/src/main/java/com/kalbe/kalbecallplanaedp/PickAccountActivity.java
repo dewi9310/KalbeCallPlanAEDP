@@ -228,7 +228,8 @@ public class PickAccountActivity extends Activity {
         adapter.setOnImageTrashClickListener(new RecyclerGridPickAccountAdapter.OnImageTrashClickListener() {
             @Override
             public void onItemClick(View view, String obj, int position) {
-                new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, AUTHTOKEN_TYPE_FULL_ACCESS);
+                //ini isFromPickAccount di buat false karena biar nggak intent 2 kali
+                new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, PickAccountActivity.this, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, false);
             }
         });
         /*listView.setAdapter(new CardAppAdapter(this,  account, icon));

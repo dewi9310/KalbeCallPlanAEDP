@@ -24,6 +24,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.adapter.ExpandableListAdapter;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -73,7 +74,7 @@ public class FragmentListCallPlan extends Fragment{
         repoRealisasi = new tRealisasiVisitPlanRepo(getContext());
         repoProgramVisitSubActivity = new tProgramVisitSubActivityRepo(getContext());
         repoActivity = new mActivityRepo(getContext());
-
+        final tRealisasiVisitPlan dataCheckinActive = (tRealisasiVisitPlan) repoRealisasi.getDataCheckinActive();
         try {
             if (repoProgramVisit.isExistProgramVisit(getContext())){
                 fab.setVisibility(View.VISIBLE);
@@ -173,14 +174,19 @@ public class FragmentListCallPlan extends Fragment{
         mExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Bundle data = new Bundle();
+                if (dataCheckinActive==null){
+                    Bundle data = new Bundle();
 
-                data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
-                FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
-                fragmentCallPlan.setArguments(data);
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragmentCallPlan);
-                fragmentTransaction.commit();
+                    data.putString( DT_CALL_PLAN , listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getTxtId());
+                    FragmentCallPlan fragmentCallPlan = new FragmentCallPlan();
+                    fragmentCallPlan.setArguments(data);
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragmentCallPlan);
+                    fragmentTransaction.commit();
+                }else {
+                    new ToastCustom().showToasty(getContext(), "Please checkout if you want to checkin again", 4);
+                }
+
                 return false;
             }
         });
@@ -188,12 +194,17 @@ public class FragmentListCallPlan extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toolbar.setTitle("Add Call Plan Unplan");
+                if (dataCheckinActive==null){
+                    toolbar.setTitle("Add Call Plan Unplan");
 
-                FragmentAddUnplan fragmentAddUnplan = new FragmentAddUnplan();
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragmentAddUnplan);
-                fragmentTransaction.commit();
+                    FragmentAddUnplan fragmentAddUnplan = new FragmentAddUnplan();
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragmentAddUnplan);
+                    fragmentTransaction.commit();
+                }else {
+                    new ToastCustom().showToasty(getContext(), "Please checkout if you want to add unplan", 4);
+                }
+
             }
         });
         return v;

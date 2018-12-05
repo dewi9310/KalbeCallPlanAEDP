@@ -887,9 +887,9 @@ break;
 
                             Log.d("Data info", "logout Success");
 
-//                            Intent intent = new Intent(MainMenu.this, SplashActivity.class);
-//                            finish();
-//                            startActivity(intent);
+                            Intent intent = new Intent(MainMenu.this, SplashActivity.class);
+                            finish();
+                            startActivity(intent);
 
                         } else {
                             new ToastCustom().showToasty(MainMenu.this,txtMessage,4);

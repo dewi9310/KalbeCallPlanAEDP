@@ -766,6 +766,7 @@ public class clsHelperBL {
                     });
 
                     finalDialog1.dismiss();
+                    popup(context, accountManager);
 
                 } else  if (error instanceof NetworkError) {
                     msg = "Cannot connect to Internet...Please check your connection!";

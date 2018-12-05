@@ -7,6 +7,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.j256.ormlite.stmt.query.In;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.LoginActivity;
 import com.kalbe.kalbecallplanaedp.PickAccountActivity;
+import com.kalbe.kalbecallplanaedp.SplashActivity;
 import com.kalbe.kalbecallplanaedp.adapter.RecyclerGridPickAccountAdapter;
 import com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral;
 
@@ -38,6 +40,7 @@ import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_ARRA
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_ARRAY_DATA_TOKEN;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
+import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_USER_PASS;
 
 /**
@@ -142,18 +145,29 @@ public class AuthenticatorUtil{
         }
     }
 
-    public void RemoveAccount(final AccountManager mAccountManager, final Account account, Activity activity, final RecyclerGridPickAccountAdapter adapter, final List<String> listAccount, final int position, final String authtokenType){
+    public void RemoveAccount(final AccountManager mAccountManager, final Account account, Activity activity, final RecyclerGridPickAccountAdapter adapter, final List<String> listAccount, final int position, final Activity context, final String accountType, final String authTokenType, final boolean isFromPickAccount){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             mAccountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
                     listAccount.remove(position);
                     adapter.notifyDataSetChanged();
+                    if (listAccount.size()==0){
+                        addNewAccount(context, mAccountManager, accountType, authTokenType , isFromPickAccount);
+//                        Intent intent = new Intent(context, SplashActivity.class);
+//                        context.finish();
+//                        context.startActivity(intent);
+                    }
 //                    recyclerView.setAdapter(adapter);
                 }
             }, null);
         }else {
             mAccountManager.removeAccountExplicitly(account);
+            listAccount.remove(position);
+            adapter.notifyDataSetChanged();
+            if (listAccount.size()==0){
+                addNewAccount(context, mAccountManager, accountType, authTokenType , isFromPickAccount);
+            }
         }
     }
 
