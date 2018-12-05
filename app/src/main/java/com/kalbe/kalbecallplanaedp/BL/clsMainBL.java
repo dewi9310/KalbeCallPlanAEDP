@@ -3,6 +3,7 @@ package com.kalbe.kalbecallplanaedp.BL;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Environment;
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -320,6 +321,50 @@ public class clsMainBL {
         else
         {
             Log.i("CreateDir","App dir already exists");
+        }
+    }
+
+    public static void deleteMediaStorage(){
+        File mediaStorageDirAbsen = new File(new clsHardCode().txtFolderCheckIn + File.separator);
+        if (mediaStorageDirAbsen.exists()){
+            if (mediaStorageDirAbsen.isDirectory()){
+                for (File currentFile : mediaStorageDirAbsen.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            mediaStorageDirAbsen.delete();
+        }
+
+        File mediaStorageDirAkuisisi = new File(new clsHardCode().txtFolderAkuisisi + File.separator);
+        if (mediaStorageDirAkuisisi.exists()){
+            if (mediaStorageDirAkuisisi.isDirectory()){
+                for (File currentFile : mediaStorageDirAkuisisi.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            mediaStorageDirAkuisisi.delete();
+        }
+
+        File mediaStorageDir = new File(new clsHardCode().txtFolderData + File.separator);
+        if (mediaStorageDir.exists()){
+            if (mediaStorageDir.isDirectory()){
+                for (File currentFile : mediaStorageDir.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            mediaStorageDir.delete();
+        }
+    }
+
+    public static void deleteMediaStorageDir (){
+        File mediaStorageDir = new File(new clsHardCode().txtFolderTemp + File.separator);
+        if (mediaStorageDir.exists()){
+            if (mediaStorageDir.isDirectory()){
+                for (File currentFile : mediaStorageDir.listFiles()){
+                    currentFile.delete();
+                }
+            }
+            mediaStorageDir.delete();
         }
     }
 }

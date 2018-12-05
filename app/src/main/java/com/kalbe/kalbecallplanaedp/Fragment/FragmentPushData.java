@@ -524,6 +524,7 @@ public void setListData(){
                             getActivity().stopService(new Intent(getContext(), MyServiceNative.class));
                             NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.cancelAll();
+                            new clsMainBL().deleteMediaStorage();
                             clearData();
 
                             Log.d("Data info", "logout Success");

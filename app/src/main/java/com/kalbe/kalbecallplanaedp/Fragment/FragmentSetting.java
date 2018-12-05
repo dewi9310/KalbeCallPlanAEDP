@@ -560,17 +560,10 @@ public class FragmentSetting extends Fragment{
                                         for (int i = 0; i < dtJson.getDataError().getListOfDatatLogError().size(); i++){
                                             new tLogErrorRepo(getContext()).delete(dtJson.getDataError().getListOfDatatLogError().get(i));
                                         }
+                                        new clsMainBL().deleteMediaStorageDir();
                                     }
                                 }
-//                                btn_push_error.setVisibility(View.GONE);
                                 new ToastCustom().showToasty(getContext(),"Success Push Data",1);
-
-//                                if (myValue!=null){
-//                                    if (myValue.equals("notMainMenu")){
-//                                        //logout
-//                                        logout();
-//                                    }
-//                                }
                             }else {
                                 new ToastCustom().showToasty(getContext(),txtMessage, 4);
                             }

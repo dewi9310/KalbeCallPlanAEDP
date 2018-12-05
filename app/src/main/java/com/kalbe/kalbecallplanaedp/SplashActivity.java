@@ -694,6 +694,7 @@ public class SplashActivity extends AppCompatActivity {
                             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.cancelAll();
                             DatabaseHelper helper = DatabaseManager.getInstance().getHelper();
+                            new clsMainBL().deleteMediaStorage();
                             helper.clearDataAfterLogout();
                             checkVersion(SplashActivity.this, mAccountManager);
 //                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
