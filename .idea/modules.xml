@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KalbeCallPlanAEDP.iml" filepath="$PROJECT_DIR$/KalbeCallPlanAEDP.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib_swipelist/lib_swipelist.iml" filepath="$PROJECT_DIR$/lib_swipelist/lib_swipelist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mobiledevknlibs/mobiledevknlibs.iml" filepath="$PROJECT_DIR$/mobiledevknlibs/mobiledevknlibs.iml" />
       <module fileurl="file://$PROJECT_DIR$/mylibrary/mylibrary.iml" filepath="$PROJECT_DIR$/mylibrary/mylibrary.iml" />
     </modules>
   </component>

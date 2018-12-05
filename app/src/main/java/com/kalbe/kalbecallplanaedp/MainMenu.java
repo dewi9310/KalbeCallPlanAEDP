@@ -862,11 +862,11 @@ break;
                         if (txtStatus == true){
 
                             stopService(new Intent(getApplicationContext(), MyServiceNative.class));
-                            ShortcutBadger.removeCountOrThrow(getApplicationContext());
                             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                             notificationManager.cancelAll();
                             deleteMediaStorage();
                             clearData();
+                            ShortcutBadger.removeCountOrThrow(getApplicationContext());
 //                            loginRepo = new mUserLoginRepo(getApplicationContext());
 //                            mUserLogin data = new mUserLogin();
 //                            data.setTxtGuID(model.getData().getTxtGuiID());
@@ -897,6 +897,9 @@ break;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (ShortcutBadgeException e) {
+                        Intent intent = new Intent(MainMenu.this, SplashActivity.class);
+                        finish();
+                        startActivity(intent);
                         e.printStackTrace();
                     }
                 }
