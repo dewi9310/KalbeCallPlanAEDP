@@ -1,6 +1,7 @@
 package com.kalbe.kalbecallplanaedp.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -109,6 +110,8 @@ public class FragmentNotification extends Fragment {
                         index++;
                     }
                 }
+                NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancelAll();
                 ShortcutBadger.removeCountOrThrow(getActivity().getApplicationContext());
             }
         } catch (SQLException e) {
