@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.multidex.MultiDex;
 
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
@@ -107,5 +108,11 @@ public class MyApplicationAEDP extends Application {
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
         return randomUUIDString;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

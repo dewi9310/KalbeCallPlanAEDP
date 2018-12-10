@@ -11,10 +11,12 @@ import android.widget.Toast;
 
 import com.kalbe.kalbecallplanaedp.Common.VMDownloadFile;
 import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
+import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tAkuisisiDetail;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.mFileAttachmentRepo;
+import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tAkuisisiDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 
@@ -70,6 +72,10 @@ public class LongThread implements Runnable {
                         tRealisasiVisitPlan datum = new tRealisasiVisitPlanRepo(context).findBytxtId(data.getTxtId());
                         datum.setBlobImg2(file);
                         new tRealisasiVisitPlanRepo(context).createOrUpdate(datum);
+                    }else if (data.getGroupDownload().equals(new clsHardCode().LOGIN)){
+                        mUserLogin datum = new mUserLoginRepo(context).findByTxtId(data.getTxtId());
+                        datum.setBlobImg(file);
+                        new mUserLoginRepo(context).createOrUpdate(datum);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();

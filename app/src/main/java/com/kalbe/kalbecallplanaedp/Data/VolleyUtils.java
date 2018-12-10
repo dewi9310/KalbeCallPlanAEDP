@@ -80,6 +80,7 @@ public class VolleyUtils {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    popup();
                     finalDialog1.dismiss();
                     if (error.getMessage() != null) {
                         listener.onError(error.getMessage());
@@ -95,9 +96,11 @@ public class VolleyUtils {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    popup();
                     finalDialog1.dismiss();
                 } else if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR ){
                     Toast.makeText(activity.getApplicationContext(), "Error 500, Server Error", Toast.LENGTH_SHORT).show();
+                    popup();
                     finalDialog1.dismiss();
                 } else {
                     popup();

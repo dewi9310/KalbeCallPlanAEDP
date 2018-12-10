@@ -613,12 +613,13 @@ public class SplashActivity extends AppCompatActivity {
                         Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                         String txtPath = new clsHardCode().txtPathUserData + "kalbecallplanaedp.apk";
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         File file = new File(txtPath);
                         Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
                         intent.setData(uri);
-
+//                        intent.setDataAndType(FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(txtPath)), "application/vnd.android.package-archive");
                         startActivity(intent);
+                        finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -639,6 +640,7 @@ public class SplashActivity extends AppCompatActivity {
                     //intent.setDataAndType(Uri.fromFile(new File(txtPath)), "application/vnd.android.package-archive");
 
                     startActivity(intent);
+                    finish();
                 }
             }
         }

@@ -55,6 +55,7 @@ import com.kalbe.kalbecallplanaedp.ResponseDataJson.PushLogError.PushLogError;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.mobiledevknlibs.Helper.clsMainActivity;
 import com.kalbe.mobiledevknlibs.PermissionChecker.PermissionChecker;
+import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -79,6 +80,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import eu.janmuller.android.simplecropimage.CropImage;
 
 import static android.app.Activity.RESULT_OK;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
@@ -258,6 +260,15 @@ public class FragmentSetting extends Fragment{
 //        repoUserImageProfile.createOrUpdate(data);
 //        Toast.makeText(getApplicationContext(), "Image Profile Saved", Toast.LENGTH_SHORT).show();
 //    }
+public void runCropImage(String path) {
+    Intent intent = new Intent(getContext(), CropImage.class);
+    intent.putExtra(CropImage.IMAGE_PATH, path);
+    intent.putExtra(CropImage.SCALE, true);
+    intent.putExtra(CropImage.ASPECT_X, 2);//change ration here via intent
+    intent.putExtra(CropImage.ASPECT_Y, 2);
+    intent.putExtra("return-data", false);
+    startActivityForResult(intent, PIC_CROP_PROFILE);//final static int 1
+}
 
     private void galleryIntentProfile() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -360,13 +371,11 @@ public class FragmentSetting extends Fragment{
 //                    PickImage.decodeByteArraytoImageFile(save, new clsHardCode().txtFolderData, "tmp_act");
 //                    dtLogin.setBlobImg(save);
 //                    dtLogin.setTxtFileName("tmp_act");
-                    Bitmap bmCameraCapture = BitmapFactory.decodeFile(uriImage.getPath());
-                    Bitmap rotateBitmap =  new PickImage().rotateBitmap(bmCameraCapture, uriImage.getPath());
-                    uriImage = getImageUri(getContext(), rotateBitmap);
-//                    String tes = "haha";
-//                    Uri uri = data.getData();
-                    performCropProfile();
-//                    changeProfile(dtLogin);
+//                    Bitmap bmCameraCapture = BitmapFactory.decodeFile(uriImage.getPath());
+//                    Bitmap rotateBitmap =  new PickImage().rotateBitmap(bmCameraCapture, uriImage.getPath());
+//                    uriImage = getImageUri(getContext(), rotateBitmap);
+                    runCropImage(uriImage.getPath());
+//                    performCropProfile();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -388,11 +397,19 @@ public class FragmentSetting extends Fragment{
                 //get the returned data
                 Bundle extras = data.getExtras();
                 //get the cropped bitmap
-                Bitmap thePic = extras.getParcelable("data");
-//                byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
+//                Bitmap thePic = extras.getParcelable("data");
+                Bitmap thePic = BitmapFactory.decodeFile(uriImage.getPath());
+//                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
 //                dtLogin.setBlobImg(save);
 //                dtLogin.setTxtFileName("tmp_act");
 //                changeProfile(dtLogin);
+
+//                Bitmap rotateBitmap = null;
+//                try {
+//                    rotateBitmap = new PickImage().rotateBitmap(thePic, new PickImage().Orientation(getContext(), getImageUri(getContext(), thePic)));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 previewCaptureImageProfile(thePic);
             } else if (resultCode == 0) {
                 new clsMainActivity().showCustomToast(getContext(), "User cancel take image", false);
@@ -401,14 +418,11 @@ public class FragmentSetting extends Fragment{
         else if (requestCode == SELECT_FILE_PROFILE) {
             if(resultCode == RESULT_OK){
                 try {
-//                    Bitmap bitmap;
-//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     selectedImage = data.getData();
-//                    byte[] save = PickImage.getByteImageToSaveRotate2(getContext(), selectedImage);
-//                    dtLogin.setBlobImg(save);
-//                    dtLogin.setTxtFileName("tmp_act");
-//                    changeProfile(dtLogin);
-                    performCropGalleryProfile();
+                    uriImage = getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
+                    new PickFile().moveFileToSpecificUri(getContext(), data, uriImage);
+                    runCropImage(uriImage.getPath());
+//                    performCropGalleryProfile();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

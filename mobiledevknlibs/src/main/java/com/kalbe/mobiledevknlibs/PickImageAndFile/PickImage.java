@@ -188,7 +188,7 @@ public class PickImage {
         Bitmap rotatedBitmap = null;
         try {
             exif = new ExifInterface(path);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
            rotatedBitmap = rotateBitmap(bitmap, orientation);
         } catch (IOException e) {
             e.printStackTrace();
@@ -204,7 +204,7 @@ public class PickImage {
             ExifInterface exif = null;
             String path = uri.toString();
             if (path.startsWith("file://")) {
-                exif = new ExifInterface(path);
+                exif = new ExifInterface(uri.getPath());
             }
 //            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //
@@ -334,16 +334,19 @@ public class PickImage {
             return bmRotated;
         } catch (OutOfMemoryError e) {
             e.printStackTrace();
-            return null;
+            return bitmap;
         }
     }
 
     public int Orientation(Context context, Uri uri) throws IOException {
         ExifInterface exif = null;
         String path = uri.toString();
+//         path = FileUtility.getRealPathFromURI(context, uri);
+//        ExifInterface exif = new ExifInterface(path);
+//        rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         if (path.startsWith("file://")) {
             try {
-                exif = new ExifInterface(path);
+                exif = new ExifInterface(uri.getPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -368,4 +371,6 @@ public class PickImage {
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
         return orientation;
     }
+
+
 }

@@ -1,1 +1,1 @@
-include ':app', ':mylibrary', ':mobiledevknlibs'
+include ':app', ':mylibrary', ':mobiledevknlibs', ':simple-crop-image-lib'

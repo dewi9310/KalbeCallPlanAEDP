@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -430,6 +431,8 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+//                Glide.with(this).load(uri).into(imgCamera1);
+//                Bitmap bitmap1 = new PickImage().decodeByteArrayReturnBitmap(save);
                 new PickImage().previewCapturedImage(imgCamera1, bitmap1, 150, 150);
             }else if (resultCode == 0) {
                new  clsMainActivity().showCustomToast(getContext(), "User canceled photo", false);

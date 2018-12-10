@@ -25,7 +25,7 @@ import java.io.OutputStream;
 
 public class PickFile {
 
-    public static void intentPickFile(Context context, int requestCode, String[] mimetypes){
+    public void intentPickFile(Context context, int requestCode, String[] mimetypes){
         boolean result = PermissionChecker.Utility.checkPermission(context);
         if (result){
             Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -37,7 +37,7 @@ public class PickFile {
             ((Activity)context).startActivityForResult(pickIntent, requestCode);
         }
     }
-    public static byte[] getByteArrayFileToSave(Uri path, Context mContext) throws FileNotFoundException
+    public byte[] getByteArrayFileToSave(Uri path, Context mContext) throws FileNotFoundException
     {
         byte[] byteFile = null;
         InputStream is = null;
@@ -67,7 +67,7 @@ public class PickFile {
         return byteFile;
     }
 
-    public static void moveFileToSpecificUri(Context context, Intent fileReturnedIntent, Uri path){
+    public void moveFileToSpecificUri(Context context, Intent fileReturnedIntent, Uri path){
         InputStream in = null;
         OutputStream out = null;
         Uri uri = fileReturnedIntent.getData();
@@ -92,7 +92,7 @@ public class PickFile {
     }
 
     //untuk decode yang ada path folder dan nama filenya (create file pertama kali saat intent untuk pick file)??
-    public static File decodeByteArraytoFile(byte[] fileArray, String pathFolder, String nameFile) {
+    public File decodeByteArraytoFile(byte[] fileArray, String pathFolder, String nameFile) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -113,7 +113,7 @@ public class PickFile {
     }
 
     //untuk create file temporary dengan ekstensi PDF
-    public static File decodeByteArraytoTempFilePDF(byte[] fileArray, String pathFolder) {
+    public File decodeByteArraytoTempFilePDF(byte[] fileArray, String pathFolder) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -134,7 +134,7 @@ public class PickFile {
     }
 
     //create file temporary dengan berbagai ekstensi, parameternya hanya byte array data, path folder dan ekstension(nama file tidak di perlukan)
-    public static File decodeByteArraytoTempFile(byte[] fileArray, String pathFolder, String fileExtension) {
+    public File decodeByteArraytoTempFile(byte[] fileArray, String pathFolder, String fileExtension) {
         File folder = new File(pathFolder);
         folder.mkdirs();
         File file = null;
@@ -154,7 +154,7 @@ public class PickFile {
         return file;
     }
 
-    public static String getFileName(Context context, Uri uri) {
+    public String getFileName(Context context, Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
@@ -174,7 +174,7 @@ public class PickFile {
         return result;
     }
 
-    public static String getFileName(Context context, int resultCode, Intent fileReturnedIntent) throws FileNotFoundException {
+    public String getFileName(Context context, int resultCode, Intent fileReturnedIntent) throws FileNotFoundException {
         Uri uri = fileReturnedIntent.getData();
         String fileName = "";
         byte[] dataFile = null;

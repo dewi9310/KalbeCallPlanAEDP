@@ -38,6 +38,7 @@ import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
+import com.kalbe.kalbecallplanaedp.Data.CustomVolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyUtils;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
@@ -557,6 +558,152 @@ public class clsHelperBL {
                 String errorMessage = null;
                 listener.onResponse(response, status, errorMessage);
                 finalDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String strLinkAPI = new clsHardCode().linkToken;
+                final String refresh_token = dataToken.get(0).txtRefreshToken;
+                NetworkResponse networkResponse = error.networkResponse;
+                String msg = "";
+                if (networkResponse != null && networkResponse.statusCode == HttpStatus.SC_UNAUTHORIZED) {
+                    // HTTP Status Code: 401 Unauthorized
+                    try {
+                        // body for value error response
+                        body[0] = new String(error.networkResponse.data,"UTF-8");
+                        JSONObject jsonObject = new JSONObject(body[0]);
+                        message[0] = jsonObject.getString("Message");
+                        //Toast.makeText(context, "Error 401, " + message[0], Toast.LENGTH_SHORT).show();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    new VolleyUtils().requestTokenWithRefresh((Activity) context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                        @Override
+                        public void onError(String message) {
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            new ToastCustom().showToasty(context,message,4);
+                        }
+
+                        @Override
+                        public void onResponse(String response, Boolean status, String strErrorMsg) {
+                            if (response != null) {
+                                try {
+                                    String accessToken = "";
+                                    String newRefreshToken = "";
+                                    String refreshToken = "";
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    accessToken = jsonObject.getString("access_token");
+                                    refreshToken = jsonObject.getString("refresh_token");
+                                    String dtIssued = jsonObject.getString(".issued");
+
+                                    clsToken data = new clsToken();
+                                    data.setIntId("1");
+                                    data.setDtIssuedToken(dtIssued);
+                                    data.setTxtUserToken(accessToken);
+                                    data.setTxtRefreshToken(refreshToken);
+
+                                    clsTokenRepo tokenRepo = new clsTokenRepo(context);
+                                    tokenRepo.createOrUpdate(data);
+//                                    ToastCustom.showToasty(context,"Success get new Access Token",1);
+                                    newRefreshToken = refreshToken;
+                                    if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
+                                        new ToastCustom().showToasty(context,"Please press the button again",3);
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+
+                    finalDialog1.dismiss();
+
+                } else  if (error instanceof NetworkError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ServerError) {
+                    msg = "The server could not be found. Please try again after some time!!";
+                } else if (error instanceof AuthFailureError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof ParseError) {
+                    msg = "Parsing error! Please try again after some time!!";
+                } else if (error instanceof NoConnectionError) {
+                    msg = "Cannot connect to Internet...Please check your connection!";
+                } else if (error instanceof TimeoutError) {
+                    msg = "Connection TimeOut! Please check your internet connection.";
+                } else {
+                    msg = "Error 500, Server Error";
+                }
+
+                if (msg!=null||!msg.equals("")){
+                    new ToastCustom().showToasty(context,msg,4);
+                    finalDialog1.dismiss();
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    return null;
+                }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                dataToken = getDataToken(context);
+                access_token = dataToken.get(0).getTxtUserToken();
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + access_token);
+
+                return headers;
+            }
+        };
+        request.setRetryPolicy(new
+                DefaultRetryPolicy(60000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        queue.add(request);
+    }
+
+    public void volleyLoginCustom(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final CustomVolleyResponseListener listener) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        final String[] body = new String[1];
+        final String[] message = new String[1];
+        final ProgressDialog Dialog = new ProgressDialog(context);
+        Dialog.setMessage(progressBarType);
+        Dialog.setCancelable(false);
+        Dialog.show();
+
+        final ProgressDialog finalDialog = Dialog;
+        final ProgressDialog finalDialog1 = Dialog;
+
+        final mConfigRepo configRepo = new mConfigRepo(context);
+        try {
+            mConfigData configDataClient = (mConfigData) configRepo.findById(4);
+            clientId = configDataClient.getTxtDefaultValue().toString();
+            dataToken = getDataToken(context);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest request = new StringRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Boolean status = false;
+                String errorMessage = null;
+                listener.onResponse(response, status, errorMessage, finalDialog);
+//                finalDialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override

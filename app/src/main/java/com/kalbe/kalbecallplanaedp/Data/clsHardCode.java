@@ -32,8 +32,8 @@ public class clsHardCode {
     public String txtPathTempData = pathApp + "tempdata" + File.separator;
 
     //    public String dbName = "KalbeCallPlanAEDP.db";
-//    public String dbName = "AEDP.db";
-    public String dbName = "DP.db";
+    public String dbName = "AEDP.db";
+//    public String dbName = "DP.db";
     public String txtFolderCheckIn = txtPathUserData + "Absen" + File.separator;
     public String txtFolderAkuisisi = txtPathUserData + "Akuisisi" + File.separator;
     public String txtFolderData = txtPathUserData + "Image_Person" + File.separator;
@@ -100,6 +100,7 @@ public class clsHardCode {
     public String INFO_PROGRAM = "info program";
     public String REALISASI_SATU = "realisasi pertama";
     public String REALISASI_DUA = "realisasi kedua";
+    public String LOGIN =   "login";
 
     public String copydb(Context context) throws IOException {
         String CURRENT_DATABASE_PATH = "data/data/" + context.getPackageName() + "/databases/"+ new clsHardCode().dbName;
@@ -131,7 +132,11 @@ public class clsHardCode {
         String device = android.os.Build.DEVICE;           // Device
         String model = android.os.Build.MODEL;            // Model
         String product = android.os.Build.PRODUCT;
-        String osVersion = Build.VERSION.BASE_OS;
+        String osVersion = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+             osVersion = Build.VERSION.BASE_OS;
+        }
+
         JSONObject jDevInfo = new JSONObject();
         try {
             jDevInfo.put("os_version", osVersion);

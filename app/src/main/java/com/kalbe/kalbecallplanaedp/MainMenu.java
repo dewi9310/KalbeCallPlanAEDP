@@ -688,6 +688,7 @@ break;
     // put image from camera
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_PROFILE) {
             if (resultCode == -1) {
                 try {

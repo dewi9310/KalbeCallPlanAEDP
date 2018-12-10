@@ -185,7 +185,7 @@ public class LocalReportSenderAcra implements ReportSender {
                 logError.setTxtUserId(String.valueOf(dtLogin.getIntUserID()));
             }
             Uri uriPath = new UriData().getOutputMediaUriFolder(mContext, path);
-            byte[] file = PickFile.getByteArrayFileToSave(uriPath, mContext);
+            byte[] file = new PickFile().getByteArrayFileToSave(uriPath, mContext);
             logError.setTxtFileName(fileName);
             logError.setDtDateLog(dateFormats.format(new Date()));
             logError.setBlobImg(file);

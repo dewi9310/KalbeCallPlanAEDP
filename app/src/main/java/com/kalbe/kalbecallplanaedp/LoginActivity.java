@@ -6,6 +6,7 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -39,9 +42,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
+import com.kalbe.kalbecallplanaedp.Common.VMDownloadFile;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.mUserRole;
+import com.kalbe.kalbecallplanaedp.Data.CustomVolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
@@ -51,6 +56,7 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserRoleRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.loginMobileApps.LoginMobileApps;
 import com.kalbe.kalbecallplanaedp.Utils.AuthenticatorUtil;
 import com.kalbe.kalbecallplanaedp.Utils.DrawableClickListener;
+import com.kalbe.kalbecallplanaedp.Utils.LongThread;
 import com.kalbe.kalbecallplanaedp.Utils.ReceiverDownloadManager;
 import com.kalbe.mobiledevknlibs.InputFilter.InputFilters;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
@@ -72,6 +78,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_ACCOUNT_NAME;
 import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.ARG_AUTH_TYPE;
@@ -84,7 +93,7 @@ import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_US
  * Created by Rian Andrivani on 11/22/2017.
  */
 
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends AccountAuthenticatorActivity{
     Account availableAccounts[];
     String name[];
     private String mAuthTokenType;
@@ -112,6 +121,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     mMenuRepo menuRepo;
     boolean isFromPickAccount = false;
     private Gson gson;
+    ThreadPoolExecutor executor;
+    ProgressDialog progress;
     ArrayAdapter<String> spinnerArrayAdapter;
 
     @Override
@@ -356,6 +367,16 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 //                requestToken(LoginActivity.this);
             }
         });
+
+        int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+        executor = new ThreadPoolExecutor(
+                NUMBER_OF_CORES * 2,
+                NUMBER_OF_CORES * 2,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>()
+        );
     }
 
     private void popupSubmit() {
@@ -417,14 +438,14 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         final boolean newAccount = getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false);
 
         final Bundle datum = new Bundle();
-        new clsHelperBL().volleyLogin(LoginActivity.this, strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+        new clsHelperBL().volleyLoginCustom(LoginActivity.this, strLinkAPI, mRequestBody, "Please Wait....", new CustomVolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onResponse(String response, Boolean status, String strErrorMsg) {
+            public void onResponse(String response, Boolean status, String strErrorMsg, ProgressDialog dialog) {
                 Intent res = null;
                 if (response != null) {
                     try {
@@ -453,6 +474,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                 data.setTxtRoleName(model.getData().getMUserRole().getTxtRoleName());
                             }
                             data.setDtLogIn(parseDate(model.getData().getDtDateLogin()));
+
                             byte[] file = getByte(model.getData().getTxtLinkFotoProfile());
                             if (file!=null){
                                 data.setBlobImg(file);
@@ -460,7 +482,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                                 data.setBlobImg(null);
                             }
                             loginRepo.createOrUpdate(data);
-
+                            progress = dialog;
+                            VMDownloadFile dt = new VMDownloadFile();
+                            dt.setLink(model.getData().getTxtLinkFotoProfile());
+                            dt.setGroupDownload(new clsHardCode().LOGIN);
+                            dt.setIndex(0);
+                            dt.setTxtId(model.getData().getTxtGuiID());
+                            executor.execute(new LongThread(getApplicationContext(), 0, dt, new Handler(handler)));
                             Log.d("Data info", "Login Success");
 
                             datum.putString(AccountManager.KEY_ACCOUNT_NAME, txtUsername);
@@ -472,16 +500,13 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                             res = new Intent();
                             res.putExtras(datum);
                             finishLogin(res, mAccountManager);
-
-//                            List<Long> listId = new ArrayList<>();
-//                            registerReceiver(new ReceiverDownloadManager(listId).receiver, new IntentFilter(
-//                                    DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                            dialog.dismiss();
                             Intent intent = new Intent(LoginActivity.this, MainMenu.class);
                             finish();
                             startActivity(intent);
-
                         } else {
                             new ToastCustom().showToasty(LoginActivity.this,txtMessage,4);
+                            dialog.dismiss();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -665,4 +690,12 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             }
         });
     }
+
+    Handler.Callback handler = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            progress.dismiss();
+            return true;
+        }
+    };
 }
