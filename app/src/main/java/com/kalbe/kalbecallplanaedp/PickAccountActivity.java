@@ -227,9 +227,32 @@ public class PickAccountActivity extends Activity {
 
         adapter.setOnImageTrashClickListener(new RecyclerGridPickAccountAdapter.OnImageTrashClickListener() {
             @Override
-            public void onItemClick(View view, String obj, int position) {
+            public void onItemClick(View view, String obj, final int position) {
+                final int pos = position;
                 //ini isFromPickAccount di buat false karena biar nggak intent 2 kali
-                new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, PickAccountActivity.this, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(PickAccountActivity.this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Are You sure to delete " + account.get(position) +" ?");
+
+                builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, PickAccountActivity.this, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
         /*listView.setAdapter(new CardAppAdapter(this,  account, icon));
