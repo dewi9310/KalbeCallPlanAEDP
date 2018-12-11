@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.github.barteksc.pdfviewer.util.ArrayUtils;
 import com.j256.ormlite.stmt.query.In;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.LoginActivity;
@@ -29,6 +30,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -145,12 +147,13 @@ public class AuthenticatorUtil{
         }
     }
 
-    public void RemoveAccount(final AccountManager mAccountManager, final Account account, Activity activity, final RecyclerGridPickAccountAdapter adapter, final List<String> listAccount, final int position, final Activity context, final String accountType, final String authTokenType, final boolean isFromPickAccount){
+    public void RemoveAccount(final AccountManager mAccountManager, final Account account, Activity activity, final RecyclerGridPickAccountAdapter adapter, final List<String> listAccount, final Account availableAccounts[], final int position, final Activity context, final String accountType, final String authTokenType, final boolean isFromPickAccount){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             mAccountManager.removeAccount(account, activity, new AccountManagerCallback<Bundle>() {
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
                     listAccount.remove(position);
+                    remove(availableAccounts, account);
                     adapter.notifyDataSetChanged();
                     if (listAccount.size()==0){
                         addNewAccount(context, mAccountManager, accountType, authTokenType , isFromPickAccount);
@@ -164,11 +167,20 @@ public class AuthenticatorUtil{
         }else {
             mAccountManager.removeAccountExplicitly(account);
             listAccount.remove(position);
+            remove(availableAccounts, account);
             adapter.notifyDataSetChanged();
             if (listAccount.size()==0){
                 addNewAccount(context, mAccountManager, accountType, authTokenType , isFromPickAccount);
             }
         }
+    }
+
+    private Account[] remove(Account[] accounts, Account item){
+        Account[] account = accounts;
+        List<Account> list = new ArrayList<Account>(Arrays.asList(account));
+        list.remove(item);
+        account = list.toArray(account);
+        return  account;
     }
 
 }

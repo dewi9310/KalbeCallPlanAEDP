@@ -238,7 +238,7 @@ public class PickAccountActivity extends Activity {
                 builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, position, PickAccountActivity.this, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, false);
+                        new AuthenticatorUtil().RemoveAccount(mAccountManager, availableAccounts[position], PickAccountActivity.this, adapter, account, availableAccounts, position, PickAccountActivity.this, AccountGeneral.ACCOUNT_TYPE, AUTHTOKEN_TYPE_FULL_ACCESS, false);
                         dialog.dismiss();
                     }
                 });
@@ -418,7 +418,7 @@ public class PickAccountActivity extends Activity {
                                         public void onClick(View v) {
                                             if (!single_choice_selected.equals("")){
                                                 popupSubmit(data_token, HMRole.get(single_choice_selected), activity, mAccountManager);
-//                                                alertD.dismiss();
+                                                alertD.dismiss();
                                             }else {
                                                 new ToastCustom().showToasty(activity,"Please select role",4);
                                             }
