@@ -229,37 +229,14 @@ public class FragmentSetting extends Fragment{
                     e.printStackTrace();
                 }
             }
-//            Bitmap photo_view = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
             phtProfile = output.toByteArray();
-//            byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
-//            dtLogin.setBlobImg(save);
-//            dtLogin.setTxtFileName("tmp_act");
-//            ivProfile.setImageBitmap(photo_view);
             dtLogin.setBlobImg(phtProfile);
             dtLogin.setTxtFileName("tmp_act");
             changeProfile(dtLogin);
-//            saveImageProfile();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
-
-//    protected void saveImageProfile() {
-//        try {
-//            repoUserImageProfile = new clsPhotoProfilRepo(getApplicationContext());
-//            dataImageProfile = (List<clsPhotoProfile>) repoUserImageProfile.findAll();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        clsPhotoProfile data = new clsPhotoProfile();
-//        data.setTxtGuiId("1");
-//        data.setTxtDescription("Profile");
-//        data.setTxtImg(phtProfile);
-//
-//        repoUserImageProfile.createOrUpdate(data);
-//        Toast.makeText(getApplicationContext(), "Image Profile Saved", Toast.LENGTH_SHORT).show();
-//    }
 public void runCropImage(String path) {
     Intent intent = new Intent(getContext(), CropImage.class);
     intent.putExtra(CropImage.IMAGE_PATH, path);
@@ -363,10 +340,6 @@ public void runCropImage(String path) {
         if (requestCode == CAMERA_REQUEST_PROFILE) {
             if (resultCode == -1) {
                 try {
-                    //untuk mendapatkan bitmap bisa menggunakan decode stream
-//                    Bitmap bitmap = PickImage.decodeStreamReturnBitmap(getContext(), uriImage);
-                    //get byte array
-//                    byte[] save = PickImage.getByteImageToSaveRotate(getContext(), uriImage);
 //                    uriImage = getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderData, "tmp_act");
 //                    PickImage.decodeByteArraytoImageFile(save, new clsHardCode().txtFolderData, "tmp_act");
 //                    dtLogin.setBlobImg(save);

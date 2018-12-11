@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kalbe.kalbecallplanaedp.R;
@@ -72,7 +73,7 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
 //            Tools.displayImageOriginal(mContext, viewHolder.image_akuisisi, item.getBlobImg());
             viewHolder.iv_icon.setColorFilter(null);
             viewHolder.tv_name.setText(item);
-            viewHolder.tv_name.setOnClickListener(new View.OnClickListener() {
+            viewHolder.ln_pick_account.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnNameClickListener != null){
@@ -110,12 +111,14 @@ public class RecyclerGridPickAccountAdapter extends RecyclerView.Adapter<Recycle
 
         ImageView iv_icon, iv_trash;
         TextView tv_name;
+        LinearLayout ln_pick_account;
 
         public ViewHolder(View view) {
             super(view);
             iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
             iv_trash = (ImageView) view.findViewById(R.id.iv_trash);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
+            ln_pick_account = (LinearLayout)view.findViewById(R.id.ln_pick_account);
 
 //            iv_icon.setVisibility(View.GONE);
             view.setTag(this);

@@ -482,13 +482,13 @@ public class LoginActivity extends AccountAuthenticatorActivity{
                                 data.setBlobImg(null);
                             }
                             loginRepo.createOrUpdate(data);
-                            progress = dialog;
-                            VMDownloadFile dt = new VMDownloadFile();
-                            dt.setLink(model.getData().getTxtLinkFotoProfile());
-                            dt.setGroupDownload(new clsHardCode().LOGIN);
-                            dt.setIndex(0);
-                            dt.setTxtId(model.getData().getTxtGuiID());
-                            executor.execute(new LongThread(getApplicationContext(), 0, dt, new Handler(handler)));
+//                            progress = dialog;
+//                            VMDownloadFile dt = new VMDownloadFile();
+//                            dt.setLink(model.getData().getTxtLinkFotoProfile());
+//                            dt.setGroupDownload(new clsHardCode().LOGIN);
+//                            dt.setIndex(0);
+//                            dt.setTxtId(model.getData().getTxtGuiID());
+//                            executor.execute(new LongThread(getApplicationContext(), 0, dt, new Handler(handler)));
                             Log.d("Data info", "Login Success");
 
                             datum.putString(AccountManager.KEY_ACCOUNT_NAME, txtUsername);

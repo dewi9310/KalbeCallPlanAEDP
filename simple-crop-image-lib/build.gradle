@@ -1,22 +1,24 @@
-buildscript {
-  repositories {
-    mavenCentral()
+//buildscript {
+//  repositories {
+//    mavenCentral()
+//
+//  }
+//
+//  dependencies {
+////    classpath 'com.android.tools.build:gradle:0.4.+'
+//    classpath 'com.android.tools.build:gradle:3.0.1'
+//  }
+//}
 
-  }
-
-  dependencies {
-    classpath 'com.android.tools.build:gradle:0.4.+'
-  }
-}
-
-apply plugin: 'android-library'
+//apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 dependencies {
 compile project(path: ':mobiledevknlibs')
 }
 
 android {
-  compileSdkVersion 17
+  compileSdkVersion 26
   buildToolsVersion '26.0.2'
   defaultConfig {
     minSdkVersion 15
