@@ -157,11 +157,7 @@ public class AuthenticatorUtil{
                     adapter.notifyDataSetChanged();
                     if (listAccount.size()==0){
                         addNewAccount(context, mAccountManager, accountType, authTokenType , isFromPickAccount);
-//                        Intent intent = new Intent(context, SplashActivity.class);
-//                        context.finish();
-//                        context.startActivity(intent);
                     }
-//                    recyclerView.setAdapter(adapter);
                 }
             }, null);
         }else {

@@ -1185,12 +1185,12 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
 //                                    downloadFile(f.getLink(),f.getGroupDownload(), f.getTxtId(), f.getIndex());
 //                                }
 //                            }
-                            List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
-                            if (notificationList!=null){
-                                if (notificationList.size()>0){
-                                    createNotification(notificationList.size());
-                                }
-                            }
+//                            List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+//                            if (notificationList!=null){
+//                                if (notificationList.size()>0){
+//                                    createNotification(notificationList.size());
+//                                }
+//                            }
 
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = true;
@@ -1962,9 +1962,8 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                                             data.setTxtNoDoc(model.getNotificationData().get(i).getTxtNoDoc());
                                             dtRepoNotification.createOrUpdate(data);
                                         }
-                                        List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
-                                        createNotification(notificationList.size());
-//                                        createNotification(model.getNotificationData().size());
+//                                        List<tNotification> notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+//                                        createNotification(notificationList.size());
                                     }
                                 }
                             }
@@ -2587,9 +2586,22 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
 //        Toast.makeText(getContext(), "hahaha", Toast.LENGTH_SHORT).show();
         if (curCount == (int)totalCount){
             progress.dismiss();
+
+            List<tNotification> notificationList = null;
+            try {
+                notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (notificationList!=null){
+                if (notificationList.size()>0){
+                    createNotification(notificationList.size());
+                }
+            }
             if (isFromDownloadAll){
                 checkMenu();
             }
+
         }
 
 
