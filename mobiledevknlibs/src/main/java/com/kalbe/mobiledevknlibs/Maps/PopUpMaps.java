@@ -148,15 +148,76 @@ public class PopUpMaps extends Activity implements LocationListener, OnMapReadyC
 
             locationA.setLatitude(latitude);
             locationA.setLongitude(longitude);
+            alertD.setTitle("Your Position");
+            alertD.show();
+        }
+    }
 
-            Location locationB = new Location("point B");
+    public void popUpMapsCustom(final Context context, int resViewLayout, String lblLat, String lblLong) {
+        Boolean valid = true;
+        getLocation(context);
+        double latitude = 0;
+        double longitude = 0;
 
-//                    locationB.setLatitude(latitudeOutlet);
-//                    locationB.setLongitude(longitudeOutlet);
+        try {
+            latitude = Double.parseDouble(lblLat);
+            longitude = Double.parseDouble(lblLong);
+        } catch (Exception ex) {
+            valid = false;
+            new ToastCustom().showToasty(context.getApplicationContext(),"Your location is not detected",4);
+        }
 
-//                    float distance = locationA.distanceTo(locationB);
-//
-//                    alertD.setTitle("Distance : "+String.valueOf((int) Math.ceil(distance)) + " meters");
+        if (valid) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            View promptView = inflater.inflate(resViewLayout, null);
+
+            final Activity activity = (Activity) context;
+
+            mMap = ((MapFragment) (activity).getFragmentManager().findFragmentById(R.id.map)).getMap();
+
+            if (mMap == null) {
+                mMap = ((MapFragment) (activity).getFragmentManager().findFragmentById(R.id.map)).getMap();
+            }
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Your Location");
+            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(marker.getPosition());
+            mMap.clear();
+            mMap.addMarker(marker);
+            final GoogleMap finalMMap = mMap;
+            mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+                @Override
+                public void onCameraChange(CameraPosition arg0) {
+                    // Move camera.
+                    finalMMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 60));
+                    // Remove listener to prevent position reset on camera move.
+                    finalMMap.setOnCameraChangeListener(null);
+                }
+            });
+
+            android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+            alertDialogBuilder.setView(promptView);
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    MapFragment f = (MapFragment) (activity).getFragmentManager().findFragmentById(R.id.map);
+                                    if (f != null) {
+                                        (activity).getFragmentManager().beginTransaction().remove(f).commit();
+                                    }
+
+                                    dialog.dismiss();
+                                }
+                            });
+            final android.support.v7.app.AlertDialog alertD = alertDialogBuilder.create();
+
+            Location locationA = new Location("point A");
+
+            locationA.setLatitude(latitude);
+            locationA.setLongitude(longitude);
             alertD.setTitle("Your Position");
             alertD.show();
         }

@@ -137,20 +137,6 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
                     dtRealisasiVisit = (tRealisasiVisitPlan) realisasiVisitPlanRepo.findBytxtPlanId(dtVisitPlan.getTxtProgramVisitSubActivityId());
                     if (dataHeader.getString(DT_HISTORY)!=null){
                         valid = true;
-                        btnCheckin.setVisibility(View.GONE);
-                        btnRefreshMap.setVisibility(View.GONE);
-                        imgCamera1.setEnabled(false);
-                        imgCamera2.setEnabled(false);
-                        if (dtRealisasiVisit.getBlobImg1()!=null){
-                            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg1());
-                            new PickImage().previewCapturedImage(imgCamera1, bitmap, 150, 150);
-                        }
-
-                        if (dtRealisasiVisit.getBlobImg2()!=null){
-                            Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg2());
-                            new PickImage().previewCapturedImage(imgCamera2, bitmap, 150, 150);
-                        }
-
                     }
 
 //                   dtVisitPlan = (tProgramVisitSubActivity) visitPlanRepo.findBytxtId(dtRealisasiVisit.getTxtProgramVisitSubActivityId());
@@ -177,21 +163,42 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
 
         }
 
-
         options = new Options();
         options.inSampleSize = 2;
 
-        tvLongUser.setText("");
-        tvLatUser.setText("");
-        tvAcc.setText("");
-        tvLongOutlet.setText("");
-        tvLatOutlet.setText("");
+        if (valid){
+            btnCheckin.setVisibility(View.GONE);
+            btnRefreshMap.setVisibility(View.GONE);
+            imgCamera1.setEnabled(false);
+            imgCamera2.setEnabled(false);
+            if (dtRealisasiVisit.getBlobImg1()!=null){
+                Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg1());
+                new PickImage().previewCapturedImage(imgCamera1, bitmap, 150, 150);
+            }
 
-        getLocation();
+            if (dtRealisasiVisit.getBlobImg2()!=null){
+                Bitmap bitmap = new PickImage().decodeByteArrayReturnBitmap(dtRealisasiVisit.getBlobImg2());
+                new PickImage().previewCapturedImage(imgCamera2, bitmap, 150, 150);
+            }
 
-        if (mLastLocation!=null){
-            displayLocation(mLastLocation);
+            tvLongUser.setText(dtRealisasiVisit.getTxtLong());
+            tvLatUser.setText(dtRealisasiVisit.getTxtLat());
+            tvAcc.setText(dtRealisasiVisit.getTxtAcc());
+        }else {
+            tvLongUser.setText("");
+            tvLatUser.setText("");
+            tvAcc.setText("");
+            tvLongOutlet.setText("");
+            tvLatOutlet.setText("");
+            getLocation();
+
+            if (mLastLocation!=null){
+                displayLocation(mLastLocation);
+            }
+
         }
+
+
 
         if (checkPlayServices()){
             buildGoogleApiClient();
@@ -210,7 +217,7 @@ public class FragmentCallPlan extends Fragment implements GoogleApiClient.Connec
             @Override
             public void onClick(View v) {
 //                new PopUpMaps().popUpMapsTwoCoordinates(getContext(), R.layout.popup_map, tvLatOutlet.getText().toString(), tvLongOutlet.getText().toString());
-                new PopUpMaps().popUpMaps(getActivity(), R.layout.popup_map);
+                new PopUpMaps().popUpMapsCustom(getActivity(), R.layout.popup_map, tvLatUser.getText().toString(), tvLongUser.getText().toString());
 
 
             }
