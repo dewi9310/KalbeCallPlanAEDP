@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kalbe.kalbecallplanaedp.Model.clsInfoProgram;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsMaintenance;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
@@ -24,11 +24,20 @@ import java.util.List;
 public class AdapterListMaintenance extends BaseAdapter{
     private Context mContext;
     List<clsMaintenance> mAppLists;
+    private onItemClickListener mOnItemClickListener;
 
     public AdapterListMaintenance(Context mContext, List<clsMaintenance> mAppList) {
         this.mContext = mContext;
         this.mAppLists = mAppList;
     }
+    public void setOnItemClickListener(final onItemClickListener mItemClickListener) {
+        this.mOnItemClickListener = mItemClickListener;
+    }
+
+    public interface onItemClickListener{
+        void onItemClick(View view, final clsMaintenance obj, int position);
+    }
+
     @Override
     public int getCount() {
         return mAppLists.size();
@@ -45,7 +54,7 @@ public class AdapterListMaintenance extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final clsMaintenance item = mAppLists.get(position);
         if (convertView==null){
             convertView = View.inflate(mContext, R.layout.cardlist_maintenance, null);
@@ -58,26 +67,40 @@ public class AdapterListMaintenance extends BaseAdapter{
         holder.image_letter.setText(item.getTxtImgName());
         holder.tv_status_main.setText(item.getTxtStatus());
         holder.tv_status_main.setTextColor(mContext.getResources().getColor(item.getInColorStatus()));
-
+//        if (item.getIntStatus()==new clsHardCode().Draft){
+//            holder.tv_edit_main.setVisibility(View.VISIBLE);
+//        }else {
+            holder.tv_edit_main.setVisibility(View.GONE);
+//        }
+        holder.ln_maintenance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null){
+                    mOnItemClickListener.onItemClick(v, item, position);
+                }
+            }
+        });
         displayImage(holder, item);
         return convertView;
     }
 
     class ViewHolder {
 
-        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram, tv_status_main;
+        public TextView tv_outlet_name_info, image_letter, tv_desc_infoprogram, tv_status_main, tv_edit_main;
         public ImageView image;
         public RelativeLayout lyt_image;
-        LinearLayout lnDesc;
+        LinearLayout lnDesc, ln_maintenance;
 
         public ViewHolder(View view) {
             tv_desc_infoprogram = (TextView) view.findViewById(R.id.tv_desc_main);
             tv_outlet_name_info = (TextView) view.findViewById(R.id.tv_outlet_name_main);
             tv_status_main = (TextView)view.findViewById(R.id.tv_status_main);
+            tv_edit_main = (TextView)view.findViewById(R.id.tv_edit_main);
             image_letter = (TextView) view.findViewById(R.id.image_letter_main);
             image = (ImageView) view.findViewById(R.id.image_main);
             lyt_image = (RelativeLayout) view.findViewById(R.id.lyt_image_main);
             lnDesc = (LinearLayout) view.findViewById(R.id.ln_desc_main);
+            ln_maintenance = (LinearLayout)view.findViewById(R.id.ln_maintenance);
             view.setTag(this);
         }
     }

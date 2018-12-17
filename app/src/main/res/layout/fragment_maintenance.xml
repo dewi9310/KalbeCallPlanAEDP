@@ -33,15 +33,30 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_maintenance"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end|right"-->
+        <!--android:layout_margin="@dimen/spacing_smlarge"-->
+        <!--android:tint="@android:color/white"-->
+        <!--app:backgroundTint="@color/orange_800"-->
+        <!--app:fabSize="normal"-->
+        <!--app:rippleColor="@android:color/white"-->
+        <!--app:srcCompat="@drawable/ic_add_white" />-->
+
+    <io.github.yavski.fabspeeddial.FabSpeedDial
         android:id="@+id/fab_maintenance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end|right"
-        android:layout_margin="@dimen/spacing_smlarge"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/orange_800"
-        app:fabSize="normal"
-        app:rippleColor="@android:color/white"
-        app:srcCompat="@drawable/ic_add_white" />
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        app:fabGravity="bottom_end"
+        app:fabMenu="@menu/menu_main_add_submit"
+        app:miniFabBackgroundTint="@android:color/white"
+        app:miniFabDrawableTint="@color/orange_800"
+        app:miniFabTitleTextColor="@color/orange_800"
+        app:fabBackgroundTint="@color/orange_800"
+        app:touchGuardDrawable="#B3000000" />
 </android.support.design.widget.CoordinatorLayout>

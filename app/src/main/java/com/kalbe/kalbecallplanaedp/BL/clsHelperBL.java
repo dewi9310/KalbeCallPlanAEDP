@@ -36,6 +36,7 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tLogError;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.CustomVolleyResponseListener;
@@ -54,6 +55,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tInfoProgramHeaderRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tLogErrorRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
+import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.responsePushData.ResponsePushData;
@@ -94,6 +96,7 @@ public class clsHelperBL {
         List<String> FileName = new ArrayList<>();
         if (loginRepo.getContactCount(context)>0){
             mUserLogin dataLogin = new clsMainBL().getUserLogin(context);
+            dtPush.setDtLogin(dataLogin.getDtLogIn());
             dtPush.setTxtVersionApp(versionName);
             dtPush.setTxtUserId(String.valueOf(dataLogin.getIntUserID()));
             try {
@@ -109,6 +112,8 @@ public class clsHelperBL {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            tProgramVisitRepo _tProgramVisitRepo = new tProgramVisitRepo(context);
             tRealisasiVisitPlanRepo _tRealisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(context);
             tProgramVisitSubActivityRepo _tProgramVisitSubActivityRepo = new tProgramVisitSubActivityRepo(context);
             tAkuisisiHeaderRepo _tAkuisisiHeaderRepo = new tAkuisisiHeaderRepo(context);
@@ -126,6 +131,7 @@ public class clsHelperBL {
             List<tInfoProgramHeader> ListOftInfoProgramHeader = _tInfoProgramHeaderRepo.getAllPushData();
             List<tInfoProgramDetail> ListOftInfoProgramDetail = _tInfoProgramDetailRepo.getPushAllData(ListOftInfoProgramHeader);
             List<tProgramVisitSubActivity> ListOftProgramSubActivity = _tProgramVisitSubActivityRepo.getAllPushData();
+            List<tProgramVisit> ListOftProgramVisit = _tProgramVisitRepo.getAllPushData();
 //            List<tLogError>
 
             FileUpload = new HashMap<>();
@@ -159,6 +165,10 @@ public class clsHelperBL {
 
             if (ListOftInfoProgramDetail!=null){
                 dtPush.setListOfDatatInfoProgramDetail(ListOftInfoProgramDetail);
+            }
+
+            if (ListOftProgramVisit != null) {
+                dtPush.setListDataOftProgramVisit(ListOftProgramVisit);
             }
 
             if (ListOftProgramSubActivity!=null){
@@ -239,6 +249,14 @@ public class clsHelperBL {
     public void SavePushData(Context context, clsDataJson dtJson, ResponsePushData jsonResult){
         try {
             for (int i = 0; i < jsonResult.getData().getModelData().size(); i++){
+                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListDataOftProgramVisit")){
+                    for (tProgramVisit data : dtJson.getListDataOftProgramVisit()){
+
+                        data.setIntFlagPush(new clsHardCode().Sync);
+                        new tProgramVisitRepo(context).createOrUpdate(data);
+                    }
+                }
+
                 if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatRealisasiVisitPlan")){
                     for (tRealisasiVisitPlan data : dtJson.getListOfDatatRealisasiVisitPlan()){
                         data.setIntFlagPush(new clsHardCode().Sync);

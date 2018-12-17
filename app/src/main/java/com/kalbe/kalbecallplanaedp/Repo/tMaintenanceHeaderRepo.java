@@ -201,4 +201,18 @@ public class tMaintenanceHeaderRepo implements crud {
         }
         return listData;
     }
+
+    public tMaintenanceHeader getDraft() {
+        tMaintenanceHeader item = new tMaintenanceHeader();
+//        List<tMaintenanceHeader> listData = new ArrayList<>();
+        QueryBuilder<tMaintenanceHeader, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettMaintenanceHeaderDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Draft);
+            item = queryBuilder.queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
 }

@@ -36,6 +36,7 @@ public class clsDataJson {
     private String txtValue;
     private String txtMethod;
     private String txtVersionApp;
+    private String dtLogin;
 
     public List<mUserLogin> getListDatamUserLogin() {
         return ListDatamUserLogin;
@@ -198,6 +199,14 @@ public class clsDataJson {
         this.txtVersionApp = txtVersionApp;
     }
 
+    public String getDtLogin() {
+        return dtLogin;
+    }
+
+    public void setDtLogin(String dtLogin) {
+        this.dtLogin = dtLogin;
+    }
+
     public JSONObject txtJSON() throws JSONException{
         JSONObject resJson = new JSONObject();
         Collection<JSONObject> itemLIstQuery = new ArrayList<>();
@@ -208,6 +217,26 @@ public class clsDataJson {
             for (mUserLogin data : this.getListDatamUserLogin()){
                 JSONObject item = new JSONObject();
             }
+        }
+
+        if (this.getListDataOftProgramVisit()!=null){
+            tProgramVisit dataHeader = new tProgramVisit();
+            itemLIstQuery = new ArrayList<>();
+            for (tProgramVisit data: this.getListDataOftProgramVisit()){
+                JSONObject item = new JSONObject();
+                item.put(dataHeader.Property_txtProgramVisitId, String.valueOf(data.getTxtProgramVisitId()));
+                item.put(dataHeader.Property_intUserId, String.valueOf(data.getIntUserId()));
+                item.put(dataHeader.Property_intRoleId, String.valueOf(data.getIntRoleId()));
+                item.put(dataHeader.Property_txtNotes, String.valueOf(data.getTxtNotes()));
+                item.put(dataHeader.Property_intType, String.valueOf(data.getIntType()));
+                item.put(dataHeader.Property_intStatus, String.valueOf(data.getIntStatus()));
+//                item.put(dataHeader.Property_dtStart, String.valueOf(data.getDtStart()));
+//                item.put(dataHeader.Property_dtEnd, String.valueOf(data.getDtEnd()));
+                item.put(dataHeader.Property_dtLogin, getDtLogin());
+                item.put(dataHeader.Property_intFlagPush, String.valueOf(data.getIntFlagPush()));
+                itemLIstQuery.add(item);
+            }
+            resJson.put(dataHeader.Property_ListDataOftProgramVisit, new JSONArray(itemLIstQuery));
         }
 
         if(this.getListOfDatatProgramVisitSubActivity()!=null){

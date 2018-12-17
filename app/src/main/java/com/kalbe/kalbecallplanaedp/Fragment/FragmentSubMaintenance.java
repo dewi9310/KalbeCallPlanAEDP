@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,6 +24,8 @@ import com.kalbe.kalbecallplanaedp.Common.tInfoProgramDetail;
 import com.kalbe.kalbecallplanaedp.Common.tInfoProgramHeader;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceDetail;
 import com.kalbe.kalbecallplanaedp.Common.tMaintenanceHeader;
+import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
+import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.Model.clsInfoProgram;
 import com.kalbe.kalbecallplanaedp.Model.clsMaintenance;
@@ -35,6 +38,7 @@ import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceDetailRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tMaintenanceHeaderRepo;
 import com.kalbe.kalbecallplanaedp.adapter.AdapterListInfoProgram;
 import com.kalbe.kalbecallplanaedp.adapter.AdapterListMaintenance;
+import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -66,12 +70,18 @@ public class FragmentSubMaintenance extends Fragment {
     int index;
     LinearLayout lnEmpty;
     SwipeRefreshLayout swpInfo;
+    String txtSubSubActivity;
+    tRealisasiVisitPlan dtCheckinActive;
+    tProgramVisitSubActivity dataPlan;
 
-    public FragmentSubMaintenance(List<String> listHeaderId, tMaintenanceHeader header, int intSubSubActivity, int index){
+    public FragmentSubMaintenance(List<String> listHeaderId, tMaintenanceHeader header, int intSubSubActivity, int index, String txtSubSubActivity, tRealisasiVisitPlan dtCheckinActive,  tProgramVisitSubActivity dataPlan){
         this.header = header;
         this.intSubSubActivity = intSubSubActivity;
         this.index = index;
         this.listHeaderId = listHeaderId;
+        this.txtSubSubActivity = txtSubSubActivity;
+        this.dtCheckinActive = dtCheckinActive;
+        this.dataPlan = dataPlan;
     }
 
 
@@ -141,12 +151,16 @@ public class FragmentSubMaintenance extends Fragment {
                             itemAdapter.setTxtTittle(strName); //nama dokter substring(0,1)
                             itemAdapter.setTxtImgName((data.getTxtNoDoc().substring(0,1)).toUpperCase());
                             itemAdapter.setTxtSubTittle(data.getTxtNoDoc());
+                            itemAdapter.setIntStatus(data.getIntFlagPush());
                             if (data.getIntFlagPush()==new clsHardCode().Save){
                                 itemAdapter.setTxtStatus("Submit");
                                 itemAdapter.setInColorStatus(R.color.red_200);
                             }else if (data.getIntFlagPush()==new clsHardCode().Sync){
                                 itemAdapter.setTxtStatus("Sync");
                                 itemAdapter.setInColorStatus(R.color.green_300);
+                            }else if (data.getIntFlagPush()==new clsHardCode().Draft){
+                                itemAdapter.setTxtStatus("Draft");
+                                itemAdapter.setInColorStatus(R.color.grey_60);
                             }
                             if (index==0){
                                 itemAdapter.setIntColor(R.color.amber_700);
@@ -172,6 +186,24 @@ public class FragmentSubMaintenance extends Fragment {
         listView.setAdapter(adapter);
         listView.setDivider(null);
         listView.setEmptyView(lnEmpty);
+//        new ToastCustom().showToasty(getActivity(),"haii...",1);
+        adapter.setOnItemClickListener(new AdapterListMaintenance.onItemClickListener() {
+            @Override
+            public void onItemClick(View view, clsMaintenance obj, int position) {
+                try {
+                    tMaintenanceDetail detail = new tMaintenanceDetailRepo(getContext()).findByDetailId(obj.getTxtId());
+                    if (detail.getIntFlagPush()==new clsHardCode().Draft){
+                        new FragementMaintenance().showCustomDialog(true, getActivity(), txtSubSubActivity, intSubSubActivity, dtCheckinActive, dataPlan, detail);
+                    }else if (detail.getIntFlagPush()== new clsHardCode().Save){
+                        new ToastCustom().showToasty(getActivity(),"Already Submit...",4);
+                    }else if (detail.getIntFlagPush()== new clsHardCode().Sync){
+                        new ToastCustom().showToasty(getActivity(),"Already Sync...",1);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
     private SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override

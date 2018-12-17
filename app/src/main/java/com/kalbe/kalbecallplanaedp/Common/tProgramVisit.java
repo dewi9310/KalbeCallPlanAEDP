@@ -28,17 +28,18 @@ public class tProgramVisit implements Serializable{
     @DatabaseField(columnName = "dtEnd")
     private String dtEnd;
     @DatabaseField(columnName = "intFlagPush")
-    public int intFlagPush;
+    private int intFlagPush;
 
 
     public String Property_txtProgramVisitId = "txtProgramVisitId";
-    private String Property_intUserId = "intUserId";
-    private String Property_intRoleId = "intRoleId";
-    private String Property_txtNotes = "txtNotes";
-    private String Property_intType = "intType";
-    private String Property_intStatus = "intStatus";
-    private String Property_dtStart = "dtStart";
-    private String Property_dtEnd = "dtEnd";
+    public String Property_intUserId = "intUserId";
+    public String Property_intRoleId = "intRoleId";
+    public String Property_txtNotes = "txtNotes";
+    public String Property_intType = "intType";
+    public String Property_intStatus = "intStatus";
+    public String Property_dtStart = "dtStart";
+    public String Property_dtEnd = "dtEnd";
+    public String Property_dtLogin = "dtLogin";
     public String Property_intFlagPush = "intFlagPush";
     public String Property_ListDataOftProgramVisit = "ListDataOftProgramVisit";
 

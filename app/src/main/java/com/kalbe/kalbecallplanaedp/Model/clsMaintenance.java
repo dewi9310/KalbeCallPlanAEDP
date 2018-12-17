@@ -12,6 +12,7 @@ public class clsMaintenance {
     private int intColor;
     private String txtImgName;
     private String txtStatus;
+    private int intStatus;
     private int inColorStatus;
 
     public String getTxtId() {
@@ -76,5 +77,13 @@ public class clsMaintenance {
 
     public void setInColorStatus(int inColorStatus) {
         this.inColorStatus = inColorStatus;
+    }
+
+    public int getIntStatus() {
+        return intStatus;
+    }
+
+    public void setIntStatus(int intStatus) {
+        this.intStatus = intStatus;
     }
 }

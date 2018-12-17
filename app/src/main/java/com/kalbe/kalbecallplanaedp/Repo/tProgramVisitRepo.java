@@ -8,6 +8,7 @@ import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseHelper;
 import com.kalbe.kalbecallplanaedp.Data.DatabaseManager;
+import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -132,6 +133,20 @@ public class tProgramVisitRepo implements crud {
         }
 
         return valid;
+    }
+
+    public List<tProgramVisit> getAllPushData () {
+        tProgramVisit item = new tProgramVisit();
+        List<tProgramVisit> listData = new ArrayList<>();
+        QueryBuilder<tProgramVisit, Integer> queryBuilder = null;
+        try {
+            queryBuilder = helper.gettProgramVisitDao().queryBuilder();
+            queryBuilder.where().eq(item.Property_intFlagPush, new clsHardCode().Save);
+            listData = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listData;
     }
 
     public tProgramVisit getProgramVisitActive(Context context) throws ParseException {

@@ -1,6 +1,8 @@
 package com.kalbe.kalbecallplanaedp.Fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +39,7 @@ import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.HomeFragment;
+import com.kalbe.kalbecallplanaedp.MainMenu;
 import com.kalbe.kalbecallplanaedp.R;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mSubActivityRepo;
@@ -54,6 +58,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
+
 /**
  * Created by Dewi Oktaviani on 11/1/2018.
  */
@@ -69,9 +76,11 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
     mActivityRepo activityRepo;
     tRealisasiVisitPlan dtCheckinActive;
     tProgramVisitSubActivity dataPlan;
-    private FloatingActionButton fab;
+//    private FloatingActionButton fab;
+    FabSpeedDial fab;
     tMaintenanceHeaderRepo headerRepo;
     tMaintenanceDetailRepo detailRepo;
+    tMaintenanceDetail dtDetail;
     private String SUB_SUB_ACTIVITY = "sub sub activity";
     int IntSubSubActivityid;
     String txtSubSubActivity;
@@ -81,6 +90,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
     String txtRealisasiId;
     boolean valid = false;
     private String FRAG_VIEW = "Fragment view";
+    Boolean isEditDetail = false;
 
 
     @Nullable
@@ -89,7 +99,8 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
         v = inflater.inflate(R.layout.fragment_maintenance, container, false);
         customViewPager = (CustomViewPager) v.findViewById(R.id.view_pager_maintenance);
         tabLayout = (TabLayout) v.findViewById(R.id.tab_layout_maintenance);
-        fab = (FloatingActionButton) v.findViewById(R.id.fab_maintenance);
+//        fab = (FloatingActionButton) v.findViewById(R.id.fab_maintenance);
+        fab = (FabSpeedDial) v.findViewById(R.id.fab_maintenance);
 
         Bundle data = this.getArguments();
         if (data != null) {
@@ -163,16 +174,90 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int i = customViewPager.getCurrentItem();
+//                IntSubSubActivityid = _mSubSubActivity.get(i).getIntSubSubActivityid();
+//                txtSubSubActivity = _mSubSubActivity.get(i).getTxtName();
+//                showCustomDialog(false, getActivity(), txtSubSubActivity, IntSubSubActivityid, dtCheckinActive, dataPlan, dtDetail);
+//            }
+//        });
+
+        fab.setMenuListener(new SimpleMenuListenerAdapter(){
+
             @Override
-            public void onClick(View v) {
-                int i = customViewPager.getCurrentItem();
-                IntSubSubActivityid = _mSubSubActivity.get(i).getIntSubSubActivityid();
-                txtSubSubActivity = _mSubSubActivity.get(i).getTxtName();
-                showCustomDialog();
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+
+                    case R.id.action_add:
+                        int i = customViewPager.getCurrentItem();
+                        IntSubSubActivityid = _mSubSubActivity.get(i).getIntSubSubActivityid();
+                        txtSubSubActivity = _mSubSubActivity.get(i).getTxtName();
+                        showCustomDialog(false, getActivity(), txtSubSubActivity, IntSubSubActivityid, dtCheckinActive, dataPlan, dtDetail);
+                        return true;
+                    case R.id.action_submit:
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+
+                        builder.setTitle(txtSubSubActivity);
+                        builder.setMessage("Are you sure?");
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                ProgressDialog pDialog = new ProgressDialog(getContext(), ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                                pDialog.show();
+                                int position = customViewPager.getCurrentItem();
+                                IntSubSubActivityid = _mSubSubActivity.get(position).getIntSubSubActivityid();
+
+                                try {
+//                            tMaintenanceHeader dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).getDraft();
+                                    tMaintenanceHeader dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
+                                    if (dtHeader!=null){
+                                        List<tMaintenanceDetail> listDetail = detailRepo.findByHeaderDraftId(dtHeader.getTxtHeaderId(), IntSubSubActivityid);
+                                        if (listDetail.size()>0){
+                                            for (tMaintenanceDetail detail : listDetail){
+                                                detail.setIntFlagPush(new clsHardCode().Save);
+                                                detailRepo.createOrUpdate(detail);
+                                            }
+                                            setupViewPager(customViewPager);
+                                            tabLayout.setupWithViewPager(customViewPager);
+                                            allotEachTabWithEqualWidth();
+                                            customViewPager.setCurrentItem(position);
+                                            pDialog.dismiss();
+                                            new ToastCustom().showToasty(getActivity(),"Data Submitted...",1);
+                                        }else {
+                                            pDialog.dismiss();
+                                            new ToastCustom().showToasty(getActivity(),"No Data Submitted...",4);
+                                        }
+//                                dtHeader.setIntFlagPush(new clsHardCode().Save);
+//                                headerRepo.createOrUpdate(dtHeader);
+                                    }else {
+                                        pDialog.dismiss();
+                                        new ToastCustom().showToasty(getActivity(),"No Data Submitted...",4);
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        android.app.AlertDialog alert = builder.create();
+                        alert.show();
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
-
 
 //        swpMain.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 //            @Override
@@ -236,7 +321,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
                 e.printStackTrace();
             }
 
-            adapter.addFragment(new FragmentSubMaintenance(listId, dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i), _mSubSubActivity.get(i).getTxtName());
+            adapter.addFragment(new FragmentSubMaintenance(listId, dtHeader, _mSubSubActivity.get(i).getIntSubSubActivityid(), i, _mSubSubActivity.get(i).getTxtName(), dtCheckinActive, dataPlan), _mSubSubActivity.get(i).getTxtName());
         }
 
         viewPager.setAdapter(adapter);
@@ -288,8 +373,8 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
         }
     }
 
-    private void showCustomDialog() {
-        dialogCustom = new Dialog(getActivity());
+    public void showCustomDialog(Boolean isEdit, final Activity activity, String txtSubSubActivity, int intSubSubActivityid, tRealisasiVisitPlan dtCheckinActive,  tProgramVisitSubActivity dataPlan, tMaintenanceDetail detail) {
+        dialogCustom = new Dialog(activity);
         dialogCustom.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialogCustom.setContentView(R.layout.dialog_checkout);
         dialogCustom.setCancelable(true);
@@ -301,13 +386,24 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
 
         TextView tv_title = (TextView)dialogCustom.findViewById(R.id.cd_title);
         TextView tv_subtitle = (TextView)dialogCustom.findViewById(R.id.cd_subtitle);
+        final EditText et_userName = (EditText) dialogCustom.findViewById(R.id.et_int_number_realisasi);
+        ((AppCompatButton) dialogCustom.findViewById(R.id.btn_submit_realisasi)).setText("SAVE");
+        if (isEdit){
+//            new ToastCustom().showToasty(activity,"Yeaaay Edit...",4);
+            this.dtCheckinActive = dtCheckinActive;
+            this.dataPlan = dataPlan;
+            this.IntSubSubActivityid = intSubSubActivityid;
+            this.txtSubSubActivity = txtSubSubActivity;
+            this.dtDetail = detail;
+            this.isEditDetail = isEdit;
+            et_userName.setText(detail.getTxtNoDoc());
+        }
         tv_title.setText(txtSubSubActivity);
         tv_subtitle.setText("Please fill number document");
-        final EditText et_userName = (EditText) dialogCustom.findViewById(R.id.et_int_number_realisasi);
         et_userName.setHint("AA.2018.07");
 //        et_userName.setInputType(InputType.TYPE_CLASS_TEXT);
-        char[] chars = {'.'};
-        InputFilters.etCapsTextWatcherNoSpaceAtFirst(et_userName, null, chars);
+        char[] chars = {'.', '-', '/', ','};
+        InputFilters.etCapsTextWatcherNoSpace(et_userName, null, chars);
         ((AppCompatButton) dialogCustom.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,9 +416,9 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
             public void onClick(View v) {
                 txtNoDoc = et_userName.getText().toString().trim();
                 if (txtNoDoc.equals("")) {
-                    new ToastCustom().showToasty(getContext(),"Please fill number document...",4);
+                    new ToastCustom().showToasty(activity,"Please fill number document...",4);
                 } else {
-                    saveData();
+                    saveData(activity);
                 }
             }
         });
@@ -331,62 +427,72 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
         dialogCustom.getWindow().setAttributes(lp);
     }
 
-    public void saveData(){
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+    public void saveData(final Activity activity){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
 
         builder.setTitle(txtSubSubActivity);
         builder.setMessage("Are you sure?");
 
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
-                tMaintenanceHeader dtHeader = null;
-                try {
-                    mUserLogin dtLogin = new clsMainBL().getUserLogin(getContext());
 //                    if (dataPlan.getIntActivityId()==1){
 //                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtDokterId(),dataPlan.getIntActivityId());
 //                    }else if (dataPlan.getIntActivityId()==2){
 //                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByOutletId(dtCheckinActive.getTxtApotekId(), dataPlan.getIntActivityId());
 //                    }
-
-                    dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
-                    if (dtHeader==null){
-                        tMaintenanceHeader dt = new tMaintenanceHeader();
-                        dt.setTxtHeaderId(new clsActivity().GenerateGuid());
-                        dt.setTxtRealisasiVisitId(dtCheckinActive.getTxtRealisasiVisitId());
-                        dt.setIntActivityId(dataPlan.getIntActivityId());
-                        dt.setIntUserId(dtLogin.getIntUserID());
-                        dt.setIntRoleId(dtLogin.getIntRoleID());
-                        dt.setIntAreaId(dataPlan.getTxtAreaId());
-                        if (dataPlan.getIntActivityId()==1){
-                            dt.setIntDokterId(dtCheckinActive.getTxtDokterId());
-                        }else if (dataPlan.getIntActivityId()==2){
-                            dt.setIntApotekID(dtCheckinActive.getTxtApotekId());
-                        }
-                        dt.setIntFlagPush(new clsHardCode().Save);
-                        headerRepo.createOrUpdate(dt);
-                        dtHeader = dt;
-                    } else {
-                        tMaintenanceHeader dt = dtHeader;
-                        dt.setIntFlagPush(new clsHardCode().Save);
-                        headerRepo.createOrUpdate(dt);
-                    }
+                headerRepo = new tMaintenanceHeaderRepo(activity.getApplicationContext());
+                detailRepo = new tMaintenanceDetailRepo(activity.getApplicationContext());
+                tMaintenanceHeader dtHeader = null;
+                try {
                     tMaintenanceDetail detail = new tMaintenanceDetail();
-                    detail.setTxtDetailId(new clsActivity().GenerateGuid());
-                    detail.setTxtHeaderId(dtHeader.getTxtHeaderId());
-                    detail.setIntSubDetailActivityId(IntSubSubActivityid);
-                    detail.setTxtNoDoc(txtNoDoc);
-                    detail.setIntFlagPush(new clsHardCode().Save);
+                    if (isEditDetail){
+                        detail = dtDetail;
+                        detail.setTxtNoDoc(txtNoDoc);
+                        detail.setIntFlagPush(new clsHardCode().Draft);
+                    }else {
+                        mUserLogin dtLogin = new clsMainBL().getUserLogin(activity.getApplicationContext());
+
+                        dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(activity.getApplicationContext()).findByRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
+                        if (dtHeader==null){
+                            tMaintenanceHeader dt = new tMaintenanceHeader();
+                            dt.setTxtHeaderId(new clsActivity().GenerateGuid());
+                            dt.setTxtRealisasiVisitId(dtCheckinActive.getTxtRealisasiVisitId());
+                            dt.setIntActivityId(dataPlan.getIntActivityId());
+                            dt.setIntUserId(dtLogin.getIntUserID());
+                            dt.setIntRoleId(dtLogin.getIntRoleID());
+                            dt.setIntAreaId(dataPlan.getTxtAreaId());
+                            if (dataPlan.getIntActivityId()==1){
+                                dt.setIntDokterId(dtCheckinActive.getTxtDokterId());
+                            }else if (dataPlan.getIntActivityId()==2){
+                                dt.setIntApotekID(dtCheckinActive.getTxtApotekId());
+                            }
+                            dt.setIntFlagPush(new clsHardCode().Save);
+                            headerRepo.createOrUpdate(dt);
+                            dtHeader = dt;
+                        } else {
+                            tMaintenanceHeader dt = dtHeader;
+                            dt.setIntFlagPush(new clsHardCode().Save);
+                            headerRepo.createOrUpdate(dt);
+                        }
+
+                        detail.setTxtDetailId(new clsActivity().GenerateGuid());
+                        detail.setTxtHeaderId(dtHeader.getTxtHeaderId());
+                        detail.setIntSubDetailActivityId(IntSubSubActivityid);
+                        detail.setTxtNoDoc(txtNoDoc);
+                        detail.setIntFlagPush(new clsHardCode().Draft);
+                    }
+
                     detailRepo.createOrUpdate(detail);
 
-                    new ToastCustom().showToasty(getContext(), "Saved", 1);
+                    new ToastCustom().showToasty(activity, "Saved", 1);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 dialogCustom.dismiss();
                 Bundle bundle = new Bundle();
                 bundle.putString(SUB_SUB_ACTIVITY, txtSubSubActivity);
-               new Tools().intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", getContext(), bundle);
+               new Tools().intentFragmentSetArgument(FragementMaintenance.class, "Maintenance", activity, bundle);
             }
         });
 
