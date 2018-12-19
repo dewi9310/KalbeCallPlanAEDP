@@ -209,7 +209,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
 //        spnRole = (Spinner) findViewById(R.id.spnRole);
 //        final CircularProgressView progressView = (CircularProgressView) findViewById(R.id.progress_view);
         char[] chars = {'.'};
-        InputFilters.etCapsTextWatcherNoSpaceAtFirst(etUsername, null, chars);
+        InputFilters.etCapsTextWatcherNoSpace(etUsername, null, chars);
         spnRoleLogin.setEnabled(false);
         if (accountName != null){
             etUsername.setText(accountName);

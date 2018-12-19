@@ -2,10 +2,12 @@ package com.kalbe.kalbecallplanaedp.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kalbe.kalbecallplanaedp.BL.clsActivity;
+import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
+import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mActivity;
 import com.kalbe.kalbecallplanaedp.Common.mApotek;
 import com.kalbe.kalbecallplanaedp.Common.mDokter;
@@ -27,8 +32,10 @@ import com.kalbe.kalbecallplanaedp.Common.mUserMappingArea;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisit;
 import com.kalbe.kalbecallplanaedp.Common.tProgramVisitSubActivity;
 import com.kalbe.kalbecallplanaedp.Common.tRealisasiVisitPlan;
+import com.kalbe.kalbecallplanaedp.Data.VolleyResponseListener;
 import com.kalbe.kalbecallplanaedp.Data.clsHardCode;
 import com.kalbe.kalbecallplanaedp.R;
+import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mApotekRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mDokterRepo;
@@ -36,9 +43,13 @@ import com.kalbe.kalbecallplanaedp.Repo.mUserMappingAreaRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadtMappingArea.DownloadtMappingArea;
 import com.kalbe.kalbecallplanaedp.Utils.IOBackPressed;
 import com.kalbe.kalbecallplanaedp.Utils.Tools;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -79,6 +90,8 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
     tProgramVisitRepo visitRepo;
     tRealisasiVisitPlanRepo realisasiVisitPlanRepo;
     mUserLogin dtUserLogin;
+    List<clsToken> dataToken;
+    clsTokenRepo tokenRepo;
     private String FRAG_VIEW = "Fragment view";
 
     @Nullable
@@ -432,23 +445,19 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
         if (spnArea.getSelectedItem().toString().equals("Select One")){
             valid = false;
             msg = "Please select Area";
-//            ToastCustom.showToasty(getContext(), "Please select Area", 4);
         }else if (spnActivity.getSelectedItem().toString().equals("Select One")){
             valid = false;
             msg = "Please select Activity";
-//            ToastCustom.showToasty(getContext(), "Please select Activity", 4);
         }else if (mapActivity.get(spnActivity.getSelectedItem())==1){
             if (cbOutlet.isChecked()){
                 if (etOutlet.getText().toString().equals("")){
                     valid = false;
                     msg = "Please fill name of Doctor";
-//                    ToastCustom.showToasty(getContext(), "Please fill name of Doctor", 4);
                 }
             }else {
                 if (spnOutlet.getSelectedItem().toString().equals("Select One")){
                     valid = false;
                     msg = "Please select Doctor";
-//                    ToastCustom.showToasty(getContext(), "Please select Doctor", 4);
                 }
             }
         }else if (mapActivity.get(spnActivity.getSelectedItem())==2){
@@ -456,13 +465,11 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 if (etOutlet.getText().toString().equals("")){
                     valid = false;
                     msg = "Please fill name of Pharmacy";
-//                    ToastCustom.showToasty(getContext(), "Please fill name of Pharmacy", 4);
                 }
             }else {
                 if (spnOutlet.getSelectedItem().toString().equals("Select One")){
                     valid = false;
                     msg = "Please select Pharmacy";
-//                    ToastCustom.showToasty(getContext(), "Please select Pharmacy", 4);
                 }
             }
         }
@@ -558,6 +565,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
                 data.setIntFlagPush(new clsHardCode().Save);
                 realisasiVisitPlanRepo.createOrUpdate(data);
 
+//                createUnplan(visitHeader, dataPlan, data);
                 new ToastCustom().showToasty(getContext(),"Save",1);
                 new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
             } catch (SQLException e) {
@@ -568,6 +576,146 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
         }else {
             new ToastCustom().showToasty(getContext(), msg, 4);
         }
+    }
+
+    private JSONObject ParamCreateUnplan(tProgramVisit header, tProgramVisitSubActivity visitPlan, tRealisasiVisitPlan dtRealisasi){
+        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonHeader = new JSONObject();
+        JSONObject jsonVisit = new JSONObject();
+        JSONObject jsonRealisasi = new JSONObject();
+
+        try {
+            tProgramVisit dataHeader = new tProgramVisit();
+            jsonHeader.put(dataHeader.Property_txtProgramVisitId, String.valueOf(header.getTxtProgramVisitId()));
+            jsonHeader.put(dataHeader.Property_intUserId, String.valueOf(header.getIntUserId()));
+            jsonHeader.put(dataHeader.Property_intRoleId, String.valueOf(header.getIntRoleId()));
+            jsonHeader.put(dataHeader.Property_txtNotes, String.valueOf(header.getTxtNotes()));
+            jsonHeader.put(dataHeader.Property_intType, String.valueOf(header.getIntType()));
+            jsonHeader.put(dataHeader.Property_intStatus, String.valueOf(header.getIntStatus()));
+            jsonHeader.put(dataHeader.Property_dtLogin, dtUserLogin.getDtLogIn());
+            jsonHeader.put(dataHeader.Property_intFlagPush, String.valueOf(header.getIntFlagPush()));
+
+            tProgramVisitSubActivity dataVisit = new tProgramVisitSubActivity();
+            jsonVisit.put(dataVisit.Property_txtProgramVisitSubActivityId, String.valueOf(visitPlan.getTxtProgramVisitSubActivityId()));
+            jsonVisit.put(dataVisit.Property_txtApotekName, String.valueOf(visitPlan.getTxtApotekName()));
+            jsonVisit.put(dataVisit.Property_intType, String.valueOf(visitPlan.getIntType()));
+            jsonVisit.put(dataVisit.Property_txtAreaName, String.valueOf(visitPlan.getTxtAreaName()));
+            jsonVisit.put(dataVisit.Property_txtDokterId, String.valueOf(visitPlan.getTxtDokterId()));
+            jsonVisit.put(dataVisit.Property_txtNotes, String.valueOf(visitPlan.getTxtNotes()));
+            jsonVisit.put(dataVisit.Property_txtDokterName, String.valueOf(visitPlan.getTxtDokterName()));
+            jsonVisit.put(dataVisit.Property_txtProgramVisitId, String.valueOf(visitPlan.getTxtProgramVisitId()));
+            jsonVisit.put(dataVisit.Property_txtApotekId, String.valueOf(visitPlan.getTxtApotekId()));
+            jsonVisit.put(dataVisit.Property_intActivityId, String.valueOf(visitPlan.getIntActivityId()));
+            jsonVisit.put(dataVisit.Property_intSubActivityId, String.valueOf(visitPlan.getIntSubActivityId()));
+            jsonVisit.put(dataVisit.Property_txtAreaId, String.valueOf(visitPlan.getTxtAreaId()));
+            jsonVisit.put(dataVisit.Property_dtStart, String.valueOf(visitPlan.getDtStart()));
+            jsonVisit.put(dataVisit.Property_dtEnd, String.valueOf(visitPlan.getDtEnd()));
+
+
+            tRealisasiVisitPlan dataRealisasi = new tRealisasiVisitPlan();
+            jsonRealisasi.put(dataRealisasi.Property_txtRealisasiVisitId, String.valueOf(dtRealisasi.getTxtRealisasiVisitId()));
+            jsonRealisasi.put(dataRealisasi.Property_txtProgramVisitSubActivityId, String.valueOf(dtRealisasi.getTxtProgramVisitSubActivityId()));
+            jsonRealisasi.put(dataRealisasi.Property_intUserId, String.valueOf(dtRealisasi.getIntUserId()));
+            jsonRealisasi.put(dataRealisasi.Property_intRoleID, String.valueOf(dtRealisasi.getIntRoleID()));
+            jsonRealisasi.put(dataRealisasi.Property_txtDokterId, String.valueOf(dtRealisasi.getTxtDokterId()));
+            jsonRealisasi.put(dataRealisasi.Property_txtDokterName, String.valueOf(dtRealisasi.getTxtDokterName()));
+            jsonRealisasi.put(dataRealisasi.Property_txtApotekId, String.valueOf(dtRealisasi.getTxtApotekId()));
+            jsonRealisasi.put(dataRealisasi.Property_txtApotekName, String.valueOf(dtRealisasi.getTxtApotekName()));
+            jsonRealisasi.put(dataRealisasi.Property_dtCheckIn, String.valueOf(dtRealisasi.getDtCheckIn()));
+            jsonRealisasi.put(dataRealisasi.Property_dtCheckOut, String.valueOf(dtRealisasi.getDtCheckOut()));
+            jsonRealisasi.put(dataRealisasi.Property_dtDateRealisasi, String.valueOf(dtRealisasi.getDtDateRealisasi()));
+            jsonRealisasi.put(dataRealisasi.Property_dtDatePlan, String.valueOf(dtRealisasi.getDtDatePlan()));
+            jsonRealisasi.put(dataRealisasi.Property_intNumberRealisasi, String.valueOf(dtRealisasi.getIntNumberRealisasi()));
+            jsonRealisasi.put(dataRealisasi.Property_txtAcc, String.valueOf(dtRealisasi.getTxtAcc()));
+            jsonRealisasi.put(dataRealisasi.Property_txtLong, String.valueOf(dtRealisasi.getTxtLong()));
+            jsonRealisasi.put(dataRealisasi.Property_txtLat, String.valueOf(dtRealisasi.getTxtLat()));
+            jsonRealisasi.put(dataRealisasi.Property_txtImgName1, String.valueOf(dtRealisasi.getTxtImgName1()));
+            jsonRealisasi.put(dataRealisasi.Property_txtImgName2, String.valueOf(dtRealisasi.getTxtImgName2()));
+            jsonRealisasi.put(dataRealisasi.Property_intStatusRealisasi, String.valueOf(dtRealisasi.getIntStatusRealisasi()));
+            jsonRealisasi.put(dataRealisasi.Property_blobImg1, String.valueOf(dtRealisasi.getBlobImg1()));
+            jsonRealisasi.put(dataRealisasi.Property_blobImg2, String.valueOf(dtRealisasi.getBlobImg2()));
+
+            jsonObject.put("tProgramVisit",jsonHeader);
+            jsonObject.put("tProgramVisitSubActivity", jsonVisit);
+            jsonObject.put("tRealisasiVisitPlan", jsonRealisasi);
+            jsonObject.put("userId", dtUserLogin.getIntUserID());
+            jsonObject.put("intRoleId", dtUserLogin.getIntRoleID());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+    private void createUnplan(tProgramVisit header, tProgramVisitSubActivity visitPlan, tRealisasiVisitPlan dataRealisasi) {
+        String strLinkAPI = new clsHardCode().linkCreateUnplan;
+        JSONObject resJson = new JSONObject();
+        try {
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+
+            resJson.put("data", ParamCreateUnplan(header, visitPlan, dataRealisasi));
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+        new clsHelperBL().volleyDownloadData(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(String response, Boolean status, String strErrorMsg) {
+                Intent res = null;
+                if (response != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+////                        DownloadtMappingArea model = gson.fromJson(jsonObject.toString(), DownloadtMappingArea.class);
+////                        boolean txtStatus = model.getResult().isStatus();
+////                        String txtMessage = model.getResult().getMessage();
+////                        String txtMethode_name = model.getResult().getMethodName();
+////                        if (txtStatus == true){
+////                            itemList.clear();
+////                            if (model.getData().getLtMappingArea()!=null){
+////                                if (model.getData().getLtMappingArea().size()>0){
+////                                    dtRepoArea = new mUserMappingAreaRepo(getContext());
+////                                    for (int i = 0; i <model.getData().getLtMappingArea().size(); i++){
+////                                        mUserMappingArea data = new mUserMappingArea();
+////                                        data.setIntUserMappingAreaId(model.getData().getLtMappingArea().get(i).getIntUserMappingAreaId());
+////                                        data.setIntUserId(model.getData().getLtMappingArea().get(i).getIntUserId());
+////                                        data.setTxtKecamatanID(model.getData().getLtMappingArea().get(i).getTxtKecamatanID());
+////
+////                                        dtRepoArea.createOrUpdate(data);
+//////                                        itemList.add(String.valueOf(model.getData().getLtMappingArea().get(i).getIntUserMappingAreaId()) + " - " + model.getData().getLtMappingArea().get(i).getTxtKecamatanID());
+////                                    }
+////                                }
+////                                dataListArea = (List<mUserMappingArea>) dtRepoArea.findAll();
+////                                if (dataListArea!=null){
+////                                    if (dataListArea.size()>0){
+////                                        for (mUserMappingArea data : dataListArea){
+////                                            itemList.add(String.valueOf(data.getIntUserMappingAreaId()) + " - " + data.getTxtKecamatanID());
+////                                        }
+////                                    }else {
+////                                        itemList.add(" - ");
+////                                    }
+////                                }
+////                                dataAdapter.notifyDataSetChanged();
+////                                tv_count_branch.setText(String.valueOf(dataListArea.size()));
+////                            }
+////                            Log.d("Data info", "Success Download");
+////                            checkMenu();
+//                        } else {
+//                            new ToastCustom().showToasty(getContext(),txtMessage,4);
+//                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
     @Override
     public boolean onBackPressed() {

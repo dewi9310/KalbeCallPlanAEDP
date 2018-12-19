@@ -71,6 +71,7 @@ import com.kalbe.kalbecallplanaedp.BL.clsHelperBL;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.clsPhotoProfile;
 import com.kalbe.kalbecallplanaedp.Common.clsPushData;
+import com.kalbe.kalbecallplanaedp.Common.clsStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Common.clsToken;
 import com.kalbe.kalbecallplanaedp.Common.mMenuData;
 import com.kalbe.kalbecallplanaedp.Common.mUserLogin;
@@ -94,6 +95,7 @@ import com.kalbe.kalbecallplanaedp.Fragment.FragmentPushData;
 import com.kalbe.kalbecallplanaedp.Fragment.FragmentSetting;
 import com.kalbe.kalbecallplanaedp.Repo.clsPhotoProfilRepo;
 import com.kalbe.kalbecallplanaedp.Repo.clsTokenRepo;
+import com.kalbe.kalbecallplanaedp.Repo.enumStatusMenuStart;
 import com.kalbe.kalbecallplanaedp.Repo.mConfigRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mMenuRepo;
 import com.kalbe.kalbecallplanaedp.Repo.mUserLoginRepo;
@@ -1333,25 +1335,43 @@ break;
     protected void onResume() {
         Account[] accounts = new AuthenticatorUtil().countingAccount(mAccountManager);
         if (!isOnCreate){
-            if (accounts.length>0){
-                boolean isExist = false;
-                for (int i=0; i<accounts.length; i++){
-                    if (accounts[i].name.equals(dataLogin.get(0).getTxtUserName().toUpperCase().toString())){
-                        isExist = true;
-                        break;
+            try {
+                clsStatusMenuStart _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
+                if (_clsStatusMenuStart.get_intStatus()!=null){
+                    if (_clsStatusMenuStart.get_intStatus()== enumStatusMenuStart.FormLogin){
+                        logout();
+                    }else if (_clsStatusMenuStart.get_intStatus()==enumStatusMenuStart.PushDataMobile){
+                        Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                        myIntent.putExtra(i_View, "FragmentPushData");
+                        finish();
+                        startActivity(myIntent);
+                    }else if (_clsStatusMenuStart.get_intStatus()==enumStatusMenuStart.UserActiveLogin){
+                        if (accounts.length>0){
+                            boolean isExist = false;
+                            for (int i=0; i<accounts.length; i++){
+                                if (accounts[i].name.equals(dataLogin.get(0).getTxtUserName().toUpperCase().toString())){
+                                    isExist = true;
+                                    break;
+                                }
+                            }
+                            if (!isExist){
+                                Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                                myIntent.putExtra(i_View, "FragmentPushData");
+                                finish();
+                                startActivity(myIntent);
+                            }
+                        } else {
+                            Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
+                            myIntent.putExtra(i_View, "FragmentPushData");
+                            finish();
+                            startActivity(myIntent);
+                        }
                     }
                 }
-            if (!isExist){
-                Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
-                myIntent.putExtra(i_View, "FragmentPushData");
-                finish();
-                startActivity(myIntent);
-            }
-            } else {
-            Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
-            myIntent.putExtra(i_View, "FragmentPushData");
-            finish();
-            startActivity(myIntent);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         isOnCreate = false;

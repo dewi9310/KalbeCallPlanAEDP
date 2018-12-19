@@ -907,6 +907,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                                         data.setIntStatus(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntStatus());
                                         data.setIntType(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getIntType());
                                         data.setTxtNotes(model.getData().getDatatProgramVisitDetail().getTProgramVisit().get(i).getTxtNotes());
+                                        data.setIntFlagPush(new clsHardCode().Sync);
                                         dtRepoProgramVisit.createOrUpdate(data);
                                     }
                                 }
@@ -1707,6 +1708,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                                         data.setIntStatus(model.getData().getTProgramVisit().get(i).getIntStatus());
                                         data.setIntType(model.getData().getTProgramVisit().get(i).getIntType());
                                         data.setTxtNotes(model.getData().getTProgramVisit().get(i).getTxtNotes());
+                                        data.setIntFlagPush(new clsHardCode().Sync);
                                         dtRepoProgramVisit.createOrUpdate(data);
                                     }
                                 }
