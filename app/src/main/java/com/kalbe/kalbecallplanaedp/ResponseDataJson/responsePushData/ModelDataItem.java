@@ -6,11 +6,22 @@ import com.google.gson.annotations.SerializedName;
 @Generated("com.robohorse.robopojogenerator")
 public class ModelDataItem{
 
+	@SerializedName("modDetail")
+	private ModDetail modDetail;
+
 	@SerializedName("modStatus")
 	private boolean modStatus;
 
 	@SerializedName("modName")
 	private String modName;
+
+	public void setModDetail(ModDetail modDetail){
+		this.modDetail = modDetail;
+	}
+
+	public ModDetail getModDetail(){
+		return modDetail;
+	}
 
 	public void setModStatus(boolean modStatus){
 		this.modStatus = modStatus;
@@ -32,7 +43,8 @@ public class ModelDataItem{
  	public String toString(){
 		return 
 			"ModelDataItem{" + 
-			"modStatus = '" + modStatus + '\'' + 
+			"modDetail = '" + modDetail + '\'' + 
+			",modStatus = '" + modStatus + '\'' + 
 			",modName = '" + modName + '\'' + 
 			"}";
 		}

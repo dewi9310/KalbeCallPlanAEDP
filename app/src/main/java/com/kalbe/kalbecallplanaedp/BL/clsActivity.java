@@ -20,8 +20,11 @@ import com.kalbe.mobiledevknlibs.library.swipemenu.interfaces.SwipeMenuCreator;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -194,5 +197,22 @@ public class clsActivity extends Activity {
 
         return mAdapter;
 
+    }
+
+    public String parseDate(String dateParse){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        Date date = null;
+        try {
+            if (dateParse!=null&& dateParse!="")
+                date = sdf.parse(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date!=null){
+            return dateFormat.format(date);
+        }else {
+            return null;
+        }
     }
 }

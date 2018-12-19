@@ -103,32 +103,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
         visitRepo = new tProgramVisitRepo(getContext());
         realisasiVisitPlanRepo = new tRealisasiVisitPlanRepo(getContext());
         dtUserLogin = new clsMainBL().getUserLogin(getContext());
-        DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm:ss");
-        try {
-//            visitHeader = (tProgramVisit) visitRepo.findAll().get(0);
-            if (visitRepo.isExistProgramVisit(getContext())){
-                visitHeader = (tProgramVisit) visitRepo.getProgramVisitActive(getContext());
-            }else {
-                tProgramVisit dt = new tProgramVisit();
-                dt.setTxtProgramVisitId(new clsActivity().GenerateGuid());
-                dt.setIntUserId(dtUserLogin.getIntUserID());
-                dt.setIntRoleId(dtUserLogin.getIntRoleID());
-                dt.setTxtNotes("(" + dateFormat.format(dateTimeFormat.parse(dtUserLogin.getDtLogIn())) + " - " + dtUserLogin.getTxtNick() + ") Create");
-                dt.setIntType(new clsHardCode().UnPlan);
-                dt.setIntStatus(0);
-                dt.setDtStart(dtUserLogin.getDtLogIn());
-                dt.setDtEnd(dtUserLogin.getDtLogIn());
-                dt.setIntFlagPush(new clsHardCode().Save);
-                visitRepo.createOrUpdate(dt);
-                visitHeader = dt;
-            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
 
         listArea.clear();
@@ -494,9 +469,35 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed{
 
         if (valid){
             try {
+
                 DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                DateFormat dateLongFormat = new SimpleDateFormat("dd MMMM yyyy HH:mm:ss");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
+                try {
+//            visitHeader = (tProgramVisit) visitRepo.findAll().get(0);
+                    if (visitRepo.isExistProgramVisit(getContext())){
+                        visitHeader = (tProgramVisit) visitRepo.getProgramVisitActive(getContext());
+                    }else {
+                        tProgramVisit dt = new tProgramVisit();
+                        dt.setTxtProgramVisitId(new clsActivity().GenerateGuid());
+                        dt.setIntUserId(dtUserLogin.getIntUserID());
+                        dt.setIntRoleId(dtUserLogin.getIntRoleID());
+                        dt.setTxtNotes("(" + dateLongFormat.format(dateTimeFormat.parse(dtUserLogin.getDtLogIn())) + " - " + dtUserLogin.getTxtNick() + ") Create");
+                        dt.setIntType(new clsHardCode().UnPlan);
+                        dt.setIntStatus(0);
+                        dt.setDtStart(dtUserLogin.getDtLogIn());
+                        dt.setDtEnd(dtUserLogin.getDtLogIn());
+                        dt.setIntFlagPush(new clsHardCode().Save);
+                        visitRepo.createOrUpdate(dt);
+                        visitHeader = dt;
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
 
                 tProgramVisitSubActivity dataPlan = new tProgramVisitSubActivity();
                 dataPlan.setTxtProgramVisitSubActivityId(new clsActivity().GenerateGuid());
