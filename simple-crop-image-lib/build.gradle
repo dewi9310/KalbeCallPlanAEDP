@@ -14,7 +14,13 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-compile project(path: ':mobiledevknlibs')
+//compile project(path: ':mobiledevknlibs')
+}
+
+android {
+  lintOptions {
+    abortOnError false
+  }
 }
 
 android {

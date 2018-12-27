@@ -19,7 +19,8 @@ public class mConfigRepo {
     public String API_menu = "http://template.kalbe.com/abc";
 //    public String API = "http://10.171.14.10/WebAPITemplate/API/";
 //    public String APIToken = "http://10.171.14.10/WebAPITemplate/";
-public String APIToken = "http://10.171.13.50:8013/";
+    public String APIToken = "http://10.171.13.50:8013/";
+//    public String APIToken = "http://aedp.kalbenutritionals.web.id/api/";
 //    public String APIToken = "http://10.171.14.16/apiAEDP/";
 //    public String API = "http://10.171.13.50:8013/api/";
     public String API = APIToken + "api/";

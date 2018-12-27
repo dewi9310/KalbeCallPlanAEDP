@@ -352,7 +352,7 @@ public class FragmentAkuisisi extends Fragment implements IOBackPressed{
         et_userName.setHint("NICE.PEOPLE");
 //        et_userName.setInputType(InputType.TYPE_CLASS_TEXT);
         char[] chars = {'.'};
-        InputFilters.etCapsTextWatcherNoSpaceAtFirst(et_userName, null, chars);
+        new InputFilters().etCapsTextWatcherNoSpaceAtFirst(et_userName, null, chars);
         ((AppCompatButton) dialogCustom.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

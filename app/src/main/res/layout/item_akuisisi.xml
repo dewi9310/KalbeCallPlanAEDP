@@ -120,8 +120,7 @@
                     android:layout_height="200dp"
                     android:layout_margin="@dimen/spacing_large"
                     android:foreground="@color/overlay_light_20"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/image_23" />
+                    android:scaleType="centerCrop" />
 
             </LinearLayout>
 

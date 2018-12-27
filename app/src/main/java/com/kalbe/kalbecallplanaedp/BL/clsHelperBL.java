@@ -152,9 +152,13 @@ public class clsHelperBL {
             }
 
 
-            if (ListOftMaintenanceHeader!=null){
+            if (ListOftMaintenanceHeader!=null&&ListOfMaintenanceDetail!=null&&ListOfMaintenanceDetail.size()>0){
+                dtPush.setListOfDatatMaintenanceHeader(ListOftMaintenanceHeader);
+            }else {
+                ListOftMaintenanceHeader = new ArrayList<>();
                 dtPush.setListOfDatatMaintenanceHeader(ListOftMaintenanceHeader);
             }
+
             if (ListOfMaintenanceDetail!=null){
                 dtPush.setListOfDatatMaintenanceDetail(ListOfMaintenanceDetail);
             }
@@ -249,17 +253,16 @@ public class clsHelperBL {
     public void SavePushData(Context context, clsDataJson dtJson, ResponsePushData jsonResult){
         try {
             for (int i = 0; i < jsonResult.getData().getModelData().size(); i++){
-//                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListDataOftProgramVisit")){
-                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatProgramVisitUnplan")){
-                    if (jsonResult.getData().getModelData().get(i).getModDetail()!=null){
-                        for (tProgramVisit data : dtJson.getListDataOftProgramVisit()){
-                            data.setDtStart(new clsActivity().parseDate(jsonResult.getData().getModelData().get(i).getModDetail().getDtStart()));
-                            data.setDtEnd(new clsActivity().parseDate(jsonResult.getData().getModelData().get(i).getModDetail().getDtEnd()));
-                            data.setIntFlagPush(new clsHardCode().Sync);
-                            new tProgramVisitRepo(context).createOrUpdate(data);
-                        }
-                    }
-                }
+//                if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatProgramVisitUnplan")){
+//                    if (jsonResult.getData().getModelData().get(i).getModDetail()!=null){
+//                        for (tProgramVisit data : dtJson.getListDataOftProgramVisit()){
+//                            data.setDtStart(new clsActivity().parseDate(jsonResult.getData().getModelData().get(i).getModDetail().getDtStart()));
+//                            data.setDtEnd(new clsActivity().parseDate(jsonResult.getData().getModelData().get(i).getModDetail().getDtEnd()));
+//                            data.setIntFlagPush(new clsHardCode().Sync);
+//                            new tProgramVisitRepo(context).createOrUpdate(data);
+//                        }
+//                    }
+//                }
 
                 if (jsonResult.getData().getModelData().get(i).isModStatus()==true&&jsonResult.getData().getModelData().get(i).getModName().equals("ListOfDatatRealisasiVisitPlan")){
                     for (tRealisasiVisitPlan data : dtJson.getListOfDatatRealisasiVisitPlan()){

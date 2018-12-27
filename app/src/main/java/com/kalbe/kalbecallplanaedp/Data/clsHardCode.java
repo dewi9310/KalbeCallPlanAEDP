@@ -56,7 +56,7 @@ public class clsHardCode {
     public String linkAkuisisi = new mConfigRepo(context).API + "downloadtAkuisisi";
     public String linkMaintenance = new mConfigRepo(context).API + "downloadtMaintenance";
     public String linkInfoProgram = new mConfigRepo(context).API + "downloadtInfoProgram";
-    public String linkCreateUnplan = new mConfigRepo(context).API + "";
+    public String linkCreateUnplan = new mConfigRepo(context).API + "CreateUnplan";
 //    public String linkRealisasiVisit = new mConfigRepo(context).API + "downloadTRealisasi";
     public String linkPushData = new mConfigRepo(context).API +"PushAllData";
     public String linkPushDataError = new mConfigRepo(context).API +"PushLogError";

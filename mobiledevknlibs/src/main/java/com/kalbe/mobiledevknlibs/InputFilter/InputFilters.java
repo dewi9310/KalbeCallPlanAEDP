@@ -9,7 +9,7 @@ import android.widget.EditText;
  */
 
 public class InputFilters {
-    public static void etTextWatcher(final EditText editText, final Integer length){
+    public void etTextWatcher(final EditText editText, final Integer length){
         editText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -79,7 +79,7 @@ public class InputFilters {
         });
     }
 
-    public static void etTextWatcherSPChar(final EditText editText, final Integer length, final char[] chars){
+    public void etTextWatcherSPChar(final EditText editText, final Integer length, final char[] chars){
         editText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -150,7 +150,7 @@ public class InputFilters {
         });
     }
 
-    public static void etCapsTextWatcher(final EditText editText, final Integer length){
+    public void etCapsTextWatcher(final EditText editText, final Integer length){
         editText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         editText.addTextChangedListener(new TextWatcher() {
 
@@ -222,7 +222,7 @@ public class InputFilters {
         });
     }
 
-    public static void etCapsTextWatcherSPChar(final EditText editText, final Integer length, final char[] chars){
+    public void etCapsTextWatcherSPChar(final EditText editText, final Integer length, final char[] chars){
         editText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         editText.addTextChangedListener(new TextWatcher() {
 
@@ -294,7 +294,7 @@ public class InputFilters {
         });
     }
 
-    public static void etCapsTextWatcherNoSpace(final EditText editText, final Integer length, final char[] chars){
+    public void etCapsTextWatcherNoSpace(final EditText editText, final Integer length, final char[] chars){
         editText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         editText.addTextChangedListener(new TextWatcher() {
 
@@ -366,7 +366,7 @@ public class InputFilters {
         });
     }
 
-    public static void etCapsTextWatcherNoSpaceAtFirst(final EditText editText, final Integer length, final char[] chars){
+    public void etCapsTextWatcherNoSpaceAtFirst(final EditText editText, final Integer length, final char[] chars){
         editText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         editText.addTextChangedListener(new TextWatcher() {
             int b = 0;
@@ -451,7 +451,7 @@ public class InputFilters {
         });
     }
 
-    public static void etTextWatcherNoSpaceAtFirst(final EditText editText, final Integer length, final char[] chars){
+    public void etTextWatcherNoSpaceAtFirst(final EditText editText, final Integer length, final char[] chars){
         editText.addTextChangedListener(new TextWatcher() {
             int b = 0;
             @Override
@@ -535,7 +535,7 @@ public class InputFilters {
         });
     }
 
-    private static boolean isThereChar(char[] chaArray, char chr){
+    private boolean isThereChar(char[] chaArray, char chr){
         boolean bool = false;
         for(int i=0; i < chaArray.length; i++) {
             if(chr==chaArray[i]){

@@ -1195,7 +1195,22 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
 
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = true;
-                            downlaodFileNew(vmList, getActivity().getApplicationContext());
+                            if (vmList.size()>0){
+                                downlaodFileNew(vmList, getActivity().getApplicationContext());
+                            }else {
+                                List<tNotification> notificationList = null;
+                                try {
+                                    notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                checkMenu();
+                                if (notificationList!=null){
+                                    if (notificationList.size()>0){
+                                        createNotification(notificationList.size());
+                                    }
+                                }
+                            }
                         } else {
                             new ToastCustom().showToasty(getContext(),txtMessage,4);
                         }
@@ -2433,7 +2448,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
 //    };
 
 
-    private void createNotification(int size){
+    public void createNotification(int size){
         Intent i = new Intent(getContext(), MainMenu.class);
         i.putExtra(i_View, "FragmentNotification");
 //        int icon = R.drawable.ic_notif;
@@ -2595,15 +2610,16 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            if (isFromDownloadAll){
+                checkMenu();
+            }
+
             if (notificationList!=null){
                 if (notificationList.size()>0){
                     createNotification(notificationList.size());
                 }
             }
-            if (isFromDownloadAll){
-                checkMenu();
-            }
-
         }
 
 

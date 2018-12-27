@@ -504,7 +504,7 @@ public class FragmentAddAkuisisi extends Fragment implements IOBackPressed{
                 Uri uri = new UriData().getOutputMediaImageUri(getContext(), new clsHardCode().txtFolderAkuisisi, fileName);
                 //get byte array
                 byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
-//                PickImage.decodeByteArraytoImageFile(save, new clsHardCode().txtPathTempData);
+//                new PickImage().decodeByteArraytoImageFile(save, new clsHardCode().txtFolderAkuisisi, "testing");
                 try {
                     if (dataPlan.getIntActivityId()==1){
                         dtHeader = (tAkuisisiHeader) dtHeaderRepo.findBySubSubIdAndDokterId(MapTab.get(txtSubSubActivity), dataPlan.getTxtDokterId(), new clsHardCode().Draft);

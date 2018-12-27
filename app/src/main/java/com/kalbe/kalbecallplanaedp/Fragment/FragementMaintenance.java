@@ -211,7 +211,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
                                 IntSubSubActivityid = _mSubSubActivity.get(position).getIntSubSubActivityid();
 
                                 try {
-//                            tMaintenanceHeader dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).getDraft();
+//                                    tMaintenanceHeader dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).getDraft();
                                     tMaintenanceHeader dtHeader = (tMaintenanceHeader) new tMaintenanceHeaderRepo(getContext()).findByRealisasiId(dtCheckinActive.getTxtRealisasiVisitId());
                                     if (dtHeader!=null){
                                         List<tMaintenanceDetail> listDetail = detailRepo.findByHeaderDraftId(dtHeader.getTxtHeaderId(), IntSubSubActivityid);
@@ -403,7 +403,7 @@ public class FragementMaintenance extends Fragment implements IOBackPressed{
         et_userName.setHint("AA.2018.07");
 //        et_userName.setInputType(InputType.TYPE_CLASS_TEXT);
         char[] chars = {'.', '-', '/', ','};
-        InputFilters.etCapsTextWatcherNoSpace(et_userName, null, chars);
+        new InputFilters().etCapsTextWatcherNoSpace(et_userName, null, chars);
         ((AppCompatButton) dialogCustom.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -230,6 +230,7 @@ public class FragmentSetting extends Fragment{
                 }
             }
             phtProfile = output.toByteArray();
+//            new PickImage().decodeByteArraytoImageFile(phtProfile, new clsHardCode().txtFolderData, "testing");
             dtLogin.setBlobImg(phtProfile);
             dtLogin.setTxtFileName("tmp_act");
             changeProfile(dtLogin);
@@ -372,7 +373,8 @@ public void runCropImage(String path) {
                 //get the cropped bitmap
 //                Bitmap thePic = extras.getParcelable("data");
                 Bitmap thePic = BitmapFactory.decodeFile(uriImage.getPath());
-//                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uri);
+//                byte[] save = new PickImage().getByteImageToSaveRotate(getContext(), uriImage);
+//                new PickImage().decodeByteArraytoImageFile(save, new clsHardCode().txtFolderData, "test");
 //                dtLogin.setBlobImg(save);
 //                dtLogin.setTxtFileName("tmp_act");
 //                changeProfile(dtLogin);

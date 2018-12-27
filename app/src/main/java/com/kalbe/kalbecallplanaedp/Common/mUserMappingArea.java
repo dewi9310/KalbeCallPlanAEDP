@@ -12,11 +12,11 @@ import java.io.Serializable;
 @DatabaseTable
 public class mUserMappingArea implements Serializable {
     @DatabaseField(id = true, columnName = "intUserMappingAreaId")
-    public int intUserMappingAreaId;
+    private int intUserMappingAreaId;
     @DatabaseField(columnName = "intUserId")
-    public int intUserId;
+    private int intUserId;
     @DatabaseField(columnName = "txtKecamatanID")
-    public String txtKecamatanID;
+    private String txtKecamatanID;
 
     public int getIntUserMappingAreaId() {
         return intUserMappingAreaId;
