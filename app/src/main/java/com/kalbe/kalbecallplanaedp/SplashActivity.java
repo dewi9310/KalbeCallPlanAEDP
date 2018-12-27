@@ -151,15 +151,6 @@ public class SplashActivity extends AppCompatActivity {
             StartAnimations();
             checkStatusMenu();
         }
-// else if (Build.VERSION.SDK_INT >= 23
-//                && hasCameraPermission != PackageManager.PERMISSION_GRANTED){
-//            boolean checkPermission = checkPermission();
-//        } else {
-//            StartAnimations();
-//            checkStatusMenu();
-//        }
-        //StartAnimations();
-        //checkStatusMenu();
     }
 
     private boolean checkPermission() {

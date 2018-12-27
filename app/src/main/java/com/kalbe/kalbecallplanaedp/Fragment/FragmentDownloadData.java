@@ -212,6 +212,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     ThreadPoolExecutor executor;
     ProgressDialog progress;
     boolean isFromDownloadAll = false;
+    boolean isAllowNotification = false;
 
 
     @Nullable
@@ -1196,6 +1197,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = true;
                             if (vmList.size()>0){
+                                isAllowNotification = true;
                                 downlaodFileNew(vmList, getActivity().getApplicationContext());
                             }else {
                                 List<tNotification> notificationList = null;
@@ -1830,6 +1832,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             }
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = false;
+                            isAllowNotification = false;
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
@@ -1986,6 +1989,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             }
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = false;
+                            isAllowNotification = true;
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
                         } else {
                             new ToastCustom().showToasty(getContext(),txtMessage,4);
@@ -2249,6 +2253,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                             }
                             Log.d("Data info", "Success Download");
                             isFromDownloadAll = false;
+                            isAllowNotification = false;
                             downlaodFileNew(vmList, getActivity().getApplicationContext());
 
                         } else {
@@ -2616,7 +2621,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
             }
 
             if (notificationList!=null){
-                if (notificationList.size()>0){
+                if (notificationList.size()>0 && isAllowNotification){
                     createNotification(notificationList.size());
                 }
             }
