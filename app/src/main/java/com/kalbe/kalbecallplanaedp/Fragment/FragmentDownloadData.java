@@ -13,13 +13,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +37,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -683,7 +687,20 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     private  void onButtonOnClick(LinearLayout ln_click, TextView tv_click, final String txtDownlaod){
         RelativeLayout rl_download = (RelativeLayout) ln_click.getChildAt(0);
         ImageView img_download = (ImageView) rl_download.getChildAt(0);
-        int color = ImageViewCompat.getImageTintList(img_download).getDefaultColor();
+        int color = setButtonColor(txtDownlaod);
+//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+//            color = ImageViewCompat.getImageTintList(img_download).getDefaultColor();
+//        }else {
+//            ColorDrawable drawable = (ColorDrawable) img_download.getBackground();
+//            color = drawable.getColor();
+//        ColorStateList clr = ImageViewCompat.getImageTintList(img_download);
+//            Drawable background = img_download.getBackground();
+//            if (background instanceof ColorDrawable) {
+//                color = ((ColorDrawable) background).getColor();
+//                // Use color here
+//            }
+//        }
+
         String item =  tv_click.getText().toString();
 
         final Dialog dialog = new Dialog(getContext());
@@ -700,9 +717,9 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         final AppCompatSpinner spnDownload = (AppCompatSpinner) dialog.findViewById(R.id.spnDownload);
         final  TextView tv_download_title = (TextView) dialog.findViewById(R.id.tv_title_download);
         final  Button btn_download = (Button) dialog.findViewById(R.id.btn_download);
-        Drawable drawable = getResources().getDrawable(R.drawable.btn_rounded_green_300);
-        drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        btn_download.setBackgroundColor(color);
+//        Drawable drawable = getResources().getDrawable(R.drawable.btn_rounded_green_300);
+//        drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        btn_download.setBackgroundColor(getResources().getColor(color));
         appBarLayout.setBackgroundColor(getResources().getColor(R.color.green_300));
         tv_download_title.setText(item);
 
@@ -729,6 +746,33 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
         dialog.show();
         dialog.getWindow().setAttributes(lp);
     }
+
+    private int setButtonColor(String txtDownlaod) {
+        int color = 0;
+        if (txtDownlaod.equals("mActivity")){
+            color = R.color.blue_300;
+        }else if (txtDownlaod.equals("mSubActivity")){
+           color = R.color.red_100;
+        } else if (txtDownlaod.equals("mSubSubActivity")){
+            color = R.color.green_A700;
+        } else if (txtDownlaod.equals("mApotek")){
+            color = R.color.indigo_400;
+        } else if (txtDownlaod.equals("mDokter")){
+            color = R.color.red_300;
+        } else if (txtDownlaod.equals("mUserMappingArea")){
+            color = R.color.orange_400;
+        }else if (txtDownlaod.equals("tRealisasiVisitPlan")){
+            color = R.color.red_300;
+        }else if (txtDownlaod.equals("tAkuisisiHeader")){
+            color = R.color.light_green_500;
+        }else if (txtDownlaod.equals("tMaintenanceHeader")){
+            color = R.color.orange_400;
+        }else if (txtDownlaod.equals("tInfoProgramHeader")){
+            color = R.color.indigo_400;
+        }
+        return color;
+    }
+
     private void displayDataResult(String txtDownlaod) {
         boolean isDataReady = new clsMainBL().isDataReady(getContext());
         if (txtDownlaod.equals("mActivity")){

@@ -134,6 +134,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed, Handle
     ProgressDialog progress;
     private String FRAG_VIEW = "Fragment view";
     private String i_View ="Fragment";
+    boolean isCreateNotification = false;
 
     tProgramVisitSubActivity dataPlan;
     tRealisasiVisitPlan data;
@@ -834,6 +835,9 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed, Handle
                                         data.setTxtNoDoc(model.getData().getDtNotification().get(i).getTxtNoDoc());
                                         new tNotificationRepo(getContext()).createOrUpdate(data);
                                     }
+                                    isCreateNotification = true;
+                                }else {
+                                    isCreateNotification =false;
                                 }
                             }
 
@@ -876,10 +880,12 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed, Handle
                                 downlaodFileNew(vmList, getActivity().getApplicationContext());
                             }else {
                                 List<tNotification> notificationList = null;
-                                try {
-                                    notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
+                                if (isCreateNotification){
+                                    try {
+                                        notificationList = (List<tNotification>)  new tNotificationRepo(getContext()).findOutletId();
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 new ToastCustom().showToasty(getContext(),"Save",1);
                                 new Tools().intentFragment(FragmentListCallPlan.class, "Call Plan", getContext());
