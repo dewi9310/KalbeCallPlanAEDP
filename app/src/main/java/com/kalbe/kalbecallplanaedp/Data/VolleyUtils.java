@@ -49,7 +49,7 @@ import java.util.Map;
 public class VolleyUtils {
     String access_token,clientId = "";
     List<clsToken> dataToken;
-    public void makeJsonObjectRequestToken(final Activity activity, String strLinkAPI, final String username, final String password, final String clientId, String progressBarType, final VolleyResponseListener listener) {
+    public void makeJsonObjectRequestToken(final Context activity, String strLinkAPI, final String username, final String password, final String clientId, String progressBarType, final VolleyResponseListener listener) {
         final ProgressDialog Dialog = new ProgressDialog(activity);
         Dialog.setMessage(progressBarType);
         Dialog.setCancelable(false);
@@ -163,7 +163,7 @@ public class VolleyUtils {
         queue.add(req);
     }
 
-    public void requestTokenWithRefresh(final Activity activity, String strLinkAPI, final String refreshToken, final String clientId, final VolleyResponseListener listener) {
+    public void requestTokenWithRefresh(final Context activity, String strLinkAPI, final String refreshToken, final String clientId, final VolleyResponseListener listener) {
         StringRequest req = new StringRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -220,9 +220,19 @@ public class VolleyUtils {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("grant_type", "refresh_token");
-                params.put("client_id", clientId);
-                params.put("refresh_token", refreshToken);
+                try {
+                    mConfigData configDataUser = (mConfigData) new mConfigRepo(activity.getApplicationContext()).findById(5);
+                    params.put("grant_type", "password");
+                    params.put("client_id", clientId);
+                    params.put("refresh_token", refreshToken);
+                    params.put("username", configDataUser.getTxtDefaultValue().toString());
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+//                params.put("grant_type", "refresh_token");
+//                params.put("client_id", clientId);
+//                params.put("refresh_token", refreshToken);
                 return params;
             }
         };
@@ -234,7 +244,7 @@ public class VolleyUtils {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         queue.add(req);
     }
-    public void requestTokenWithRefresh2(final Activity activity, String strLinkAPI, final String username, final String refreshToken, final String clientId, final VolleyResponseListener listener) {
+    public void requestTokenWithRefresh2(final Context activity, String strLinkAPI, final String username, final String refreshToken, final String clientId, final VolleyResponseListener listener) {
         StringRequest req = new StringRequest(Request.Method.POST, strLinkAPI, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -307,6 +317,7 @@ public class VolleyUtils {
         RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
         queue.add(req);
     }
+
     public void makeJsonObjectRequestPushData(final Context ctx, String strLinkAPI, final clsPushData mRequestBody, final ProgressDialog pDialog, final VolleyResponseListener listener) {
         final String[] body = new String[1];
         final String[] message = new String[1];
@@ -350,7 +361,8 @@ public class VolleyUtils {
 
                     String username = configDataUser.getTxtDefaultValue().toString();
                     clientId = configDataClient.getTxtDefaultValue().toString();
-                    new VolleyUtils().requestTokenWithRefresh2((Activity)ctx, strLinkAPI, username, refresh_token, clientId, new VolleyResponseListener() {
+//                    Activity activity = (Activity)ctx;
+                    new VolleyUtils().requestTokenWithRefresh2(ctx, strLinkAPI, username, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             new ToastCustom().showToasty(ctx,message,4);
@@ -607,7 +619,7 @@ public class VolleyUtils {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             new ToastCustom().showToasty(ctx,message,4);
@@ -784,7 +796,7 @@ public class VolleyUtils {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity)ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             new ToastCustom().showToasty(ctx,message,4);

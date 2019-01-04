@@ -363,7 +363,7 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity) ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(ctx, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
@@ -605,7 +605,7 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity) context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -751,7 +751,7 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity) context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
 //                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -897,7 +897,7 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity)context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -1076,7 +1076,7 @@ public class clsHelperBL {
                         e.printStackTrace();
                     }
 
-                    new VolleyUtils().requestTokenWithRefresh((Activity)context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
+                    new VolleyUtils().requestTokenWithRefresh(context, strLinkAPI, refresh_token, clientId, new VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             new ToastCustom().showToasty(context,message,4);

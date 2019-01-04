@@ -317,7 +317,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    public void requestToken(final Activity activity){
+    public void requestToken(final Context activity){
         String username = "";
         String strLinkAPI = new clsHardCode().linkToken;
 

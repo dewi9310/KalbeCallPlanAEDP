@@ -50,12 +50,10 @@ public class LongThread implements Runnable {
         Log.i(TAG, "Starting Thread : " + threadNo);
 //        getBitmap(strUrl);
         final byte[] file =  getByte(data.getLink());
-        data.setBlobFile(file);
         handler.post(new Runnable() {
             @Override
             public void run() {
                 try {
-                    byte[] fileku = data.getBlobFile();
                     if (data.getGroupDownload().equals(new clsHardCode().INFO_PROGRAM)){
                         mFileAttachment datum = (mFileAttachment) new mFileAttachmentRepo(context).findById(Integer.parseInt(data.getTxtId()));
                         datum.setBlobFile(file);
