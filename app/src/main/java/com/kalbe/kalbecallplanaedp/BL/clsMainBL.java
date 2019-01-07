@@ -107,7 +107,7 @@ public class clsMainBL {
                 dataCheckinActive.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
                 dataCheckinActive.setIntStatusRealisasi(new clsHardCode().Realisasi);
                 dataCheckinActive.setIntFlagPush(new clsHardCode().Save);
-                dataCheckinActive.setIntNumberRealisasi(0);
+                dataCheckinActive.setIntNumberRealisasi(null);
                 realisasiVisitPlanRepo.createOrUpdate(dataCheckinActive);
 
                 tProgramVisitSubActivity dtVisit = visitSubActivityRepo.findBytxtId(dataCheckinActive.getTxtProgramVisitSubActivityId());

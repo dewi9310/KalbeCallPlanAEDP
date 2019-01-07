@@ -41,6 +41,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -1240,7 +1241,8 @@ break;
                     data.setDtCheckOut(dateTimeFormat.format(cal.getTime()));
                     data.setDtDateRealisasi(dateFormat.format(dateTimeFormat.parse(dtLogin.getDtLogIn()))); ///tanggal login
                     data.setDtDatePlan(dataCheckinActive.getDtDatePlan());
-                    data.setIntNumberRealisasi(Integer.parseInt(numberRealisasi)); //generate number
+                    long angka = Long.parseLong(numberRealisasi);
+                    data.setIntNumberRealisasi(Long.parseLong(numberRealisasi)); //generate number
                     data.setTxtAcc(dataCheckinActive.getTxtAcc());
                     data.setTxtLat(dataCheckinActive.getTxtLat());
                     data.setTxtLong(dataCheckinActive.getTxtLong());
@@ -1296,6 +1298,7 @@ break;
         tv_subtitle.setText("Please fill number realization before you checkout");
         final EditText et_int_number_realisasi = (EditText) dialog.findViewById(R.id.et_int_number_realisasi);
         et_int_number_realisasi.setInputType(InputType.TYPE_CLASS_NUMBER);
+        et_int_number_realisasi.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         ((AppCompatButton) dialog.findViewById(R.id.btn_cancel_realisasi)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

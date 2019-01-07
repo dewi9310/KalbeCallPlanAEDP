@@ -637,7 +637,7 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed, Handle
                 data.setDtCheckOut("");
                 data.setDtDateRealisasi("");
                 data.setDtDatePlan(dateFormat.format(dateTimeFormat.parse(dtUserLogin.getDtLogIn())));///tanggal login
-                data.setIntNumberRealisasi(0); //generate number
+                data.setIntNumberRealisasi(null); //generate number
                 data.setTxtAcc("");
                 data.setTxtLat("");
                 data.setTxtLong("");

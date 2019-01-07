@@ -67,7 +67,7 @@ public class RealisasiDataItem{
 	private String txtImage1Link;
 
 	@SerializedName("intRealisasiNumber")
-	private int intRealisasiNumber;
+	private long intRealisasiNumber;
 
 	@SerializedName("intRealisasiStatus")
 	private int intRealisasiStatus;
@@ -235,11 +235,11 @@ public class RealisasiDataItem{
 		return txtImage1Link;
 	}
 
-	public void setIntRealisasiNumber(int intRealisasiNumber){
+	public void setIntRealisasiNumber(long intRealisasiNumber){
 		this.intRealisasiNumber = intRealisasiNumber;
 	}
 
-	public int getIntRealisasiNumber(){
+	public long getIntRealisasiNumber(){
 		return intRealisasiNumber;
 	}
 

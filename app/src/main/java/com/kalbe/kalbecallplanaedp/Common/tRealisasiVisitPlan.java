@@ -39,7 +39,7 @@ public class tRealisasiVisitPlan implements Serializable{
     @DatabaseField(columnName = "dtDatePlan")
     private String dtDatePlan;
     @DatabaseField(columnName = "intNumberRealisasi")
-    private int intNumberRealisasi;
+    private Long intNumberRealisasi;
     @DatabaseField(columnName = "txtAcc")
     private String txtAcc;
     @DatabaseField(columnName = "txtLong")
@@ -180,11 +180,11 @@ public class tRealisasiVisitPlan implements Serializable{
         this.dtDateRealisasi = dtDateRealisasi;
     }
 
-    public int getIntNumberRealisasi() {
+    public Long getIntNumberRealisasi() {
         return intNumberRealisasi;
     }
 
-    public void setIntNumberRealisasi(int intNumberRealisasi) {
+    public void setIntNumberRealisasi(Long intNumberRealisasi) {
         this.intNumberRealisasi = intNumberRealisasi;
     }
 
