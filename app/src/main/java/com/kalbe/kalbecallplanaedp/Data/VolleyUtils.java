@@ -222,8 +222,9 @@ public class VolleyUtils {
                 Map<String, String> params = new HashMap<>();
                 try {
                     mConfigData configDataUser = (mConfigData) new mConfigRepo(activity.getApplicationContext()).findById(5);
+                    mConfigData configDataClient = (mConfigData) new mConfigRepo(activity.getApplicationContext()).findById(4);
                     params.put("grant_type", "password");
-                    params.put("client_id", clientId);
+                    params.put("client_id", configDataClient.getTxtDefaultValue().toString());
                     params.put("refresh_token", refreshToken);
                     params.put("username", configDataUser.getTxtDefaultValue().toString());
 
@@ -389,7 +390,7 @@ public class VolleyUtils {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(ctx);
                                     tokenRepo.createOrUpdate(data);
-                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
                                         Toast.makeText(ctx, "Please press the button again", Toast.LENGTH_SHORT).show();
@@ -823,7 +824,7 @@ public class VolleyUtils {
 
                                     clsTokenRepo tokenRepo = new clsTokenRepo(ctx);
                                     tokenRepo.createOrUpdate(data);
-                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(ctx, "Success get new Access Token", Toast.LENGTH_SHORT).show();
                                     newRefreshToken = refreshToken;
                                     if (refreshToken == newRefreshToken && !newRefreshToken.equals("")) {
                                         Toast.makeText(ctx, "Please press the button again", Toast.LENGTH_SHORT).show();

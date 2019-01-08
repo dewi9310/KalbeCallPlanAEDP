@@ -215,9 +215,6 @@ public class FragmentPushData extends Fragment{
     }
 
     private void pushData() throws JSONException {
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Pushing Data");
-//        pDialog.setTitle("Pushing Your data");
         pDialog.setMessage("Push your data....");
         pDialog.setCancelable(false);
         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
