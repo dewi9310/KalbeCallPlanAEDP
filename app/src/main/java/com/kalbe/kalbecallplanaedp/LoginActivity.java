@@ -368,6 +368,7 @@ public class LoginActivity extends AccountAuthenticatorActivity{
             }
         });
 
+        btnRefreshApp.setVisibility(View.GONE);
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
         executor = new ThreadPoolExecutor(
