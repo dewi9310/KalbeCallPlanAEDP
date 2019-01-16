@@ -349,7 +349,7 @@ public class PickAccountActivity extends Activity {
             e.printStackTrace();
         }
         final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyLogin(activity, strLinkAPI, mRequestBody, "Getting your role......", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(activity, strLinkAPI, mRequestBody, "Getting your role......",false, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();

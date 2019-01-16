@@ -806,7 +806,7 @@ break;
                                         new  clsHelperBL().SavePushData(getApplicationContext(), dtJson.getDataJson(), model);
                                     }
                                 }
-                                logout();
+                                logout(false);
 //                                ToastCustom.showToasty(getApplicationContext(),"Success Push Data",1);
                             }else {
                                 new ToastCustom().showToasty(getApplicationContext(),txtMessage, 4);
@@ -825,7 +825,7 @@ break;
         }
     }
 
-    private void logout() {
+    private void logout(boolean isMustLogout) {
         String strLinkAPI = new clsHardCode().linkLogout;
         JSONObject resJson = new JSONObject();
         mUserLogin dtLogin = new clsMainBL().getUserLogin(getApplicationContext());
@@ -846,7 +846,7 @@ break;
         }
         final String mRequestBody = resJson.toString();
 
-        new clsHelperBL().volleyLogin(MainMenu.this, strLinkAPI, mRequestBody, "Logout....", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(MainMenu.this, strLinkAPI, mRequestBody, "Logout....", isMustLogout, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -1342,7 +1342,7 @@ break;
                 clsStatusMenuStart _clsStatusMenuStart = new clsMainBL().checkUserActive(getApplicationContext());
                 if (_clsStatusMenuStart.get_intStatus()!=null){
                     if (_clsStatusMenuStart.get_intStatus()== enumStatusMenuStart.FormLogin){
-                        logout();
+                        logout(true);
                     }else if (_clsStatusMenuStart.get_intStatus()==enumStatusMenuStart.PushDataMobile){
                         Intent myIntent = new Intent(getApplicationContext(), MainMenu.class);
                         myIntent.putExtra(i_View, "FragmentPushData");

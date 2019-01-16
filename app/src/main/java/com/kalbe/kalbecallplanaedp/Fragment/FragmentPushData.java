@@ -285,7 +285,7 @@ public class FragmentPushData extends Fragment{
         }
     }
 
-public void setListData(){
+    public void setListData(){
     listDataHeader.clear();
     listDataChild.clear();
     swipeListPlan.clear();
@@ -503,7 +503,7 @@ public void setListData(){
         }
         final String mRequestBody = resJson.toString();
 
-        new clsHelperBL().volleyLogin(getContext(), strLinkAPI, mRequestBody, "Logout....", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(getContext(), strLinkAPI, mRequestBody, "Logout....",false, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 new ToastCustom().showToasty(getContext(),message,4);

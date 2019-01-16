@@ -8,7 +8,7 @@ public class AccountGeneral {
     /**
      * Account type id
      */
-    public static final String ACCOUNT_TYPE = "com.kalbe.klikapotek";
+    public static final String ACCOUNT_TYPE = "com.kalbenutritionals";
 
     /**
      * Account name

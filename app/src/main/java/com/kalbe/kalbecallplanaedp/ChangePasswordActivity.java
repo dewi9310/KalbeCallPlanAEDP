@@ -165,7 +165,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         final String mRequestBody = resJson.toString();
-        new clsHelperBL().volleyLogin(ChangePasswordActivity.this, strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+        new clsHelperBL().volleyLogin(ChangePasswordActivity.this, strLinkAPI, mRequestBody, "Please Wait....", false, new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();

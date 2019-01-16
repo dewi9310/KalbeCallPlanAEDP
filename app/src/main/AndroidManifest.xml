@@ -4,7 +4,7 @@
     package="com.kalbe.kalbecallplanaedp"
     android:installLocation="internalOnly"
     android:versionCode="1"
-    android:sharedUserId="com.kalbe.klikapotek"
+    android:sharedUserId="com.kalbenutritionals"
     tools:overrideLibrary="com.google.android.gms.appindexing">
 
     <!-- <uses-permission -->

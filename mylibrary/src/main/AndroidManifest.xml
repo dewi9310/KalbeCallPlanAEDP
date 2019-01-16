@@ -2,7 +2,7 @@
     package="com.oktaviani.dewi.mylibrary.authenticator"
     android:versionCode="1"
     android:versionName="1.0"
-    android:sharedUserId="com.kalbe">
+    android:sharedUserId="com.kalbenutritionals">
 
     <uses-permission
         android:name="android.permission.AUTHENTICATE_ACCOUNTS"

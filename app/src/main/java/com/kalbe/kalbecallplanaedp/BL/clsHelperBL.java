@@ -555,7 +555,7 @@ public class clsHelperBL {
 
         queue.add(multipartRequest);
     }
-    public void volleyLogin(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final VolleyResponseListener listener) {
+    public void volleyLogin(final Context context, String strLinkAPI, final String mRequestBody, String progressBarType, final boolean isMustLogout, final VolleyResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String[] body = new String[1];
         final String[] message = new String[1];
@@ -664,9 +664,33 @@ public class clsHelperBL {
                 }
 
                 if (msg!=null||!msg.equals("")){
+                    if (isMustLogout){
+                        popup();
+                    }
                     new ToastCustom().showToasty(context,msg,4);
                     finalDialog1.dismiss();
                 }
+            }
+
+            public void popup() {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+
+                builder.setTitle("Failed to Logout");
+                builder.setMessage("You Have to request again");
+
+                builder.setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        new SplashActivity().logout(context);
+                        dialog.dismiss();
+                    }
+                });
+
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+
+                alert.setCanceledOnTouchOutside(false);
+                alert.setCancelable(false);
             }
         }) {
             @Override
