@@ -16,7 +16,6 @@ import java.util.List;
 
 public class mConfigRepo {
     DatabaseHelper helper;
-    public String API_menu = "http://template.kalbe.com/abc";
 //    public String API = "http://10.171.14.10/WebAPITemplate/API/";
 //    public String APIToken = "http://10.171.14.10/WebAPITemplate/";
 //    public String APIToken = "http://10.171.13.50:8013/";
@@ -24,9 +23,6 @@ public class mConfigRepo {
 //    public String APIToken = "http://10.171.14.16/apiAEDP/";
 //    public String API = "http://10.171.13.50:8013/api/";
     public String API = APIToken + "api/";
-//    private String domainAddress = "10.171.14.54/apiAEDP";
-//    public String APIToken = "http://"+domainAddress+"/";
-//    public String API = "http://"+domainAddress+"/api/";
     public String APIKLB = "http://api.karsalintasbuwana.com/";
 
     public mConfigRepo(Context context) {
@@ -66,8 +62,8 @@ public class mConfigRepo {
         data = new mConfigData();
         data.setIntId(2);
         data.setTxtName("API_menu");
-        data.setTxtValue(API_menu);
-        data.setTxtDefaultValue(API_menu);
+        data.setTxtValue(APIToken);
+        data.setTxtDefaultValue(APIToken);
         data.setIntEditAdmin("1");
         helper.getmConfigDao().createOrUpdate(data);
 

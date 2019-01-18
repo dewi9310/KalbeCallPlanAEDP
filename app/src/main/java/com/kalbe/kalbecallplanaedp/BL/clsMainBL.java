@@ -158,24 +158,6 @@ public class clsMainBL {
                 _clsStatusMenuStart.set_intStatus(enumStatusMenuStart.FormLogin);
             }
         }
-
-//        List<mUserLogin> listDataLogin = new ArrayList<>();
-//        try {
-//            listDataLogin = (List<mUserLogin>) login.findAll();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        if (listDataLogin!=null)
-
-
-//        for (mUserLogin data : listDataLogin){
-//            if (data.getTxtUserName()!=null){
-//                if (!data.getTxtUserName().equals("null")||!data.getTxtUserName().equals(null)){
-//
-//                }
-//            }
-//        }
-
         return _clsStatusMenuStart;
     }
 

@@ -228,16 +228,6 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-//        Timer runProgress = new Timer();
-//        TimerTask viewTask = new TimerTask() {
-//
-//            public void run() {
-////                Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
-//
-//
-//            }
-//        };
-//        runProgress.schedule(viewTask, delay);
         try {
             new clsHardCode().copydb(getApplicationContext());
         } catch (IOException e) {
@@ -675,6 +665,8 @@ public class SplashActivity extends AppCompatActivity {
                 Intent res = null;
                 if (response != null) {
                     try {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        gson = gsonBuilder.create();
                         JSONObject jsonObject = new JSONObject(response);
                         LoginMobileApps model = gson.fromJson(jsonObject.toString(), LoginMobileApps.class);
                         boolean txtStatus = model.getResult().isStatus();
@@ -703,7 +695,7 @@ public class SplashActivity extends AppCompatActivity {
 //                            new AuthenticatorUtil().showAccountPicker(SplashActivity.this, mAccountManager, AUTHTOKEN_TYPE_FULL_ACCESS);
                             new ToastCustom().showToasty(SplashActivity.this,txtMessage,4);
                         }
-                    } catch (JSONException e) { 
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
