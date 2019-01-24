@@ -592,11 +592,22 @@ public class FragmentAddUnplan extends Fragment implements IOBackPressed, Handle
                 dataPlan = new tProgramVisitSubActivity();
                 dataPlan.setTxtProgramVisitSubActivityId(new clsActivity().GenerateGuid());
                 if (mapActivity.get(spnActivity.getSelectedItem()) == 1) {
-                    dataPlan.setTxtDokterId(mapOutlet.get(spnOutlet.getSelectedItem()));
-                    dataPlan.setTxtDokterName(spnOutlet.getSelectedItem().toString());
+                    if (cbOutlet.isChecked()){
+                        dataPlan.setTxtDokterName(etOutlet.getText().toString());
+                        dataPlan.setTxtDokterId(etOutlet.getText().toString());
+                    }else {
+                        dataPlan.setTxtDokterId(mapOutlet.get(spnOutlet.getSelectedItem()));
+                        dataPlan.setTxtDokterName(spnOutlet.getSelectedItem().toString());
+                    }
+
                 }else if (mapActivity.get(spnActivity.getSelectedItem())==2){
-                    dataPlan.setTxtApotekId(mapOutlet.get(spnOutlet.getSelectedItem()));
-                    dataPlan.setTxtApotekName(spnOutlet.getSelectedItem().toString());
+                    if (cbOutlet.isChecked()){
+                        dataPlan.setTxtApotekId(etOutlet.getText().toString());
+                        dataPlan.setTxtApotekName(etOutlet.getText().toString());
+                    }else {
+                        dataPlan.setTxtApotekId(mapOutlet.get(spnOutlet.getSelectedItem()));
+                        dataPlan.setTxtApotekName(spnOutlet.getSelectedItem().toString());
+                    }
                 }
                 dataPlan.setIntType(new clsHardCode().UnPlan);
                 dataPlan.setTxtAreaName(spnArea.getSelectedItem().toString());
