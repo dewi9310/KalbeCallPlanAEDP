@@ -25,7 +25,7 @@
                 android:gravity="center"
                 android:padding="@dimen/spacing_mlarge">
 
-                <com.mikhaellopez.circularimageview.CircularImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_setting"
                     android:layout_width="200dp"
                     android:layout_height="200dp"

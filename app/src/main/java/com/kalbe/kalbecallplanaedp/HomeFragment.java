@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Dewi Oktaviani on 9/26/2018.
  */
@@ -50,7 +52,7 @@ public class HomeFragment extends Fragment {
     private LinearLayout ln_plan_home, ln_realisasi_home, ln_unplan_home;
     TextView tv_plan_home, tv_unplan_home, tvRealisasi_home, tv_userName, tv_email, tv_outlet, tv_emp_id, tv_name, tv_role;
     tRealisasiVisitPlanRepo repoRealisasi;
-    CircularImageView ivProfile;
+    CircleImageView ivProfile;
     private String FRAG_VIEW = "Fragment view";
     tProgramVisitSubActivity dtPlan;
 
@@ -69,7 +71,7 @@ public class HomeFragment extends Fragment {
         tv_role = (TextView)v.findViewById(R.id.tv_role);
         tv_name = (TextView)v.findViewById(R.id.tv_full_name);
         tv_emp_id = (TextView)v.findViewById(R.id.tv_emp_id);
-        ivProfile = (CircularImageView)v.findViewById(R.id.image_profil_home);
+        ivProfile = (CircleImageView)v.findViewById(R.id.image_profil_home);
 
         tvRealisasi_home = (TextView)v.findViewById(R.id.tv_Realisasi_home);
 

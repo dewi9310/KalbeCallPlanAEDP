@@ -1,6 +1,8 @@
 package com.kalbe.kalbecallplanaedp;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +20,7 @@ import android.view.View;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
+import com.github.barteksc.pdfviewer.listener.OnRenderListener;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.kalbe.kalbecallplanaedp.BL.clsMainBL;
 import com.kalbe.kalbecallplanaedp.Common.mFileAttachment;
@@ -64,6 +67,7 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
 //    tInfoProgramDetail dtDetail;
     private String PDF_View = "pdf viewer";
     mFileAttachment attach;
+    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,9 +78,19 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
         setContentView(R.layout.activity_pdfviewer);
         pdfView = (PDFView)findViewById(R.id.pdfViewInfo);
         Bundle bundle = getIntent().getExtras();
+//        pDialog = new ProgressDialog(PDFViewer.this);
+//        pDialog.setMessage("Please wait....");
+//        pDialog.setCancelable(false);
+//        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//
+//            }
+//        });
 //        infoProgramDetailRepo = new tInfoProgramDetailRepo(getApplicationContext());
         if (bundle!=null){
             try {
+//                pDialog.show();
 //                String tes = bundle.getString(PDF_View);
                 attach = (mFileAttachment) new mFileAttachmentRepo(getApplicationContext()).findById(bundle.getInt(PDF_View));
 //                dtDetail = (tInfoProgramDetail) infoProgramDetailRepo.findByDetailId(bundle.getString(PDF_View));
@@ -104,6 +118,7 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
     public void loadComplete(int nbPages) {
         PdfDocument.Meta meta = pdfView.getDocumentMeta();
         printBookmarkTree(pdfView.getTableOfContents(), "-");
+        pDialog.dismiss();
     }
 
     @Override
@@ -123,7 +138,7 @@ public class PDFViewer extends AppCompatActivity implements OnPageChangeListener
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+        super.onBackPressed();
         Intent parentIntent = NavUtils.getParentActivityIntent(this);
         parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(parentIntent);

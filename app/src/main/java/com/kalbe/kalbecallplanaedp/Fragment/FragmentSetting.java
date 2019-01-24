@@ -59,7 +59,10 @@ import com.kalbe.mobiledevknlibs.PickImageAndFile.PickFile;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.PickImage;
 import com.kalbe.mobiledevknlibs.PickImageAndFile.UriData;
 import com.kalbe.mobiledevknlibs.ToastAndSnackBar.ToastCustom;
-import com.mikhaellopez.circularimageview.CircularImageView;
+
+
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
@@ -79,7 +82,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import eu.janmuller.android.simplecropimage.CropImage;
 
 import static android.app.Activity.RESULT_OK;
@@ -94,7 +96,7 @@ import static com.oktaviani.dewi.mylibrary.authenticator.AccountGeneral.PARAM_US
 
 public class FragmentSetting extends Fragment{
     View v;
-    CircularImageView ivProfile;
+    CircleImageView ivProfile;
     FloatingActionButton fab;
     private static final int CAMERA_REQUEST_PROFILE = 100;
     private static final String IMAGE_DIRECTORY_NAME = "Image Personal";
@@ -118,7 +120,7 @@ public class FragmentSetting extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_setting, container, false);
-        ivProfile = (CircularImageView) v.findViewById(R.id.image_setting);
+        ivProfile = (CircleImageView) v.findViewById(R.id.image_setting);
         fab = (FloatingActionButton)v.findViewById(R.id.fab_add_img_setting);
         ln_error = (LinearLayout)v.findViewById(R.id.ln_push_error);
         ln_change_ps = (LinearLayout)v.findViewById(R.id.ln_change_ps);

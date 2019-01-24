@@ -221,6 +221,8 @@ public class SplashActivity extends AppCompatActivity {
     }
     Intent myIntent = null;
     clsStatusMenuStart _clsStatusMenuStart = null;
+
+
     private void checkStatusMenu() {
         try {
             new mConfigRepo(getApplicationContext()).InsertDefaultmConfig();
