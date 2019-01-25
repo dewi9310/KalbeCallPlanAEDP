@@ -462,6 +462,13 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 menuItem.setChecked(true);
                 checkNavItem = menuItem;
+                pDialog.setCancelable(false);
+                pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
                 pDialog.show();
                 drawerLayout.closeDrawers();
 
@@ -480,6 +487,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                 if(checkNavItem!= null){
                     switch (checkNavItem.getItemId()) {
                         case R.id.mnLogout:
+                            checkNavItem = null;
                             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainMenu.this);
 
                             builder.setTitle("Confirm");
@@ -526,6 +534,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             alert.show();
                             break;
                         case R.id.home:
+                            checkNavItem = null;
                             toolbar.setTitle("Home");
 
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -538,6 +547,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             selectedId = 99;
                             break;
                         case R.id.mnpushData:
+                            checkNavItem = null;
                             toolbar.setTitle("Push Data");
                             toolbar.setSubtitle(null);
 
@@ -550,6 +560,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             selectedId = 99;
                             break;
                         case R.id.mnDownloadData:
+                            checkNavItem = null;
                             toolbar.setTitle("Download Data");
                             toolbar.setSubtitle(null);
 
@@ -562,6 +573,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             selectedId = 99;
                             break;
                         case R.id.mnCallPlan:
+                            checkNavItem = null;
                             toolbar.setTitle("Call Plan");
                             toolbar.setSubtitle(null);
 
@@ -575,6 +587,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             selectedId = 99;
                             break;
                         case R.id.mnAkusisi:
+                            checkNavItem = null;
                             toolbar.setTitle("Akusisi");
                             toolbar.setSubtitle(null);
 
@@ -587,6 +600,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             selectedId = 99;
                             break;
                         case R.id.mnMaintenance:
+                            checkNavItem = null;
                             toolbar.setTitle("Maintenance");
                             toolbar.setSubtitle(null);
 
@@ -600,6 +614,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             break;
 
                         case R.id.mnInfoProgram:
+                            checkNavItem = null;
                             toolbar.setTitle("Info Program");
                             toolbar.setSubtitle(null);
 
@@ -613,6 +628,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                             break;
                         case R.id.mnNotification:
+                            checkNavItem = null;
                             toolbar.setTitle("Notification");
                             toolbar.setSubtitle(null);
 
@@ -626,6 +642,7 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
 
                             break;
                         case R.id.mnSetting:
+                            checkNavItem = null;
                             toolbar.setTitle("Setting");
                             toolbar.setSubtitle(null);
 
@@ -639,10 +656,12 @@ public class MainMenu extends AppCompatActivity implements GoogleApiClient.Conne
                             break;
 
                         case R.id.mnCheckOut:
+                            checkNavItem = null;
                             showCustomDialog();
 //                        selectedId = 99;
 break;
                         default:
+                            checkNavItem = null;
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
                             try {
                                 Class<?> fragmentClass = Class.forName(linkMenu[checkNavItem.getItemId()]);
