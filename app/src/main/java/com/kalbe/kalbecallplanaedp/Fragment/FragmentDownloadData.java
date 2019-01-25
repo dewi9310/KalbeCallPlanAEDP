@@ -110,7 +110,9 @@ import com.kalbe.kalbecallplanaedp.Repo.tProgramVisitSubActivityRepo;
 import com.kalbe.kalbecallplanaedp.Repo.tRealisasiVisitPlanRepo;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadAllData.DownloadAllData;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadApotek.DownlaodApotek;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadApotekAEDP.DownlaodApotekAep;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadDokter.DownloadDokter;
+import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadDoterAedp.DownloadDokterAEDP;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadSubActivity.DownloadSubActivity;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadSubActivityDetail.DownloadSubActivityDetail;
 import com.kalbe.kalbecallplanaedp.ResponseDataJson.downloadTRealisasi.DownloadTRealisasi;
@@ -1570,8 +1572,21 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     }
 
     private void downloadApotek(final boolean isFromDownloadAll) {
-        final String strLinkAPI = new clsHardCode().linkApotek;
-        new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
+        String strLinkAPI = new clsHardCode().linkApotekAedp;
+        JSONObject resJson = new JSONObject();
+        try {
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", ParamDownloadMaster());
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+        new clsHelperBL().volleyDownloadDataget(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 new ToastCustom().showToasty(getContext(),message,4);
@@ -1583,21 +1598,21 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                 if (response != null) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        DownlaodApotek model = gson.fromJson(jsonObject.toString(), DownlaodApotek.class);
-                        boolean txtStatus = model.isStatus();
-                        String txtMessage = model.getMessage();
+                        DownlaodApotekAep model = gson.fromJson(jsonObject.toString(), DownlaodApotekAep.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
 
                         if (txtStatus == true){
                             apotekRepo = new mApotekRepo(getContext());
                             if (model.getData()!=null){
                                 itemList.clear();
-                                if (model.getData().size()>0){
-                                    for (int i = 0; i < model.getData().size(); i++){
+                                if (model.getData().getRecords().size()>0){
+                                    for (int i = 0; i < model.getData().getRecords().size(); i++){
                                         mApotek data = new mApotek();
-                                        data.setTxtCode(model.getData().get(i).getCode());
-                                        data.setTxtName(model.getData().get(i).getName());
-                                        data.setTxtKecId(model.getData().get(i).getKecId());
-                                        data.setTxtKecName(model.getData().get(i).getKecName());
+                                        data.setTxtCode(model.getData().getRecords().get(i).getCode());
+                                        data.setTxtName(model.getData().getRecords().get(i).getName());
+                                        data.setTxtKecId(model.getData().getRecords().get(i).getKecId());
+                                        data.setTxtKecName(model.getData().getRecords().get(i).getKecName());
 
                                         apotekRepo.createOrUpdate(data);
                                     }
@@ -1639,8 +1654,23 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
     }
 
     private void downloadDokter(final boolean isFromDownloadAll) {
-        String strLinkAPI = new clsHardCode().linkDokter;
-        new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
+        String strLinkAPI = new clsHardCode().linkDokterAedp;
+        JSONObject resJson = new JSONObject();
+        try {
+            tokenRepo = new clsTokenRepo(getContext());
+            dataToken = (List<clsToken>) tokenRepo.findAll();
+            resJson.put("data", ParamDownloadMaster());
+            resJson.put("device_info", new clsHardCode().pDeviceInfo());
+            resJson.put("txtRefreshToken", dataToken.get(0).txtRefreshToken.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        final String mRequestBody = resJson.toString();
+//        String strLinkAPI = new clsHardCode().linkDokter;
+        new clsHelperBL().volleyDownloadDataget(getActivity(), strLinkAPI, mRequestBody, "Please Wait....", new VolleyResponseListener() {
+//        new clsHelperBL().volleyDownloadDataKLB(getActivity(), strLinkAPI, "Please Wait....", new VolleyResponseListener() {
             @Override
             public void onError(String message) {
                 new ToastCustom().showToasty(getContext(),message,4);
@@ -1652,23 +1682,23 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
                 if (response != null) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        DownloadDokter model = gson.fromJson(jsonObject.toString(), DownloadDokter.class);
-                        boolean txtStatus = model.isStatus();
-                        String txtMessage = model.getMessage();
+                        DownloadDokterAEDP model = gson.fromJson(jsonObject.toString(), DownloadDokterAEDP.class);
+                        boolean txtStatus = model.getResult().isStatus();
+                        String txtMessage = model.getResult().getMessage();
 
                         if (txtStatus == true){
                             dokterRepo = new mDokterRepo(getContext());
                             if (model.getData()!=null){
                                 itemList.clear();
-                                if (model.getData().size()>0){
-                                    for (int i = 0; i < model.getData().size(); i++){
+                                if (model.getData().getRecords().size()>0){
+                                    for (int i = 0; i < model.getData().getRecords().size(); i++){
                                         mDokter data = new mDokter();
-                                        data.setTxtId(model.getData().get(i).getId());
-                                        data.setTxtFirstName(model.getData().get(i).getFirstname());
-                                        data.setTxtLastName(model.getData().get(i).getLastname());
-                                        data.setTxtGender(model.getData().get(i).getGender());
-                                        data.setTxtSpecialist(model.getData().get(i).getSpecialist());
-                                        data.setTxtType(model.getData().get(i).getType());
+                                        data.setTxtId(model.getData().getRecords().get(i).getId());
+                                        data.setTxtFirstName(model.getData().getRecords().get(i).getFirstname());
+                                        data.setTxtLastName(model.getData().getRecords().get(i).getLastname());
+                                        data.setTxtGender(model.getData().getRecords().get(i).getGender());
+                                        data.setTxtSpecialist(model.getData().getRecords().get(i).getSpecialist());
+                                        data.setTxtType(model.getData().getRecords().get(i).getType());
 
                                         dokterRepo.createOrUpdate(data);
                                     }
@@ -1703,7 +1733,7 @@ public class FragmentDownloadData extends Fragment implements Handler.Callback{
 //                                else if (!isDataReady||!checkMenu()){
 //                                    checkMenu();
 //                                }
-                                tv_count_dokter.setText(String.valueOf(model.getData().size()));
+                                tv_count_dokter.setText(String.valueOf(model.getData().getRecords().size()));
 
                             }
                             Log.d("Data info", "Success Download");
